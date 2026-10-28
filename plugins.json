@@ -1,0 +1,1776 @@
+[
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=aniarsiv.com&sz=%size%",
+        "fileHash": "sha256-b76a363181f1ea2604561e6a67bfa8a2aedf7bc607cf0d9a3586e792734b6174",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 22758,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "AniArsiv",
+        "description": "AniArsiv \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/AniArsiv.cs3",
+        "name": "AniArsiv"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=animecix.tv&sz=%size%",
+        "fileHash": "sha256-9bd346ead1689e57fc7e9ed44e73c3195d651b40cc147f828df81f077cfe860f",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 24645,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Anime"
+        ],
+        "version": 3,
+        "internalName": "AnimeciX",
+        "description": "AnimeciX \u2014 T\u00fcrk\u00e7e altyaz\u0131l\u0131 anime ar\u015fivi (animecix.tv)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/AnimeciX.cs3",
+        "name": "AnimeciX"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=animeler.live&sz=%size%",
+        "fileHash": "sha256-0feacdf57bf2dd53deb8e236e9690ae3c721cabdfd4b6b802021cb26673b8dc1",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 21850,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Anime"
+        ],
+        "version": 2,
+        "internalName": "Animeler",
+        "description": "Animeler \u2014 T\u00fcrk\u00e7e altyaz\u0131l\u0131 anime ar\u015fivi (animeler.live)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Animeler.cs3",
+        "name": "Animeler"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=anizium.co&sz=%size%",
+        "fileHash": "sha256-0d6dc68d6791c5990cf0f6d6de1076da10f08bcde7417f245ad53ea611ff333e",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 26427,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Anime",
+            "Movie"
+        ],
+        "version": 5,
+        "internalName": "Anizium",
+        "description": "Anizium \u2014 4K T\u00fcrk\u00e7e dublaj & altyaz\u0131l\u0131 anime (anizium.co)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Anizium.cs3",
+        "name": "Anizium"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=turkanime.info&sz=%size%",
+        "fileHash": "sha256-d8fa539286616e585d35590c232606a3ce172658dae26b4099786adcfb04829e",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 29388,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Anime"
+        ],
+        "version": 6,
+        "internalName": "Anizm",
+        "description": "Anizm \u2014 T\u00fcrk\u00e7e altyaz\u0131l\u0131 anime izle (turkanime.info)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Anizm.cs3",
+        "name": "Anizm"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=asyaanimeleri.top&sz=%size%",
+        "fileHash": "sha256-2b146a99a4007c766ec000897e042f32651448275cc6addb43db02f98b13f23b",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 34108,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Anime",
+            "Movie"
+        ],
+        "version": 9,
+        "internalName": "AsyaAnimeleri",
+        "description": "AsyaAnimeleri \u2014 T\u00fcrk\u00e7e altyaz\u0131l\u0131 anime ve donghua ar\u015fivi (asyaanimeleri.top)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/AsyaAnimeleri.cs3",
+        "name": "AsyaAnimeleri"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=asyabox.co&sz=%size%",
+        "fileHash": "sha256-3b84123814121a1239c984f29ee3991150779299cd81d95dd84d51e4c9895eb3",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 32953,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 2,
+        "internalName": "AsyaBox",
+        "description": "AsyaBox \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/AsyaBox.cs3",
+        "name": "AsyaBox"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=asyadizi.com&sz=%size%",
+        "fileHash": "sha256-6d1f702533f034ffe638f17fe949852fb98b134183a6c92bfbf63e43b280b7e5",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 32416,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "AsyaDizi",
+        "description": "AsyaDizi \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/AsyaDizi.cs3",
+        "name": "AsyaDizi"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=asyadizileriizle.com&sz=%size%",
+        "fileHash": "sha256-c0117b9585c880b2841385dfa28f13542c955885a55ac20af00903597736e468",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 32230,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "Asyadizileriizle",
+        "description": "Asyadizileriizle \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Asyadizileriizle.cs3",
+        "name": "Asyadizileriizle"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=asyalog.co&sz=%size%",
+        "fileHash": "sha256-eaa93d5fdb745370ed23d902ad3e21bc6b2dabf4c0d231e380c3462a9b7d6163",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 26891,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 6,
+        "internalName": "AsyaLog",
+        "description": "AsyaLog \u2014 Asya dizileri ve filmleri (asyalog.co)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/AsyaLog.cs3",
+        "name": "AsyaLog"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=asyaluna.com&sz=%size%",
+        "fileHash": "sha256-04f924fcdc05a96c5d714ce2bad93ed745d579c736f462885d81144c97c7aa93",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 34075,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 2,
+        "internalName": "AsyaLuna",
+        "description": "AsyaLuna \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/AsyaLuna.cs3",
+        "name": "AsyaLuna"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=asyawatch.com&sz=%size%",
+        "fileHash": "sha256-0903bed7bb09388dab26ed8def22b56afd9add79467583d18a2d930f34ddaa6c",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 36522,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 3,
+        "internalName": "AsyaWatch",
+        "description": "AsyaWatch \u2014 Kore ve Asya web dramalar\u0131, T\u00fcrk\u00e7e altyaz\u0131l\u0131 (asyawatch.com)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/AsyaWatch.cs3",
+        "name": "AsyaWatch"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=atv.com.tr&sz=%size%",
+        "fileHash": "sha256-74d10fde368e711ad954ac76740957398d181c978cc3376895e4f8da48071776",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 30474,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "ATV",
+        "description": "ATV \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/ATV.cs3",
+        "name": "ATV"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=belgeselx.com&sz=%size%",
+        "fileHash": "sha256-246381b73f7778dddc09cc66e6dfa256e6c01a123782b5a72b2f5b20ab990232",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 34128,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 4,
+        "internalName": "BelgeselX",
+        "description": "BelgeselX \u2014 T\u00fcrk\u00e7e belgesel ar\u015fivi (belgeselx.com)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/BelgeselX.cs3",
+        "name": "BelgeselX"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=birasyadizi.cx&sz=%size%",
+        "fileHash": "sha256-af793072702753d5d5450ca38ae8c8f048aac50cabc01935eae3426189590ae0",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 32670,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "BirAsyaDizi",
+        "description": "BirAsyaDizi \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/BirAsyaDizi.cs3",
+        "name": "BirAsyaDizi"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=canlidizi.sbs&sz=%size%",
+        "fileHash": "sha256-cd8d117116784d13dec622b99e2e95e7bb9064062ef15894990f110dc24300cc",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 29770,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "CanliDizi",
+        "description": "CanliDizi \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/CanliDizi.cs3",
+        "name": "CanliDizi"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=iptv-org.github.io&sz=%size%",
+        "fileHash": "sha256-e37fbcda81afa866b1e9aa375e04746e1bd1be14340c3b5f28d03ea0cb21882a",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 15967,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Live"
+        ],
+        "version": 3,
+        "internalName": "CanliTV",
+        "description": "CanliTV \u2014 iptv-org T\u00fcrkiye canl\u0131 TV listesi (ulusal, haber, spor, \u00e7ocuk, m\u00fczik)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/CanliTV.cs3",
+        "name": "CanliTV"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain={base}&sz=%size%",
+        "fileHash": "sha256-24fd367b190d1ab9182b1cf592e2917cc4d20e863c089ffcbe91d31eeb2eba02",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 14783,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Live"
+        ],
+        "version": 3,
+        "internalName": "CanliYayinKanallari",
+        "description": "CanliYayinKanallari \u2014 T\u00fcrk\u00e7e canl\u0131 TV (do\u011frulanm\u0131\u015f HLS)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/CanliYayinKanallari.cs3",
+        "name": "CanliYayinKanallari"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=cizgimax.online&sz=%size%",
+        "fileHash": "sha256-28cafe0ee5c88f1525a3864a0ca43dcf3d937975e580908ea3db2ff786f8e63d",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 38293,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 7,
+        "internalName": "Cizgimax",
+        "description": "\u00c7izgiMax \u2014 \u00e7izgi film, anime ve dizi izle (cizgimax.online)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Cizgimax.cs3",
+        "name": "Cizgimax"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=cizgi.site&sz=%size%",
+        "fileHash": "sha256-0a0c9db9a916c78c7c911c425d91c9e5691195ba3b5a187585891d77b73f8f56",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 21731,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "CizgiSite",
+        "description": "CizgiSite \u2014 T\u00fcrk\u00e7e \u00e7izgi film ar\u015fivi",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/CizgiSite.cs3",
+        "name": "CizgiSite"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=ddizi.tel&sz=%size%",
+        "fileHash": "sha256-6b519175c3ed6fcda97583b2428be6144b1296a43ac0d651397c75d1e4916542",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 28253,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 3,
+        "internalName": "Ddizi",
+        "description": "DDizi \u2014 T\u00fcrk\u00e7e dizi izle (ddizi.im \u2192 ddizi.tel)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Ddizi.cs3",
+        "name": "Ddizi"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=ddizimag.com&sz=%size%",
+        "fileHash": "sha256-870125105d56b9f4af63bbe955bee8e934b139634e8483003a5ad4d29a9fc105",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 29766,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "DDizimag",
+        "description": "DDizimag \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DDizimag.cs3",
+        "name": "DDizimag"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=deokwave.com&sz=%size%",
+        "fileHash": "sha256-b286b735697ebd1d3a40b06119cf9a8661f931cb0469efc763900d5169686033",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 36421,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "Deokwave",
+        "description": "Deokwave \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Deokwave.cs3",
+        "name": "Deokwave"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=diziabi.net&sz=%size%",
+        "fileHash": "sha256-7ca7aca69764e6f56ec2698529d1b9bec943a30a7afd1338f0dd405f527d2ce4",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 29732,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "DiziAbi",
+        "description": "DiziAbi \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DiziAbi.cs3",
+        "name": "DiziAbi"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=diziasia.com&sz=%size%",
+        "fileHash": "sha256-c757a897700003d7635c33fb839769272ffa545548fefc2c80950c076a60dd0b",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 30029,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 5,
+        "internalName": "Diziasia",
+        "description": "DiziAsia \u2014 Asya dizileri ve filmleri (diziasia.com)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Diziasia.cs3",
+        "name": "Diziasia"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizibaba.net&sz=%size%",
+        "fileHash": "sha256-87b13f2d94f5763cd2b0d79ce26581784ebd11815b88a097e3b0bbb689d5bb93",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 18725,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "Dizibaba",
+        "description": "Dizibaba \u2014 T\u00fcrk\u00e7e dublaj/altyaz\u0131l\u0131 film ar\u015fivi",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Dizibaba.cs3",
+        "name": "Dizibaba"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizibal.org&sz=%size%",
+        "fileHash": "sha256-f7559b6332759e442c543dbc883a2a2a9c37bd53d9944f8a20602de90be2f2c2",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 33634,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 4,
+        "internalName": "DiziBal",
+        "description": "DiziBal \u2014 altyaz\u0131l\u0131 yabanc\u0131 dizi ve film ar\u015fivi (dizibal.org)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DiziBal.cs3",
+        "name": "DiziBal"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizibol.org&sz=%size%",
+        "fileHash": "sha256-f8f4572101ef1bffdefa0c6717d5fe9adc5a79a67b7d27206a082882c54402f2",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 33374,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "DiziBol",
+        "description": "DiziBol \u2014 altyaz\u0131l\u0131 yabanc\u0131 dizi ve film ar\u015fivi (dizibol.org)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DiziBol.cs3",
+        "name": "DiziBol"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizibox.live&sz=%size%",
+        "fileHash": "sha256-1993339ff4dd520fbd89c9826212c46b80bf66ce5e90d04201e883f681b9e2e6",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 29594,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 9,
+        "internalName": "Dizibox",
+        "description": "DiziBox \u2014 yabanc\u0131 dizi izle (dizibox.live mirror'lar\u0131)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Dizibox.cs3",
+        "name": "Dizibox"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=diziboxizle.com&sz=%size%",
+        "fileHash": "sha256-4cfda1eee4f2a909d1752610543539563d8be7b9bcd6f73544d7f57d049e3386",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 28681,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 6,
+        "internalName": "DiziboxIzle",
+        "description": "DiziboxIzle \u2014 g\u00fcncel yabanc\u0131 dizi (diziboxizle.com)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DiziboxIzle.cs3",
+        "name": "DiziboxIzle"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=diziboxtv.com&sz=%size%",
+        "fileHash": "sha256-f273f77fcc384795712ff5f681be22a073d8f5a6c1226540fe6bae138ff92f2b",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 29873,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "DiziBoxTv",
+        "description": "DiziBoxTv \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DiziBoxTv.cs3",
+        "name": "DiziBoxTv"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizican.cc&sz=%size%",
+        "fileHash": "sha256-5022ae5c37bbfcb1fdcc298ff45b88b1ba1bf8b23b2024c847aa67643ff51746",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 29961,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "DiziCaN",
+        "description": "DiziCaN \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DiziCaN.cs3",
+        "name": "DiziCaN"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizifilmizle.to&sz=%size%",
+        "fileHash": "sha256-35e24ebe1f03d248ce3bb15256a947e23c678ad42d5e5f2bbd88a6883564286a",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 31990,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 2,
+        "internalName": "DiziFilmIzle",
+        "description": "DiziFilmIzle \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DiziFilmIzle.cs3",
+        "name": "DiziFilmIzle"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizifon.cc&sz=%size%",
+        "fileHash": "sha256-e5fec2cd19615ea8ec56770b12e50483343b6ddee66454a9f8b8a229828fccaf",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 33747,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 2,
+        "internalName": "Dizifon",
+        "description": "Dizifon \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Dizifon.cs3",
+        "name": "Dizifon"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizigecesi.com&sz=%size%",
+        "fileHash": "sha256-1fa06e8c56314b9b8eea40f45d9a1171d5fe219d379c9ffb79f7fb5d6529d017",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 32896,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 3,
+        "internalName": "Dizigecesi",
+        "description": "Dizigecesi \u2014 T\u00fcrk\u00e7e dublaj/altyaz\u0131l\u0131 film ar\u015fivi",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Dizigecesi.cs3",
+        "name": "Dizigecesi"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizigom.news&sz=%size%",
+        "fileHash": "sha256-1daa01fa45ac4a9b3b2c32837c72952072c78a829340b65a4028c4f9746f5bab",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 29772,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "Dizigom",
+        "description": "Dizigom \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Dizigom.cs3",
+        "name": "Dizigom"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizikorea3.com&sz=%size%",
+        "fileHash": "sha256-6899e1d490f0e920473ef8a364a4994846f107478ec657683a8b46abfd8f20b6",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 28727,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 5,
+        "internalName": "Dizikorea3",
+        "description": "Dizikorea3 \u2014 Kore/Asya dizileri ve filmleri (dizikorea3.com)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Dizikorea3.cs3",
+        "name": "Dizikorea3"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizilab.cc&sz=%size%",
+        "fileHash": "sha256-124a67be51f20108ead94bc42119c20ca10bf8c63696196a9102487fa87cdbb4",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 19023,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "Dizilab",
+        "description": "Dizilab \u2014 T\u00fcrk\u00e7e altyaz\u0131l\u0131/dublajl\u0131 yabanc\u0131 diziler",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Dizilab.cs3",
+        "name": "Dizilab"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizi82.life&sz=%size%",
+        "fileHash": "sha256-65efe57c3cdd6caf52e04f9c0528c5d2b41e0fe958670fd6d109212c5bb85376",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 30483,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 5,
+        "internalName": "DiziLife",
+        "description": "DiziLife \u2014 dizi74.life (dizi82.life) dizi ve film ar\u015fivi",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DiziLife.cs3",
+        "name": "DiziLife"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizilla.nl&sz=%size%",
+        "fileHash": "sha256-4adb0db38d0cc88f74df8aad3b1bf3cac3ddf4d31d2195dfbb3ffa65e17d4ccf",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 32180,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 8,
+        "internalName": "Dizilla",
+        "description": "Dizilla \u2014 yabanc\u0131 dizi izle (dizilla.nl mirror'\u0131)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Dizilla.cs3",
+        "name": "Dizilla"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=ddizimom.net&sz=%size%",
+        "fileHash": "sha256-d8952ce23246b1ab42a13c31ab0436762f2f216e39086d4890835e27065dd448",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 26517,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 7,
+        "internalName": "DiziMom",
+        "description": "DiziMom \u2014 yabanc\u0131 dizi izle, T\u00fcrk\u00e7e dublaj & altyaz\u0131 (ddizimom.net)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DiziMom.cs3",
+        "name": "DiziMom"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizipal1592.com&sz=%size%",
+        "fileHash": "sha256-87b66f2914dca6a0d6ee74950e42a0198ac7eb72ca52c27ad877ee4b21f2453c",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 37902,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 3,
+        "internalName": "DiziPal",
+        "description": "DiziPal \u2014 T\u00fcrk\u00e7e dizi & film ar\u015fivi, platform b\u00f6l\u00fcmleri (dizipal1592.com)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DiziPal.cs3",
+        "name": "DiziPal"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizipod.com&sz=%size%",
+        "fileHash": "sha256-7c0a227c076f8ec947afd0ecfeae1cc912e40e6f8dac3d5822110b6caa9e8735",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 31982,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 4,
+        "internalName": "DiziPod",
+        "description": "DiziPod \u2014 T\u00fcrk\u00e7e altyaz\u0131l\u0131 yabanc\u0131 dizi & film ar\u015fivi (dizipod.com)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DiziPod.cs3",
+        "name": "DiziPod"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizirella.one&sz=%size%",
+        "fileHash": "sha256-f608e84739658f4f7f11a18a050bd312f83ec1868d21fe7fb3cbe6dc04cd9934",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 29812,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "Dizirella",
+        "description": "Dizirella \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Dizirella.cs3",
+        "name": "Dizirella"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=diziyou.one&sz=%size%",
+        "fileHash": "sha256-1b5ec86a72be6cbdb5097aa4d63cafeecd640f641c0b24adb15d286177f2af0f",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 23322,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 6,
+        "internalName": "DiziYou",
+        "description": "DiziYou \u2014 T\u00fcrk\u00e7e dublaj & altyaz\u0131l\u0131 yabanc\u0131 dizi (diziyou.one)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DiziYou.cs3",
+        "name": "DiziYou"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dmax.com.tr&sz=%size%",
+        "fileHash": "sha256-aad515d3cf8b4a597ae5525d63e21ed59aa5972212011d05f9655a1df991582e",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 20347,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "DMAX",
+        "description": "DMAX \u2014 belgesel ve program b\u00f6l\u00fcmleri",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DMAX.cs3",
+        "name": "DMAX"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dramadizilerim.com&sz=%size%",
+        "fileHash": "sha256-cf8a93470d25bf6eb767610101979a68a4a654641c897dd0849e3ed4c831879f",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 26295,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 4,
+        "internalName": "DramaDizilerim",
+        "description": "DramaDizilerim \u2014 dikey mini dizi & k\u0131sa dizi ar\u015fivi, T\u00fcrk\u00e7e dublaj/altyaz\u0131l\u0131 (dramadizilerim.com)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/DramaDizilerim.cs3",
+        "name": "DramaDizilerim"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=filmekseni.vip&sz=%size%",
+        "fileHash": "sha256-d2c60b0f4abfe2c9abf4036a90f58130c5355471dc919a1c33bcb6f0fc8286d7",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 28432,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 4,
+        "internalName": "FilmEkseni",
+        "description": "FilmEkseni \u2014 T\u00fcrk\u00e7e dublaj film ar\u015fivi (filmekseni.vip)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/FilmEkseni.cs3",
+        "name": "FilmEkseni"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=filmizleya.com&sz=%size%",
+        "fileHash": "sha256-cdc030a961337e3ff8c3ae0a3ae30b1f0ff5257737b8622dd0bc09bc273570a2",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 32446,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "Filmizleya",
+        "description": "Filmizleya \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Filmizleya.cs3",
+        "name": "Filmizleya"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=filmizyon.net&sz=%size%",
+        "fileHash": "sha256-20bad443e8da0bafa14b70d235430e54c11dd2b93830650a095ffd80d3f4dd6b",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 29925,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "Filmizyon",
+        "description": "Filmizyon \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Filmizyon.cs3",
+        "name": "Filmizyon"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=filmmodu.news&sz=%size%",
+        "fileHash": "sha256-1d8f44de05831e8476be49bb83f53bff3acb4d6de93c731b27fc38140786a5ff",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 22927,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 4,
+        "internalName": "FilmModu",
+        "description": "Filmmodu \u2014 T\u00fcrk\u00e7e dublaj & altyaz\u0131l\u0131 film ar\u015fivi (filmmodu.news)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/FilmModu.cs3",
+        "name": "FilmModu"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=fullhdfilmizlebox.vip&sz=%size%",
+        "fileHash": "sha256-89a4f4f3e1d10879c4479b953ae3fe82a1a89287644be82a3f5829de80625d57",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 25937,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 4,
+        "internalName": "FullHDFilm",
+        "description": "FullHDFilm \u2014 fullhdfilmizlebox.vip (T\u00fcrk\u00e7e dublaj & altyaz\u0131)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/FullHDFilm.cs3",
+        "name": "FullHDFilm"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=fullhdfilmizlesene.now&sz=%size%",
+        "fileHash": "sha256-01edb4d76af61939e8c5d8b8c7ce8c97369d7e15cccf099ee2cbbe8d177f63df",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 25153,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 3,
+        "internalName": "FullHDFilmizlesene",
+        "description": "FullHDFilmizlesene \u2014 fullhdfilmizlesene.now (T\u00fcrk\u00e7e dublaj/altyaz\u0131l\u0131 film ar\u015fivi)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/FullHDFilmizlesene.cs3",
+        "name": "FullHDFilmizlesene"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmcehennemi.nl&sz=%size%",
+        "fileHash": "sha256-beb3b1f898f6cb6d4bf86b1ee243c1fd0e4fe62ad73cc48043c31d7ea2c5863d",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 26532,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 6,
+        "internalName": "HDFilmCehennemi",
+        "description": "HDFilmCehennemi \u2014 hd film izle (hdfilmcehennemi.nl)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/HDFilmCehennemi.cs3",
+        "name": "HDFilmCehennemi"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmcehennemi2.biz&sz=%size%",
+        "fileHash": "sha256-3ab8585befd1ff76dad84c50a3b0c754496b0dc4e80538454465244edb4e8212",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 38547,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "HDFilmCehennemi2",
+        "description": "HDFilmCehennemi2 \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/HDFilmCehennemi2.cs3",
+        "name": "HDFilmCehennemi2"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmdelisi.one&sz=%size%",
+        "fileHash": "sha256-0ff9e33aeac2c9dc8afa1b3affc02efece7e8f937988c8f247020ba697bcfd8f",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 41056,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 2,
+        "internalName": "HDFilmDelisi",
+        "description": "HDFilmDelisi \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/HDFilmDelisi.cs3",
+        "name": "HDFilmDelisi"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmdiziizle.com&sz=%size%",
+        "fileHash": "sha256-a55d60cfba24b618fa436463a4d9d4e24748a977465dda4eab7065a9b5308cd3",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 30712,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "HDFilmDiziIzle",
+        "description": "HDFilmDiziIzle \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/HDFilmDiziIzle.cs3",
+        "name": "HDFilmDiziIzle"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmizle.ink&sz=%size%",
+        "fileHash": "sha256-43e326e3a76621b853219f4dcfe64bb40fb5313f5c8a5e30b11e4edb34b28142",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 37480,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 3,
+        "internalName": "HDFilmizle",
+        "description": "HDFilmizle \u2014 Full HD film ve yabanc\u0131 dizi ar\u015fivi (hdfilmizle.ink)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/HDFilmizle.cs3",
+        "name": "HDFilmizle"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmizle.best&sz=%size%",
+        "fileHash": "sha256-b076d2b55f181eb6d7b2be5d2fee55b8a26ba6dc4c573448d57f9200774dc8ba",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 36276,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "HDFilmizleBest",
+        "description": "HDFilmizleBest \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/HDFilmizleBest.cs3",
+        "name": "HDFilmizleBest"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=diziboxen.help&sz=%size%",
+        "fileHash": "sha256-e7cfaaf5ed7eb164ee24a095966d071ff794560e9c1f54bbc73b00fe4266b406",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 58432,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Live",
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "InatBox",
+        "description": "Inat Baks \u2014 35 listeli canl\u0131 TV, spor ve film/dizi ar\u015fivi (imzal\u0131 Inat API)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/InatBox.cs3",
+        "name": "InatBox"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=jetfilmizle.app&sz=%size%",
+        "fileHash": "sha256-6b3ce223c8430609cbd1482db5a8a9d3799072042536cfddddb7998c907f04c8",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 39008,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 4,
+        "internalName": "JetFilmizle",
+        "description": "JetFilmizle \u2014 T\u00fcrk\u00e7e dublaj/altyaz\u0131l\u0131 film izle (jetfilmizle.app)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/JetFilmizle.cs3",
+        "name": "JetFilmizle"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=kanald.com.tr&sz=%size%",
+        "fileHash": "sha256-d4b405cc3863cb49c58ab7ce91ba26277396afab60e0fadabaff55a9ddd8e176",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 21467,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "KanalD",
+        "description": "Kanal D \u2014 dizi ve program b\u00f6l\u00fcmleri",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/KanalD.cs3",
+        "name": "KanalD"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=koreanturk.tv&sz=%size%",
+        "fileHash": "sha256-72f6d1b5058975c31651eacf5903f2d634bfee9576e0abe7b5c608b82d8c10aa",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 22060,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 4,
+        "internalName": "KoreanTurk",
+        "description": "KoreanTurk \u2014 Kore dizileri T\u00fcrk\u00e7e altyaz\u0131l\u0131 (koreanturk.tv)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/KoreanTurk.cs3",
+        "name": "KoreanTurk"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=kultfilmler.net&sz=%size%",
+        "fileHash": "sha256-63bbb0233bdf5fed6998cf2ecd03133223480de2d81f9b625be637ced62f5548",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 25174,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 6,
+        "internalName": "Kultfilmler",
+        "description": "K\u00fclt Filmler \u2014 kultfilmler.net",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Kultfilmler.cs3",
+        "name": "Kultfilmler"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=lovefilmizle.net&sz=%size%",
+        "fileHash": "sha256-d4f44daec09593b33d6ad86486f8c6725e7321f2f21ba20272faed5785becfc1",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 28762,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 3,
+        "internalName": "LoveFilm",
+        "description": "LoveFilm \u2014 T\u00fcrk\u00e7e dublaj & altyaz\u0131l\u0131 film ar\u015fivi (lovefilmizle.net)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/LoveFilm.cs3",
+        "name": "LoveFilm"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=minikacocuk.com.tr&sz=%size%",
+        "fileHash": "sha256-96d43df821cc1fd183532ea037d64c4ae5638e6698dbf6e0667ae27e958dd5b1",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 17599,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 2,
+        "internalName": "MinikaCocuk",
+        "description": "MinikaCocuk \u2014 T\u00fcrk\u00e7e \u00e7ocuk \u00e7izgi filmleri",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/MinikaCocuk.cs3",
+        "name": "MinikaCocuk"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=minikago.com.tr&sz=%size%",
+        "fileHash": "sha256-26a10a2952e104459ca269a09bc533d4b8eca3fb836f2799e84fa83fbf83edce",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 17634,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "MinikaGO",
+        "description": "MinikaGO \u2014 \u00e7ocuk dizileri ve b\u00f6l\u00fcmleri (MP4)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/MinikaGO.cs3",
+        "name": "MinikaGO"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=netfilmizle.com&sz=%size%",
+        "fileHash": "sha256-6a2934448a4ebc7344f836d03569fe5f7d006dd4d142ad0301e5d899118c8a1a",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 23922,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "NetFilmizle",
+        "description": "NetFilmizle \u2014 T\u00fcrk\u00e7e dublaj/altyaz\u0131l\u0131 film ar\u015fivi",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/NetFilmizle.cs3",
+        "name": "NetFilmizle"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=onepacetr.net&sz=%size%",
+        "fileHash": "sha256-4437dc83320b3c7c150c5f050d7e3843d4e1b33d99fab6cec6f89f3638eeffba",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 22032,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Anime"
+        ],
+        "version": 5,
+        "internalName": "Onepacetr",
+        "description": "One Pace TR \u2014 One Piece fan edit, T\u00fcrk\u00e7e altyaz\u0131l\u0131 (onepacetr.net)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Onepacetr.cs3",
+        "name": "Onepacetr"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=selcukflix.app&sz=%size%",
+        "fileHash": "sha256-e513cbbf379e463fa9e6c8910270807e2dbc0e498b38e329f256c7d6e818b134",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 35067,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 3,
+        "internalName": "SelcukFlix",
+        "description": "Selcukflix \u2014 T\u00fcrk\u00e7e dublaj & altyaz\u0131l\u0131 film ve dizi ar\u015fivi (selcukflix.app)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/SelcukFlix.cs3",
+        "name": "SelcukFlix"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=setfilmizle.ltd&sz=%size%",
+        "fileHash": "sha256-1fad45d0c02ba8f4de3b54adaaf520b303fe3428cd2a0f60521ae70238305f20",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 32183,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 5,
+        "internalName": "SetFilmIzle",
+        "description": "SetFilmIzle \u2014 T\u00fcrk\u00e7e dublaj & altyaz\u0131l\u0131 film ve dizi ar\u015fivi (setfilmizle.ltd)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/SetFilmIzle.cs3",
+        "name": "SetFilmIzle"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=sezonlukdizi.cc&sz=%size%",
+        "fileHash": "sha256-9103c8007a097618a1cadc48db87f70c5b42a73d9c8be2c004e0cdd5716a62ff",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 42541,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 6,
+        "internalName": "Sezonlukdizi",
+        "description": "SezonlukDizi \u2014 yabanc\u0131 dizi izle (sezonlukdizi.cc)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Sezonlukdizi.cs3",
+        "name": "Sezonlukdizi"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=showtv.com.tr&sz=%size%",
+        "fileHash": "sha256-e68c01a873ecc6b010929946cd008c3a9c248d75c116a1c49765ab0ffd2a6cd1",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 20703,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "ShowTV",
+        "description": "Show TV \u2014 dizi ve program b\u00f6l\u00fcmleri",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/ShowTV.cs3",
+        "name": "ShowTV"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=sinemacc.com&sz=%size%",
+        "fileHash": "sha256-6d686eb62b8b8b2ebbfd7daf48c3a77eafbc95c421b34591753a6f70e5624356",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 25467,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 3,
+        "internalName": "SinemaCX",
+        "description": "SinemaCX \u2014 T\u00fcrk\u00e7e dublaj & altyaz\u0131l\u0131 film ar\u015fivi (sinemacc.com)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/SinemaCX.cs3",
+        "name": "SinemaCX"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=sinemakolik.com&sz=%size%",
+        "fileHash": "sha256-c506c4c35a37f2fb8e2298a00dddf9849c96757adb28a5427559003a27008300",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 23597,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "Sinemakolik",
+        "description": "Sinemakolik \u2014 T\u00fcrk\u00e7e dublaj/altyaz\u0131l\u0131 film ar\u015fivi",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Sinemakolik.cs3",
+        "name": "Sinemakolik"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=sinezy.si&sz=%size%",
+        "fileHash": "sha256-fc87b551562115382564c3b5e2dd54d8f2e8e4866df8345fef8572664c9c239b",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 21033,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "Sinezy",
+        "description": "Sinezy \u2014 T\u00fcrk\u00e7e dublaj/altyaz\u0131l\u0131 film ar\u015fivi",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Sinezy.cs3",
+        "name": "Sinezy"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=sonanime.com&sz=%size%",
+        "fileHash": "sha256-87f019137df6350dbe9eed1d36842ada1844bfd8221d8f22179ab5f30d4de69a",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 31347,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "SonAnime",
+        "description": "SonAnime \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/SonAnime.cs3",
+        "name": "SonAnime"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=startv.com.tr&sz=%size%",
+        "fileHash": "sha256-cd2f38eeb340a65318a59c9da080c8c233aa0a9a572022158241242471e5d2da",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 23239,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 2,
+        "internalName": "StarTV",
+        "description": "StarTV \u2014 Yal\u0131 \u00c7apk\u0131n\u0131 ve di\u011fer dizilerin b\u00f6l\u00fcmleri",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/StarTV.cs3",
+        "name": "StarTV"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=tlctv.com.tr&sz=%size%",
+        "fileHash": "sha256-9c40be4fa590599b5754252ba74c16876f8a5f17d040b0468a5e84892bbf5d2e",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 28803,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Live"
+        ],
+        "version": 4,
+        "internalName": "TLCtr",
+        "description": "TLCtr \u2014 TLC T\u00fcrkiye: ger\u00e7ek hikayeler, belgesel ve dizi b\u00f6l\u00fcmleri + canl\u0131 yay\u0131n (tlctv.com.tr)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/TLCtr.cs3",
+        "name": "TLCtr"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=turkcedizi.com&sz=%size%",
+        "fileHash": "sha256-a183b0f1d2d99906a420a3f3e7bff483f9e99ab41f918ba40cf45531978bee34",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 30963,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "TurkceDizi",
+        "description": "TurkceDizi \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/TurkceDizi.cs3",
+        "name": "TurkceDizi"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=tv8.com.tr&sz=%size%",
+        "fileHash": "sha256-23ae5284e3eb5babfacaf35dab7efffc2e1afb19efdaa8d525885bfd001b1bff",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 19118,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "TV8",
+        "description": "TV8 \u2014 program ve dizi b\u00f6l\u00fcmleri",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/TV8.cs3",
+        "name": "TV8"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=ufilmizle.com&sz=%size%",
+        "fileHash": "sha256-11ec70012ff4b3d65af48356c7fc8890f581bb647aeefce495ed33280e1aab49",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 23652,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "UltraFilmizle",
+        "description": "UltraFilmizle \u2014 T\u00fcrk\u00e7e dublaj/altyaz\u0131l\u0131 film ar\u015fivi",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/UltraFilmizle.cs3",
+        "name": "UltraFilmizle"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=webdramaturkey2.com&sz=%size%",
+        "fileHash": "sha256-89228f859769ab92052eb9e0e7c723fe537bc75efce090de3497a6117adf5d67",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 33476,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Anime"
+        ],
+        "version": 4,
+        "internalName": "WebdramaTurkey2",
+        "description": "WebdramaTurkey2 \u2014 Kore, \u00c7in ve Japon dizileri, TR altyaz\u0131l\u0131 (webdramaturkey2.com)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/WebdramaTurkey2.cs3",
+        "name": "WebdramaTurkey2"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=weboo.com.tr&sz=%size%",
+        "fileHash": "sha256-b351b095b7f577a93e72ebeb46f11022206c933c719ebe6fb6cbcc3e255c9cd3",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 29811,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "Weboo",
+        "description": "Weboo \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Weboo.cs3",
+        "name": "Weboo"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=yabancidizi.live&sz=%size%",
+        "fileHash": "sha256-bdda2cbd1ddc56cdbd197d1e125e9e20242ef3d475d1428631321bd0ff6a3733",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 34859,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 5,
+        "internalName": "Yabancidizi",
+        "description": "Yabanc\u0131dizi \u2014 yabancidizi.live (dizi, film, anime)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/Yabancidizi.cs3",
+        "name": "Yabancidizi"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=yesilcamtv.com.tr&sz=%size%",
+        "fileHash": "sha256-081f172d546bf0baf918e1c574d7525f7bdbe25ef4cca3dd5a8966135385b623",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/F0Rextasy/bigbullapp-cs",
+        "fileSize": 28871,
+        "status": 3,
+        "language": "tr",
+        "authors": [
+            "F0Rextasy"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "YesilCamTv",
+        "description": "YesilCamTv \u2014 T\u00fcrk\u00e7e i\u00e7erik (autopilot)",
+        "url": "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/YesilCamTv.cs3",
+        "name": "YesilCamTv"
+    }
+]
