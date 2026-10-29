@@ -63,7 +63,8 @@ class DiziasiaProvider : MainAPI() {
     private fun Element.toSearchResult(): SearchResponse? {
         val href = fixUrlNull(attr("href")) ?: return null
         if (href.contains("sezon")) return null
-        val title = selectFirst("h3.title")?.text()?.trim().orEmpty()
+        val title = selectFirst("h3.title")?.text()?.trim()?.takeIf { it.isNotBlank() }
+            ?: selectFirst("img[alt]")?.attr("alt")?.trim().orEmpty()
         if (title.isBlank()) return null
         val poster = fixUrlNull(selectFirst("img[data-src]")?.attr("data-src"))
         val year = select("ul li").lastOrNull()?.text()?.trim()?.toIntOrNull()
