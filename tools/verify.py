@@ -41,8 +41,8 @@ def get(url: str, ref: str | None = None, data: bytes | None = None, timeout: in
         with urllib.request.urlopen(req, timeout=timeout, context=CTX) as resp:
             return resp.read(2_000_000).decode("utf-8", "replace")
     except urllib.error.HTTPError as exc:
-        if retries and exc.code >= 500:
-            time.sleep(3)
+        if retries and (exc.code >= 500 or exc.code == 429):
+            time.sleep(5)
             return get(url, ref, data, timeout, retries - 1)
         raise
     except Exception:
@@ -80,21 +80,15 @@ def absolute(b: str, pattern: str, text: str) -> str | None:
 
 def verify_dizibox() -> dict:
     b = base("dizibox.live")
-    body = get(
-        f"{b}/wp-admin/admin-ajax.php",
-        data=urllib.parse.urlencode({"action": "dwls_search", "query": "love is blind"}).encode(),
-    )
-    results = json.loads(body).get("results") or []
-    candidates = [
-        urllib.parse.urljoin(b, f"/diziler/{r['post_name']}/")
-        for r in results
-        if r.get("post_type") == "diziler" and r.get("post_name")
-    ][:2]
+    search = get(f"{b}/search/love+is+blind/")
+    candidates = re.findall(
+        r'<article class="detailed-article".*?<h3[^>]*><a href="([^"]+)"', search, re.S
+    )[:2]
     episode = None
     time.sleep(2)  # the site throttles bursts of series requests
     for candidate in candidates:
         for attempt in range(2):
-            detail = get(candidate)
+            detail = get(urllib.parse.urljoin(b, candidate))
             episode = absolute(b, r'href="([^"]+)"[^>]*class="season-episode', detail)
             if episode:
                 break
@@ -116,7 +110,7 @@ def verify_dizibox() -> dict:
     playlist = get(stream, ref=embed)
     return {
         "ok": playlist.startswith("#EXTM3U"),
-        "detail": f"search={len(results)} episodes=yes stream={stream[:60]}",
+        "detail": f"search={len(candidates)} episodes=yes stream={stream[:60]}",
     }
 
 
