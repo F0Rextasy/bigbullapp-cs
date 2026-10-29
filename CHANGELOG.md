@@ -5,6 +5,12 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.2.2] - 2026-10-29
+
+### Düzeltildi
+
+- **DiziBox**: site zaman zaman bölümsüz/boş sayfa döndürdüğünde `load` iki kez daha deniyor.
+
 ## [1.2.1] - 2026-10-29
 
 ### Eklendi

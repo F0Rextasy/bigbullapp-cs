@@ -113,8 +113,13 @@ class DiziboxProvider : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val doc = runCatching { app.get(url, headers = uaHeaders).document }
+        var doc = runCatching { app.get(url, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
+        var attempts = 0
+        while (doc.select("a.season-episode").isEmpty() && attempts < 2) {
+            attempts++
+            doc = runCatching { app.get(url, headers = uaHeaders).document }.getOrNull() ?: doc
+        }
         val title = doc.selectFirst("div.tv-overview h1 a")?.text()?.trim()?.takeIf { it.isNotBlank() }
             ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
 
