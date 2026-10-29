@@ -1,0 +1,84 @@
+package com.allcalidad
+
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.Context
+import android.content.SharedPreferences
+import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.Spinner
+import android.widget.TextView
+
+/** Preferencias del plugin: límite de calidad y filtro de subtítulos. */
+object Settings {
+    private const val FILE = "bigbull_allcalidad"
+    private var prefs: SharedPreferences? = null
+
+    private val qualityLabels = arrayOf("Sin límite", "1080p", "720p", "480p", "360p")
+    private val qualityValues = intArrayOf(0, 1080, 720, 480, 360)
+    private val subtitleLabels = arrayOf("Todos", "Español", "Inglés", "Desactivado")
+    private val subtitleValues = arrayOf("all", "es", "en", "off")
+
+    fun init(context: Context) {
+        prefs = context.applicationContext.getSharedPreferences(FILE, Context.MODE_PRIVATE)
+    }
+
+    var qualityCap: Int
+        get() = prefs?.getInt("quality_cap", 0) ?: 0
+        set(value) {
+            prefs?.edit()?.putInt("quality_cap", value)?.apply()
+        }
+
+    var subtitleLang: String
+        get() = prefs?.getString("subtitle_lang", "all") ?: "all"
+        set(value) {
+            prefs?.edit()?.putString("subtitle_lang", value)?.apply()
+        }
+
+    fun qualityAllowed(quality: Int): Boolean {
+        val cap = qualityCap
+        return cap == 0 || quality <= 0 || quality <= cap
+    }
+
+    fun subtitleAllowed(language: String?): Boolean {
+        val pref = subtitleLang
+        if (pref == "off") return false
+        if (pref == "all") return true
+        val label = language?.lowercase().orEmpty()
+        return when (pref) {
+            "es" -> label.contains("es") || label.contains("span") || label.contains("latino")
+            "en" -> label.contains("en") || label.contains("ingl")
+            else -> true
+        }
+    }
+
+    fun showDialog(context: Context, title: String) {
+        val activity = context as? Activity ?: return
+        val layout = LinearLayout(activity).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(64, 40, 64, 16)
+        }
+        layout.addView(TextView(activity).apply { text = "Calidad máxima" })
+        val qualitySpinner = Spinner(activity).apply {
+            adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, qualityLabels)
+            setSelection(qualityValues.indexOf(qualityCap).coerceAtLeast(0))
+        }
+        layout.addView(qualitySpinner)
+        layout.addView(TextView(activity).apply { text = "Subtítulos" })
+        val subtitleSpinner = Spinner(activity).apply {
+            adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, subtitleLabels)
+            setSelection(subtitleValues.indexOf(subtitleLang).coerceAtLeast(0))
+        }
+        layout.addView(subtitleSpinner)
+
+        AlertDialog.Builder(activity)
+            .setTitle(title)
+            .setView(layout)
+            .setPositiveButton("Guardar") { _, _ ->
+                qualityCap = qualityValues[qualitySpinner.selectedItemPosition]
+                subtitleLang = subtitleValues[subtitleSpinner.selectedItemPosition]
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+}

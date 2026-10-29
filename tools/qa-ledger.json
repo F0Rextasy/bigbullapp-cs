@@ -1,0 +1,294 @@
+{
+  "generated": "2026-10-29",
+  "note": "pass = izole emülatör + sağlayıcı adı doğrulaması; pass-unverified = eski harness, yeniden koşulmalı",
+  "modules": [
+    {
+      "module": "AllCalidad",
+      "result": "pass",
+      "evidence": "İzole emülatör + result_meta_site eşleşmesi",
+      "runner": "emu_ledger.py v3 (isolated)"
+    },
+    {
+      "module": "AnimeIndo",
+      "result": "fail",
+      "evidence": "Blogger video.g 403 (pot tokenı yok)",
+      "runner": "emu_ledger.py v3 (isolated)"
+    },
+    {
+      "module": "AnimeWorld",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "AnimeYTX",
+      "result": "fail",
+      "evidence": "İzole test: sonuç yok / /yt POST boş",
+      "runner": "emu_ledger.py v3 (isolated)"
+    },
+    {
+      "module": "Anizium",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Anizm",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "AreaDocumental",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "AsyaAnimeleri",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "AsyaLog",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "BelgeselX",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "CanliTV",
+      "result": "fail",
+      "evidence": "Canlı TV; film/dizi kapsamı dışı",
+      "runner": "emu_ledger.py v3 (isolated)"
+    },
+    {
+      "module": "CanliTVMe",
+      "result": "fail",
+      "evidence": "Domain ölü (canlitv.me DNS yok)",
+      "runner": "emu_ledger.py v3 (isolated)"
+    },
+    {
+      "module": "CineHdPlus",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Cinecalidad",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Cizgimax",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Ddizi",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "DiziLife",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "DiziMom",
+      "result": "pass",
+      "evidence": "İzole emülatör, pilavyerplay.top + UA",
+      "runner": "emu_ledger.py v3 (isolated)"
+    },
+    {
+      "module": "DiziYou",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Diziasia",
+      "result": "pass",
+      "evidence": "İzole emülatör + result_meta_site eşleşmesi",
+      "runner": "emu_ledger.py v3 (isolated)"
+    },
+    {
+      "module": "Dizibox",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "DiziboxIzle",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Dizikorea3",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Dizilla",
+      "result": "fail",
+      "evidence": "İzole test: no detail",
+      "runner": "emu_ledger.py v3 (isolated)"
+    },
+    {
+      "module": "DoramasYT",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "FilmModu",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Flixlatam",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "FullHDFilm",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "FullHDFilmizlesene",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "HDFilmCehennemi",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Hdfilme",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "HiAnime",
+      "result": "fail",
+      "evidence": "İzole test: sonuç yok",
+      "runner": "emu_ledger.py v3 (isolated)"
+    },
+    {
+      "module": "JKAnime",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "JetFilmizle",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "KoreanTurk",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Kultfilmler",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "LaMovie",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Latanime",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Monoschinos",
+      "result": "pass",
+      "evidence": "İzole emülatör + result_meta_site eşleşmesi",
+      "runner": "emu_ledger.py v3 (isolated)"
+    },
+    {
+      "module": "MoviesDrive",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Onepacetr",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Serienstream",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Sezonlukdizi",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Supercartoons",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "TioAnime",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "UHDmovies",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "UltraCine",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    },
+    {
+      "module": "Yabancidizi",
+      "result": "pass-unverified",
+      "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
+      "runner": "emu_ledger.py v1"
+    }
+  ]
+}
