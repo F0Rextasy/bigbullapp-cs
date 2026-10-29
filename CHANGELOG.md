@@ -5,6 +5,25 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.2.4] - 2026-10-29
+
+### Düzeltildi
+
+- **MoviesDrive v2**: arama sunucusu new1.moviesdrive.cyou'ye taşındı.
+- **HDFilmCehennemi v2**: arama JSON'u org.json ile çözülüyor; yeni kart markup'u.
+- **AreaDocumental v2**: PHPSESSID yoksa ana sayfa ile cookie tazeleniyor, yoksa açık hata.
+
+## [1.2.3] - 2026-10-29
+
+### Düzeltildi
+
+- **HDFilmCehennemi v3**: dinamik `juq8/ev5u` JS decoder'ı çalışma anında sabitlerini okuyup Kotlin'de çözüyor; c6rbn fallback korundu.
+- **Diziasia v5**: arama kartlarında başlık `img[alt]` üzerinden okunuyor (yeni kart yapısı).
+- **DiziMom v2**: oynatıcı hostu `pilavyerplay.top` olarak güncellendi.
+- **BelgeselX v2**: yeni `/belgeseldizi/<slug>` detay sayfalarında bölüm satırı yoksa ilk
+  `a.px-ep-card` bölüm sayfasına geçilip bölümler oradan okunuyor; başlık `h1.px-hero-title`
+  fallback'i eklendi.
+
 ## [1.2.2] - 2026-10-29
 
 ### Düzeltildi
