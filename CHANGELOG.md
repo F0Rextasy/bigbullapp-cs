@@ -9,6 +9,7 @@ sayı arttığında güncelleme sunar.
 
 ### Düzeltildi
 
+- **DiziBox v7**: v6'daki gereksiz yeniden deneme geri alındı; bölüm listesi tek istekten okunuyor.
 - **Doğrulama aracı**: DiziBox verifier'ı gerçek `/search/` akışını kullanıyor; 429 yanıtları 5 sn
   bekleyip yeniden deneniyor. Böylece DiziBox ve AsyaAnimeleri yanlış FAIL vermiyor.
 
