@@ -9,7 +9,8 @@ sayı arttığında güncelleme sunar.
 
 ### Düzeltildi
 
-- **DiziBox**: site zaman zaman bölümsüz/boş sayfa döndürdüğünde `load` iki kez daha deniyor.
+- **Doğrulama aracı**: DiziBox verifier'ı gerçek `/search/` akışını kullanıyor; 429 yanıtları 5 sn
+  bekleyip yeniden deneniyor. Böylece DiziBox ve AsyaAnimeleri yanlış FAIL vermiyor.
 
 ## [1.2.1] - 2026-10-29
 
