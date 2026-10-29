@@ -97,7 +97,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git checkout -- .
+          existing=$(gh issue list --state open --search "Domain güncellemesi doğrulamadan geçemedi in:title" --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            echo "Açık issue zaten var: #$existing"
+            exit 0
+          fi
           gh issue create \
             --title "🔄 Domain güncellemesi doğrulamadan geçemedi" \
             --body "Otomatik mirror güncellemesi, fonksiyonel doğrulama başarısız olduğu için geri alındı. Çalıştırma: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
