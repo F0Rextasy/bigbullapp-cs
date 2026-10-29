@@ -1,0 +1,8 @@
+{
+  "name": "BigBullApp",
+  "description": "Cloudstream için Türkçe film, dizi, anime, çizgi film ve canlı TV eklentileri",
+  "manifestVersion": 1,
+  "pluginLists": [
+    "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/plugins.json"
+  ]
+}

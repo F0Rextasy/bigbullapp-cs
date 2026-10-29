@@ -1,0 +1,46 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+**/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+.vscode
+# research raw dumps (reproducible, ~8 MB)
+research/raw-*.json
+research/site-samples/
+# agent probe dumps (keep them under research/site-samples/)
+/_*.txt
+/_*.json
+/_*.html
+/_*.js
+/*_home.html
+/*_probe*.html
+/bol.html
+/det.html
+omp-md-placeholder
+.kotlin/
+/*.html
+/site.js
+/*.js
+# local-only research and generated reports
+/research/
+/tools/planned.json
+/tools/providers-ranked.md
+/tools/health-report.md
+/tools/verify-report.md
+/tools/revive-suggestions.md
+/tools/history.jsonl
+/tools/dashboard.html
+*.har
+
+# Python
+__pycache__/
+*.pyc
+*.log
+# local agent notes only
+AGENTS.md
