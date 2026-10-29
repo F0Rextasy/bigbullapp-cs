@@ -5,6 +5,16 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.2.1] - 2026-10-29
+
+### Eklendi
+
+- Kalan 8 modülde gerçek kategori satırları ve satır başına aç/kapat anahtarları:
+  **Dizibox** (Dram/Komedi/Korku), **DiziboxIzle** (Aksiyon/Dram/IMDb 7+),
+  **Dizikorea3** (Çin/Japon/Tayland), **Dizilla** (Tüm Diziler/Anime/Türkçe Dublaj),
+  **Kultfilmler** (Korku/Bilim Kurgu/Aksiyon), **Sezonlukdizi** (Bilim Kurgu/Korku/Aksiyon),
+  **Yabancidizi** (Aksiyon/Bilim Kurgu/Korku), **Onepacetr** (yalnız switch; gerçek kategori yok).
+
 ## [1.2.0] - 2026-10-29
 
 ### Düzeltildi

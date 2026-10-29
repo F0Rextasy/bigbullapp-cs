@@ -5,6 +5,7 @@ import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
 import com.lagradost.cloudstream3.MainAPI
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SearchResponse
@@ -12,7 +13,6 @@ import com.lagradost.cloudstream3.SearchResponseList
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
@@ -35,10 +35,17 @@ class KultfilmlerProvider : MainAPI() {
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.Movie)
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/film-arsivi/?sayfa=SAYFA" to "Son Eklenenler",
-        "$mainUrl/film-arsivi/?sort=imdb&sayfa=SAYFA" to "IMDb Puanı",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Eklenenler" -> MainPageData(name, "$mainUrl/film-arsivi/?sayfa=SAYFA")
+            "IMDb Puanı" -> MainPageData(name, "$mainUrl/film-arsivi/?sort=imdb&sayfa=SAYFA")
+            "Korku" -> MainPageData(name, "$mainUrl/film-arsivi/?tur=korku-filmleri-izle&sayfa=SAYFA")
+            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/film-arsivi/?tur=bilim-kurgu-filmleri-izle&sayfa=SAYFA")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/film-arsivi/?tur=aksiyon-filmleri-izle&sayfa=SAYFA")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data.replace("SAYFA", page.toString())).document
@@ -204,6 +211,8 @@ class KultfilmlerProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage row labels, in display order; each maps to a live archive filter above. */
+        val ROWS = listOf("Son Eklenenler", "IMDb Puanı", "Korku", "Bilim Kurgu", "Aksiyon")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

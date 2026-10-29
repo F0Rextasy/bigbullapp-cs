@@ -17,7 +17,7 @@ import com.lagradost.cloudstream3.base64Decode
 import com.lagradost.cloudstream3.extractors.helper.CryptoJS
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newTvSeriesLoadResponse
@@ -42,15 +42,47 @@ class DiziboxProvider : MainAPI() {
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.TvSeries)
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/tum-bolumler/page/SAYFA/" to "Son Bölümler",
-        "$mainUrl/tum-bolumler/page/SAYFA/?tip=populer" to "Popüler",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Bölümler" -> MainPageData(name, "$mainUrl/tum-bolumler/")
+            "Popüler" -> MainPageData(name, "$mainUrl/tum-bolumler/?tip=populer")
+            "Dram" -> MainPageData(name, "$mainUrl/tur/dram/")
+            "Komedi" -> MainPageData(name, "$mainUrl/tur/komedi/")
+            "Korku" -> MainPageData(name, "$mainUrl/tur/korku/")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = uaHeaders).document
+        val path = request.data.substringBefore("?").trimEnd('/')
+        val query = request.data.substringAfter("?", "")
+        val url = when {
+            page <= 1 -> request.data
+            query.isEmpty() -> "$path/page/$page/"
+            else -> "$path/page/$page/?$query"
+        }
+        val doc = app.get(url, headers = uaHeaders).document
+        if (path.contains("/tur/")) {
+            val items = doc.select("article.article-series-poster").mapNotNull { it.toPosterSeries() }
+            return newHomePageResponse(request.name, items, hasNext = items.isNotEmpty())
+        }
         val items = doc.select("article.article-episode-card").mapNotNull { it.toSearchResult() }
         return newHomePageResponse(request.name, items, hasNext = true)
+    }
+
+    /** Genre pages use the poster grid, unlike the episode feed. */
+    private fun Element.toPosterSeries(): SearchResponse? {
+        val anchor = selectFirst("a.poster-title") ?: return null
+        val href = fixUrlNull(anchor.attr("href")) ?: return null
+        val img = selectFirst("img")
+        return newTvSeriesSearchResponse(
+            anchor.text().trim().ifBlank { anchor.attr("title") },
+            href,
+            TvType.TvSeries,
+        ) {
+            this.posterUrl = fixUrlNull(img?.attr("data-src")?.takeIf { it.isNotBlank() } ?: img?.attr("src"))
+        }
     }
 
     private fun Element.toSearchResult(): SearchResponse? {
@@ -207,6 +239,9 @@ class DiziboxProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage rows in display order; genre rows map to live `/tur/<tur>/` listings. */
+        val ROWS = listOf("Son Bölümler", "Popüler", "Dram", "Komedi", "Korku")
+
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

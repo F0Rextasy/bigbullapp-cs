@@ -1,4 +1,4 @@
-version = 3
+version = 4
 
 cloudstream {
     description = "One Pace TR — One Piece fan edit, Türkçe altyazılı (onepacetr.net)"

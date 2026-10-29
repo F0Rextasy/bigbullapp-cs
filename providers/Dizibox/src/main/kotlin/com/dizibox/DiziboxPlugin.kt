@@ -9,6 +9,6 @@ class DiziboxPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(DiziboxProvider())
-        this.openSettings = { Settings.showDialog(it, "DiziBox Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "DiziBox Ayarları", DiziboxProvider.ROWS) }
     }
 }

@@ -9,6 +9,6 @@ class YabancidiziPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(YabancidiziProvider())
-        this.openSettings = { Settings.showDialog(it, "Yabancidizi Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "Yabancidizi Ayarları", YabancidiziProvider.ROWS) }
     }
 }

@@ -9,6 +9,6 @@ class DizillaPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(DizillaProvider())
-        this.openSettings = { Settings.showDialog(it, "Dizilla Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "Dizilla Ayarları", DizillaProvider.ROWS) }
     }
 }

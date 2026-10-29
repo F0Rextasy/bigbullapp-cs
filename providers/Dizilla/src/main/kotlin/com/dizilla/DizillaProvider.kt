@@ -16,7 +16,7 @@ import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newSearchResponseList
@@ -45,12 +45,19 @@ class DizillaProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.TvSeries)
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/yabanci-dizi-izle?page=SAYFA" to "Yabancı Diziler",
-        "$mainUrl/yerli-dizi-izle?page=SAYFA" to "Yerli Diziler",
-        "$mainUrl/kdrama-izle?page=SAYFA" to "K-Drama",
-        "$mainUrl/asya-dizileri-izle?page=SAYFA" to "Asya Dizileri",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Yabancı Diziler" -> MainPageData(name, "$mainUrl/yabanci-dizi-izle?page=SAYFA")
+            "Yerli Diziler" -> MainPageData(name, "$mainUrl/yerli-dizi-izle?page=SAYFA")
+            "K-Drama" -> MainPageData(name, "$mainUrl/kdrama-izle?page=SAYFA")
+            "Asya Dizileri" -> MainPageData(name, "$mainUrl/asya-dizileri-izle?page=SAYFA")
+            "Tüm Diziler" -> MainPageData(name, "$mainUrl/dizi-izle?page=SAYFA")
+            "Anime" -> MainPageData(name, "$mainUrl/anime-izle?page=SAYFA")
+            "Türkçe Dublaj" -> MainPageData(name, "$mainUrl/turkce-dublaj-dizi-izle?page=SAYFA")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data.replace("SAYFA", page.toString())).document
@@ -304,6 +311,17 @@ class DizillaProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf(
+            "Yabancı Diziler",
+            "Yerli Diziler",
+            "K-Drama",
+            "Asya Dizileri",
+            "Tüm Diziler",
+            "Anime",
+            "Türkçe Dublaj",
+        )
+
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

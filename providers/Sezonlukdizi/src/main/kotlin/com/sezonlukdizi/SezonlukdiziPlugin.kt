@@ -9,6 +9,6 @@ class SezonlukdiziPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(SezonlukdiziProvider())
-        this.openSettings = { Settings.showDialog(it, "Sezonlukdizi Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "Sezonlukdizi Ayarları", SezonlukdiziProvider.ROWS) }
     }
 }

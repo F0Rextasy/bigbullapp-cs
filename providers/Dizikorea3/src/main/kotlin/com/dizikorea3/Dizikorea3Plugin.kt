@@ -9,7 +9,7 @@ class Dizikorea3Plugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(Dizikorea3Provider())
-        this.openSettings = { Settings.showDialog(it, "Dizikorea3 Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "Dizikorea3 Ayarları", Dizikorea3Provider.ROWS) }
         registerExtractorAPI(VidmolyOrg())
     }
 }
