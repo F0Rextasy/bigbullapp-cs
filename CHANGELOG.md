@@ -5,6 +5,14 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.3.0] - 2026-10-29
+
+### Eklendi
+
+- Doğrulanmış yeni sağlayıcılar: **AllCalidad**, **DiziMom**, **HDFilmCehennemi**,
+  **Monoschinos**, **MoviesDrive** (beta; tek içerik oynatma doğrulaması).
+- `tools/qa-ledger.json`: modül bazlı test durumu ve kanıt kaydı.
+
 ## [1.2.4] - 2026-10-29
 
 ### Düzeltildi
