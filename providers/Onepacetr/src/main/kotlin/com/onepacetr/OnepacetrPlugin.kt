@@ -9,6 +9,6 @@ class OnepacetrPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(OnepacetrProvider())
-        this.openSettings = { Settings.showDialog(it, "Onepacetr Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "Onepacetr Ayarları", OnepacetrProvider.ROWS) }
     }
 }

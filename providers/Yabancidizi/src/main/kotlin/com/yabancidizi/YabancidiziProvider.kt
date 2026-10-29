@@ -4,6 +4,7 @@ import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.MainAPI
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SearchResponse
@@ -11,7 +12,6 @@ import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
@@ -40,10 +40,17 @@ class YabancidiziProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/diziler?sort=date_desc" to "Son Eklenen Diziler",
-        "$mainUrl/filmler?sort=date_desc" to "Son Eklenen Filmler",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Eklenen Diziler" -> MainPageData(name, "$mainUrl/diziler?sort=date_desc")
+            "Son Eklenen Filmler" -> MainPageData(name, "$mainUrl/filmler?sort=date_desc")
+            "Diziler — Aksiyon" -> MainPageData(name, "$mainUrl/diziler?tur=aksiyon")
+            "Diziler — Bilim Kurgu" -> MainPageData(name, "$mainUrl/diziler?tur=bilim-kurgu")
+            "Filmler — Korku" -> MainPageData(name, "$mainUrl/filmler?tur=korku")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get("${request.data}&page=$page").document
@@ -301,6 +308,11 @@ class YabancidiziProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage row labels, in display order; each maps to a live genre filter above. */
+        val ROWS = listOf(
+            "Son Eklenen Diziler", "Son Eklenen Filmler",
+            "Diziler — Aksiyon", "Diziler — Bilim Kurgu", "Filmler — Korku",
+        )
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

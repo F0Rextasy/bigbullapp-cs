@@ -4,13 +4,13 @@ import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.MainAPI
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.SearchResponseList
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
-import com.lagradost.cloudstream3.mainPageOf
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newSearchResponseList
@@ -42,7 +42,8 @@ class OnepacetrProvider : MainAPI() {
         "Authorization" to "Bearer 1fe5d72626ea6144e9d685128cfc40a54c303573432381c8943fc497bb2203f693922fa8afaa872168eef456bf3aa7802507fb2a526582a642241acc0665b30861c60ba344f5d8b925b7ebb75073d9419dfbf9be4b3420427bd22302889792973faaf01c8f1d5bd40105187d22aa9f5595b00a8e2700b94614678cc3303a7ac3"
     )
 
-    override val mainPage = mainPageOf(mainUrl to "Sezonlar")
+    /** The Strapi API has one listing (all seasons); the row label is purely cosmetic. */
+    override val mainPage get() = ROWS.filter { Settings.rowEnabled(it) }.map { MainPageData(it, mainUrl) }
 
     // Encrypted JS players with no CloudStream extractor (clone/abyss, Google Drive, gettsu, vidguard, upnshare).
     private val jsOnlyPlayers =
@@ -150,6 +151,8 @@ class OnepacetrProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage row labels; the API has one listing, so each row maps to the same data. */
+        val ROWS = listOf("Sezonlar")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

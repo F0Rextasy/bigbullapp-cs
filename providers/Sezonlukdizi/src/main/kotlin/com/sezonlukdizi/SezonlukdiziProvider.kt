@@ -8,6 +8,7 @@ import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
 import com.lagradost.cloudstream3.MainAPI
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SearchResponse
@@ -15,7 +16,6 @@ import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newSubtitleFile
@@ -56,10 +56,17 @@ class SezonlukdiziProvider : MainAPI() {
         "X-Requested-With" to "XMLHttpRequest",
     )
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/diziler.asp?siralama_tipi=id" to "Son Eklenenler",
-        "$mainUrl/diziler.asp" to "IMDb",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Eklenenler" -> MainPageData(name, "$mainUrl/diziler.asp?siralama_tipi=id")
+            "IMDb" -> MainPageData(name, "$mainUrl/diziler.asp")
+            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/diziler.asp?tur=bilimkurgu")
+            "Korku" -> MainPageData(name, "$mainUrl/diziler.asp?tur=korku")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/diziler.asp?tur=aksiyon")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val separator = if (request.data.contains('?')) "&" else "?"
@@ -578,7 +585,9 @@ class SezonlukdiziProvider : MainAPI() {
         return total
     }
 
-    private companion object {
+    companion object {
+        /** Homepage row labels, in display order; each maps to a live genre filter above. */
+        val ROWS = listOf("Son Eklenenler", "IMDb", "Bilim Kurgu", "Korku", "Aksiyon")
         const val MAX_POW_ATTEMPTS = 4_000_000
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"

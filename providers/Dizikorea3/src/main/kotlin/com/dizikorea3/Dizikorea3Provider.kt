@@ -16,7 +16,7 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.extractors.Vidmoly
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
@@ -50,10 +50,17 @@ class Dizikorea3Provider : MainAPI() {
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/dizi-arsivi/sayfa/SAYFA" to "Tüm Diziler",
-        "$mainUrl/filmler/sayfa/SAYFA" to "Filmler",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Tüm Diziler" -> MainPageData(name, "$mainUrl/dizi-arsivi/sayfa/SAYFA")
+            "Filmler" -> MainPageData(name, "$mainUrl/filmler/sayfa/SAYFA")
+            "Çin Dizileri" -> MainPageData(name, "$mainUrl/cin-dizileri/sayfa/SAYFA")
+            "Japon Dizileri" -> MainPageData(name, "$mainUrl/japon-dizileri/sayfa/SAYFA")
+            "Tayland Dizileri" -> MainPageData(name, "$mainUrl/tayland-dizileri/sayfa/SAYFA")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data.replace("SAYFA", page.toString())).document
@@ -257,6 +264,10 @@ class Dizikorea3Provider : MainAPI() {
     }
 
     companion object {
+        /** Homepage rows in display order; country rows are live listing pages. */
+        val ROWS =
+            listOf("Tüm Diziler", "Filmler", "Çin Dizileri", "Japon Dizileri", "Tayland Dizileri")
+
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

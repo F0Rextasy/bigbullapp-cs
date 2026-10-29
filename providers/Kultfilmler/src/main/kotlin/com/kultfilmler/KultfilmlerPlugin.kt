@@ -9,6 +9,6 @@ class KultfilmlerPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(KultfilmlerProvider())
-        this.openSettings = { Settings.showDialog(it, "Kultfilmler Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "Kultfilmler Ayarları", KultfilmlerProvider.ROWS) }
     }
 }

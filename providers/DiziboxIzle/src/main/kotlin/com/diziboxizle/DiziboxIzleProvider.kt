@@ -16,7 +16,7 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newSearchResponseList
@@ -43,23 +43,49 @@ class DiziboxIzleProvider : MainAPI() {
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.TvSeries)
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/" to "Son Eklenenler",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Eklenenler" -> MainPageData(name, "$mainUrl/")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=aksiyon")
+            "Dram" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=drama")
+            "IMDb 7+" -> MainPageData(name, "$mainUrl/dizi-arsivi/?filtrele=imdb&sirala=DESC&imdb=7")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val url = if (page <= 1) request.data else "${request.data.trimEnd('/')}/page/$page/"
+        val path = request.data.substringBefore("?").trimEnd('/')
+        val query = request.data.substringAfter("?", "")
+        val url = when {
+            page <= 1 -> request.data
+            query.isEmpty() -> "$path/page/$page/"
+            else -> "$path/page/$page/?$query"
+        }
         val doc = app.get(url).document
-        val items = doc.select("a[href*='-sezon'][href*='-bolum']")
-            .mapNotNull { anchor ->
-                val episodeUrl = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
-                seriesUrl(episodeUrl)?.let { series ->
-                    val label = anchor.attr("title").ifBlank { anchor.text() }.trim()
-                    newTvSeriesSearchResponse(label, series, TvType.TvSeries)
+        val items = if (path.endsWith("/dizi-arsivi")) {
+            doc.select("div.single-item").mapNotNull { it.toArchiveResult() }
+        } else {
+            doc.select("a[href*='-sezon'][href*='-bolum']")
+                .mapNotNull { anchor ->
+                    val episodeUrl = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
+                    seriesUrl(episodeUrl)?.let { series ->
+                        val label = anchor.attr("title").ifBlank { anchor.text() }.trim()
+                        newTvSeriesSearchResponse(label, series, TvType.TvSeries)
+                    }
                 }
-            }
-            .distinctBy { it.url }
+                .distinctBy { it.url }
+        }
         return newHomePageResponse(request.name, items, hasNext = true)
+    }
+
+    /** Archive/genre cards: poster in `.cat-img`, title in `.categorytitle`. */
+    private fun org.jsoup.nodes.Element.toArchiveResult(): SearchResponse? {
+        val anchor = selectFirst(".categorytitle a") ?: selectFirst(".cat-img a") ?: return null
+        val href = fixUrlNull(anchor.attr("href")) ?: return null
+        return newTvSeriesSearchResponse(anchor.text().trim(), href, TvType.TvSeries) {
+            this.posterUrl = fixUrlNull(selectFirst(".cat-img img")?.attr("src"))
+        }
     }
 
     override suspend fun search(query: String): List<SearchResponse> =
@@ -120,8 +146,11 @@ class DiziboxIzleProvider : MainAPI() {
             .also { cachedQuickSearchNonce = it }
     }
 
-    private companion object {
-        var cachedQuickSearchNonce: String? = null
+    companion object {
+        /** Homepage rows in display order; genre rows map to live `/dizi-arsivi/` filters. */
+        val ROWS = listOf("Son Eklenenler", "Aksiyon", "Dram", "IMDb 7+")
+
+        private var cachedQuickSearchNonce: String? = null
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }
