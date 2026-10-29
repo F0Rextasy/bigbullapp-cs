@@ -1,0 +1,249 @@
+{
+ "generated": "2026-10-28",
+ "providers": {
+  "asyalog.co": {
+   "id": "asyalog-co",
+   "name": "AsyaLog",
+   "mainUrl": "https://asyalog.co",
+   "status": "implemented",
+   "http": 200,
+   "title": "Asyalog - En Güncel Asya Dizileri Çevirileri Burada!",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Movie"
+   ],
+   "poolNames": [
+    "AsyaLog"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-28T15:40:39Z",
+   "latencyMs": 1022,
+   "module": "AsyaLog"
+  },
+  "dizibox.live": {
+   "id": "dizibox-live",
+   "name": "DiziBox",
+   "mainUrl": "https://www.dizibox.live",
+   "status": "implemented",
+   "http": 403,
+   "title": "",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "DiziBox"
+   ],
+   "source": "manual",
+   "module": "Dizibox",
+   "health": "unknown",
+   "checked": "2026-10-28T15:40:39Z",
+   "latencyMs": 212,
+   "mirrors": [],
+   "revivedFrom": "dizibox.live"
+  },
+  "diziboxizle.com": {
+   "id": "diziboxizle-com",
+   "name": "DiziBox",
+   "mainUrl": "https://diziboxizle.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "Dizibox İzle - Güncel Yabancı Dizi izle, HD Diziler izle",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "DiziBox"
+   ],
+   "source": "provider-source",
+   "health": "unknown",
+   "checked": "2026-10-28T15:40:39Z",
+   "latencyMs": 455,
+   "module": "DiziboxIzle",
+   "pipeline": "planned"
+  },
+  "diziyou.one": {
+   "id": "diziyou-one",
+   "name": "DiziYou",
+   "mainUrl": "https://diziyou.one",
+   "status": "implemented",
+   "http": 200,
+   "title": "Diziyou - Türkçe Dublaj &amp; Altyazılı Yabancı Dizi İzle",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "DiziYou"
+   ],
+   "source": "manual",
+   "module": "DiziYou",
+   "health": "ok",
+   "checked": "2026-10-28T15:40:39Z",
+   "latencyMs": 1542
+  },
+  "asyaanimeleri.top": {
+   "id": "asyaanimeleri-top",
+   "name": "AsyaAnimeleri",
+   "mainUrl": "https://asyaanimeleri.top",
+   "status": "implemented",
+   "health": "ok",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Movie"
+   ],
+   "module": "AsyaAnimeleri",
+   "pipeline": "planned",
+   "source": "manual"
+  },
+  "kultfilmler.net": {
+   "id": "kultfilmler-net",
+   "name": "KultFilmler",
+   "mainUrl": "https://kultfilmler.net",
+   "status": "implemented",
+   "health": "ok",
+   "language": "tr",
+   "tvTypes": [
+    "Movie"
+   ],
+   "module": "Kultfilmler",
+   "pipeline": "planned",
+   "source": "manual"
+  },
+  "yabancidizi.live": {
+   "id": "yabancidizi-live",
+   "name": "YabanciDizi",
+   "mainUrl": "https://yabancidizi.live",
+   "status": "implemented",
+   "health": "ok",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Movie"
+   ],
+   "module": "Yabancidizi",
+   "pipeline": "planned",
+   "source": "manual"
+  },
+  "dizi82.life": {
+   "id": "dizi82-life",
+   "name": "DiziLife",
+   "mainUrl": "https://dizi82.life",
+   "status": "implemented",
+   "health": "ok",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Movie"
+   ],
+   "module": "DiziLife",
+   "pipeline": "planned",
+   "source": "other-repos"
+  },
+  "diziasia.com": {
+   "id": "diziasia-com",
+   "name": "DiziAsia",
+   "mainUrl": "https://diziasia.com",
+   "status": "implemented",
+   "health": "ok",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Movie"
+   ],
+   "module": "Diziasia",
+   "pipeline": "planned",
+   "source": "other-repos"
+  },
+  "anizium.co": {
+   "id": "anizium-co",
+   "name": "Anizium",
+   "mainUrl": "https://anizium.co",
+   "status": "implemented",
+   "health": "ok",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Movie"
+   ],
+   "module": "Anizium",
+   "pipeline": "planned",
+   "source": "other-repos"
+  },
+  "dizilla.nl": {
+   "id": "dizilla-nl",
+   "name": "Dizilla",
+   "mainUrl": "https://dizilla.nl",
+   "status": "implemented",
+   "health": "ok",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "module": "Dizilla",
+   "pipeline": "planned",
+   "source": "other-repos"
+  },
+  "onepacetr.net": {
+   "id": "onepacetr-net",
+   "name": "OnePaceTr",
+   "mainUrl": "https://onepacetr.net",
+   "status": "implemented",
+   "health": "ok",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "module": "Onepacetr",
+   "pipeline": "planned",
+   "source": "other-repos"
+  },
+  "dizikorea3.com": {
+   "id": "dizikorea3-com",
+   "name": "DiziKorea",
+   "mainUrl": "https://dizikorea3.com",
+   "status": "implemented",
+   "health": "ok",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Movie"
+   ],
+   "module": "Dizikorea3",
+   "pipeline": "planned",
+   "source": "other-repos"
+  },
+  "cizgimax.online": {
+   "id": "cizgimax-online",
+   "name": "CizgiMax",
+   "mainUrl": "https://cizgimax.online",
+   "status": "implemented",
+   "health": "ok",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "module": "Cizgimax",
+   "pipeline": "planned",
+   "source": "other-repos"
+  },
+  "sezonlukdizi.cc": {
+   "id": "sezonlukdizi-cc",
+   "name": "SezonlukDizi",
+   "mainUrl": "https://sezonlukdizi.cc",
+   "status": "implemented",
+   "health": "ok",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "module": "Sezonlukdizi",
+   "pipeline": "planned",
+   "source": "other-repos"
+  }
+ }
+}

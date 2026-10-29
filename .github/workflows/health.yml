@@ -1,0 +1,40 @@
+name: Sağlayıcı sağlığı
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: health
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sağlayıcıları yokla
+        run: python3 tools/check.py
+
+      - name: Ölü domainler için mirror öner
+        run: python3 tools/revive.py
+
+      - name: Panoyu oluştur
+        run: python3 tools/report.py
+
+      - name: Sağlık çıktılarını yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: sağlık-raporu
+          path: |
+            tools/providers.json
+            tools/health-report.md
+            tools/revive-suggestions.md
+            tools/history.jsonl
+            tools/dashboard.html
+          if-no-files-found: warn
