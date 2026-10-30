@@ -93,12 +93,6 @@
       "runner": "bench_runner.py 2026-10-30"
     },
     {
-      "module": "CanliTVMe",
-      "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=0, ep=0",
-      "runner": "bench_runner.py 2026-10-30"
-    },
-    {
       "module": "CanliYayinKanallari",
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=1, ep=0",

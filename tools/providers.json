@@ -1,1210 +1,1195 @@
 {
- "generated": "2026-10-30",
- "providers": {
-  "asyalog.co": {
-   "id": "asyalog-co",
-   "name": "AsyaLog",
-   "mainUrl": "https://asyalog.co",
-   "status": "implemented",
-   "http": 200,
-   "title": "Asyalog - En Güncel Asya Dizileri Çevirileri Burada!",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries",
-    "Movie"
-   ],
-   "poolNames": [
-    "AsyaLog"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 830,
-   "module": "AsyaLog"
-  },
-  "dizibox.live": {
-   "id": "dizibox-live",
-   "name": "DiziBox",
-   "mainUrl": "https://www.dizibox.live",
-   "status": "implemented",
-   "http": 200,
-   "title": "DiziBOX - Yabancı Dizi izle, Yabancı Diziler",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "DiziBox"
-   ],
-   "source": "manual",
-   "module": "Dizibox",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 1420,
-   "mirrors": [],
-   "revivedFrom": "dizibox.live"
-  },
-  "diziboxizle.com": {
-   "id": "diziboxizle-com",
-   "name": "DiziBox",
-   "mainUrl": "https://diziboxizle.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Dizibox İzle - Güncel Yabancı Dizi izle, HD Diziler izle",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "DiziBox"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 542,
-   "module": "DiziboxIzle",
-   "pipeline": "planned"
-  },
-  "diziyou.one": {
-   "id": "diziyou-one",
-   "name": "DiziYou",
-   "mainUrl": "https://diziyou.one",
-   "status": "implemented",
-   "http": 200,
-   "title": "Diziyou - Türkçe Dublaj &amp; Altyazılı Yabancı Dizi İzle",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "DiziYou"
-   ],
-   "source": "manual",
-   "module": "DiziYou",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 642
-  },
-  "asyaanimeleri.top": {
-   "id": "asyaanimeleri-top",
-   "name": "AsyaAnimeleri",
-   "mainUrl": "https://asyaanimeleri.top",
-   "status": "implemented",
-   "health": "ok",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries",
-    "Movie"
-   ],
-   "module": "AsyaAnimeleri",
-   "pipeline": "planned",
-   "source": "manual",
-   "http": 200,
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 465,
-   "title": "Asya Animeleri - Anime izle | Donghua izle | Animeler | Türkanime | Donghua Anime, Türkçe Altyazılı Anime izle , Türkçe "
-  },
-  "kultfilmler.net": {
-   "id": "kultfilmler-net",
-   "name": "KultFilmler",
-   "mainUrl": "https://kultfilmler.net",
-   "status": "implemented",
-   "health": "ok",
-   "language": "tr",
-   "tvTypes": [
-    "Movie"
-   ],
-   "module": "Kultfilmler",
-   "pipeline": "planned",
-   "source": "manual",
-   "http": 200,
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 377,
-   "title": "Kült Filmler - Seçkin Film İzleme Sitesi 2026"
-  },
-  "yabancidizi.live": {
-   "id": "yabancidizi-live",
-   "name": "YabanciDizi",
-   "mainUrl": "https://yabancidizi.live",
-   "status": "implemented",
-   "health": "ok",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries",
-    "Movie"
-   ],
-   "module": "Yabancidizi",
-   "pipeline": "planned",
-   "source": "manual",
-   "http": 200,
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 1168,
-   "title": "Yabancı Dizi İzle, Film İzle, Anime İzle | Türkçe Dublaj &amp; Altyazılı | Yabancıdizi - Yabancı Dizi, İzle, Film İzle, "
-  },
-  "dizi82.life": {
-   "id": "dizi82-life",
-   "name": "DiziLife",
-   "mainUrl": "https://dizi82.life",
-   "status": "implemented",
-   "health": "ok",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries",
-    "Movie"
-   ],
-   "module": "DiziLife",
-   "pipeline": "planned",
-   "source": "other-repos",
-   "http": 200,
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 546,
-   "title": "dizi.life — Diziler ve Filmler"
-  },
-  "diziasia.com": {
-   "id": "diziasia-com",
-   "name": "DiziAsia",
-   "mainUrl": "https://diziasia.com",
-   "status": "implemented",
-   "health": "ok",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries",
-    "Movie"
-   ],
-   "module": "Diziasia",
-   "pipeline": "planned",
-   "source": "other-repos",
-   "http": 200,
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 364,
-   "title": "DiziAsia - Asya Dizileri İzle"
-  },
-  "anizium.co": {
-   "id": "anizium-co",
-   "name": "Anizium",
-   "mainUrl": "https://anizium.co",
-   "status": "implemented",
-   "health": "ok",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries",
-    "Movie"
-   ],
-   "module": "Anizium",
-   "pipeline": "planned",
-   "source": "other-repos",
-   "http": 200,
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 321,
-   "title": "Anizium - Türkçe Dublaj & 4K İzleme Platformu"
-  },
-  "onepacetr.net": {
-   "id": "onepacetr-net",
-   "name": "OnePaceTr",
-   "mainUrl": "https://onepacetr.net",
-   "status": "implemented",
-   "health": "ok",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "module": "Onepacetr",
-   "pipeline": "planned",
-   "source": "other-repos",
-   "http": 200,
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 397,
-   "title": "One Pace Türkçe Altyazılı İzleme Platformu"
-  },
-  "dizikorea3.com": {
-   "id": "dizikorea3-com",
-   "name": "DiziKorea",
-   "mainUrl": "https://dizikorea3.com",
-   "status": "implemented",
-   "health": "ok",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries",
-    "Movie"
-   ],
-   "module": "Dizikorea3",
-   "pipeline": "planned",
-   "source": "other-repos",
-   "http": 200,
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 471,
-   "title": "DiziKorea - En Güncel Asya ve Kore Dizileri izleme Sitesi"
-  },
-  "cizgimax.online": {
-   "id": "cizgimax-online",
-   "name": "CizgiMax",
-   "mainUrl": "https://cizgimax.online",
-   "status": "implemented",
-   "health": "ok",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "module": "Cizgimax",
-   "pipeline": "planned",
-   "source": "other-repos",
-   "http": 200,
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 528,
-   "title": "ÇizgiMax - HD Çizgi Film İzle"
-  },
-  "sezonlukdizi.cc": {
-   "id": "sezonlukdizi-cc",
-   "name": "SezonlukDizi",
-   "mainUrl": "https://sezonlukdizi.cc",
-   "status": "implemented",
-   "health": "ok",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "module": "Sezonlukdizi",
-   "pipeline": "planned",
-   "source": "other-repos",
-   "http": 200,
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 310,
-   "title": "Sezonluk Dizi izle - 1080p yabanc� dizi izle"
-  },
-  "turkanime.info": {
-   "id": "turkanime-info",
-   "name": "Anizm",
-   "mainUrl": "https://turkanime.info",
-   "status": "beta",
-   "module": "Anizm",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 704,
-   "title": "Anime İzle | Türkçe Altyazılı Anime Bölümleri - Anizm"
-  },
-  "belgeselx.com": {
-   "id": "belgeselx-com",
-   "name": "BelgeselX",
-   "mainUrl": "https://belgeselx.com",
-   "status": "beta",
-   "module": "BelgeselX",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 1172,
-   "title": "BelgeselX | Türkçe Dublaj ve Altyazılı HD Belgesel İzle"
-  },
-  "iptv-org.github.io": {
-   "id": "iptv-org-github-io",
-   "name": "CanliTV",
-   "mainUrl": "https://iptv-org.github.io/iptv/countries/tr.m3u",
-   "status": "beta",
-   "module": "CanliTV",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 206,
-   "title": ""
-  },
-  "www.canlitv.me": {
-   "id": "www-canlitv-me",
-   "name": "CanliTVMe",
-   "mainUrl": "https://www.canlitv.me",
-   "status": "beta",
-   "module": "CanliTVMe",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": null,
-   "health": "dead",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 136,
-   "title": ""
-  },
-  "www.ddizi.tel": {
-   "id": "www-ddizi-tel",
-   "name": "Ddizi",
-   "mainUrl": "https://www.ddizi.tel",
-   "status": "beta",
-   "module": "Ddizi",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 334,
-   "title": "Ddizi, dizi izle, dizi seyret, dizi, canlı dizi, ddizi.tel"
-  },
-  "ddizimom.net": {
-   "id": "ddizimom-net",
-   "name": "DiziMom",
-   "mainUrl": "https://ddizimom.net",
-   "status": "beta",
-   "module": "DiziMom",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 443,
-   "title": "DiziMom - Dizi izle - Yabancı Dizi izle"
-  },
-  "filmmodu.news": {
-   "id": "filmmodu-news",
-   "name": "FilmModu",
-   "mainUrl": "https://filmmodu.news",
-   "status": "beta",
-   "module": "FilmModu",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 420,
-   "title": "Filmmodu - Film ve Dizi İzleme Platformu"
-  },
-  "fullhdfilmizlebox.vip": {
-   "id": "fullhdfilmizlebox-vip",
-   "name": "FullHDFilm",
-   "mainUrl": "https://fullhdfilmizlebox.vip",
-   "status": "beta",
-   "module": "FullHDFilm",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 435,
-   "title": "Fullhdfilmizle | Film izle, HD Film izle"
-  },
-  "www.fullhdfilmizlesene.now": {
-   "id": "www-fullhdfilmizlesene-now",
-   "name": "FullHDFilmizlesene",
-   "mainUrl": "https://www.fullhdfilmizlesene.now",
-   "status": "beta",
-   "module": "FullHDFilmizlesene",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 403,
-   "health": "blocked",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 254,
-   "title": ""
-  },
-  "www.hdfilmcehennemi.nl": {
-   "id": "www-hdfilmcehennemi-nl",
-   "name": "HDFilmCehennemi",
-   "mainUrl": "https://www.hdfilmcehennemi.nl",
-   "status": "beta",
-   "module": "HDFilmCehennemi",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 403,
-   "health": "blocked",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 217,
-   "title": ""
-  },
-  "jetfilmizle.app": {
-   "id": "jetfilmizle-app",
-   "name": "JetFilmizle",
-   "mainUrl": "https://jetfilmizle.app",
-   "status": "beta",
-   "module": "JetFilmizle",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 297,
-   "title": "JetFilmizle - Film İzle, Türkçe Dublaj, Altyazılı ve Yerli Filmler"
-  },
-  "koreanturk.tv": {
-   "id": "koreanturk-tv",
-   "name": "KoreanTurk",
-   "mainUrl": "https://koreanturk.tv",
-   "status": "beta",
-   "module": "KoreanTurk",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 397,
-   "title": "KoreanTürk - En Güncel Kore Dizileri ve Filmleri izle"
-  },
-  "dizipal1592.com": {
-   "id": "dizipal1592-com",
-   "name": "DiziPal",
-   "mainUrl": "https://dizipal1592.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Dizipal | Dizipal Orijinal | Dizipal Güncel",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries",
-    "Movie"
-   ],
-   "poolNames": [
-    "DiziPal"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 321,
-   "module": "DiziPal"
-  },
-  "dizipod.com": {
-   "id": "dizipod-com",
-   "name": "DiziPod",
-   "mainUrl": "https://dizipod.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries",
-    "Movie"
-   ],
-   "poolNames": [
-    "DiziPod"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 538,
-   "module": "DiziPod"
-  },
-  "setfilmizle.ltd": {
-   "id": "setfilmizle-ltd",
-   "name": "SetFilmIzle",
-   "mainUrl": "https://www.setfilmizle.ltd",
-   "status": "implemented",
-   "http": 200,
-   "title": "Set Film izle | HD Film | Yabancı Dizi",
-   "language": "tr",
-   "tvTypes": [
-    "Movie",
-    "TvSeries"
-   ],
-   "poolNames": [
-    "SetFilmIzle"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 282,
-   "module": "SetFilmIzle"
-  },
-  "tlctv.com.tr": {
-   "id": "tlctv-com-tr",
-   "name": "TLCtr",
-   "mainUrl": "https://www.tlctv.com.tr",
-   "status": "implemented",
-   "http": 200,
-   "title": "TLC | Gerçek Hikayeler, Belgesel, Dizi",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries",
-    "Live"
-   ],
-   "poolNames": [
-    "TLCtr"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 268,
-   "module": "TLCtr"
-  },
-  "webdramaturkey2.com": {
-   "id": "webdramaturkey2-com",
-   "name": "WebdramaTurkey2",
-   "mainUrl": "https://webdramaturkey2.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Web Drama Turkey - Kore, Çin, Japon Dizileri İzle",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries",
-    "Movie",
-    "Anime"
-   ],
-   "poolNames": [
-    "WebdramaTurkey2"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 349,
-   "module": "WebdramaTurkey2"
-  },
-  "dramadizilerim.com": {
-   "id": "dramadizilerim-com",
-   "name": "DramaDizilerim",
-   "mainUrl": "https://dramadizilerim.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Drama Dizilerim - Dikey Mini Dizi &amp; Kısa Dizi İzle (Türkçe Dublaj &amp; Altyazılı)",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries",
-    "Movie"
-   ],
-   "poolNames": [
-    "DramaDizilerim"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 328,
-   "module": "DramaDizilerim"
-  },
-  "dizibal.org": {
-   "id": "dizibal-org",
-   "name": "DiziBal",
-   "mainUrl": "https://dizibal.org",
-   "status": "implemented",
-   "http": 200,
-   "title": "dizibaL: Online Dizi Arşivi - Altyazılı Yabancı Diziler",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "DiziBal"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 450,
-   "module": "DiziBal"
-  },
-  "filmekseni.vip": {
-   "id": "filmekseni-vip",
-   "name": "FilmEkseni",
-   "mainUrl": "https://filmekseni.vip",
-   "status": "implemented",
-   "http": 200,
-   "title": "Film izle | Türkçe Dublaj film izle ⚡️ FilmEkseni",
-   "language": "tr",
-   "tvTypes": [
-    "Movie"
-   ],
-   "poolNames": [
-    "FilmEkseni"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 298,
-   "module": "FilmEkseni"
-  },
-  "asyawatch.com": {
-   "id": "asyawatch-com",
-   "name": "AsyaWatch",
-   "mainUrl": "https://asyawatch.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Asyawatch - Web Drama Turkey | Kore, Asya Dizileri izle",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries",
-    "Movie"
-   ],
-   "poolNames": [
-    "AsyaWatch"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 279,
-   "module": "AsyaWatch"
-  },
-  "hdfilmizle.ink": {
-   "id": "hdfilmizle-ink",
-   "name": "HDFilmizle",
-   "mainUrl": "https://www.hdfilmizle.ink",
-   "status": "implemented",
-   "http": 200,
-   "title": "HDFilmizle - Yabancı dizi izle - Film izle",
-   "language": "tr",
-   "tvTypes": [
-    "Movie",
-    "TvSeries"
-   ],
-   "poolNames": [
-    "HDFilmizle"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 247,
-   "module": "HDFilmizle"
-  },
-  "lovefilmizle.net": {
-   "id": "lovefilmizle-net",
-   "name": "LoveFilm",
-   "mainUrl": "https://lovefilmizle.net",
-   "status": "implemented",
-   "http": 200,
-   "title": "Film izle 2026 | HD &amp; 4K Türkçe Dublaj Altyazılı | LoveFilm",
-   "language": "tr",
-   "tvTypes": [
-    "Movie"
-   ],
-   "poolNames": [
-    "LoveFilm"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 403,
-   "module": "LoveFilm"
-  },
-  "animecix.tv": {
-   "id": "animecix-tv",
-   "name": "AnimeciX",
-   "mainUrl": "https://animecix.tv",
-   "status": "implemented",
-   "http": 200,
-   "title": "AnimeciX - Türkçe Anime Bilgi ve Paylaşım Platformu",
-   "language": "tr",
-   "tvTypes": [
-    "Anime"
-   ],
-   "poolNames": [
-    "AnimeciX"
-   ],
-   "source": "provider-source",
-   "module": "AnimeciX"
-  },
-  "dizilla.now": {
-   "id": "dizilla-now",
-   "name": "Dizilla",
-   "mainUrl": "https://dizilla.now",
-   "status": "implemented",
-   "http": 200,
-   "title": "",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "Dizilla"
-   ],
-   "source": "provider-source",
-   "module": "Dizilla"
-  },
-  "selcukflix.app": {
-   "id": "selcukflix-app",
-   "name": "SelcukFlix",
-   "mainUrl": "https://selcukflix.app",
-   "status": "implemented",
-   "http": 200,
-   "title": "Yabancı Dizi ve film izle - Selcukflix",
-   "language": "tr",
-   "tvTypes": [
-    "Movie",
-    "TvSeries"
-   ],
-   "poolNames": [
-    "SelcukFlix"
-   ],
-   "source": "provider-source",
-   "module": "SelcukFlix"
-  },
-  "sinemacc.com": {
-   "id": "sinemacc-com",
-   "name": "SinemaCX",
-   "mainUrl": "https://sinemacc.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Film izle | Türkçe Dublaj HD Yabancı Filmler | Sinema CC",
-   "language": "tr",
-   "tvTypes": [
-    "Movie"
-   ],
-   "poolNames": [
-    "SinemaCX"
-   ],
-   "source": "provider-source",
-   "module": "SinemaCX"
-  },
-  "animeler.live": {
-   "id": "animeler-live",
-   "name": "Animeler",
-   "mainUrl": "https://animeler.live",
-   "status": "implemented",
-   "http": 200,
-   "title": "Animeler.live | Türkçe Altyazılı Anime İzle",
-   "language": "tr",
-   "tvTypes": [
-    "Anime"
-   ],
-   "poolNames": [
-    "Animeler"
-   ],
-   "source": "provider-source",
-   "module": "Animeler"
-  },
-  "hdfilmdelisi.one": {
-   "id": "hdfilmdelisi-one",
-   "name": "HDFilmDelisi",
-   "mainUrl": "https://hdfilmdelisi.one",
-   "status": "implemented",
-   "http": 200,
-   "title": "Matrix",
-   "language": "tr",
-   "tvTypes": [
-    "Movie"
-   ],
-   "poolNames": [
-    "HDFilmDelisi"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T02:40:42Z",
-   "latencyMs": 0,
-   "module": "HDFilmDelisi"
-  },
-  "yesilcamtv.com.tr": {
-   "id": "yesilcamtv-com-tr",
-   "name": "YesilCamTv",
-   "mainUrl": "https://yesilcamtv.com.tr",
-   "status": "implemented",
-   "http": 200,
-   "title": "Abuk Sabuk Bir Film",
-   "language": "tr",
-   "tvTypes": [
-    "Movie"
-   ],
-   "poolNames": [
-    "YesilCamTv"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T02:54:02Z",
-   "latencyMs": 0,
-   "module": "YesilCamTv"
-  },
-  "sonanime.com": {
-   "id": "sonanime-com",
-   "name": "SonAnime",
-   "mainUrl": "https://sonanime.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Frieren: Beyond Journey's End",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "SonAnime"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T03:23:32Z",
-   "latencyMs": 0,
-   "module": "SonAnime"
-  },
-  "asyaluna.com": {
-   "id": "asyaluna-com",
-   "name": "AsyaLuna",
-   "mainUrl": "https://asyaluna.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Summer Vacation 2026 Kore",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "AsyaLuna"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T03:25:57Z",
-   "latencyMs": 0,
-   "module": "AsyaLuna"
-  },
-  "dizican.cc": {
-   "id": "dizican-cc",
-   "name": "DiziCaN",
-   "mainUrl": "https://dizican.cc",
-   "status": "implemented",
-   "http": 200,
-   "title": "Head 2 Head 1. Bölüm",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "DiziCaN"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T03:27:47Z",
-   "latencyMs": 0,
-   "module": "DiziCaN"
-  },
-  "dizirella.one": {
-   "id": "dizirella-one",
-   "name": "Dizirella",
-   "mainUrl": "https://dizirella.one",
-   "status": "implemented",
-   "http": 200,
-   "title": "Welcome back, First love. 1. Sezon 4. Bölüm",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "Dizirella"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T03:28:30Z",
-   "latencyMs": 0,
-   "module": "Dizirella"
-  },
-  "asyabox.co": {
-   "id": "asyabox-co",
-   "name": "AsyaBox",
-   "mainUrl": "https://asyabox.co",
-   "status": "implemented",
-   "http": 200,
-   "title": "Turbulent Love 2026 Çin",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "AsyaBox"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T03:33:17Z",
-   "latencyMs": 0,
-   "module": "AsyaBox"
-  },
-  "diziboxtv.com": {
-   "id": "diziboxtv-com",
-   "name": "DiziBoxTv",
-   "mainUrl": "https://diziboxtv.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Film",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "DiziBoxTv"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T03:36:03Z",
-   "latencyMs": 0,
-   "module": "DiziBoxTv"
-  },
-  "ddizimag.com": {
-   "id": "ddizimag-com",
-   "name": "DDizimag",
-   "mainUrl": "https://ddizimag.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Breaking Bad",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "DDizimag"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T03:37:24Z",
-   "latencyMs": 0,
-   "module": "DDizimag"
-  },
-  "turkcedizi.com": {
-   "id": "turkcedizi-com",
-   "name": "TurkceDizi",
-   "mainUrl": "https://turkcedizi.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Breaking 2022",
-   "language": "tr",
-   "tvTypes": [
-    "Movie"
-   ],
-   "poolNames": [
-    "TurkceDizi"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T03:39:13Z",
-   "latencyMs": 0,
-   "module": "TurkceDizi"
-  },
-  "asyadizileriizle.com": {
-   "id": "asyadizileriizle-com",
-   "name": "Asyadizileriizle",
-   "mainUrl": "https://asyadizileriizle.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Blind Woman",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "Asyadizileriizle"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T03:41:00Z",
-   "latencyMs": 0,
-   "module": "Asyadizileriizle"
-  },
-  "canlidizi.sbs": {
-   "id": "canlidizi-sbs",
-   "name": "CanliDizi",
-   "mainUrl": "https://canlidizi.sbs",
-   "status": "implemented",
-   "http": 200,
-   "title": "CanlıDizi",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "CanliDizi"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T04:47:36Z",
-   "latencyMs": 0,
-   "module": "CanliDizi"
-  },
-  "tabii.com": {
-   "id": "tabii-com",
-   "name": "CanliYayinKanallari",
-   "mainUrl": "https://www.tabii.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Canlı Yayın Kanalları",
-   "language": "tr",
-   "tvTypes": [
-    "Live"
-   ],
-   "poolNames": [
-    "CanliYayinKanallari"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T05:13:10Z",
-   "latencyMs": 0,
-   "module": "CanliYayinKanallari"
-  },
-  "filmizleya.com": {
-   "id": "filmizleya-com",
-   "name": "Filmizleya",
-   "mainUrl": "https://filmizleya.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Pizza Movie",
-   "language": "tr",
-   "tvTypes": [
-    "Movie"
-   ],
-   "poolNames": [
-    "Filmizleya"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T05:48:38Z",
-   "latencyMs": 0,
-   "module": "Filmizleya"
-  },
-  "weboo.com.tr": {
-   "id": "weboo-com-tr",
-   "name": "Weboo",
-   "mainUrl": "https://weboo.com.tr",
-   "status": "implemented",
-   "http": 200,
-   "title": "Level One Loser, Maxxx Level Lover 1. Bölüm",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "Weboo"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T06:17:42Z",
-   "latencyMs": 0,
-   "module": "Weboo"
-  },
-  "dizifon.cc": {
-   "id": "dizifon-cc",
-   "name": "Dizifon",
-   "mainUrl": "https://www.dizifon.cc",
-   "status": "implemented",
-   "http": 200,
-   "title": "Built in Love 2026 Tayland",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "Dizifon"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T06:29:15Z",
-   "latencyMs": 0,
-   "module": "Dizifon"
-  },
-  "asyadizi.com": {
-   "id": "asyadizi-com",
-   "name": "AsyaDizi",
-   "mainUrl": "https://asyadizi.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Love on Hire 2026 Tayland 2.Bölüm",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "AsyaDizi"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T06:31:26Z",
-   "latencyMs": 0,
-   "module": "AsyaDizi"
-  },
-  "birasyadizi.cx": {
-   "id": "birasyadizi-cx",
-   "name": "BirAsyaDizi",
-   "mainUrl": "https://www.birasyadizi.cx",
-   "status": "implemented",
-   "http": 200,
-   "title": "Built in Love 2026 Tayland",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "BirAsyaDizi"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T06:34:24Z",
-   "latencyMs": 0,
-   "module": "BirAsyaDizi"
-  },
-  "filmizyon.net": {
-   "id": "filmizyon-net",
-   "name": "Filmizyon",
-   "mainUrl": "https://www.filmizyon.net",
-   "status": "implemented",
-   "http": 200,
-   "title": "Sisu 2, Sisu: Road to Revenge",
-   "language": "tr",
-   "tvTypes": [
-    "Movie"
-   ],
-   "poolNames": [
-    "Filmizyon"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T06:50:49Z",
-   "latencyMs": 0,
-   "module": "Filmizyon"
-  },
-  "diziabi.net": {
-   "id": "diziabi-net",
-   "name": "DiziAbi",
-   "mainUrl": "https://www.diziabi.net",
-   "status": "implemented",
-   "http": 200,
-   "title": "Love of Your Life",
-   "language": "tr",
-   "tvTypes": [
-    "Movie"
-   ],
-   "poolNames": [
-    "DiziAbi"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T08:17:08Z",
-   "latencyMs": 0,
-   "module": "DiziAbi"
-  },
-  "dizigom.news": {
-   "id": "dizigom-news",
-   "name": "Dizigom",
-   "mainUrl": "https://www.dizigom.news",
-   "status": "implemented",
-   "http": 200,
-   "title": "Saplantı",
-   "language": "tr",
-   "tvTypes": [
-    "Movie"
-   ],
-   "poolNames": [
-    "Dizigom"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T08:23:25Z",
-   "latencyMs": 0,
-   "module": "Dizigom"
-  },
-  "hdfilmdiziizle.com": {
-   "id": "hdfilmdiziizle-com",
-   "name": "HDFilmDiziIzle",
-   "mainUrl": "https://www.hdfilmdiziizle.com",
-   "status": "implemented",
-   "http": 200,
-   "title": "Matrix Resurrections",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "poolNames": [
-    "HDFilmDiziIzle"
-   ],
-   "source": "provider-source",
-   "health": "ok",
-   "checked": "2026-10-30T11:50:29Z",
-   "latencyMs": 0,
-   "module": "HDFilmDiziIzle"
+  "generated": "2026-10-30",
+  "providers": {
+    "asyalog.co": {
+      "id": "asyalog-co",
+      "name": "AsyaLog",
+      "mainUrl": "https://asyalog.co",
+      "status": "implemented",
+      "http": 200,
+      "title": "Asyalog - En Güncel Asya Dizileri Çevirileri Burada!",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "poolNames": [
+        "AsyaLog"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 830,
+      "module": "AsyaLog"
+    },
+    "dizibox.live": {
+      "id": "dizibox-live",
+      "name": "DiziBox",
+      "mainUrl": "https://www.dizibox.live",
+      "status": "implemented",
+      "http": 200,
+      "title": "DiziBOX - Yabancı Dizi izle, Yabancı Diziler",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "DiziBox"
+      ],
+      "source": "manual",
+      "module": "Dizibox",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 1420,
+      "mirrors": [],
+      "revivedFrom": "dizibox.live"
+    },
+    "diziboxizle.com": {
+      "id": "diziboxizle-com",
+      "name": "DiziBox",
+      "mainUrl": "https://diziboxizle.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Dizibox İzle - Güncel Yabancı Dizi izle, HD Diziler izle",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "DiziBox"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 542,
+      "module": "DiziboxIzle",
+      "pipeline": "planned"
+    },
+    "diziyou.one": {
+      "id": "diziyou-one",
+      "name": "DiziYou",
+      "mainUrl": "https://diziyou.one",
+      "status": "implemented",
+      "http": 200,
+      "title": "Diziyou - Türkçe Dublaj &amp; Altyazılı Yabancı Dizi İzle",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "DiziYou"
+      ],
+      "source": "manual",
+      "module": "DiziYou",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 642
+    },
+    "asyaanimeleri.top": {
+      "id": "asyaanimeleri-top",
+      "name": "AsyaAnimeleri",
+      "mainUrl": "https://asyaanimeleri.top",
+      "status": "implemented",
+      "health": "ok",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "module": "AsyaAnimeleri",
+      "pipeline": "planned",
+      "source": "manual",
+      "http": 200,
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 465,
+      "title": "Asya Animeleri - Anime izle | Donghua izle | Animeler | Türkanime | Donghua Anime, Türkçe Altyazılı Anime izle , Türkçe "
+    },
+    "kultfilmler.net": {
+      "id": "kultfilmler-net",
+      "name": "KultFilmler",
+      "mainUrl": "https://kultfilmler.net",
+      "status": "implemented",
+      "health": "ok",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "module": "Kultfilmler",
+      "pipeline": "planned",
+      "source": "manual",
+      "http": 200,
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 377,
+      "title": "Kült Filmler - Seçkin Film İzleme Sitesi 2026"
+    },
+    "yabancidizi.live": {
+      "id": "yabancidizi-live",
+      "name": "YabanciDizi",
+      "mainUrl": "https://yabancidizi.live",
+      "status": "implemented",
+      "health": "ok",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "module": "Yabancidizi",
+      "pipeline": "planned",
+      "source": "manual",
+      "http": 200,
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 1168,
+      "title": "Yabancı Dizi İzle, Film İzle, Anime İzle | Türkçe Dublaj &amp; Altyazılı | Yabancıdizi - Yabancı Dizi, İzle, Film İzle, "
+    },
+    "dizi82.life": {
+      "id": "dizi82-life",
+      "name": "DiziLife",
+      "mainUrl": "https://dizi82.life",
+      "status": "implemented",
+      "health": "ok",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "module": "DiziLife",
+      "pipeline": "planned",
+      "source": "other-repos",
+      "http": 200,
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 546,
+      "title": "dizi.life — Diziler ve Filmler"
+    },
+    "diziasia.com": {
+      "id": "diziasia-com",
+      "name": "DiziAsia",
+      "mainUrl": "https://diziasia.com",
+      "status": "implemented",
+      "health": "ok",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "module": "Diziasia",
+      "pipeline": "planned",
+      "source": "other-repos",
+      "http": 200,
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 364,
+      "title": "DiziAsia - Asya Dizileri İzle"
+    },
+    "anizium.co": {
+      "id": "anizium-co",
+      "name": "Anizium",
+      "mainUrl": "https://anizium.co",
+      "status": "implemented",
+      "health": "ok",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "module": "Anizium",
+      "pipeline": "planned",
+      "source": "other-repos",
+      "http": 200,
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 321,
+      "title": "Anizium - Türkçe Dublaj & 4K İzleme Platformu"
+    },
+    "onepacetr.net": {
+      "id": "onepacetr-net",
+      "name": "OnePaceTr",
+      "mainUrl": "https://onepacetr.net",
+      "status": "implemented",
+      "health": "ok",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "module": "Onepacetr",
+      "pipeline": "planned",
+      "source": "other-repos",
+      "http": 200,
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 397,
+      "title": "One Pace Türkçe Altyazılı İzleme Platformu"
+    },
+    "dizikorea3.com": {
+      "id": "dizikorea3-com",
+      "name": "DiziKorea",
+      "mainUrl": "https://dizikorea3.com",
+      "status": "implemented",
+      "health": "ok",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "module": "Dizikorea3",
+      "pipeline": "planned",
+      "source": "other-repos",
+      "http": 200,
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 471,
+      "title": "DiziKorea - En Güncel Asya ve Kore Dizileri izleme Sitesi"
+    },
+    "cizgimax.online": {
+      "id": "cizgimax-online",
+      "name": "CizgiMax",
+      "mainUrl": "https://cizgimax.online",
+      "status": "implemented",
+      "health": "ok",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "module": "Cizgimax",
+      "pipeline": "planned",
+      "source": "other-repos",
+      "http": 200,
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 528,
+      "title": "ÇizgiMax - HD Çizgi Film İzle"
+    },
+    "sezonlukdizi.cc": {
+      "id": "sezonlukdizi-cc",
+      "name": "SezonlukDizi",
+      "mainUrl": "https://sezonlukdizi.cc",
+      "status": "implemented",
+      "health": "ok",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "module": "Sezonlukdizi",
+      "pipeline": "planned",
+      "source": "other-repos",
+      "http": 200,
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 310,
+      "title": "Sezonluk Dizi izle - 1080p yabanc� dizi izle"
+    },
+    "turkanime.info": {
+      "id": "turkanime-info",
+      "name": "Anizm",
+      "mainUrl": "https://turkanime.info",
+      "status": "beta",
+      "module": "Anizm",
+      "source": "provider-source",
+      "language": "?",
+      "tvTypes": [],
+      "http": 200,
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 704,
+      "title": "Anime İzle | Türkçe Altyazılı Anime Bölümleri - Anizm"
+    },
+    "belgeselx.com": {
+      "id": "belgeselx-com",
+      "name": "BelgeselX",
+      "mainUrl": "https://belgeselx.com",
+      "status": "beta",
+      "module": "BelgeselX",
+      "source": "provider-source",
+      "language": "?",
+      "tvTypes": [],
+      "http": 200,
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 1172,
+      "title": "BelgeselX | Türkçe Dublaj ve Altyazılı HD Belgesel İzle"
+    },
+    "iptv-org.github.io": {
+      "id": "iptv-org-github-io",
+      "name": "CanliTV",
+      "mainUrl": "https://iptv-org.github.io/iptv/countries/tr.m3u",
+      "status": "beta",
+      "module": "CanliTV",
+      "source": "provider-source",
+      "language": "?",
+      "tvTypes": [],
+      "http": 200,
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 206,
+      "title": ""
+    },
+    "www.ddizi.tel": {
+      "id": "www-ddizi-tel",
+      "name": "Ddizi",
+      "mainUrl": "https://www.ddizi.tel",
+      "status": "beta",
+      "module": "Ddizi",
+      "source": "provider-source",
+      "language": "?",
+      "tvTypes": [],
+      "http": 200,
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 334,
+      "title": "Ddizi, dizi izle, dizi seyret, dizi, canlı dizi, ddizi.tel"
+    },
+    "ddizimom.net": {
+      "id": "ddizimom-net",
+      "name": "DiziMom",
+      "mainUrl": "https://ddizimom.net",
+      "status": "beta",
+      "module": "DiziMom",
+      "source": "provider-source",
+      "language": "?",
+      "tvTypes": [],
+      "http": 200,
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 443,
+      "title": "DiziMom - Dizi izle - Yabancı Dizi izle"
+    },
+    "filmmodu.news": {
+      "id": "filmmodu-news",
+      "name": "FilmModu",
+      "mainUrl": "https://filmmodu.news",
+      "status": "beta",
+      "module": "FilmModu",
+      "source": "provider-source",
+      "language": "?",
+      "tvTypes": [],
+      "http": 200,
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 420,
+      "title": "Filmmodu - Film ve Dizi İzleme Platformu"
+    },
+    "fullhdfilmizlebox.vip": {
+      "id": "fullhdfilmizlebox-vip",
+      "name": "FullHDFilm",
+      "mainUrl": "https://fullhdfilmizlebox.vip",
+      "status": "beta",
+      "module": "FullHDFilm",
+      "source": "provider-source",
+      "language": "?",
+      "tvTypes": [],
+      "http": 200,
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 435,
+      "title": "Fullhdfilmizle | Film izle, HD Film izle"
+    },
+    "www.fullhdfilmizlesene.now": {
+      "id": "www-fullhdfilmizlesene-now",
+      "name": "FullHDFilmizlesene",
+      "mainUrl": "https://www.fullhdfilmizlesene.now",
+      "status": "beta",
+      "module": "FullHDFilmizlesene",
+      "source": "provider-source",
+      "language": "?",
+      "tvTypes": [],
+      "http": 403,
+      "health": "blocked",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 254,
+      "title": ""
+    },
+    "www.hdfilmcehennemi.nl": {
+      "id": "www-hdfilmcehennemi-nl",
+      "name": "HDFilmCehennemi",
+      "mainUrl": "https://www.hdfilmcehennemi.nl",
+      "status": "beta",
+      "module": "HDFilmCehennemi",
+      "source": "provider-source",
+      "language": "?",
+      "tvTypes": [],
+      "http": 403,
+      "health": "blocked",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 217,
+      "title": ""
+    },
+    "jetfilmizle.app": {
+      "id": "jetfilmizle-app",
+      "name": "JetFilmizle",
+      "mainUrl": "https://jetfilmizle.app",
+      "status": "beta",
+      "module": "JetFilmizle",
+      "source": "provider-source",
+      "language": "?",
+      "tvTypes": [],
+      "http": 200,
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 297,
+      "title": "JetFilmizle - Film İzle, Türkçe Dublaj, Altyazılı ve Yerli Filmler"
+    },
+    "koreanturk.tv": {
+      "id": "koreanturk-tv",
+      "name": "KoreanTurk",
+      "mainUrl": "https://koreanturk.tv",
+      "status": "beta",
+      "module": "KoreanTurk",
+      "source": "provider-source",
+      "language": "?",
+      "tvTypes": [],
+      "http": 200,
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 397,
+      "title": "KoreanTürk - En Güncel Kore Dizileri ve Filmleri izle"
+    },
+    "dizipal1592.com": {
+      "id": "dizipal1592-com",
+      "name": "DiziPal",
+      "mainUrl": "https://dizipal1592.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Dizipal | Dizipal Orijinal | Dizipal Güncel",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "poolNames": [
+        "DiziPal"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 321,
+      "module": "DiziPal"
+    },
+    "dizipod.com": {
+      "id": "dizipod-com",
+      "name": "DiziPod",
+      "mainUrl": "https://dizipod.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "poolNames": [
+        "DiziPod"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 538,
+      "module": "DiziPod"
+    },
+    "setfilmizle.ltd": {
+      "id": "setfilmizle-ltd",
+      "name": "SetFilmIzle",
+      "mainUrl": "https://www.setfilmizle.ltd",
+      "status": "implemented",
+      "http": 200,
+      "title": "Set Film izle | HD Film | Yabancı Dizi",
+      "language": "tr",
+      "tvTypes": [
+        "Movie",
+        "TvSeries"
+      ],
+      "poolNames": [
+        "SetFilmIzle"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 282,
+      "module": "SetFilmIzle"
+    },
+    "tlctv.com.tr": {
+      "id": "tlctv-com-tr",
+      "name": "TLCtr",
+      "mainUrl": "https://www.tlctv.com.tr",
+      "status": "implemented",
+      "http": 200,
+      "title": "TLC | Gerçek Hikayeler, Belgesel, Dizi",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Live"
+      ],
+      "poolNames": [
+        "TLCtr"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 268,
+      "module": "TLCtr"
+    },
+    "webdramaturkey2.com": {
+      "id": "webdramaturkey2-com",
+      "name": "WebdramaTurkey2",
+      "mainUrl": "https://webdramaturkey2.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Web Drama Turkey - Kore, Çin, Japon Dizileri İzle",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie",
+        "Anime"
+      ],
+      "poolNames": [
+        "WebdramaTurkey2"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 349,
+      "module": "WebdramaTurkey2"
+    },
+    "dramadizilerim.com": {
+      "id": "dramadizilerim-com",
+      "name": "DramaDizilerim",
+      "mainUrl": "https://dramadizilerim.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Drama Dizilerim - Dikey Mini Dizi &amp; Kısa Dizi İzle (Türkçe Dublaj &amp; Altyazılı)",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "poolNames": [
+        "DramaDizilerim"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 328,
+      "module": "DramaDizilerim"
+    },
+    "dizibal.org": {
+      "id": "dizibal-org",
+      "name": "DiziBal",
+      "mainUrl": "https://dizibal.org",
+      "status": "implemented",
+      "http": 200,
+      "title": "dizibaL: Online Dizi Arşivi - Altyazılı Yabancı Diziler",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "DiziBal"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 450,
+      "module": "DiziBal"
+    },
+    "filmekseni.vip": {
+      "id": "filmekseni-vip",
+      "name": "FilmEkseni",
+      "mainUrl": "https://filmekseni.vip",
+      "status": "implemented",
+      "http": 200,
+      "title": "Film izle | Türkçe Dublaj film izle ⚡️ FilmEkseni",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "FilmEkseni"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 298,
+      "module": "FilmEkseni"
+    },
+    "asyawatch.com": {
+      "id": "asyawatch-com",
+      "name": "AsyaWatch",
+      "mainUrl": "https://asyawatch.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Asyawatch - Web Drama Turkey | Kore, Asya Dizileri izle",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "poolNames": [
+        "AsyaWatch"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 279,
+      "module": "AsyaWatch"
+    },
+    "hdfilmizle.ink": {
+      "id": "hdfilmizle-ink",
+      "name": "HDFilmizle",
+      "mainUrl": "https://www.hdfilmizle.ink",
+      "status": "implemented",
+      "http": 200,
+      "title": "HDFilmizle - Yabancı dizi izle - Film izle",
+      "language": "tr",
+      "tvTypes": [
+        "Movie",
+        "TvSeries"
+      ],
+      "poolNames": [
+        "HDFilmizle"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 247,
+      "module": "HDFilmizle"
+    },
+    "lovefilmizle.net": {
+      "id": "lovefilmizle-net",
+      "name": "LoveFilm",
+      "mainUrl": "https://lovefilmizle.net",
+      "status": "implemented",
+      "http": 200,
+      "title": "Film izle 2026 | HD &amp; 4K Türkçe Dublaj Altyazılı | LoveFilm",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "LoveFilm"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 403,
+      "module": "LoveFilm"
+    },
+    "animecix.tv": {
+      "id": "animecix-tv",
+      "name": "AnimeciX",
+      "mainUrl": "https://animecix.tv",
+      "status": "implemented",
+      "http": 200,
+      "title": "AnimeciX - Türkçe Anime Bilgi ve Paylaşım Platformu",
+      "language": "tr",
+      "tvTypes": [
+        "Anime"
+      ],
+      "poolNames": [
+        "AnimeciX"
+      ],
+      "source": "provider-source",
+      "module": "AnimeciX"
+    },
+    "dizilla.now": {
+      "id": "dizilla-now",
+      "name": "Dizilla",
+      "mainUrl": "https://dizilla.now",
+      "status": "implemented",
+      "http": 200,
+      "title": "",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "Dizilla"
+      ],
+      "source": "provider-source",
+      "module": "Dizilla"
+    },
+    "selcukflix.app": {
+      "id": "selcukflix-app",
+      "name": "SelcukFlix",
+      "mainUrl": "https://selcukflix.app",
+      "status": "implemented",
+      "http": 200,
+      "title": "Yabancı Dizi ve film izle - Selcukflix",
+      "language": "tr",
+      "tvTypes": [
+        "Movie",
+        "TvSeries"
+      ],
+      "poolNames": [
+        "SelcukFlix"
+      ],
+      "source": "provider-source",
+      "module": "SelcukFlix"
+    },
+    "sinemacc.com": {
+      "id": "sinemacc-com",
+      "name": "SinemaCX",
+      "mainUrl": "https://sinemacc.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Film izle | Türkçe Dublaj HD Yabancı Filmler | Sinema CC",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "SinemaCX"
+      ],
+      "source": "provider-source",
+      "module": "SinemaCX"
+    },
+    "animeler.live": {
+      "id": "animeler-live",
+      "name": "Animeler",
+      "mainUrl": "https://animeler.live",
+      "status": "implemented",
+      "http": 200,
+      "title": "Animeler.live | Türkçe Altyazılı Anime İzle",
+      "language": "tr",
+      "tvTypes": [
+        "Anime"
+      ],
+      "poolNames": [
+        "Animeler"
+      ],
+      "source": "provider-source",
+      "module": "Animeler"
+    },
+    "hdfilmdelisi.one": {
+      "id": "hdfilmdelisi-one",
+      "name": "HDFilmDelisi",
+      "mainUrl": "https://hdfilmdelisi.one",
+      "status": "implemented",
+      "http": 200,
+      "title": "Matrix",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "HDFilmDelisi"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T02:40:42Z",
+      "latencyMs": 0,
+      "module": "HDFilmDelisi"
+    },
+    "yesilcamtv.com.tr": {
+      "id": "yesilcamtv-com-tr",
+      "name": "YesilCamTv",
+      "mainUrl": "https://yesilcamtv.com.tr",
+      "status": "implemented",
+      "http": 200,
+      "title": "Abuk Sabuk Bir Film",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "YesilCamTv"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T02:54:02Z",
+      "latencyMs": 0,
+      "module": "YesilCamTv"
+    },
+    "sonanime.com": {
+      "id": "sonanime-com",
+      "name": "SonAnime",
+      "mainUrl": "https://sonanime.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Frieren: Beyond Journey's End",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "SonAnime"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T03:23:32Z",
+      "latencyMs": 0,
+      "module": "SonAnime"
+    },
+    "asyaluna.com": {
+      "id": "asyaluna-com",
+      "name": "AsyaLuna",
+      "mainUrl": "https://asyaluna.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Summer Vacation 2026 Kore",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "AsyaLuna"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T03:25:57Z",
+      "latencyMs": 0,
+      "module": "AsyaLuna"
+    },
+    "dizican.cc": {
+      "id": "dizican-cc",
+      "name": "DiziCaN",
+      "mainUrl": "https://dizican.cc",
+      "status": "implemented",
+      "http": 200,
+      "title": "Head 2 Head 1. Bölüm",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "DiziCaN"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T03:27:47Z",
+      "latencyMs": 0,
+      "module": "DiziCaN"
+    },
+    "dizirella.one": {
+      "id": "dizirella-one",
+      "name": "Dizirella",
+      "mainUrl": "https://dizirella.one",
+      "status": "implemented",
+      "http": 200,
+      "title": "Welcome back, First love. 1. Sezon 4. Bölüm",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "Dizirella"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T03:28:30Z",
+      "latencyMs": 0,
+      "module": "Dizirella"
+    },
+    "asyabox.co": {
+      "id": "asyabox-co",
+      "name": "AsyaBox",
+      "mainUrl": "https://asyabox.co",
+      "status": "implemented",
+      "http": 200,
+      "title": "Turbulent Love 2026 Çin",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "AsyaBox"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T03:33:17Z",
+      "latencyMs": 0,
+      "module": "AsyaBox"
+    },
+    "diziboxtv.com": {
+      "id": "diziboxtv-com",
+      "name": "DiziBoxTv",
+      "mainUrl": "https://diziboxtv.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Film",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "DiziBoxTv"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T03:36:03Z",
+      "latencyMs": 0,
+      "module": "DiziBoxTv"
+    },
+    "ddizimag.com": {
+      "id": "ddizimag-com",
+      "name": "DDizimag",
+      "mainUrl": "https://ddizimag.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Breaking Bad",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "DDizimag"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T03:37:24Z",
+      "latencyMs": 0,
+      "module": "DDizimag"
+    },
+    "turkcedizi.com": {
+      "id": "turkcedizi-com",
+      "name": "TurkceDizi",
+      "mainUrl": "https://turkcedizi.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Breaking 2022",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "TurkceDizi"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T03:39:13Z",
+      "latencyMs": 0,
+      "module": "TurkceDizi"
+    },
+    "asyadizileriizle.com": {
+      "id": "asyadizileriizle-com",
+      "name": "Asyadizileriizle",
+      "mainUrl": "https://asyadizileriizle.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Blind Woman",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "Asyadizileriizle"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T03:41:00Z",
+      "latencyMs": 0,
+      "module": "Asyadizileriizle"
+    },
+    "canlidizi.sbs": {
+      "id": "canlidizi-sbs",
+      "name": "CanliDizi",
+      "mainUrl": "https://canlidizi.sbs",
+      "status": "implemented",
+      "http": 200,
+      "title": "CanlıDizi",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "CanliDizi"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T04:47:36Z",
+      "latencyMs": 0,
+      "module": "CanliDizi"
+    },
+    "tabii.com": {
+      "id": "tabii-com",
+      "name": "CanliYayinKanallari",
+      "mainUrl": "https://www.tabii.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Canlı Yayın Kanalları",
+      "language": "tr",
+      "tvTypes": [
+        "Live"
+      ],
+      "poolNames": [
+        "CanliYayinKanallari"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T05:13:10Z",
+      "latencyMs": 0,
+      "module": "CanliYayinKanallari"
+    },
+    "filmizleya.com": {
+      "id": "filmizleya-com",
+      "name": "Filmizleya",
+      "mainUrl": "https://filmizleya.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Pizza Movie",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "Filmizleya"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T05:48:38Z",
+      "latencyMs": 0,
+      "module": "Filmizleya"
+    },
+    "weboo.com.tr": {
+      "id": "weboo-com-tr",
+      "name": "Weboo",
+      "mainUrl": "https://weboo.com.tr",
+      "status": "implemented",
+      "http": 200,
+      "title": "Level One Loser, Maxxx Level Lover 1. Bölüm",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "Weboo"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T06:17:42Z",
+      "latencyMs": 0,
+      "module": "Weboo"
+    },
+    "dizifon.cc": {
+      "id": "dizifon-cc",
+      "name": "Dizifon",
+      "mainUrl": "https://www.dizifon.cc",
+      "status": "implemented",
+      "http": 200,
+      "title": "Built in Love 2026 Tayland",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "Dizifon"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T06:29:15Z",
+      "latencyMs": 0,
+      "module": "Dizifon"
+    },
+    "asyadizi.com": {
+      "id": "asyadizi-com",
+      "name": "AsyaDizi",
+      "mainUrl": "https://asyadizi.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Love on Hire 2026 Tayland 2.Bölüm",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "AsyaDizi"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T06:31:26Z",
+      "latencyMs": 0,
+      "module": "AsyaDizi"
+    },
+    "birasyadizi.cx": {
+      "id": "birasyadizi-cx",
+      "name": "BirAsyaDizi",
+      "mainUrl": "https://www.birasyadizi.cx",
+      "status": "implemented",
+      "http": 200,
+      "title": "Built in Love 2026 Tayland",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "BirAsyaDizi"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T06:34:24Z",
+      "latencyMs": 0,
+      "module": "BirAsyaDizi"
+    },
+    "filmizyon.net": {
+      "id": "filmizyon-net",
+      "name": "Filmizyon",
+      "mainUrl": "https://www.filmizyon.net",
+      "status": "implemented",
+      "http": 200,
+      "title": "Sisu 2, Sisu: Road to Revenge",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "Filmizyon"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T06:50:49Z",
+      "latencyMs": 0,
+      "module": "Filmizyon"
+    },
+    "diziabi.net": {
+      "id": "diziabi-net",
+      "name": "DiziAbi",
+      "mainUrl": "https://www.diziabi.net",
+      "status": "implemented",
+      "http": 200,
+      "title": "Love of Your Life",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "DiziAbi"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T08:17:08Z",
+      "latencyMs": 0,
+      "module": "DiziAbi"
+    },
+    "dizigom.news": {
+      "id": "dizigom-news",
+      "name": "Dizigom",
+      "mainUrl": "https://www.dizigom.news",
+      "status": "implemented",
+      "http": 200,
+      "title": "Saplantı",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "Dizigom"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T08:23:25Z",
+      "latencyMs": 0,
+      "module": "Dizigom"
+    },
+    "hdfilmdiziizle.com": {
+      "id": "hdfilmdiziizle-com",
+      "name": "HDFilmDiziIzle",
+      "mainUrl": "https://www.hdfilmdiziizle.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Matrix Resurrections",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "HDFilmDiziIzle"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T11:50:29Z",
+      "latencyMs": 0,
+      "module": "HDFilmDiziIzle"
+    }
   }
- }
 }
