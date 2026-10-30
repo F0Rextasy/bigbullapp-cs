@@ -61,6 +61,8 @@ sayı arttığında güncelleme sunar.
 +  ana sayfa/kanal kategori satırı aç/kapat anahtarları eklendi; kalite/altyazı seçimleri korundu.
 +- **FullHDFilm v4**: ana sayfa kart seçicisi `group/poster` sınıfına göre düzeltildi; 24 kart
 +  gerçek başlık ve posterle geliyor.
+- **DiziboxIzle v6**: ok.ru oynatıcısı HTML kazıma yerine `videoPlayerMetadata` JSON'undan
++  `videos` dizisiyle okunuyor; copyright'lu bölümlerde dürüst hata, çalışan bölümlerde 6 link.
 - **Poster düzeltmesi (21 modül)**: Anizm, AsyaAnimeleri, AsyaLog, BelgeselX, Cizgimax,
 +  DiziBal, DiziMom, DiziPod, DiziYou, Dizibox, DiziboxIzle, Dizilla, DramaDizilerim,
 +  FilmEkseni, FilmModu, FullHDFilm, HDFilmCehennemi, JetFilmizle, KoreanTurk, Kultfilmler,
