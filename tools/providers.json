@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-29",
+ "generated": "2026-10-30",
  "providers": {
   "asyalog.co": {
    "id": "asyalog-co",
@@ -18,8 +18,8 @@
    ],
    "source": "provider-source",
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1857,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 830,
    "module": "AsyaLog"
   },
   "dizibox.live": {
@@ -39,8 +39,8 @@
    "source": "manual",
    "module": "Dizibox",
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 352,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 1420,
    "mirrors": [],
    "revivedFrom": "dizibox.live"
   },
@@ -60,8 +60,8 @@
    ],
    "source": "provider-source",
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1569,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 542,
    "module": "DiziboxIzle",
    "pipeline": "planned"
   },
@@ -82,8 +82,8 @@
    "source": "manual",
    "module": "DiziYou",
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1589
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 642
   },
   "asyaanimeleri.top": {
    "id": "asyaanimeleri-top",
@@ -100,8 +100,8 @@
    "pipeline": "planned",
    "source": "manual",
    "http": 200,
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1463,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 465,
    "title": "Asya Animeleri - Anime izle | Donghua izle | Animeler | Türkanime | Donghua Anime, Türkçe Altyazılı Anime izle , Türkçe "
   },
   "kultfilmler.net": {
@@ -118,8 +118,8 @@
    "pipeline": "planned",
    "source": "manual",
    "http": 200,
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1381,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 377,
    "title": "Kült Filmler - Seçkin Film İzleme Sitesi 2026"
   },
   "yabancidizi.live": {
@@ -137,8 +137,8 @@
    "pipeline": "planned",
    "source": "manual",
    "http": 200,
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 2997,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 1168,
    "title": "Yabancı Dizi İzle, Film İzle, Anime İzle | Türkçe Dublaj &amp; Altyazılı | Yabancıdizi - Yabancı Dizi, İzle, Film İzle, "
   },
   "dizi82.life": {
@@ -156,8 +156,8 @@
    "pipeline": "planned",
    "source": "other-repos",
    "http": 200,
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1494,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 546,
    "title": "dizi.life — Diziler ve Filmler"
   },
   "diziasia.com": {
@@ -175,8 +175,8 @@
    "pipeline": "planned",
    "source": "other-repos",
    "http": 200,
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 3446,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 364,
    "title": "DiziAsia - Asya Dizileri İzle"
   },
   "anizium.co": {
@@ -194,27 +194,9 @@
    "pipeline": "planned",
    "source": "other-repos",
    "http": 200,
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1295,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 321,
    "title": "Anizium - Türkçe Dublaj & 4K İzleme Platformu"
-  },
-  "dizilla.nl": {
-   "id": "dizilla-nl",
-   "name": "Dizilla",
-   "mainUrl": "https://dizilla.nl",
-   "status": "implemented",
-   "health": "dead",
-   "language": "tr",
-   "tvTypes": [
-    "TvSeries"
-   ],
-   "module": "Dizilla",
-   "pipeline": "planned",
-   "source": "other-repos",
-   "http": null,
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 24516,
-   "title": "..."
   },
   "onepacetr.net": {
    "id": "onepacetr-net",
@@ -230,8 +212,8 @@
    "pipeline": "planned",
    "source": "other-repos",
    "http": 200,
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 3342,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 397,
    "title": "One Pace Türkçe Altyazılı İzleme Platformu"
   },
   "dizikorea3.com": {
@@ -249,8 +231,8 @@
    "pipeline": "planned",
    "source": "other-repos",
    "http": 200,
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1421,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 471,
    "title": "DiziKorea - En Güncel Asya ve Kore Dizileri izleme Sitesi"
   },
   "cizgimax.online": {
@@ -267,8 +249,8 @@
    "pipeline": "planned",
    "source": "other-repos",
    "http": 200,
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 3577,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 528,
    "title": "ÇizgiMax - HD Çizgi Film İzle"
   },
   "sezonlukdizi.cc": {
@@ -285,69 +267,9 @@
    "pipeline": "planned",
    "source": "other-repos",
    "http": 200,
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1281,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 310,
    "title": "Sezonluk Dizi izle - 1080p yabanc� dizi izle"
-  },
-  "allcalidad.re": {
-   "id": "allcalidad-re",
-   "name": "AllCalidad",
-   "mainUrl": "https://allcalidad.re",
-   "status": "beta",
-   "module": "AllCalidad",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1409,
-   "title": "AllCalidad Oficial: Películas, Series y Animes Online en HD"
-  },
-  "animeindo.me": {
-   "id": "animeindo-me",
-   "name": "AnimeIndo",
-   "mainUrl": "https://animeindo.me",
-   "status": "beta",
-   "module": "AnimeIndo",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 4705,
-   "title": "Animeindo - Nonton Streaming Anime Subtitle Indonesia Update Terbaru dan Terlengkap"
-  },
-  "www.animeworld.ac": {
-   "id": "www-animeworld-ac",
-   "name": "AnimeWorld",
-   "mainUrl": "https://www.animeworld.ac",
-   "status": "beta",
-   "module": "AnimeWorld",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1519,
-   "title": "AnimeWorld - Download e Streaming Anime Sub ITA e ITA"
-  },
-  "animeytx.org": {
-   "id": "animeytx-org",
-   "name": "AnimeYTX",
-   "mainUrl": "https://animeytx.org",
-   "status": "beta",
-   "module": "AnimeYTX",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 3532,
-   "title": "Anime Online en Sub Español y Latino HD | AnimeYT"
   },
   "turkanime.info": {
    "id": "turkanime-info",
@@ -360,24 +282,9 @@
    "tvTypes": [],
    "http": 200,
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1764,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 704,
    "title": "Anime İzle | Türkçe Altyazılı Anime Bölümleri - Anizm"
-  },
-  "www.area-documental.com": {
-   "id": "www-area-documental-com",
-   "name": "AreaDocumental",
-   "mainUrl": "https://www.area-documental.com",
-   "status": "beta",
-   "module": "AreaDocumental",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 663,
-   "title": "Area Documental - Los mejores Documentales online"
   },
   "belgeselx.com": {
    "id": "belgeselx-com",
@@ -390,8 +297,8 @@
    "tvTypes": [],
    "http": 200,
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 2039,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 1172,
    "title": "BelgeselX | Türkçe Dublaj ve Altyazılı HD Belgesel İzle"
   },
   "iptv-org.github.io": {
@@ -405,8 +312,8 @@
    "tvTypes": [],
    "http": 200,
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1356,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 206,
    "title": ""
   },
   "www.canlitv.me": {
@@ -420,39 +327,9 @@
    "tvTypes": [],
    "http": null,
    "health": "dead",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 124,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 136,
    "title": ""
-  },
-  "www.cinecalidad.ec": {
-   "id": "www-cinecalidad-ec",
-   "name": "Cinecalidad",
-   "mainUrl": "https://www.cinecalidad.ec",
-   "status": "beta",
-   "module": "Cinecalidad",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 4191,
-   "title": "Cinecalidad | Películas y Series Online y Descarga"
-  },
-  "cinehdplus.work": {
-   "id": "cinehdplus-work",
-   "name": "CineHdPlus",
-   "mainUrl": "https://cinehdplus.work",
-   "status": "beta",
-   "module": "CineHdPlus",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 385,
-   "title": "Ver Películas Online Gratis en Español/Castellano - CineHDPlus"
   },
   "www.ddizi.tel": {
    "id": "www-ddizi-tel",
@@ -465,8 +342,8 @@
    "tvTypes": [],
    "http": 200,
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1356,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 334,
    "title": "Ddizi, dizi izle, dizi seyret, dizi, canlı dizi, ddizi.tel"
   },
   "ddizimom.net": {
@@ -480,24 +357,9 @@
    "tvTypes": [],
    "http": 200,
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 461,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 443,
    "title": "DiziMom - Dizi izle - Yabancı Dizi izle"
-  },
-  "www.doramasyt.com": {
-   "id": "www-doramasyt-com",
-   "name": "DoramasYT",
-   "mainUrl": "https://www.doramasyt.com",
-   "status": "beta",
-   "module": "DoramasYT",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1468,
-   "title": "Ver Doramas Online Gratis en HD - Sub Español y Latino | DoramasYT"
   },
   "filmmodu.news": {
    "id": "filmmodu-news",
@@ -510,24 +372,9 @@
    "tvTypes": [],
    "http": 200,
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 426,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 420,
    "title": "Filmmodu - Film ve Dizi İzleme Platformu"
-  },
-  "flixlatam.com": {
-   "id": "flixlatam-com",
-   "name": "Flixlatam",
-   "mainUrl": "https://flixlatam.com",
-   "status": "beta",
-   "module": "Flixlatam",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 517,
-   "title": "FlixLatam (Series Latinoamérica)"
   },
   "fullhdfilmizlebox.vip": {
    "id": "fullhdfilmizlebox-vip",
@@ -540,8 +387,8 @@
    "tvTypes": [],
    "http": 200,
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 316,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 435,
    "title": "Fullhdfilmizle | Film izle, HD Film izle"
   },
   "www.fullhdfilmizlesene.now": {
@@ -555,8 +402,8 @@
    "tvTypes": [],
    "http": 403,
    "health": "blocked",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 206,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 254,
    "title": ""
   },
   "www.hdfilmcehennemi.nl": {
@@ -570,39 +417,9 @@
    "tvTypes": [],
    "http": 403,
    "health": "blocked",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 3215,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 217,
    "title": ""
-  },
-  "hdfilme.to": {
-   "id": "hdfilme-to",
-   "name": "Hdfilme",
-   "mainUrl": "https://hdfilme.to",
-   "status": "beta",
-   "module": "Hdfilme",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 483,
-   "title": "HDfilme – Filme und Serien kostenlos streamen in HD (2026)"
-  },
-  "hianime.fun": {
-   "id": "hianime-fun",
-   "name": "HiAnime",
-   "mainUrl": "https://hianime.fun",
-   "status": "beta",
-   "module": "HiAnime",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 3694,
-   "title": "HiAnime – Watch Free HD Anime Online with Sub and Dub"
   },
   "jetfilmizle.app": {
    "id": "jetfilmizle-app",
@@ -615,24 +432,9 @@
    "tvTypes": [],
    "http": 200,
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1280,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 297,
    "title": "JetFilmizle - Film İzle, Türkçe Dublaj, Altyazılı ve Yerli Filmler"
-  },
-  "jkanime.bz": {
-   "id": "jkanime-bz",
-   "name": "JKAnime",
-   "mainUrl": "https://jkanime.bz",
-   "status": "beta",
-   "module": "JKAnime",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 3722,
-   "title": "Ver Anime Online - todos los animes gratis"
   },
   "koreanturk.tv": {
    "id": "koreanturk-tv",
@@ -645,146 +447,307 @@
    "tvTypes": [],
    "http": 200,
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1389,
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 397,
    "title": "KoreanTürk - En Güncel Kore Dizileri ve Filmleri izle"
   },
-  "lamovie.org": {
-   "id": "lamovie-org",
-   "name": "LaMovie",
-   "mainUrl": "https://lamovie.org",
-   "status": "beta",
-   "module": "LaMovie",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
+  "dizipal1592.com": {
+   "id": "dizipal1592-com",
+   "name": "DiziPal",
+   "mainUrl": "https://dizipal1592.com",
+   "status": "implemented",
    "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 477,
-   "title": "LaMovie - Películas, Series y Animes Online en HD Gratis"
-  },
-  "latanime.org": {
-   "id": "latanime-org",
-   "name": "Latanime",
-   "mainUrl": "https://latanime.org",
-   "status": "beta",
-   "module": "Latanime",
+   "title": "Dizipal | Dizipal Orijinal | Dizipal Güncel",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Movie"
+   ],
+   "poolNames": [
+    "DiziPal"
+   ],
    "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
+   "health": "ok",
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 321,
+   "module": "DiziPal"
+  },
+  "dizipod.com": {
+   "id": "dizipod-com",
+   "name": "DiziPod",
+   "mainUrl": "https://dizipod.com",
+   "status": "implemented",
    "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 544,
-   "title": "Latanime - Ver Anime Online Full HD"
-  },
-  "monoschinos.st": {
-   "id": "monoschinos-st",
-   "name": "Monoschinos",
-   "mainUrl": "https://monoschinos.st",
-   "status": "beta",
-   "module": "Monoschinos",
+   "title": "",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Movie"
+   ],
+   "poolNames": [
+    "DiziPod"
+   ],
    "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
+   "health": "ok",
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 538,
+   "module": "DiziPod"
+  },
+  "setfilmizle.ltd": {
+   "id": "setfilmizle-ltd",
+   "name": "SetFilmIzle",
+   "mainUrl": "https://www.setfilmizle.ltd",
+   "status": "implemented",
    "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1491,
-   "title": "MonosChinos - Ver Anime Online Sub Español Gratis en Full HD"
-  },
-  "serienstream.to": {
-   "id": "serienstream-to",
-   "name": "Serienstream",
-   "mainUrl": "https://serienstream.to",
-   "status": "beta",
-   "module": "Serienstream",
+   "title": "Set Film izle | HD Film | Yabancı Dizi",
+   "language": "tr",
+   "tvTypes": [
+    "Movie",
+    "TvSeries"
+   ],
+   "poolNames": [
+    "SetFilmIzle"
+   ],
    "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
+   "health": "ok",
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 282,
+   "module": "SetFilmIzle"
+  },
+  "tlctv.com.tr": {
+   "id": "tlctv-com-tr",
+   "name": "TLCtr",
+   "mainUrl": "https://www.tlctv.com.tr",
+   "status": "implemented",
    "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1475,
-   "title": "Serien Online gratis ansehen &amp; streamen - Kostenloses Streaming | SerienStream (S.to)"
-  },
-  "www.supercartoons.net": {
-   "id": "www-supercartoons-net",
-   "name": "Supercartoons",
-   "mainUrl": "https://www.supercartoons.net",
-   "status": "beta",
-   "module": "Supercartoons",
+   "title": "TLC | Gerçek Hikayeler, Belgesel, Dizi",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Live"
+   ],
+   "poolNames": [
+    "TLCtr"
+   ],
    "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
+   "health": "ok",
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 268,
+   "module": "TLCtr"
+  },
+  "webdramaturkey2.com": {
+   "id": "webdramaturkey2-com",
+   "name": "WebdramaTurkey2",
+   "mainUrl": "https://webdramaturkey2.com",
+   "status": "implemented",
    "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1659,
-   "title": "SuperCartoons : Watch Old Classical Cartoons"
-  },
-  "tioanime.com": {
-   "id": "tioanime-com",
-   "name": "TioAnime",
-   "mainUrl": "https://tioanime.com",
-   "status": "beta",
-   "module": "TioAnime",
+   "title": "Web Drama Turkey - Kore, Çin, Japon Dizileri İzle",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Movie",
+    "Anime"
+   ],
+   "poolNames": [
+    "WebdramaTurkey2"
+   ],
    "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
+   "health": "ok",
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 349,
+   "module": "WebdramaTurkey2"
+  },
+  "dramadizilerim.com": {
+   "id": "dramadizilerim-com",
+   "name": "DramaDizilerim",
+   "mainUrl": "https://dramadizilerim.com",
+   "status": "implemented",
    "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1443,
-   "title": "Anime Online en HD - TioAnime"
-  },
-  "uhdmovies.org": {
-   "id": "uhdmovies-org",
-   "name": "UHDmovies",
-   "mainUrl": "https://uhdmovies.org",
-   "status": "beta",
-   "module": "UHDmovies",
+   "title": "Drama Dizilerim - Dikey Mini Dizi &amp; Kısa Dizi İzle (Türkçe Dublaj &amp; Altyazılı)",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Movie"
+   ],
+   "poolNames": [
+    "DramaDizilerim"
+   ],
    "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
+   "health": "ok",
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 328,
+   "module": "DramaDizilerim"
+  },
+  "dizibal.org": {
+   "id": "dizibal-org",
+   "name": "DiziBal",
+   "mainUrl": "https://dizibal.org",
+   "status": "implemented",
    "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 984,
-   "title": "UHDMovies - 4k Ultra HD Movies | 1080p Dual Audio Movies"
-  },
-  "ultracine.lol": {
-   "id": "ultracine-lol",
-   "name": "UltraCine",
-   "mainUrl": "https://ultracine.lol",
-   "status": "beta",
-   "module": "UltraCine",
+   "title": "dizibaL: Online Dizi Arşivi - Altyazılı Yabancı Diziler",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "DiziBal"
+   ],
    "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
+   "health": "ok",
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 450,
+   "module": "DiziBal"
+  },
+  "filmekseni.vip": {
+   "id": "filmekseni-vip",
+   "name": "FilmEkseni",
+   "mainUrl": "https://filmekseni.vip",
+   "status": "implemented",
    "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 1620,
-   "title": "UltraCine Oficial - Assistir Filmes e Séries Online em HD"
-  },
-  "new1.moviesdrive.cyou": {
-   "id": "new1-moviesdrive-cyou",
-   "name": "MoviesDrive",
-   "mainUrl": "https://new1.moviesdrive.cyou",
-   "status": "beta",
-   "module": "MoviesDrive",
-   "source": "provider-source",
-   "language": "hi",
+   "title": "Film izle | Türkçe Dublaj film izle ⚡️ FilmEkseni",
+   "language": "tr",
    "tvTypes": [
     "Movie"
    ],
-   "http": 200,
+   "poolNames": [
+    "FilmEkseni"
+   ],
+   "source": "provider-source",
    "health": "ok",
-   "checked": "2026-10-29T16:31:24Z",
-   "latencyMs": 494,
-   "title": "MoviesDrive &#8211; Download Movies &amp; Webseries in 4k"
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 298,
+   "module": "FilmEkseni"
+  },
+  "asyawatch.com": {
+   "id": "asyawatch-com",
+   "name": "AsyaWatch",
+   "mainUrl": "https://asyawatch.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "Asyawatch - Web Drama Turkey | Kore, Asya Dizileri izle",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Movie"
+   ],
+   "poolNames": [
+    "AsyaWatch"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 279,
+   "module": "AsyaWatch"
+  },
+  "hdfilmizle.ink": {
+   "id": "hdfilmizle-ink",
+   "name": "HDFilmizle",
+   "mainUrl": "https://www.hdfilmizle.ink",
+   "status": "implemented",
+   "http": 200,
+   "title": "HDFilmizle - Yabancı dizi izle - Film izle",
+   "language": "tr",
+   "tvTypes": [
+    "Movie",
+    "TvSeries"
+   ],
+   "poolNames": [
+    "HDFilmizle"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 247,
+   "module": "HDFilmizle"
+  },
+  "lovefilmizle.net": {
+   "id": "lovefilmizle-net",
+   "name": "LoveFilm",
+   "mainUrl": "https://lovefilmizle.net",
+   "status": "implemented",
+   "http": 200,
+   "title": "Film izle 2026 | HD &amp; 4K Türkçe Dublaj Altyazılı | LoveFilm",
+   "language": "tr",
+   "tvTypes": [
+    "Movie"
+   ],
+   "poolNames": [
+    "LoveFilm"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-29T19:23:07Z",
+   "latencyMs": 403,
+   "module": "LoveFilm"
+  },
+  "animecix.tv": {
+   "id": "animecix-tv",
+   "name": "AnimeciX",
+   "mainUrl": "https://animecix.tv",
+   "status": "implemented",
+   "http": 200,
+   "title": "AnimeciX - Türkçe Anime Bilgi ve Paylaşım Platformu",
+   "language": "tr",
+   "tvTypes": [
+    "Anime"
+   ],
+   "poolNames": [
+    "AnimeciX"
+   ],
+   "source": "provider-source",
+   "module": "AnimeciX"
+  },
+  "dizilla.now": {
+   "id": "dizilla-now",
+   "name": "Dizilla",
+   "mainUrl": "https://dizilla.now",
+   "status": "implemented",
+   "http": 200,
+   "title": "",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "Dizilla"
+   ],
+   "source": "provider-source",
+   "module": "Dizilla"
+  },
+  "selcukflix.app": {
+   "id": "selcukflix-app",
+   "name": "SelcukFlix",
+   "mainUrl": "https://selcukflix.app",
+   "status": "implemented",
+   "http": 200,
+   "title": "Yabancı Dizi ve film izle - Selcukflix",
+   "language": "tr",
+   "tvTypes": [
+    "Movie",
+    "TvSeries"
+   ],
+   "poolNames": [
+    "SelcukFlix"
+   ],
+   "source": "provider-source",
+   "module": "SelcukFlix"
+  },
+  "sinemacc.com": {
+   "id": "sinemacc-com",
+   "name": "SinemaCX",
+   "mainUrl": "https://sinemacc.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "Film izle | Türkçe Dublaj HD Yabancı Filmler | Sinema CC",
+   "language": "tr",
+   "tvTypes": [
+    "Movie"
+   ],
+   "poolNames": [
+    "SinemaCX"
+   ],
+   "source": "provider-source",
+   "module": "SinemaCX"
   }
  }
 }

@@ -266,12 +266,32 @@ class CizgimaxProvider : MainAPI() {
                     }
 
                     resolveUrl.isNotBlank() -> {
-                        val videoKey = JSONObject(app.get(fixUrl(resolveUrl), referer = data, headers = uaHeaders).text)
+                        val resolve = if (resolveUrl.startsWith("http")) resolveUrl else "$mainUrl$resolveUrl"
+                        val videoKey = JSONObject(app.get(resolve, referer = data, headers = uaHeaders).text)
                             .optString("id")
                         if (videoKey.isNotBlank()) {
-                            loadExtractor(
-                                "https://tau-video.xyz/embed/$videoKey", data, subtitleFilter, emit
-                            )
+                            // tau-video's SPA loads its own API; read the renditions directly.
+                            val body = runCatching {
+                                app.get(
+                                    "https://tau-video.xyz/api/video/$videoKey",
+                                    referer = "https://tau-video.xyz/",
+                                    headers = uaHeaders,
+                                ).text
+                            }.getOrNull().orEmpty()
+                            val urls = runCatching { JSONObject(body).optJSONArray("urls") }.getOrNull()
+                            if (urls != null) {
+                                for (i in 0 until urls.length()) {
+                                    val item = urls.optJSONObject(i) ?: continue
+                                    val stream = item.optString("url").takeIf { it.startsWith("http") }
+                                        ?: continue
+                                    val label = item.optString("label").ifBlank { "TauVideo" }
+                                    emit(
+                                        newExtractorLink(name, "$name · $label", stream, ExtractorLinkType.VIDEO) {
+                                            this.quality = getQualityFromName(label)
+                                        }
+                                    )
+                                }
+                            }
                         }
                     }
                 }

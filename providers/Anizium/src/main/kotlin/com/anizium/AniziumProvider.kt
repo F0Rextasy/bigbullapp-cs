@@ -207,6 +207,8 @@ class AniziumProvider : MainAPI() {
         "Cf-Control" to cfControl(),
         "language" to "tr",
         "site" to "main",
+        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
     )
 
     private fun JSONObject.toSearchResult(): SearchResponse? {

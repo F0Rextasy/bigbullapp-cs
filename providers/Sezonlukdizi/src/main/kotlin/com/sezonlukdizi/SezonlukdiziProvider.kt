@@ -424,7 +424,7 @@ class SezonlukdiziProvider : MainAPI() {
         val payload = claims ?: JSONObject()
             .put("viewer_id", response.optString("viewer_id"))
             .put("device_id", response.optString("device_id"))
-            .put("confidence", response.optDouble("confidence"))
+            .put("confidence", response.optDouble("confidence").takeIf { it.isFinite() } ?: 0.0)
 
         return JSONObject()
             .put("token", response.optString("token"))

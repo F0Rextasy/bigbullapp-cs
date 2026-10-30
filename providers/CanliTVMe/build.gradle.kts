@@ -1,7 +1,7 @@
-version = 1
+version = 2
 
 cloudstream {
-    description = "CanliTVMe — Türkçe canlı TV kanalları (canlitv.me)"
+    description = "CanliTVMe — Türkçe canlı TV kanalları (canlitv.me / canlitvizle.tv)"
     authors = listOf("F0Rextasy")
     status = 3
     tvTypes = listOf("Live")
