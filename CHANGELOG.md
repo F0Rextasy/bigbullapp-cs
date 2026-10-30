@@ -5,9 +5,6 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
-- **CanliTV v3**: M3U kanal URL'si doğrudan `loadLinks` ile HLS olarak verilir; eski
-  `loadLinks returned false` hatası giderildi.
-
 ## [1.5.1] - 2026-10-30
 
 ### Eklendi
@@ -70,6 +67,36 @@ sayı arttığında güncelleme sunar.
 - **YesilCamTv v1**: `yesilcamtv.com.tr` sıfırdan eklendi; film; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
 - **HDFilmDelisi v1**: `hdfilmdelisi.one` sıfırdan eklendi; film; runner doğrulaması: arama 4, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+### Değişti
+- **CanliTV v3**: M3U kanal URL'si doğrudan `loadLinks` ile HLS olarak verilir; eski
+  `loadLinks returned false` hatası giderildi.
+- **HDFilmDelisi v2**: site kategorilerinin tamamı (22 satır) ana sayfa seçicisine eklendi;
+  runner doğrulaması: arama 4, bağlantı 1.
+
+- **AnimeciX v3**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **AsyaLog v6**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **AsyaWatch v3**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **DiziBal v4**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **DiziLife v5**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **DiziYou v6**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **Dizikorea3 v5**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **Dizilla v8**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **DramaDizilerim v4**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **FilmEkseni v4**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **FilmModu v4**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **FullHDFilmizlesene v3**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **HDFilmizle v3**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **KoreanTurk v4**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **Kultfilmler v6**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **LoveFilm v3**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **SelcukFlix v3**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **SetFilmIzle v5**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **Sezonlukdizi v6**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **SinemaCX v3**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **TLCtr v4**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **WebdramaTurkey2 v4**: sürüm ve runner/kategori doğrulaması güncellendi.
+- **Yabancidizi v5**: sürüm ve runner/kategori doğrulaması güncellendi.
 
 ## [1.5.0] - 2026-10-29
 

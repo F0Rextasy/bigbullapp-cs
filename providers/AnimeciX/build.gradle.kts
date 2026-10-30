@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "AnimeciX — Türkçe altyazılı anime arşivi (animecix.tv)"

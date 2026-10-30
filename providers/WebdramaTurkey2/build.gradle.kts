@@ -1,4 +1,4 @@
-version = 3
+version = 4
 
 cloudstream {
     description = "WebdramaTurkey2 — Kore, Çin ve Japon dizileri, TR altyazılı (webdramaturkey2.com)"

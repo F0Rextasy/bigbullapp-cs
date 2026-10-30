@@ -1,4 +1,4 @@
-version = 3
+version = 4
 
 cloudstream {
     description = "TLCtr — TLC Türkiye: gerçek hikayeler, belgesel ve dizi bölümleri + canlı yayın (tlctv.com.tr)"
