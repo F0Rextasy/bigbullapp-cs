@@ -103,7 +103,8 @@ class AnimelerProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val doc = app.get(data, headers = uaHeaders).document
+        val resp = app.get(data, headers = uaHeaders)
+        val doc = resp.document
         val frames = doc.select("iframe[src]").mapNotNull { fixUrlNull(it.attr("src")) }.distinct()
         var found = false
         for (frame in frames) {
@@ -113,6 +114,12 @@ class AnimelerProvider : MainAPI() {
                 loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)
             }
             if (ok) found = true
+        }
+        // Some episodes inject the iframe with JS; the raw page still has the stable id.
+        val embedded = Regex("""(?:ok\.ru|odnoklassniki\.ru)/videoembed/(\d+)""")
+            .findAll(resp.text).map { it.groupValues[1] }.distinct().take(3)
+        for (id in embedded) {
+            if (loadOkRu("https://ok.ru/videoembed/$id", callback)) found = true
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir akış yok")
         return found
