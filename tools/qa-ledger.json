@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-30",
-  "note": "65 TR modül runner benchmark (2026-10-30)",
+  "note": "64 TR modül runner benchmark (2026-10-30)",
   "modules": [
     {
       "module": "AnimeciX",
@@ -319,12 +319,6 @@
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=1, ep=20",
       "runner": "bench_runner.py 2026-10-30"
-    },
-    {
-      "module": "RareFilmm",
-      "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=11, ep=0",
-      "runner": "autopilot.py 2026-10-30"
     },
     {
       "module": "SelcukFlix",

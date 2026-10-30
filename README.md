@@ -124,7 +124,6 @@ Tek modül derleme ve cihaza kurulum:
 | `Kultfilmler` | kultfilmler.net | Film | ✓ | — | — | ✓ | ✓ | ✓ |
 | `LoveFilm` **beta** | lovefilmizle.net | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
-| `RareFilmm` **beta** | rarefilmm.com | Film | — | — | — | — | — | — |
 | `SelcukFlix` **beta** | selcukflix.app | Dizi/Film | — | — | — | — | ✓ | ✓ |
 | `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `Sezonlukdizi` **beta** | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
@@ -168,7 +167,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          65 modül
+  Yabancidizi/          64 modül
 ```
 
 ## Geliştirme
