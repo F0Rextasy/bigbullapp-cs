@@ -1,4 +1,4 @@
-version = 7
+version = 8
 
 cloudstream {
     description = "Dizilla — yabancı dizi izle (dizilla.nl mirror'ı)"

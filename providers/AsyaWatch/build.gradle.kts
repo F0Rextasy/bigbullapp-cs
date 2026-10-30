@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "AsyaWatch — Kore ve Asya web dramaları, Türkçe altyazılı (asyawatch.com)"

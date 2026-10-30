@@ -1,5 +1,5 @@
 // Use an integer for version numbers
-version = 4
+version = 5
 
 cloudstream {
     description = "DiziLife — dizi74.life (dizi82.life) dizi ve film arşivi"

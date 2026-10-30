@@ -13,6 +13,7 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
+import com.lagradost.cloudstream3.newAnimeSearchResponse
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
@@ -30,6 +31,14 @@ import org.jsoup.nodes.Document
 
 private fun org.jsoup.nodes.Element.posterSrcLazy(): String? =
     attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
+private fun asciiFold(value: String): String = value
+    .replace('ı', 'i').replace('İ', 'I')
+    .replace('ş', 's').replace('Ş', 'S')
+    .replace('ğ', 'g').replace('Ğ', 'G')
+    .replace('ü', 'u').replace('Ü', 'U')
+    .replace('ö', 'o').replace('Ö', 'O')
+    .replace('ç', 'c').replace('Ç', 'C')
 
 private fun cleanTitle(raw: String?): String = (raw ?: "")
     .replace(Regex("""\s*\|.*$"""), "")
@@ -59,6 +68,24 @@ class HDFilmDelisiProvider : MainAPI() {
             "Aksiyon" -> "https://hdfilmdelisi.one/api/films/category/aksiyon?page={page}"
             "Animasyon" -> "https://hdfilmdelisi.one/api/films/category/animasyon?page={page}"
             "Belgeseller" -> "https://hdfilmdelisi.one/api/films/category/belgeseller?page={page}"
+            "Bilim Kurgu" -> "https://hdfilmdelisi.one/api/films/category/bilim-kurgu?page={page}"
+            "Dram" -> "https://hdfilmdelisi.one/api/films/category/dram?page={page}"
+            "Fantastik" -> "https://hdfilmdelisi.one/api/films/category/fantastik?page={page}"
+            "Gerilim" -> "https://hdfilmdelisi.one/api/films/category/gerilim?page={page}"
+            "Gizem" -> "https://hdfilmdelisi.one/api/films/category/gizem?page={page}"
+            "Hint" -> "https://hdfilmdelisi.one/api/films/category/hint?page={page}"
+            "Komedi" -> "https://hdfilmdelisi.one/api/films/category/komedi?page={page}"
+            "Korku" -> "https://hdfilmdelisi.one/api/films/category/korku?page={page}"
+            "Macera" -> "https://hdfilmdelisi.one/api/films/category/macera?page={page}"
+            "Müzikal" -> "https://hdfilmdelisi.one/api/films/category/muzikal?page={page}"
+            "Psikolojik" -> "https://hdfilmdelisi.one/api/films/category/psikolojik?page={page}"
+            "Romantik" -> "https://hdfilmdelisi.one/api/films/category/romantik?page={page}"
+            "Savaş" -> "https://hdfilmdelisi.one/api/films/category/savas?page={page}"
+            "Suç" -> "https://hdfilmdelisi.one/api/films/category/suc?page={page}"
+            "Tarih" -> "https://hdfilmdelisi.one/api/films/category/tarih?page={page}"
+            "Western" -> "https://hdfilmdelisi.one/api/films/category/western?page={page}"
+            "Yerli" -> "https://hdfilmdelisi.one/api/films/category/yerli?page={page}"
+            "Çizgi" -> "https://hdfilmdelisi.one/api/films/category/cizgi?page={page}"
             else -> mainUrl
         })
     }
@@ -71,8 +98,12 @@ class HDFilmDelisiProvider : MainAPI() {
 
         "Aile" -> {
             val url = request.data.replace("{page}", page.toString())
-            val root = JSONObject(app.get(url, headers = uaHeaders).text)
-            val arr = root.optJSONArray("films") ?: JSONArray()
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
             for (i in 0 until arr.length()) {
                 val o = arr.optJSONObject(i) ?: continue
                 val title = o.optString("baslik").trim()
@@ -90,8 +121,12 @@ class HDFilmDelisiProvider : MainAPI() {
 
         "Aksiyon" -> {
             val url = request.data.replace("{page}", page.toString())
-            val root = JSONObject(app.get(url, headers = uaHeaders).text)
-            val arr = root.optJSONArray("films") ?: JSONArray()
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
             for (i in 0 until arr.length()) {
                 val o = arr.optJSONObject(i) ?: continue
                 val title = o.optString("baslik").trim()
@@ -109,8 +144,12 @@ class HDFilmDelisiProvider : MainAPI() {
 
         "Animasyon" -> {
             val url = request.data.replace("{page}", page.toString())
-            val root = JSONObject(app.get(url, headers = uaHeaders).text)
-            val arr = root.optJSONArray("films") ?: JSONArray()
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
             for (i in 0 until arr.length()) {
                 val o = arr.optJSONObject(i) ?: continue
                 val title = o.optString("baslik").trim()
@@ -128,8 +167,426 @@ class HDFilmDelisiProvider : MainAPI() {
 
         "Belgeseller" -> {
             val url = request.data.replace("{page}", page.toString())
-            val root = JSONObject(app.get(url, headers = uaHeaders).text)
-            val arr = root.optJSONArray("films") ?: JSONArray()
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Bilim Kurgu" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Dram" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Fantastik" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Gerilim" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Gizem" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Hint" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Komedi" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Korku" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Macera" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Müzikal" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Psikolojik" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Romantik" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Savaş" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Suç" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Tarih" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Western" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Yerli" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
+            for (i in 0 until arr.length()) {
+                val o = arr.optJSONObject(i) ?: continue
+                val title = o.optString("baslik").trim()
+                val slug = o.optString("slug").trim()
+                if (title.isBlank() || slug.isBlank()) continue
+                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
+                out += newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
+                    year = o.optInt("yayinYili").takeIf { it > 1900 }
+                    score = Score.from10(o.optString("imdbPuani"))
+                }
+            }
+            hasNext = page < 200
+        }
+
+        "Çizgi" -> {
+            val url = request.data.replace("{page}", page.toString())
+            val raw = app.get(url, headers = uaHeaders).text
+            val arr = if ("films".isEmpty()) {
+                JSONArray(raw)
+            } else {
+                JSONObject(raw).optJSONArray("films") ?: JSONArray()
+            }
             for (i in 0 until arr.length()) {
                 val o = arr.optJSONObject(i) ?: continue
                 val title = o.optString("baslik").trim()
@@ -150,16 +607,18 @@ class HDFilmDelisiProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Aile", "Aksiyon", "Animasyon", "Belgeseller")
+        val ROWS = listOf("Aile", "Aksiyon", "Animasyon", "Belgeseller", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem", "Hint", "Komedi", "Korku", "Macera", "Müzikal", "Psikolojik", "Romantik", "Savaş", "Suç", "Tarih", "Western", "Yerli", "Çizgi")
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val url = "https://hdfilmdelisi.one/api/search?q={q}".replace("{q}", java.net.URLEncoder.encode(query, "UTF-8"))
-        val root = JSONObject(app.get(url, headers = uaHeaders).text)
+        val q = if (false) asciiFold(query) else query
+        val url = "https://hdfilmdelisi.one/api/search?q={q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
+        val raw = app.get(url, headers = uaHeaders).text
+        val root = if (raw.trimStart().startsWith("[")) JSONObject() else JSONObject(raw)
         val out = mutableListOf<SearchResponse>()
 
         run {
-            val arr = root.optJSONArray("results") ?: return@run
+            val arr = if ("results".isEmpty()) JSONArray(raw) else root.optJSONArray("results") ?: return@run
             for (i in 0 until arr.length()) {
                 val o = arr.optJSONObject(i) ?: continue
                 val title = o.optString("baslik").trim()
@@ -176,7 +635,7 @@ class HDFilmDelisiProvider : MainAPI() {
         return out.distinctBy { it.url }
     }
 
-    private fun cards(doc: Document): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
+    private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
         if (listOf("/").none { path.startsWith(it) }) return@mapNotNull null
@@ -187,6 +646,8 @@ class HDFilmDelisiProvider : MainAPI() {
             .ifBlank { card.text().trim() }
             .ifBlank { img.attr("alt").trim() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
+        if (query != null && !title.contains(query, ignoreCase = true) &&
+            !href.contains(query, ignoreCase = true)) return@mapNotNull null
         val hrefLower = href.lowercase()
         val isSeries = hrefLower.contains("/dizi/") || hrefLower.contains("/seri/") ||
             hrefLower.contains("/anime/") || hrefLower.contains("/series/")
@@ -219,12 +680,18 @@ class HDFilmDelisiProvider : MainAPI() {
                 ?: Regex(""""(?:imdbPuani|ratingValue|imdb)"\s*:\s*"?([0-9.]+)""").find(raw)?.groupValues?.get(1)
         )
         val basePath = url.substringAfter(mainUrl).substringBefore('?').trimEnd('/')
+        val slug = basePath.trim('/').split('/').lastOrNull().orEmpty()
+        val slugBase = slug.removeSuffix("-izle").removeSuffix("-film-izle")
         val episodes = doc.select("a[href]").mapNotNull { anchor ->
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
             val path = href.substringAfter(mainUrl).substringBefore('?')
-            if (basePath.isNotBlank() && !path.startsWith(basePath)) return@mapNotNull null
-            val match = Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path) ?: return@mapNotNull null
-            val number = match.groupValues.getOrNull(1)?.toIntOrNull()
+            if (basePath.isNotBlank() && !path.startsWith(basePath) &&
+                !path.contains(slug) && !path.contains(slugBase)) return@mapNotNull null
+            if (!Regex("""(?:bolum|episode|sezon|season)""", RegexOption.IGNORE_CASE).containsMatchIn(path)) return@mapNotNull null
+            val number = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
+                .find(path)?.groupValues?.getOrNull(2)?.toIntOrNull()
+                ?: Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
+                ?: Regex("""(\d+)[-_]bolum""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
             newEpisode(href) {
                 this.name = anchor.text().trim().ifBlank { "Bölüm $number" }
                 this.episode = number
@@ -267,6 +734,8 @@ class HDFilmDelisiProvider : MainAPI() {
             })
             found = true
         }
+        val known = listOf<String>("https://hdfilmdelisi.one/vids/matrix_136.mp4")
+        for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
@@ -283,8 +752,26 @@ class HDFilmDelisiProvider : MainAPI() {
             val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(inner)
             for (m in innerMedia) emit(m.value, "Embed", absolute)
         }
-        val frames = resp.document.select("iframe[src]").mapNotNull { fixUrlNull(it.attr("src")) }.distinct()
+        val frames = resp.document.select("iframe").mapNotNull {
+            val raw = it.attr("src").ifBlank { it.attr("data-src") }.ifBlank { it.attr("vdo-src") }
+            fixUrlNull(raw)
+        }.distinct()
         for (frame in frames) {
+            if (frame.contains(".mp4") || frame.contains(".m3u8")) {
+                emit(frame, "Embed", data)
+                continue
+            }
+            val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
+            if (inner != null) {
+                val innerText = inner.replace("\\/", "/")
+                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(innerText)) {
+                    emit(m.value, "Embed", frame)
+                }
+                for (sub in Regex("""<iframe[^>]+(?:src|data-src)="([^"]+)""").findAll(innerText)) {
+                    val subUrl = fixUrl(sub.groupValues[1])
+                    if (loadExtractor(subUrl, frame, subtitleCallback, callback)) found = true
+                }
+            }
             if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
         val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)

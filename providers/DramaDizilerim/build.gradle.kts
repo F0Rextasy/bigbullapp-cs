@@ -1,4 +1,4 @@
-version = 3
+version = 4
 
 cloudstream {
     description = "DramaDizilerim — dikey mini dizi & kısa dizi arşivi, Türkçe dublaj/altyazılı (dramadizilerim.com)"
