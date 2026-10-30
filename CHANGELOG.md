@@ -11,8 +11,8 @@ sayı arttığında güncelleme sunar.
 
 - **MinikaGO v1**: `minikago.com.tr` çocuk VOD'u eklendi; bölüm sayfasındaki doğrudan MP4
   kaynakları kullanılıyor. Runner: arama 1, bağlantı 1.
-- **StarTV v1**: `startv.com.tr` dizileri eklendi; arama, bölüm listesi ve DYG
-  `video_info` üzerinden anahtarsız HLS. Runner: arama 1, bağlantı 2.
+- **StarTV v2**: arama yalnızca gerçek `/dizi/` sayfası olan sonuçları döndürür; `Star Haber`
+  gibi haber kayıtları elenir. HLS ve bölüm akışı doğrulandı: arama 1, bağlantı 2.
 
 
 
