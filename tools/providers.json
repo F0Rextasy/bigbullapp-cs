@@ -805,6 +805,86 @@
    "checked": "2026-10-30T02:54:02Z",
    "latencyMs": 0,
    "module": "YesilCamTv"
+  },
+  "sonanime.com": {
+   "id": "sonanime-com",
+   "name": "SonAnime",
+   "mainUrl": "https://sonanime.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "Frieren: Beyond Journey's End",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "SonAnime"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T03:23:32Z",
+   "latencyMs": 0,
+   "module": "SonAnime"
+  },
+  "asyaluna.com": {
+   "id": "asyaluna-com",
+   "name": "AsyaLuna",
+   "mainUrl": "https://asyaluna.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "Summer Vacation 2026 Kore",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "AsyaLuna"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T03:25:57Z",
+   "latencyMs": 0,
+   "module": "AsyaLuna"
+  },
+  "dizican.cc": {
+   "id": "dizican-cc",
+   "name": "DiziCaN",
+   "mainUrl": "https://dizican.cc",
+   "status": "implemented",
+   "http": 200,
+   "title": "Head 2 Head 1. Bölüm",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "DiziCaN"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T03:27:47Z",
+   "latencyMs": 0,
+   "module": "DiziCaN"
+  },
+  "dizirella.one": {
+   "id": "dizirella-one",
+   "name": "Dizirella",
+   "mainUrl": "https://dizirella.one",
+   "status": "implemented",
+   "http": 200,
+   "title": "Welcome back, First love. 1. Sezon 4. Bölüm",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "Dizirella"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T03:28:30Z",
+   "latencyMs": 0,
+   "module": "Dizirella"
   }
  }
 }

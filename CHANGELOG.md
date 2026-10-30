@@ -8,6 +8,14 @@ sayı arttığında güncelleme sunar.
 ## [1.5.1] - 2026-10-30
 
 ### Eklendi
+- **Dizirella v1**: `dizirella.one` sıfırdan eklendi; dizi; runner doğrulaması: arama 20, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **DiziCaN v1**: `dizican.cc` sıfırdan eklendi; dizi; runner doğrulaması: arama 12, bağlantı 2. Bot (autopilot) tarafından üretildi.
+
+- **AsyaLuna v1**: `asyaluna.com` sıfırdan eklendi; dizi; runner doğrulaması: arama 10, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **SonAnime v1**: `sonanime.com` sıfırdan eklendi; dizi; runner doğrulaması: arama 2, bağlantı 2. Bot (autopilot) tarafından üretildi.
+
 - **YesilCamTv v1**: `yesilcamtv.com.tr` sıfırdan eklendi; film; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
 - **HDFilmDelisi v1**: `hdfilmdelisi.one` sıfırdan eklendi; film; runner doğrulaması: arama 4, bağlantı 1. Bot (autopilot) tarafından üretildi.
