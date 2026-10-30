@@ -1190,6 +1190,26 @@
       "checked": "2026-10-30T11:50:29Z",
       "latencyMs": 0,
       "module": "HDFilmDiziIzle"
+    },
+    "minikago.com.tr": {
+      "id": "minikago-com-tr",
+      "name": "MinikaGO",
+      "mainUrl": "https://www.minikago.com.tr",
+      "status": "implemented",
+      "http": 200,
+      "title": "MinikaGO",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "MinikaGO"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T00:00:00Z",
+      "latencyMs": 0,
+      "module": "MinikaGO"
     }
   }
 }

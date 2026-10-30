@@ -379,6 +379,12 @@
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=1, ep=0",
       "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "MinikaGO",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
     }
   ]
 }
