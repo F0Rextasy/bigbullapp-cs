@@ -9,6 +9,12 @@
    "runner": "bench_runner.py 2026-10-30"
   },
   {
+   "module": "Animeler",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=4, ep=1",
+   "runner": "bench_runner.py 2026-10-30"
+  },
+  {
    "module": "Anizium",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=5, ep=500",

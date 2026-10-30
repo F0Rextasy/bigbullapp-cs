@@ -748,6 +748,23 @@
    ],
    "source": "provider-source",
    "module": "SinemaCX"
+  },
+  "animeler.live": {
+   "id": "animeler-live",
+   "name": "Animeler",
+   "mainUrl": "https://animeler.live",
+   "status": "implemented",
+   "http": 200,
+   "title": "Animeler.live | Türkçe Altyazılı Anime İzle",
+   "language": "tr",
+   "tvTypes": [
+    "Anime"
+   ],
+   "poolNames": [
+    "Animeler"
+   ],
+   "source": "provider-source",
+   "module": "Animeler"
   }
  }
 }
