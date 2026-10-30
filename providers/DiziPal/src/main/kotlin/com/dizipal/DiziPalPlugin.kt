@@ -9,6 +9,6 @@ class DiziPalPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(DiziPalProvider())
-        this.openSettings = { Settings.showDialog(it, "DiziPal Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "DiziPal Ayarları", DiziPalProvider.ROWS) }
     }
 }

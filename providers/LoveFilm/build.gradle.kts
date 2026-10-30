@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "LoveFilm — Türkçe dublaj & altyazılı film arşivi (lovefilmizle.net)"

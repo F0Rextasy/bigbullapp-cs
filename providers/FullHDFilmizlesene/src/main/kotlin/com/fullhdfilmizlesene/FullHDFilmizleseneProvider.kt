@@ -6,6 +6,7 @@ import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
 import com.lagradost.cloudstream3.MainAPI
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SearchResponse
@@ -13,7 +14,6 @@ import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
@@ -39,12 +39,16 @@ class FullHDFilmizleseneProvider : MainAPI() {
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.Movie)
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/yeni-filmler/SAYFA" to "Son Eklenenler",
-        "$mainUrl/en-cok-izlenen-filmler/SAYFA" to "En Çok İzlenenler",
-        "$mainUrl/filmizle/turkce-dublaj-filmler-1/SAYFA" to "Türkçe Dublaj",
-        "$mainUrl/filmizle/turkce-altyazili-filmler-1/SAYFA" to "Türkçe Altyazı",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Eklenenler" -> MainPageData(name, "$mainUrl/yeni-filmler/SAYFA")
+            "En Çok İzlenenler" -> MainPageData(name, "$mainUrl/en-cok-izlenen-filmler/SAYFA")
+            "Türkçe Dublaj" -> MainPageData(name, "$mainUrl/filmizle/turkce-dublaj-filmler-1/SAYFA")
+            "Türkçe Altyazı" -> MainPageData(name, "$mainUrl/filmizle/turkce-altyazili-filmler-1/SAYFA")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = siteHeaders).document
@@ -193,5 +197,15 @@ class FullHDFilmizleseneProvider : MainAPI() {
         if (value.isBlank()) return ""
         val padded = value.trim() + "=".repeat((4 - value.trim().length % 4) % 4)
         return runCatching { String(Base64.decode(padded, Base64.DEFAULT)) }.getOrDefault("")
+    }
+
+    companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf(
+            "Son Eklenenler",
+            "En Çok İzlenenler",
+            "Türkçe Dublaj",
+            "Türkçe Altyazı",
+        )
     }
 }

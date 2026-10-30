@@ -12,7 +12,7 @@ import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newAnimeSearchResponse
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
@@ -55,20 +55,25 @@ class WebdramaTurkey2Provider : MainAPI() {
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 
-    override val mainPage = mainPageOf(
-        mainUrl to "Son Bölümler",
-        "$mainUrl/diziler?page=SAYFA" to "Diziler",
-        "$mainUrl/filmler?page=SAYFA" to "Filmler",
-        "$mainUrl/animeler?page=SAYFA" to "Animeler",
-        countryRow(1, "Kore Dizileri"),
-        countryRow(2, "Çin Dizileri"),
-        countryRow(3, "Japon Dizileri"),
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        val data = when (name) {
+            "Son Bölümler" -> mainUrl
+            "Diziler" -> "$mainUrl/diziler?page=SAYFA"
+            "Filmler" -> "$mainUrl/filmler?page=SAYFA"
+            "Animeler" -> "$mainUrl/animeler?page=SAYFA"
+            "Kore Dizileri" -> countryUrl(1)
+            "Çin Dizileri" -> countryUrl(2)
+            "Japon Dizileri" -> countryUrl(3)
+            else -> return@mapNotNull null
+        }
+        MainPageData(name, data)
+    }
 
     /** The country filter rides along as JSON: 1 Korea, 2 China, 3 Japan. */
-    private fun countryRow(country: Int, label: String): Pair<String, String> {
+    private fun countryUrl(country: Int): String {
         val filter = URLEncoder.encode("""{"country":"$country","sorting":"newest"}""", "UTF-8")
-        return "$mainUrl/diziler?filter=$filter&page=SAYFA" to label
+        return "$mainUrl/diziler?filter=$filter&page=SAYFA"
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
@@ -349,6 +354,16 @@ class WebdramaTurkey2Provider : MainAPI() {
     }
 
     companion object {
+        /** Homepage rows in display order. */
+        val ROWS = listOf(
+            "Son Bölümler",
+            "Diziler",
+            "Filmler",
+            "Animeler",
+            "Kore Dizileri",
+            "Çin Dizileri",
+            "Japon Dizileri",
+        )
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =

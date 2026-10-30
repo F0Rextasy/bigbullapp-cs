@@ -11,7 +11,7 @@ import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
@@ -55,10 +55,15 @@ class SelcukFlixProvider : MainAPI() {
         "X-Requested-With" to "XMLHttpRequest",
     )
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/film-izle" to "Yeni Filmler",
-        "$mainUrl/dizi-izle" to "Yeni Diziler",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        val data = when (name) {
+            "Yeni Filmler" -> "$mainUrl/film-izle"
+            "Yeni Diziler" -> "$mainUrl/dizi-izle"
+            else -> return@mapNotNull null
+        }
+        MainPageData(name, data)
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         // Liste sayfaları sunucuda sayfalanmıyor: ?page= ve ?sayfa= aynı 24 kaydı döndürüyor.
@@ -338,6 +343,11 @@ class SelcukFlixProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage rows in display order. */
+        val ROWS = listOf(
+            "Yeni Filmler",
+            "Yeni Diziler",
+        )
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val AES_KEY = "9bYMCNQiWsXIYFWYAu7EkdsSbmGBTyUI"

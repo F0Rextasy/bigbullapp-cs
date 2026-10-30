@@ -9,6 +9,6 @@ class FullHDFilmPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(FullHDFilmProvider())
-        this.openSettings = { Settings.showDialog(it, "FullHDFilm Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "FullHDFilm Ayarları", FullHDFilmProvider.ROWS) }
     }
 }

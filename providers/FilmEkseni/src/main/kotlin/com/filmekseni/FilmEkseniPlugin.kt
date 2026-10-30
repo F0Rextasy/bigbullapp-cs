@@ -9,6 +9,6 @@ class FilmEkseniPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(FilmEkseniProvider())
-        this.openSettings = { Settings.showDialog(it, "FilmEkseni Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "FilmEkseni Ayarları", FilmEkseniProvider.ROWS) }
     }
 }

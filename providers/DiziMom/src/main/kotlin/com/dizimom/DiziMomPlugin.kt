@@ -9,6 +9,6 @@ class DiziMomPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(DiziMomProvider())
-        this.openSettings = { Settings.showDialog(it, "DiziMom Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "DiziMom Ayarları", DiziMomProvider.ROWS) }
     }
 }

@@ -17,7 +17,7 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
@@ -63,19 +63,23 @@ class HDFilmizleProvider : MainAPI() {
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/film/page/SAYFA/" to "Son Filmler",
-        "$mainUrl/dizi/page/SAYFA/" to "Son Diziler",
-        "$mainUrl/bolum/page/SAYFA/" to "Son Bölümler",
-        "$mainUrl/tur/aksiyon/page/SAYFA/" to "Aksiyon",
-        "$mainUrl/tur/komedi/page/SAYFA/" to "Komedi",
-        "$mainUrl/tur/dram/page/SAYFA/" to "Dram",
-        "$mainUrl/tur/gerilim/page/SAYFA/" to "Gerilim",
-        "$mainUrl/tur/korku/page/SAYFA/" to "Korku",
-        "$mainUrl/tur/bilim-kurgu/page/SAYFA/" to "Bilim Kurgu",
-        "$mainUrl/tur/fantastik/page/SAYFA/" to "Fantastik",
-        "$mainUrl/tur/animasyon/page/SAYFA/" to "Animasyon",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Filmler" -> MainPageData(name, "$mainUrl/film/page/SAYFA/")
+            "Son Diziler" -> MainPageData(name, "$mainUrl/dizi/page/SAYFA/")
+            "Son Bölümler" -> MainPageData(name, "$mainUrl/bolum/page/SAYFA/")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/tur/aksiyon/page/SAYFA/")
+            "Komedi" -> MainPageData(name, "$mainUrl/tur/komedi/page/SAYFA/")
+            "Dram" -> MainPageData(name, "$mainUrl/tur/dram/page/SAYFA/")
+            "Gerilim" -> MainPageData(name, "$mainUrl/tur/gerilim/page/SAYFA/")
+            "Korku" -> MainPageData(name, "$mainUrl/tur/korku/page/SAYFA/")
+            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/tur/bilim-kurgu/page/SAYFA/")
+            "Fantastik" -> MainPageData(name, "$mainUrl/tur/fantastik/page/SAYFA/")
+            "Animasyon" -> MainPageData(name, "$mainUrl/tur/animasyon/page/SAYFA/")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = uaHeaders).document
@@ -396,6 +400,21 @@ class HDFilmizleProvider : MainAPI() {
     private data class PlayerSubtitle(val label: String, val code: String, val url: String)
 
     companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf(
+            "Son Filmler",
+            "Son Diziler",
+            "Son Bölümler",
+            "Aksiyon",
+            "Komedi",
+            "Dram",
+            "Gerilim",
+            "Korku",
+            "Bilim Kurgu",
+            "Fantastik",
+            "Animasyon",
+        )
+
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         /** Manifest kapısı masaüstü kimliğinde 404 verdiği için oynatma mobil kimlikle yapılır. */

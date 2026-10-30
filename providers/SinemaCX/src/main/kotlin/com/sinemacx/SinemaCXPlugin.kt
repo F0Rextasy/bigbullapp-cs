@@ -9,6 +9,6 @@ class SinemaCXPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(SinemaCXProvider())
-        this.openSettings = { Settings.showDialog(it, "SinemaCX Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "SinemaCX Ayarları", SinemaCXProvider.ROWS) }
     }
 }

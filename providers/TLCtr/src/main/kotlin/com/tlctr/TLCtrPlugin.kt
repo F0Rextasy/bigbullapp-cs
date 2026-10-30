@@ -9,6 +9,6 @@ class TLCtrPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(TLCtrProvider())
-        this.openSettings = { Settings.showDialog(it, "TLCtr Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "TLCtr Ayarları", TLCtrProvider.ROWS) }
     }
 }

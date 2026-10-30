@@ -53,6 +53,15 @@ sayı arttığında güncelleme sunar.
   HLS akışı ve VTT altyazıları eklendi.
 - **DiziMom v5 / HDFilmCehennemi v4**: `hasMainPage = true`; iki sağlayıcı da ana sayfa
   seçiminde görünür ve site kartlarından gerçek ana sayfa satırı üretir.
+- **Kategori ayarları (27 modül)**: AnimeciX v2, Anizm v5, AsyaAnimeleri v7, AsyaWatch v2,
++  BelgeselX v3, Ddizi v3, DiziBal v2, DiziMom v6, DiziPal v3, DiziPod v3, DramaDizilerim v2,
++  FilmEkseni v2, FilmModu v2, FullHDFilm v2, FullHDFilmizlesene v2, HDFilmCehennemi v5,
++  HDFilmizle v2, JetFilmizle v3, KoreanTurk v2, LoveFilm v2, SelcukFlix v2, SetFilmIzle v3,
++  SinemaCX v2, TLCtr v3, WebdramaTurkey2 v3, CanliTV v2, CanliTVMe v3: eklenti ayarlarına
++  ana sayfa/kanal kategori satırı aç/kapat anahtarları eklendi; kalite/altyazı seçimleri korundu.
++- **Dizibox v8**: ana sayfa bölüm kartlarında lazy `data-src` posterleri kullanılıyor; placeholder
++  yerine gerçek afiş yükleniyor.
++- **FullHDFilm v2**: `/filmler/` ana sayfası, puan sıralaması ve tür satırları eklendi.
 - **Onepacetr v5**: Vidguard/gettsu (site kendi gizliyor, alan adları 522/park) atlanıyor;
   Google Drive player'ı `drive.usercontent.google.com` üzerinden doğrudan MP4 olarak veriliyor.
 - **CanliTVMe v2**: `canlitv.me` BTK/SNI engeli nedeniyle aynı yayıncının erişilebilir aynası

@@ -10,7 +10,7 @@ import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newLiveSearchResponse
@@ -50,19 +50,24 @@ class TLCtrProvider : MainAPI() {
     private val ajaxHeaders = uaHeaders + mapOf("X-Requested-With" to "XMLHttpRequest")
 
     // Rows are the /kesfet categories; the empty slug is the featured grid.
-    override val mainPage = mainPageOf(
-        LIVE to "Canlı Yayın",
-        "" to "Öne Çıkanlar",
-        "sira-disi-hayatlar" to "Sıra Dışı Hayatlar",
-        "ev-dekorasyon" to "Ev & Dekorasyon",
-        "suc-arastirma" to "Suç & Araştırma",
-        "yasam" to "Yaşam",
-        "evlilik" to "Evlilik",
-        "yemek" to "Yemek",
-        "belgesel" to "Belgesel",
-        "korelendik" to "Korelendik",
-        "a-z" to "A-Z",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        val data = when (name) {
+            "Canlı Yayın" -> LIVE
+            "Öne Çıkanlar" -> ""
+            "Sıra Dışı Hayatlar" -> "sira-disi-hayatlar"
+            "Ev & Dekorasyon" -> "ev-dekorasyon"
+            "Suç & Araştırma" -> "suc-arastirma"
+            "Yaşam" -> "yasam"
+            "Evlilik" -> "evlilik"
+            "Yemek" -> "yemek"
+            "Belgesel" -> "belgesel"
+            "Korelendik" -> "korelendik"
+            "A-Z" -> "a-z"
+            else -> return@mapNotNull null
+        }
+        MainPageData(name, data)
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         if (request.data == LIVE) {
@@ -314,6 +319,20 @@ class TLCtrProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage rows in display order. */
+        val ROWS = listOf(
+            "Canlı Yayın",
+            "Öne Çıkanlar",
+            "Sıra Dışı Hayatlar",
+            "Ev & Dekorasyon",
+            "Suç & Araştırma",
+            "Yaşam",
+            "Evlilik",
+            "Yemek",
+            "Belgesel",
+            "Korelendik",
+            "A-Z",
+        )
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =

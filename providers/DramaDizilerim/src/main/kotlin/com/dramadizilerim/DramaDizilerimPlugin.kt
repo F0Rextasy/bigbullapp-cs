@@ -9,6 +9,6 @@ class DramaDizilerimPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(DramaDizilerimProvider())
-        this.openSettings = { Settings.showDialog(it, "DramaDizilerim Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "DramaDizilerim Ayarları", DramaDizilerimProvider.ROWS) }
     }
 }

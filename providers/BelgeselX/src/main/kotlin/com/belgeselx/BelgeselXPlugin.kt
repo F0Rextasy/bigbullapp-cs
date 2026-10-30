@@ -9,6 +9,6 @@ class BelgeselXPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(BelgeselXProvider())
-        this.openSettings = { Settings.showDialog(it, "BelgeselX Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "BelgeselX Ayarları", BelgeselXProvider.ROWS) }
     }
 }

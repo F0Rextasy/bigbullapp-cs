@@ -9,6 +9,6 @@ class JetFilmizlePlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(JetFilmizleProvider())
-        this.openSettings = { Settings.showDialog(it, "JetFilmizle Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "JetFilmizle Ayarları", JetFilmizleProvider.ROWS) }
     }
 }

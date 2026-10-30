@@ -9,6 +9,6 @@ class DiziPodPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(DiziPodProvider())
-        this.openSettings = { Settings.showDialog(it, "DiziPod Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "DiziPod Ayarları", DiziPodProvider.ROWS) }
     }
 }

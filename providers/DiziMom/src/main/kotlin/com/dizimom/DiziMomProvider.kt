@@ -40,7 +40,8 @@ class DiziMomProvider : MainAPI() {
     override var name = "DiziMom"
     override var lang = "tr"
     override val hasMainPage = true
-    override val mainPage = mainPageOf("$mainUrl/" to "Son Eklenenler")
+    override val mainPage get() = mainPageOf("$mainUrl/" to "Son Eklenenler")
+        .filter { Settings.rowEnabled(it.name) }
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.TvSeries)
 
@@ -189,4 +190,9 @@ class DiziMomProvider : MainAPI() {
         masterHeight.findAll(runCatching { app.get(masterUrl, referer = "$mainUrl/").text }.getOrDefault(""))
             .mapNotNull { it.groupValues[1].toIntOrNull() }
             .maxOrNull() ?: Qualities.Unknown.value
+
+    companion object {
+        /** Ana sayfa satırları; ayarlardan kapatılabilir. */
+        val ROWS = listOf("Son Eklenenler")
+    }
 }

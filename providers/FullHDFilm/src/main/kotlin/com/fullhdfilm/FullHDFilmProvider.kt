@@ -2,8 +2,11 @@ package com.fullhdfilm
 
 import android.util.Base64
 import com.lagradost.cloudstream3.ErrorLoadingException
+import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.MainAPI
+import com.lagradost.cloudstream3.MainPageData
+import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.SubtitleFile
@@ -13,11 +16,13 @@ import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
+import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONObject
+import org.jsoup.nodes.Element
 
 /**
  * FullHDFilm — fullhdfilmizlebox.vip (Laravel frontend).
@@ -28,6 +33,7 @@ class FullHDFilmProvider : MainAPI() {
     override var mainUrl = "https://fullhdfilmizlebox.vip"
     override var name = "FullHDFilm"
     override var lang = "tr"
+    override val hasMainPage = true
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.Movie)
 
@@ -35,6 +41,44 @@ class FullHDFilmProvider : MainAPI() {
         "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
+
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Eklenenler" -> MainPageData(name, "$mainUrl/filmler/")
+            "Puan (Yüksek)" -> MainPageData(name, "$mainUrl/filmler/?sort=rating_high")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/tur/aksiyon-filmleri/")
+            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/tur/bilim-kurgu-filmleri/")
+            "Komedi" -> MainPageData(name, "$mainUrl/tur/komedi-filmleri/")
+            "Dram" -> MainPageData(name, "$mainUrl/tur/dram-filmleri/")
+            "Gerilim" -> MainPageData(name, "$mainUrl/tur/gerilim-filmleri/")
+            "Korku" -> MainPageData(name, "$mainUrl/tur/korku-filmleri/")
+            "Macera" -> MainPageData(name, "$mainUrl/tur/macera-filmleri/")
+            "Animasyon" -> MainPageData(name, "$mainUrl/tur/animasyon-filmleri/")
+            "Belgesel" -> MainPageData(name, "$mainUrl/tur/belgesel-filmleri/")
+            else -> null
+        }
+    }
+
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
+        // Liste sayfaları 24 kartlık tek yanıt; sayfalayıcı yok.
+        if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        val doc = app.get(request.data, headers = uaHeaders).document
+        val items = doc.select("a[href]").mapNotNull { it.toSearchCard() }.distinctBy { it.url }
+        return newHomePageResponse(request.name, items, hasNext = false)
+    }
+
+    private fun Element.toSearchCard(): SearchResponse? {
+        if (!hasClass("group/poster")) return null
+        val href = fixUrlNull(attr("href")) ?: return null
+        val title = selectFirst("h3")?.text()?.trim()?.takeIf { it.isNotEmpty() } ?: return null
+        return newMovieSearchResponse(title, href, TvType.Movie) {
+            this.posterUrl = fixUrlNull(selectFirst("img[src]")?.attr("src")?.takeIf { it.startsWith("http") })
+            this.year = selectFirst("span.text-gray-300")?.text()?.trim()?.toIntOrNull()
+            this.score = selectFirst("span.text-accent")?.text()?.trim()?.toDoubleOrNull()
+                ?.let { Score.from10(it) }
+        }
+    }
 
     override suspend fun search(query: String): List<SearchResponse> {
         val encoded = java.net.URLEncoder.encode(query, "UTF-8")
@@ -197,6 +241,21 @@ class FullHDFilmProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf(
+            "Son Eklenenler",
+            "Puan (Yüksek)",
+            "Aksiyon",
+            "Bilim Kurgu",
+            "Komedi",
+            "Dram",
+            "Gerilim",
+            "Korku",
+            "Macera",
+            "Animasyon",
+            "Belgesel",
+        )
+
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

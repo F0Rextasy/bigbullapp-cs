@@ -9,6 +9,6 @@ class SelcukFlixPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(SelcukFlixProvider())
-        this.openSettings = { Settings.showDialog(it, "Selcukflix Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "Selcukflix Ayarları", SelcukFlixProvider.ROWS) }
     }
 }

@@ -7,6 +7,7 @@ import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
 import com.lagradost.cloudstream3.MainAPI
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SearchResponse
@@ -16,7 +17,6 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
@@ -56,20 +56,24 @@ class FilmEkseniProvider : MainAPI() {
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/filmler/" to "Son Eklenen Filmler",
-        "$mainUrl/en-cok-izlenenler/" to "En Çok İzlenenler",
-        "$mainUrl/imdb-250/" to "IMDb Top 250",
-        "$mainUrl/tur/aksiyon-filmleri/" to "Aksiyon",
-        "$mainUrl/tur/bilim-kurgu-filmleri/" to "Bilim Kurgu",
-        "$mainUrl/tur/komedi-filmleri/" to "Komedi",
-        "$mainUrl/tur/dram-filmleri/" to "Dram",
-        "$mainUrl/tur/gerilim-filmleri/" to "Gerilim",
-        "$mainUrl/tur/korku-filmleri/" to "Korku",
-        "$mainUrl/tur/macera-filmleri/" to "Macera",
-        "$mainUrl/tur/animasyon-filmleri/" to "Animasyon",
-        "$mainUrl/tur/belgesel-filmleri/" to "Belgesel",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Eklenen Filmler" -> MainPageData(name, "$mainUrl/filmler/")
+            "En Çok İzlenenler" -> MainPageData(name, "$mainUrl/en-cok-izlenenler/")
+            "IMDb Top 250" -> MainPageData(name, "$mainUrl/imdb-250/")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/tur/aksiyon-filmleri/")
+            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/tur/bilim-kurgu-filmleri/")
+            "Komedi" -> MainPageData(name, "$mainUrl/tur/komedi-filmleri/")
+            "Dram" -> MainPageData(name, "$mainUrl/tur/dram-filmleri/")
+            "Gerilim" -> MainPageData(name, "$mainUrl/tur/gerilim-filmleri/")
+            "Korku" -> MainPageData(name, "$mainUrl/tur/korku-filmleri/")
+            "Macera" -> MainPageData(name, "$mainUrl/tur/macera-filmleri/")
+            "Animasyon" -> MainPageData(name, "$mainUrl/tur/animasyon-filmleri/")
+            "Belgesel" -> MainPageData(name, "$mainUrl/tur/belgesel-filmleri/")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         // Liste sayfaları tek yanıtta geliyor; `?page=` aynı 24 kartı tekrar basıyor.
@@ -291,6 +295,22 @@ class FilmEkseniProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf(
+            "Son Eklenen Filmler",
+            "En Çok İzlenenler",
+            "IMDb Top 250",
+            "Aksiyon",
+            "Bilim Kurgu",
+            "Komedi",
+            "Dram",
+            "Gerilim",
+            "Korku",
+            "Macera",
+            "Animasyon",
+            "Belgesel",
+        )
+
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
         private const val REPORT_HINT =

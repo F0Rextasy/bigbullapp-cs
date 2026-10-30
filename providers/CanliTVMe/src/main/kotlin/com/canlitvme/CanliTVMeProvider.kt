@@ -5,13 +5,13 @@ import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LiveSearchResponse
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.MainAPI
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newLiveSearchResponse
 import com.lagradost.cloudstream3.newLiveStreamLoadResponse
@@ -34,16 +34,20 @@ class CanliTVMeProvider : MainAPI() {
     override val supportedTypes = setOf(TvType.Live)
     override val hasMainPage = true
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/kategori/ulusal" to "Ulusal",
-        "$mainUrl/kategori/haber" to "Haber",
-        "$mainUrl/kategori/spor" to "Spor",
-        "$mainUrl/kategori/cocuk" to "Çocuk",
-        "$mainUrl/kategori/muzik" to "Müzik",
-        "$mainUrl/kategori/belgesel" to "Belgesel",
-        "$mainUrl/kategori/dini" to "Dini",
-        "$mainUrl/kategori/yerel" to "Yerel",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Ulusal" -> MainPageData(name, "$mainUrl/kategori/ulusal")
+            "Haber" -> MainPageData(name, "$mainUrl/kategori/haber")
+            "Spor" -> MainPageData(name, "$mainUrl/kategori/spor")
+            "Çocuk" -> MainPageData(name, "$mainUrl/kategori/cocuk")
+            "Müzik" -> MainPageData(name, "$mainUrl/kategori/muzik")
+            "Belgesel" -> MainPageData(name, "$mainUrl/kategori/belgesel")
+            "Dini" -> MainPageData(name, "$mainUrl/kategori/dini")
+            "Yerel" -> MainPageData(name, "$mainUrl/kategori/yerel")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data).document
@@ -109,6 +113,9 @@ class CanliTVMeProvider : MainAPI() {
     }.distinctBy { it.url }
 
     companion object {
+        /** Homepage rows in display order; all map to category pages. */
+        val ROWS = listOf("Ulusal", "Haber", "Spor", "Çocuk", "Müzik", "Belgesel", "Dini", "Yerel")
+
         private const val MARKER = "\u00C4x|Xf|x"
         private val FILE_PATTERN = Regex("""file\s*:\s*'([^']+)'""")
 

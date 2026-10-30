@@ -55,7 +55,7 @@ class DiziPodProvider : MainAPI() {
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 
-    override val mainPage = mainPageOf(
+    override val mainPage get() = mainPageOf(
         "$mainUrl/diziler/page/SAYFA/" to "Son Eklenen Diziler",
         "$mainUrl/filmler/page/SAYFA/" to "Son Eklenen Filmler",
         "$mainUrl/tur/aksiyon/?pg=SAYFA" to "Aksiyon",
@@ -70,7 +70,7 @@ class DiziPodProvider : MainAPI() {
         "$mainUrl/tur/romantik/?pg=SAYFA" to "Romantik",
         "$mainUrl/tur/belgesel/?pg=SAYFA" to "Belgesel",
         "$mainUrl/tur/anime/?pg=SAYFA" to "Anime",
-    )
+    ).filter { Settings.rowEnabled(it.name) }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = uaHeaders).document
@@ -334,6 +334,12 @@ class DiziPodProvider : MainAPI() {
     }
 
     companion object {
+        /** Ana sayfa satırları; ayarlardan kapatılabilir. */
+        val ROWS = listOf(
+            "Son Eklenen Diziler", "Son Eklenen Filmler", "Aksiyon", "Dram", "Komedi",
+            "Gerilim", "Korku", "Bilim Kurgu", "Fantastik", "Animasyon", "Macera",
+            "Romantik", "Belgesel", "Anime",
+        )
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =

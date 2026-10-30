@@ -11,7 +11,7 @@ import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.fixUrlNull
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
@@ -34,7 +34,13 @@ class HDFilmCehennemiProvider : MainAPI() {
     override var name = "HDFilmCehennemi"
     override var lang = "tr"
     override val hasMainPage = true
-    override val mainPage = mainPageOf("$mainUrl/" to "Son Eklenen Filmler")
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Eklenen Filmler" -> MainPageData(name, "$mainUrl/")
+            else -> null
+        }
+    }
     override val supportedTypes = setOf(TvType.Movie)
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
@@ -163,6 +169,9 @@ class HDFilmCehennemiProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage row; maps to the live listing page. */
+        val ROWS = listOf("Son Eklenen Filmler")
+
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
 

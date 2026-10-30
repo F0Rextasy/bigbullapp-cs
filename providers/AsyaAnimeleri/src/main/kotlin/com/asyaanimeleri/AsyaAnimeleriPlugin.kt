@@ -9,6 +9,6 @@ class AsyaAnimeleriPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(AsyaAnimeleriProvider())
-        this.openSettings = { Settings.showDialog(it, "AsyaAnimeleri Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "AsyaAnimeleri Ayarları", AsyaAnimeleriProvider.ROWS) }
     }
 }

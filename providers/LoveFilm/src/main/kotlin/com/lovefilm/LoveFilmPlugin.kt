@@ -9,6 +9,6 @@ class LoveFilmPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(LoveFilmProvider())
-        this.openSettings = { Settings.showDialog(it, "LoveFilm Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "LoveFilm Ayarları", LoveFilmProvider.ROWS) }
     }
 }

@@ -4,6 +4,7 @@ import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.MainAPI
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SearchResponse
@@ -13,7 +14,6 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
@@ -55,16 +55,20 @@ class DramaDizilerimProvider : MainAPI() {
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/dizi?page=SAYFA" to "Son Eklenen",
-        "$mainUrl/drama-izle?page=SAYFA" to "Popüler",
-        "$mainUrl/turkce-dublaj-drama?page=SAYFA" to "Türkçe Dublaj",
-        "$mainUrl/p/dramabox?page=SAYFA" to "DramaBox",
-        "$mainUrl/p/reelshort?page=SAYFA" to "ReelShort",
-        "$mainUrl/p/shortmax?page=SAYFA" to "ShortMax",
-        "$mainUrl/p/dramawave?page=SAYFA" to "DramaWave",
-        "$mainUrl/p/goodshort?page=SAYFA" to "GoodShort",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Eklenen" -> MainPageData(name, "$mainUrl/dizi?page=SAYFA")
+            "Popüler" -> MainPageData(name, "$mainUrl/drama-izle?page=SAYFA")
+            "Türkçe Dublaj" -> MainPageData(name, "$mainUrl/turkce-dublaj-drama?page=SAYFA")
+            "DramaBox" -> MainPageData(name, "$mainUrl/p/dramabox?page=SAYFA")
+            "ReelShort" -> MainPageData(name, "$mainUrl/p/reelshort?page=SAYFA")
+            "ShortMax" -> MainPageData(name, "$mainUrl/p/shortmax?page=SAYFA")
+            "DramaWave" -> MainPageData(name, "$mainUrl/p/dramawave?page=SAYFA")
+            "GoodShort" -> MainPageData(name, "$mainUrl/p/goodshort?page=SAYFA")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = uaHeaders).document
@@ -235,6 +239,18 @@ class DramaDizilerimProvider : MainAPI() {
     private data class Stream(val url: String, val quality: Int, val isHls: Boolean)
 
     companion object {
+        /** Homepage rows in display order; every entry maps to a live listing page. */
+        val ROWS = listOf(
+            "Son Eklenen",
+            "Popüler",
+            "Türkçe Dublaj",
+            "DramaBox",
+            "ReelShort",
+            "ShortMax",
+            "DramaWave",
+            "GoodShort",
+        )
+
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =
