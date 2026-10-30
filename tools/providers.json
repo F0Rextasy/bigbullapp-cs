@@ -1185,6 +1185,146 @@
    "checked": "2026-10-30T04:02:08Z",
    "latencyMs": 0,
    "module": "TRTLive"
+  },
+  "canlidizi.sbs": {
+   "id": "canlidizi-sbs",
+   "name": "CanliDizi",
+   "mainUrl": "https://canlidizi.sbs",
+   "status": "implemented",
+   "http": 200,
+   "title": "CanlıDizi",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "CanliDizi"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:47:36Z",
+   "latencyMs": 0,
+   "module": "CanliDizi"
+  },
+  "atv.com.tr": {
+   "id": "atv-com-tr",
+   "name": "ATV",
+   "mainUrl": "https://www.atv.com.tr",
+   "status": "implemented",
+   "http": 200,
+   "title": "ATV",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "ATV"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:47:34Z",
+   "latencyMs": 0,
+   "module": "ATV"
+  },
+  "showtv.com.tr": {
+   "id": "showtv-com-tr",
+   "name": "ShowTV",
+   "mainUrl": "https://www.showtv.com.tr",
+   "status": "implemented",
+   "http": 200,
+   "title": "Show TV",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "ShowTV"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:47:34Z",
+   "latencyMs": 0,
+   "module": "ShowTV"
+  },
+  "nowtv.com.tr": {
+   "id": "nowtv-com-tr",
+   "name": "NowTV",
+   "mainUrl": "https://www.nowtv.com.tr",
+   "status": "implemented",
+   "http": 200,
+   "title": "NOW TV",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "NowTV"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:47:34Z",
+   "latencyMs": 0,
+   "module": "NowTV"
+  },
+  "cnnturk.com": {
+   "id": "cnnturk-com",
+   "name": "CNNTurk",
+   "mainUrl": "https://www.cnnturk.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "CNN Türk",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "CNNTurk"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:47:35Z",
+   "latencyMs": 0,
+   "module": "CNNTurk"
+  },
+  "apara.com.tr": {
+   "id": "apara-com-tr",
+   "name": "APara",
+   "mainUrl": "https://www.apara.com.tr",
+   "status": "implemented",
+   "http": 200,
+   "title": "A Para",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "APara"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:47:35Z",
+   "latencyMs": 0,
+   "module": "APara"
+  },
+  "vavtv.com.tr": {
+   "id": "vavtv-com-tr",
+   "name": "VAVTV",
+   "mainUrl": "https://www.vavtv.com.tr",
+   "status": "implemented",
+   "http": 200,
+   "title": "VAV TV",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "VAVTV"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:47:35Z",
+   "latencyMs": 0,
+   "module": "VAVTV"
   }
  }
 }

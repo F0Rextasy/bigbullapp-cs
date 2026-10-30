@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-30",
- "note": "63 TR modül runner benchmark (2026-10-30)",
+ "note": "70 TR modül runner benchmark (2026-10-30)",
  "modules": [
   {
    "module": "Ahaber",
@@ -31,6 +31,12 @@
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=4, ep=293",
    "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "APara",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
   },
   {
    "module": "ASpor",
@@ -75,10 +81,22 @@
    "runner": "bench_runner.py 2026-10-30"
   },
   {
+   "module": "ATV",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
    "module": "BelgeselX",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=1, ep=2",
    "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "CanliDizi",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
   },
   {
    "module": "CanliTV",
@@ -97,6 +115,12 @@
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=3, ep=1180",
    "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "CNNTurk",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
   },
   {
    "module": "Ddizi",
@@ -279,6 +303,12 @@
    "runner": "bench_runner.py 2026-10-30"
   },
   {
+   "module": "NowTV",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
    "module": "Onepacetr",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=1, ep=20",
@@ -301,6 +331,12 @@
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=2, ep=19",
    "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "ShowTV",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
   },
   {
    "module": "SinemaCX",
@@ -358,6 +394,12 @@
   },
   {
    "module": "Tvnet",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
+   "module": "VAVTV",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=1, ep=0",
    "runner": "autopilot.py 2026-10-30"
