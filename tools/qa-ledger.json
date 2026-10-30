@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-30",
- "note": "48 TR modül runner benchmark (2026-10-30)",
+ "note": "53 TR modül runner benchmark (2026-10-30)",
  "modules": [
   {
    "module": "AnimeciX",
@@ -31,6 +31,18 @@
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=2, ep=1",
    "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "AsyaBox",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=1",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
+   "module": "Asyadizileriizle",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=7, ep=8",
+   "runner": "autopilot.py 2026-10-30"
   },
   {
    "module": "AsyaLog",
@@ -81,10 +93,22 @@
    "runner": "bench_runner.py 2026-10-30"
   },
   {
+   "module": "DDizimag",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=7",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
    "module": "DiziBal",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=1, ep=0",
    "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "DiziBoxTv",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=5, ep=0",
+   "runner": "autopilot.py 2026-10-30"
   },
   {
    "module": "DiziCaN",
@@ -271,6 +295,12 @@
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=3, ep=1",
    "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "TurkceDizi",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=4, ep=0",
+   "runner": "autopilot.py 2026-10-30"
   },
   {
    "module": "WebdramaTurkey2",

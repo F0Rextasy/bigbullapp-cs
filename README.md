@@ -78,13 +78,17 @@ Tek modül derleme ve cihaza kurulum:
 | `Anizm` **beta** | turkanime.info | Anime | — | — | ✓ | — | — | ✓ |
 | `Anizium` | anizium.co | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `AsyaAnimeleri` | asyaanimeleri.top | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
+| `AsyaBox` **beta** | asyabox.co | Dizi | — | — | — | — | — | — |
+| `Asyadizileriizle` **beta** | asyadizileriizle.com | Dizi | — | — | — | — | — | — |
 | `AsyaLog` | asyalog.co | Asya dizi/film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
 | `AsyaLuna` **beta** | asyaluna.com | Dizi | — | — | — | — | — | — |
 | `AsyaWatch` **beta** | asyawatch.com | Asya dizi/film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `BelgeselX` **beta** | belgeselx.com | Belgesel | — | — | — | — | — | — |
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
 | `Ddizi` **beta** | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
+| `DDizimag` **beta** | ddizimag.com | Dizi | — | — | — | — | — | — |
 | `DiziBal` **beta** | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |
+| `DiziBoxTv` **beta** | diziboxtv.com | Dizi | — | — | — | — | — | — |
 | `DiziCaN` **beta** | dizican.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi82.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
 | `Dizirella` **beta** | dizirella.one | Dizi | — | — | — | — | — | — |
@@ -116,6 +120,7 @@ Tek modül derleme ve cihaza kurulum:
 | `SinemaCX` **beta** | sinemacc.com | Film | — | — | — | ✓ | ✓ | ✓ |
 | `SonAnime` **beta** | sonanime.com | Dizi | — | — | — | — | — | — |
 | `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
+| `TurkceDizi` **beta** | turkcedizi.com | Film | — | — | — | — | — | ✓ |
 | `WebdramaTurkey2` | webdramaturkey2.com | Asya dizi/film | ✓ | — | — | ✓ | ✓ | — |
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
 | `YesilCamTv` **beta** | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
@@ -151,7 +156,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          48 modül
+  Yabancidizi/          53 modül
 ```
 
 ## Geliştirme
