@@ -5,6 +5,9 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+- **CanliTV v3**: M3U kanal URL'si doğrudan `loadLinks` ile HLS olarak verilir; eski
+  `loadLinks returned false` hatası giderildi.
+
 ## [1.5.1] - 2026-10-30
 
 ### Eklendi
