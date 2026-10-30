@@ -1,6 +1,8 @@
 package com.hdfilmcehennemi
 
 import com.lagradost.cloudstream3.ErrorLoadingException
+import com.lagradost.cloudstream3.HomePageResponse
+import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.MainAPI
 import com.lagradost.cloudstream3.SearchResponse
@@ -9,7 +11,9 @@ import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
+import com.lagradost.cloudstream3.mainPageOf
 import com.lagradost.cloudstream3.fixUrlNull
+import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
@@ -29,8 +33,23 @@ class HDFilmCehennemiProvider : MainAPI() {
     )
     override var name = "HDFilmCehennemi"
     override var lang = "tr"
-    override val hasMainPage = false
+    override val hasMainPage = true
+    override val mainPage = mainPageOf("$mainUrl/" to "Son Eklenen Filmler")
     override val supportedTypes = setOf(TvType.Movie)
+
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
+        val doc = app.get(request.data, headers = uaHeaders).document
+        val items = doc.select("a.poster[href]").mapNotNull { card ->
+            val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
+            val title = card.attr("title").removeSuffix(" izle").trim()
+                .ifBlank { card.selectFirst("img")?.attr("alt")?.removeSuffix(" izle")?.trim().orEmpty() }
+                .takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            newMovieSearchResponse(title, href, TvType.Movie) {
+                this.posterUrl = fixUrlNull(card.selectFirst("img")?.attr("src"))
+            }
+        }.distinctBy { it.url }
+        return newHomePageResponse(request.name, items, hasNext = false)
+    }
 
     /** Site's live-search JSON: results are ready-made HTML fragments. */
     override suspend fun search(query: String): List<SearchResponse> {
