@@ -14,6 +14,8 @@ sayı arttığında güncelleme sunar.
 
 
 
+- **Filmizyon v1**: `filmizyon.net` sıfırdan eklendi; film; runner doğrulaması: arama 2, bağlantı 4. Bot (autopilot) tarafından üretildi.
+
 - **BirAsyaDizi v1**: `birasyadizi.cx` sıfırdan eklendi; dizi; runner doğrulaması: arama 1, bağlantı 2. Bot (autopilot) tarafından üretildi.
 
 - **AsyaDizi v1**: `asyadizi.com` sıfırdan eklendi; dizi; runner doğrulaması: arama 20, bağlantı 1. Bot (autopilot) tarafından üretildi.
