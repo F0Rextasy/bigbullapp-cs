@@ -8,6 +8,26 @@ sayı arttığında güncelleme sunar.
 ## [1.5.1] - 2026-10-30
 
 ### Eklendi
+- **TRTLive v1**: `tabii.com` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **Tv8Bucuk v1**: `tv8bucuk.com` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **StarTV v1**: `startv.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **Tv8 v1**: `tv8.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **KanalD v1**: `kanald.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **HtSpor v1**: `htspor.com` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **ASpor v1**: `aspor.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **Ahaber v1**: `ahaber.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **TgrtHaber v1**: `tgrthaber.com` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **Tvnet v1**: `tvnet.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
 - **Asyadizileriizle v1**: `asyadizileriizle.com` sıfırdan eklendi; dizi; runner doğrulaması: arama 1, bağlantı 7. Bot (autopilot) tarafından üretildi.
 
 - **TurkceDizi v1**: `turkcedizi.com` sıfırdan eklendi; film; runner doğrulaması: arama 12, bağlantı 4. Bot (autopilot) tarafından üretildi.
