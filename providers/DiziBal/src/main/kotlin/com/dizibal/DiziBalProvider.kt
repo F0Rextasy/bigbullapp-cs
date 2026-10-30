@@ -49,6 +49,9 @@ import org.jsoup.nodes.Element
  * (pilavyerplay.top / play2.pilavyerplay.top), taban sayfadaki `core.js` script adresinden
  * türetilir. s.php origin kilidi ister: Referer bölüm sayfasıdır.
  */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class DiziBalProvider : MainAPI() {
     override var mainUrl = "https://dizibal.org"
     override var name = "DiziBal"
@@ -290,7 +293,7 @@ class DiziBalProvider : MainAPI() {
                 ?: return@mapNotNull null
             newEpisode(fixUrl(href)) {
                 this.name = title
-                this.posterUrl = fixUrlNull(card.selectFirst("img")?.attr("src"))
+                this.posterUrl = fixUrlNull(card.selectFirst("img")?.posterSrcLazy())
                 this.season = match.groupValues[1].toIntOrNull()
                 this.episode = match.groupValues[2].toIntOrNull()
             }

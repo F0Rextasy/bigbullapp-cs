@@ -59,7 +59,11 @@ sayı arttığında güncelleme sunar.
 +  HDFilmizle v2, JetFilmizle v3, KoreanTurk v2, LoveFilm v2, SelcukFlix v2, SetFilmIzle v3,
 +  SinemaCX v2, TLCtr v3, WebdramaTurkey2 v3, CanliTV v2, CanliTVMe v3: eklenti ayarlarına
 +  ana sayfa/kanal kategori satırı aç/kapat anahtarları eklendi; kalite/altyazı seçimleri korundu.
-+- **Dizibox v8**: ana sayfa bölüm kartlarında lazy `data-src` posterleri kullanılıyor; placeholder
++- **Poster düzeltmesi (21 modül)**: Anizm, AsyaAnimeleri, AsyaLog, BelgeselX, Cizgimax,
++  DiziBal, DiziMom, DiziPod, DiziYou, Dizibox, DiziboxIzle, Dizilla, DramaDizilerim,
++  FilmEkseni, FilmModu, FullHDFilm, HDFilmCehennemi, JetFilmizle, KoreanTurk, Kultfilmler,
++  SetFilmIzle: kart posterleri `data-src` lazy kaynağından okunuyor; placeholder azaltıldı.
+- **Dizibox v8**: ana sayfa bölüm kartlarında lazy `data-src` posterleri kullanılıyor; placeholder
 +  yerine gerçek afiş yükleniyor.
 +- **FullHDFilm v2**: `/filmler/` ana sayfası, puan sıralaması ve tür satırları eklendi.
 - **Onepacetr v5**: Vidguard/gettsu (site kendi gizliyor, alan adları 522/park) atlanıyor;

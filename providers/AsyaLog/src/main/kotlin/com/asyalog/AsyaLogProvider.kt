@@ -29,6 +29,9 @@ import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.jsoup.nodes.Element
 
 /** AsyaLog — asyalog.co (Asya dizileri/filmleri, Odnoklassniki player) */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class AsyaLogProvider : MainAPI() {
     override var mainUrl = "https://asyalog.co"
     override var name = "AsyaLog"
@@ -66,7 +69,7 @@ class AsyaLogProvider : MainAPI() {
         val title = attr("title").ifBlank { selectFirst("img")?.attr("alt").orEmpty() }.trim()
         if (title.isBlank()) return null
         return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-            this.posterUrl = fixUrlNull(selectFirst("img")?.attr("src"))
+            this.posterUrl = fixUrlNull(selectFirst("img")?.posterSrcLazy())
         }
     }
 

@@ -28,6 +28,9 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 /** JetFilmizle — jetfilmizle.app (jetfilmizle.tv/.com/.now aynı yayına yönlenir) */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class JetFilmizleProvider : MainAPI() {
     override var mainUrl = "https://jetfilmizle.app"
     private val uaHeaders = mapOf(
@@ -63,7 +66,7 @@ class JetFilmizleProvider : MainAPI() {
             ?: anchor.attr("title").substringBefore(" Full").trim()
         if (title.isBlank()) return null
         return newMovieSearchResponse(title, href, TvType.Movie) {
-            this.posterUrl = fixUrlNull(selectFirst("img")?.attr("src"))
+            this.posterUrl = fixUrlNull(selectFirst("img")?.posterSrcLazy())
             this.year = selectFirst("span.fc-year")?.text()?.trim()?.toIntOrNull()
         }
     }

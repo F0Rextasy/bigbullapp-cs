@@ -23,8 +23,12 @@ import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 
 /** HDFilmCehennemi — hdfilmcehennemi.nl (movies only, self-hosted jwplayer embed) */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class HDFilmCehennemiProvider : MainAPI() {
     override var mainUrl = "https://www.hdfilmcehennemi.nl"
     private val uaHeaders = mapOf(
@@ -51,7 +55,7 @@ class HDFilmCehennemiProvider : MainAPI() {
                 .ifBlank { card.selectFirst("img")?.attr("alt")?.removeSuffix(" izle")?.trim().orEmpty() }
                 .takeIf { it.isNotBlank() } ?: return@mapNotNull null
             newMovieSearchResponse(title, href, TvType.Movie) {
-                this.posterUrl = fixUrlNull(card.selectFirst("img")?.attr("src"))
+                this.posterUrl = fixUrlNull(card.selectFirst("img")?.posterSrcLazy())
             }
         }.distinctBy { it.url }
         return newHomePageResponse(request.name, items, hasNext = false)
@@ -98,7 +102,7 @@ class HDFilmCehennemiProvider : MainAPI() {
             ?: Regex("""\((\d{4})\)""").find(h1.text())?.groupValues?.get(1)?.toIntOrNull()
 
         return newMovieLoadResponse(title, url, TvType.Movie, url) {
-            this.posterUrl = fixUrlNull(doc.selectFirst("div.poster img, figure img, img.lazyload")?.attr("src"))
+            this.posterUrl = fixUrlNull(doc.selectFirst("div.poster img, figure img, img.lazyload")?.posterSrcLazy())
             this.plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
             this.year = year
             this.tags = doc.select("a[href*='/kategori/'], a[href*='/category/']").map { it.text().trim() }

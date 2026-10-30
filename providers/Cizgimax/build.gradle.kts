@@ -1,4 +1,4 @@
-version = 6
+version = 7
 
 cloudstream {
     description = "ÇizgiMax — çizgi film, anime ve dizi izle (cizgimax.online)"

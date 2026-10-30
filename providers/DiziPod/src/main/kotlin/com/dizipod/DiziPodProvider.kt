@@ -43,6 +43,9 @@ import java.net.URLEncoder
  * `/wp/wp-admin/admin-ajax.php?action=get_episode_player` bir iframe döner, iframe'in
  * Dean Edwards packer ile paketlenmiş jwplayer kurulumu `sources[].file` m3u8 adresini verir.
  */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class DiziPodProvider : MainAPI() {
     override var mainUrl = "https://dizipod.com"
     override var name = "DiziPod"
@@ -190,7 +193,7 @@ class DiziPodProvider : MainAPI() {
             .mapNotNull { it.toSearchCard() }.distinctBy { it.url }
 
         return newMovieLoadResponse(title, url, TvType.Movie, url) {
-            this.posterUrl = fixUrlNull(doc.selectFirst("img.movie-hero__poster")?.attr("src"))
+            this.posterUrl = fixUrlNull(doc.selectFirst("img.movie-hero__poster")?.posterSrcLazy())
             this.plot = doc.selectFirst(".movie-hero__overview p")?.text()?.trim()
                 ?.takeIf { it.isNotEmpty() }
             this.year = doc.selectFirst(".movie-hero__title a[href*='/yil/']")?.text()?.trim()

@@ -30,6 +30,9 @@ import com.lagradost.cloudstream3.utils.loadExtractor
 import org.jsoup.nodes.Element
 
 /** DiziBox — dizibox.live (mirrors: dizibox.com/.net/.vip) */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class DiziboxProvider : MainAPI() {
     override var mainUrl = "https://www.dizibox.live"
     private val uaHeaders = mapOf(
@@ -146,7 +149,7 @@ class DiziboxProvider : MainAPI() {
         }
 
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes.values.toList()) {
-            this.posterUrl = fixUrlNull(doc.selectFirst("div.tv-overview figure img")?.attr("src"))
+            this.posterUrl = fixUrlNull(doc.selectFirst("div.tv-overview figure img")?.posterSrcLazy())
             this.plot = doc.selectFirst("div.tv-story p")?.text()?.trim()
             this.year = doc.selectFirst("a[href*='/yil/']")?.text()?.trim()?.toIntOrNull()
             this.tags = doc.select("a[href*='/tur/']").map { it.text() }

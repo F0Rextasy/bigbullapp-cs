@@ -1,5 +1,5 @@
 // Use an integer for version numbers
-version = 8
+version = 9
 
 cloudstream {
     description = "DiziBox — yabancı dizi izle (dizibox.live mirror'ları)"

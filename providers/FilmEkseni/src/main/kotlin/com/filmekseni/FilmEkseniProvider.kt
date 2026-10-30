@@ -44,6 +44,9 @@ import java.net.URLEncoder
  * alanı `{url}` yer tutuculu iframe'i verir: VIP (eksenload.top) jwplayer
  * `setup(JSON.parse('…'))` içinde m3u8 basar, Moly (vidmoly.net) `sources[{file: '…m3u8'}]`.
  */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class FilmEkseniProvider : MainAPI() {
     override var mainUrl = "https://filmekseni.vip"
     override var name = "FilmEkseni"
@@ -196,7 +199,7 @@ class FilmEkseniProvider : MainAPI() {
         val href = fixUrlNull(attr("href")) ?: return null
         val title = selectFirst("h3")?.text()?.trim()?.takeIf { it.isNotEmpty() } ?: return null
         return newMovieSearchResponse(title, href, TvType.Movie) {
-            this.posterUrl = fixUrlNull(selectFirst("img[src]")?.attr("src")?.takeIf { it.startsWith("http") })
+            this.posterUrl = fixUrlNull(selectFirst("img[src]")?.posterSrcLazy()?.takeIf { it.startsWith("http") })
             this.year = selectFirst("span.text-gray-300")?.text()?.trim()?.toIntOrNull()
             this.score = selectFirst("span.text-accent")?.text()?.trim()?.toDoubleOrNull()
                 ?.let { Score.from10(it) }
