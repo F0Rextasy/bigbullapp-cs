@@ -70,6 +70,8 @@ sayı arttığında güncelleme sunar.
 
 ### Değişti
 - **Dizifon v2**: taban adres https://dizifon.cc -> https://www.dizifon.cc; runner doğrulaması: arama 21, bağlantı 2. Bot (autopilot) tarafından üretildi.
+- **AsyaAnimeleri v9**: site menüsündeki 49 tür satırı (`/genres/<slug>/`) ana sayfa ve
+  ayarlara eklendi; "Son Eklenenler" korunur.
 
 - **Asyadizileriizle v2**: taban adres https://asyadizileriizle.com -> https://asyadizileriizle.com; runner doğrulaması: arama 1, bağlantı 7. Bot (autopilot) tarafından üretildi.
 

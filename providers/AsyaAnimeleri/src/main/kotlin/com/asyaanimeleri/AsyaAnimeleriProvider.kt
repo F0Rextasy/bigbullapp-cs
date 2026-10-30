@@ -53,6 +53,55 @@ class AsyaAnimeleriProvider : MainAPI() {
         if (!Settings.rowEnabled(name)) return@mapNotNull null
         when (name) {
             "Son Eklenenler" -> MainPageData(name, "$mainUrl/series/")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/genres/aksiyon/")
+            "Spor" -> MainPageData(name, "$mainUrl/genres/spor/")
+            "Dövüş Sanatları" -> MainPageData(name, "$mainUrl/genres/dovus-sanatlari/")
+            "Komedi" -> MainPageData(name, "$mainUrl/genres/komedi/")
+            "Ecchi" -> MainPageData(name, "$mainUrl/genres/ecchi/")
+            "Harem" -> MainPageData(name, "$mainUrl/genres/harem/")
+            "Okul" -> MainPageData(name, "$mainUrl/genres/okul/")
+            "Shounen" -> MainPageData(name, "$mainUrl/genres/shounen/")
+            "Comic" -> MainPageData(name, "$mainUrl/genres/comic/")
+            "Fantastik" -> MainPageData(name, "$mainUrl/genres/fantastik/")
+            "Macera" -> MainPageData(name, "$mainUrl/genres/macera/")
+            "Reenkarnasyon" -> MainPageData(name, "$mainUrl/genres/reenkarnasyon/")
+            "Tarihsel" -> MainPageData(name, "$mainUrl/genres/tarihsel/")
+            "Romantizm" -> MainPageData(name, "$mainUrl/genres/romantizm/")
+            "Bilim-Kurgu" -> MainPageData(name, "$mainUrl/genres/bilim-kurgu/")
+            "Büyü" -> MainPageData(name, "$mainUrl/genres/buyu/")
+            "Doğaüstü" -> MainPageData(name, "$mainUrl/genres/dogaustu/")
+            "Isekai" -> MainPageData(name, "$mainUrl/genres/isekai/")
+            "Tarihi" -> MainPageData(name, "$mainUrl/genres/tarihi/")
+            "Askeri" -> MainPageData(name, "$mainUrl/genres/askeri/")
+            "Dedektif" -> MainPageData(name, "$mainUrl/genres/dedektif/")
+            "Dram" -> MainPageData(name, "$mainUrl/genres/dram/")
+            "Gerilim" -> MainPageData(name, "$mainUrl/genres/gerilim/")
+            "Gizem" -> MainPageData(name, "$mainUrl/genres/gizem/")
+            "Hayat Dilimi" -> MainPageData(name, "$mainUrl/genres/hayat-dilimi/")
+            "Hayatta Kalma" -> MainPageData(name, "$mainUrl/genres/hayatta-kalma/")
+            "Josei" -> MainPageData(name, "$mainUrl/genres/josei/")
+            "Kanlı" -> MainPageData(name, "$mainUrl/genres/kanli/")
+            "Korku" -> MainPageData(name, "$mainUrl/genres/korku/")
+            "Mecha" -> MainPageData(name, "$mainUrl/genres/mecha/")
+            "Mitoloji" -> MainPageData(name, "$mainUrl/genres/mitoloji/")
+            "Müzik" -> MainPageData(name, "$mainUrl/genres/muzik/")
+            "Oyun" -> MainPageData(name, "$mainUrl/genres/oyun/")
+            "Parodi" -> MainPageData(name, "$mainUrl/genres/parodi/")
+            "Psikolojik" -> MainPageData(name, "$mainUrl/genres/psikolojik/")
+            "Romantik" -> MainPageData(name, "$mainUrl/genres/romantik/")
+            "Sağlık" -> MainPageData(name, "$mainUrl/genres/saglik/")
+            "Samuray" -> MainPageData(name, "$mainUrl/genres/samuray/")
+            "Seinen" -> MainPageData(name, "$mainUrl/genres/seinen/")
+            "Şeytanlar" -> MainPageData(name, "$mainUrl/genres/seytanlar/")
+            "Shoujo" -> MainPageData(name, "$mainUrl/genres/shoujo/")
+            "Strateji Oyunu" -> MainPageData(name, "$mainUrl/genres/strateji-oyunu/")
+            "Süper Güç" -> MainPageData(name, "$mainUrl/genres/super-guc/")
+            "Ters Harem" -> MainPageData(name, "$mainUrl/genres/ters-harem/")
+            "Uzay" -> MainPageData(name, "$mainUrl/genres/uzay/")
+            "Vahşet" -> MainPageData(name, "$mainUrl/genres/vahset/")
+            "Vampir" -> MainPageData(name, "$mainUrl/genres/vampir/")
+            "Yarış" -> MainPageData(name, "$mainUrl/genres/yaris/")
+            "Zaman Yolculuğu" -> MainPageData(name, "$mainUrl/genres/zaman-yolculugu/")
             else -> null
         }
     }
@@ -288,7 +337,7 @@ class AsyaAnimeleriProvider : MainAPI() {
 
     companion object {
         /** Homepage rows in display order; all map to live listing pages. */
-        val ROWS = listOf("Son Eklenenler")
+        val ROWS = listOf("Son Eklenenler", "Aksiyon", "Spor", "Dövüş Sanatları", "Komedi", "Ecchi", "Harem", "Okul", "Shounen", "Comic", "Fantastik", "Macera", "Reenkarnasyon", "Tarihsel", "Romantizm", "Bilim-Kurgu", "Büyü", "Doğaüstü", "Isekai", "Tarihi", "Askeri", "Dedektif", "Dram", "Gerilim", "Gizem", "Hayat Dilimi", "Hayatta Kalma", "Josei", "Kanlı", "Korku", "Mecha", "Mitoloji", "Müzik", "Oyun", "Parodi", "Psikolojik", "Romantik", "Sağlık", "Samuray", "Seinen", "Şeytanlar", "Shoujo", "Strateji Oyunu", "Süper Güç", "Ters Harem", "Uzay", "Vahşet", "Vampir", "Yarış", "Zaman Yolculuğu")
 
         private const val BROWSER_UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
