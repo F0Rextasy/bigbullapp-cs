@@ -73,24 +73,20 @@ Tek modül derleme ve cihaza kurulum:
 
 | Eklenti | Kaynak | Tür | Sayfalama | Öneri | Fragman | Kadro | Süre | Puan |
 |---|---|---|---|---|---|---|---|---|
-| `Ahaber` **beta** | ahaber.com.tr | Canlı TV | — | — | — | — | — | — |
 | `AnimeciX` **beta** | animecix.tv | Anime | — | — | — | — | — | ✓ |
 | `Animeler` **beta** | animeler.live | Anime | — | — | — | — | — | — |
 | `Anizm` **beta** | turkanime.info | Anime | — | — | ✓ | — | — | ✓ |
 | `Anizium` | anizium.co | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
-| `APara` **beta** | apara.com.tr | Canlı TV | — | — | — | — | — | — |
-| `ASpor` **beta** | aspor.com.tr | Canlı TV | — | — | — | — | — | — |
 | `AsyaAnimeleri` | asyaanimeleri.top | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `AsyaBox` **beta** | asyabox.co | Dizi | — | — | — | — | — | — |
 | `Asyadizileriizle` **beta** | asyadizileriizle.com | Dizi | — | — | — | — | — | — |
 | `AsyaLog` | asyalog.co | Asya dizi/film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
 | `AsyaLuna` **beta** | asyaluna.com | Dizi | — | — | — | — | — | — |
 | `AsyaWatch` **beta** | asyawatch.com | Asya dizi/film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `ATV` **beta** | atv.com.tr | Canlı TV | — | — | — | — | — | — |
 | `BelgeselX` **beta** | belgeselx.com | Belgesel | — | — | — | — | — | — |
 | `CanliDizi` **beta** | canlidizi.sbs | Dizi | — | — | — | — | — | — |
+| `CanliYayinKanallari` **beta** | tabii.com | Canlı TV | — | — | — | — | — | — |
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
-| `CNNTurk` **beta** | cnnturk.com | Canlı TV | — | — | — | — | — | — |
 | `Ddizi` **beta** | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
 | `DDizimag` **beta** | ddizimag.com | Dizi | — | — | — | — | — | — |
 | `DiziBal` **beta** | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |
@@ -115,29 +111,18 @@ Tek modül derleme ve cihaza kurulum:
 | `HDFilmCehennemi` **beta** | hdfilmcehennemi.nl | Film | — | — | — | — | — | — |
 | `HDFilmDelisi` **beta** | hdfilmdelisi.one | Film | ✓ | — | — | — | ✓ | ✓ |
 | `HDFilmizle` **beta** | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `HtSpor` **beta** | htspor.com | Canlı TV | — | — | — | — | — | — |
 | `JetFilmizle` **beta** | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
-| `KanalD` **beta** | kanald.com.tr | Canlı TV | — | — | — | — | — | — |
 | `KoreanTurk` **beta** | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
 | `Kultfilmler` | kultfilmler.net | Film | ✓ | — | — | ✓ | ✓ | ✓ |
 | `LoveFilm` **beta** | lovefilmizle.net | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `NowTV` **beta** | nowtv.com.tr | Canlı TV | — | — | — | — | — | — |
 | `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
 | `SelcukFlix` **beta** | selcukflix.app | Dizi/Film | — | — | — | — | ✓ | ✓ |
 | `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `Sezonlukdizi` **beta** | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
-| `ShowTV` **beta** | showtv.com.tr | Canlı TV | — | — | — | — | — | — |
 | `SinemaCX` **beta** | sinemacc.com | Film | — | — | — | ✓ | ✓ | ✓ |
 | `SonAnime` **beta** | sonanime.com | Dizi | — | — | — | — | — | — |
-| `StarTV` **beta** | startv.com.tr | Canlı TV | — | — | — | — | — | — |
-| `TgrtHaber` **beta** | tgrthaber.com | Canlı TV | — | — | — | — | — | — |
 | `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
-| `TRTLive` **beta** | tabii.com | Canlı TV | — | — | — | — | — | — |
 | `TurkceDizi` **beta** | turkcedizi.com | Film | — | — | — | — | — | ✓ |
-| `Tv8` **beta** | tv8.com.tr | Canlı TV | — | — | — | — | — | — |
-| `Tv8Bucuk` **beta** | tv8bucuk.com | Canlı TV | — | — | — | — | — | — |
-| `Tvnet` **beta** | tvnet.com.tr | Canlı TV | — | — | — | — | — | — |
-| `VAVTV` **beta** | vavtv.com.tr | Canlı TV | — | — | — | — | — | — |
 | `WebdramaTurkey2` | webdramaturkey2.com | Asya dizi/film | ✓ | — | — | ✓ | ✓ | — |
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
 | `YesilCamTv` **beta** | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
@@ -173,7 +158,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          70 modül
+  Yabancidizi/          55 modül
 ```
 
 ## Geliştirme

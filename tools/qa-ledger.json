@@ -1,426 +1,336 @@
 {
- "generated": "2026-10-30",
- "note": "70 TR modül runner benchmark (2026-10-30)",
- "modules": [
-  {
-   "module": "Ahaber",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "AnimeciX",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=3, ep=16",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Animeler",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=4, ep=1",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Anizium",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=5, ep=500",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Anizm",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=4, ep=293",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "APara",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "ASpor",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "AsyaAnimeleri",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=2, ep=1",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "AsyaBox",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=1",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "Asyadizileriizle",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=7, ep=8",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "AsyaLog",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=5, ep=6",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "AsyaLuna",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "AsyaWatch",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=7",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "ATV",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "BelgeselX",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=2",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "CanliDizi",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "CanliTV",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=0, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "CanliTVMe",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=0, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Cizgimax",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=3, ep=1180",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "CNNTurk",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "Ddizi",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=13",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "DDizimag",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=7",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "DiziBal",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "DiziBoxTv",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=5, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "DiziCaN",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=2, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "DiziLife",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=9",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "DiziMom",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=6",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "DiziPal",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=2, ep=16",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "DiziPod",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=24",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Dizirella",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "DiziYou",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=7",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Diziasia",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=12",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Dizibox",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=2, ep=3",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "DiziboxIzle",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=6, ep=6",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Dizikorea3",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=33",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Dizilla",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=120",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "DramaDizilerim",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=51",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "FilmEkseni",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "FilmModu",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "FullHDFilm",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "FullHDFilmizlesene",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "HDFilmCehennemi",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "HDFilmDelisi",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "HDFilmizle",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "HtSpor",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "JetFilmizle",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "KanalD",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "KoreanTurk",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=14",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Kultfilmler",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "LoveFilm",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "NowTV",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "Onepacetr",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=20",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "SelcukFlix",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=2, ep=7",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "SetFilmIzle",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Sezonlukdizi",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=2, ep=19",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "ShowTV",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "SinemaCX",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "SonAnime",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=2, ep=38",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "StarTV",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "TgrtHaber",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "TLCtr",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=3, ep=1",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "TRTLive",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "TurkceDizi",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=4, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "Tv8",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "Tv8Bucuk",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "Tvnet",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "VAVTV",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  },
-  {
-   "module": "WebdramaTurkey2",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=2, ep=25",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Yabancidizi",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "YesilCamTv",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-10-30"
-  }
- ]
+  "generated": "2026-10-30",
+  "note": "55 TR modül runner benchmark (2026-10-30)",
+  "modules": [
+    {
+      "module": "AnimeciX",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=3, ep=16",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Animeler",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=4, ep=1",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Anizium",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=5, ep=500",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Anizm",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=4, ep=293",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "AsyaAnimeleri",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=2, ep=1",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "AsyaBox",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=1",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "Asyadizileriizle",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=7, ep=8",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "AsyaLog",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=5, ep=6",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "AsyaLuna",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "AsyaWatch",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=7",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "BelgeselX",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=2",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "CanliDizi",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "CanliTV",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=0, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "CanliTVMe",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=0, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "CanliYayinKanallari",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "Cizgimax",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=3, ep=1180",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Ddizi",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=13",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "DDizimag",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=7",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "DiziBal",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "DiziBoxTv",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=5, ep=0",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "DiziCaN",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=2, ep=0",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "DiziLife",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=9",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "DiziMom",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=6",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "DiziPal",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=2, ep=16",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "DiziPod",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=24",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Dizirella",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "DiziYou",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=7",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Diziasia",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=12",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Dizibox",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=2, ep=3",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "DiziboxIzle",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=6, ep=6",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Dizikorea3",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=33",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Dizilla",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=120",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "DramaDizilerim",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=51",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "FilmEkseni",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "FilmModu",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "FullHDFilm",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "FullHDFilmizlesene",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "HDFilmCehennemi",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "HDFilmDelisi",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "HDFilmizle",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "JetFilmizle",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "KoreanTurk",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=14",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Kultfilmler",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "LoveFilm",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Onepacetr",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=20",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "SelcukFlix",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=2, ep=7",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "SetFilmIzle",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Sezonlukdizi",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=2, ep=19",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "SinemaCX",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "SonAnime",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=2, ep=38",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "TLCtr",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=3, ep=1",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "TurkceDizi",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=4, ep=0",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "WebdramaTurkey2",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=2, ep=25",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Yabancidizi",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "YesilCamTv",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "autopilot.py 2026-10-30"
+    }
+  ]
 }

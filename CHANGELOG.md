@@ -8,39 +8,25 @@ sayı arttığında güncelleme sunar.
 ## [1.5.1] - 2026-10-30
 
 ### Eklendi
-- **VAVTV v1**: `vavtv.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **APara v1**: `apara.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **CNNTurk v1**: `cnnturk.com` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **NowTV v1**: `nowtv.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **ShowTV v1**: `showtv.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **ATV v1**: `atv.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **CanliYayinKanallari v1**: `tabii.com` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 24, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
 - **CanliDizi v1**: `canlidizi.sbs` sıfırdan eklendi; dizi; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **TRTLive v1**: `tabii.com` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **Tv8Bucuk v1**: `tv8bucuk.com` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **StarTV v1**: `startv.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **Tv8 v1**: `tv8.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **KanalD v1**: `kanald.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **HtSpor v1**: `htspor.com` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **ASpor v1**: `aspor.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **Ahaber v1**: `ahaber.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **TgrtHaber v1**: `tgrthaber.com` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
-- **Tvnet v1**: `tvnet.com.tr` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
 - **Asyadizileriizle v1**: `asyadizileriizle.com` sıfırdan eklendi; dizi; runner doğrulaması: arama 1, bağlantı 7. Bot (autopilot) tarafından üretildi.
 
