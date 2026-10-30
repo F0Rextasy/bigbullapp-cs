@@ -21,6 +21,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import java.net.URI
 import org.json.JSONObject
+import org.jsoup.Jsoup
 
 /**
  * StarTV — startv.com.tr dizileri.
@@ -121,10 +122,14 @@ class StarTVProvider : MainAPI() {
 
     private fun parseSeries(html: String): List<Pair<String, String>> {
         val text = html.replace("\\\"", "\"")
+        val valid = Jsoup.parse(html).select("a[href^=/dizi/]")
+            .mapNotNull { it.attr("href").substringAfter("/dizi/").substringBefore("/").takeIf(String::isNotBlank) }
+            .toSet()
+        if (valid.isEmpty()) return emptyList()
         return SERIES.findAll(text).mapNotNull { match ->
             val title = match.groupValues[1].trim()
             val slug = match.groupValues[2].trim()
-            if (title.isBlank() || slug.isBlank() || slug.contains('/')) null else title to slug
+            if (title.isBlank() || slug.isBlank() || slug !in valid) null else title to slug
         }.distinctBy { it.second }.toList()
     }
 
