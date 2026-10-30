@@ -11,6 +11,10 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newLiveSearchResponse
+import com.lagradost.cloudstream3.SubtitleFile
+import com.lagradost.cloudstream3.utils.ExtractorLink
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
+import com.lagradost.cloudstream3.utils.newExtractorLink
 import com.lagradost.cloudstream3.newLiveStreamLoadResponse
 
 /** CanliTV — iptv-org Türkiye M3U listesi (canlı kanallar). */
@@ -112,6 +116,21 @@ class CanliTVProvider : MainAPI() {
         val logo: String?,
         val url: String,
     )
+
+    override suspend fun loadLinks(
+        data: String,
+        isCasting: Boolean,
+        subtitleCallback: (SubtitleFile) -> Unit,
+        callback: (ExtractorLink) -> Unit,
+    ): Boolean {
+        if (!data.startsWith("http")) throw ErrorLoadingException("$name: geçersiz kanal adresi")
+        callback.invoke(
+            newExtractorLink(name, "Canlı", data, ExtractorLinkType.M3U8) {
+                this.referer = "https://iptv-org.github.io/"
+            }
+        )
+        return true
+    }
 
     companion object {
         /** Homepage rows in display order; each maps to a playlist group-title. */
