@@ -9,6 +9,8 @@ sayı arttığında güncelleme sunar.
 
 ### Eklendi
 
+- **MinikaGO v1**: `minikago.com.tr` çocuk VOD'u eklendi; bölüm sayfasındaki doğrudan MP4
+  kaynakları kullanılıyor. Runner: arama 1, bağlantı 1.
 
 
 
