@@ -79,12 +79,15 @@ Tek modül derleme ve cihaza kurulum:
 | `Anizium` | anizium.co | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `AsyaAnimeleri` | asyaanimeleri.top | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `AsyaLog` | asyalog.co | Asya dizi/film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
+| `AsyaLuna` **beta** | asyaluna.com | Dizi | — | — | — | — | — | — |
 | `AsyaWatch` **beta** | asyawatch.com | Asya dizi/film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `BelgeselX` **beta** | belgeselx.com | Belgesel | — | — | — | — | — | — |
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
 | `Ddizi` **beta** | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
 | `DiziBal` **beta** | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |
+| `DiziCaN` **beta** | dizican.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi82.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
+| `Dizirella` **beta** | dizirella.one | Dizi | — | — | — | — | — | — |
 | `DiziYou` | diziyou.one | Dizi | — | — | ✓ | ✓ | — | ✓ |
 | `Diziasia` | diziasia.com | Asya dizi | ✓ | ✓ | — | — | — | — |
 | `Dizibox` | dizibox.live | Dizi | — | — | ✓ | ✓ | — | ✓ |
@@ -111,6 +114,7 @@ Tek modül derleme ve cihaza kurulum:
 | `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `Sezonlukdizi` **beta** | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
 | `SinemaCX` **beta** | sinemacc.com | Film | — | — | — | ✓ | ✓ | ✓ |
+| `SonAnime` **beta** | sonanime.com | Dizi | — | — | — | — | — | — |
 | `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
 | `WebdramaTurkey2` | webdramaturkey2.com | Asya dizi/film | ✓ | — | — | ✓ | ✓ | — |
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
@@ -147,7 +151,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          44 modül
+  Yabancidizi/          48 modül
 ```
 
 ## Geliştirme

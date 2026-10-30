@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-30",
- "note": "44 TR modül runner benchmark (2026-10-30)",
+ "note": "48 TR modül runner benchmark (2026-10-30)",
  "modules": [
   {
    "module": "AnimeciX",
@@ -37,6 +37,12 @@
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=5, ep=6",
    "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "AsyaLuna",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
   },
   {
    "module": "AsyaWatch",
@@ -81,6 +87,12 @@
    "runner": "bench_runner.py 2026-10-30"
   },
   {
+   "module": "DiziCaN",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=2, ep=0",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
    "module": "DiziLife",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=1, ep=9",
@@ -103,6 +115,12 @@
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=1, ep=24",
    "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "Dizirella",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
   },
   {
    "module": "DiziYou",
@@ -241,6 +259,12 @@
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=1, ep=0",
    "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "SonAnime",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=2, ep=38",
+   "runner": "autopilot.py 2026-10-30"
   },
   {
    "module": "TLCtr",
