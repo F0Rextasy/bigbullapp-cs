@@ -51,7 +51,7 @@ sayı arttığında güncelleme sunar.
   ayna sayısı çevirmen başına ilk 10 ve toplam ilk 4 link ile sınırlı, `/links` ~26 sn'de 4 HLS.
 - **JetFilmizle v2**: videopark/jetembed kaynakları için moviesapi/vidora üzerinden doğrudan
   HLS akışı ve VTT altyazıları eklendi.
-- **DiziMom v4 / HDFilmCehennemi v4**: `hasMainPage = true`; iki sağlayıcı da ana sayfa
+- **DiziMom v5 / HDFilmCehennemi v4**: `hasMainPage = true`; iki sağlayıcı da ana sayfa
   seçiminde görünür ve site kartlarından gerçek ana sayfa satırı üretir.
 - **Onepacetr v5**: Vidguard/gettsu (site kendi gizliyor, alan adları 522/park) atlanıyor;
   Google Drive player'ı `drive.usercontent.google.com` üzerinden doğrudan MP4 olarak veriliyor.
