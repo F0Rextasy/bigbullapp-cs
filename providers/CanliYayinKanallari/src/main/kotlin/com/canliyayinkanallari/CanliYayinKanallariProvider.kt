@@ -15,6 +15,7 @@ import com.lagradost.cloudstream3.newLiveSearchResponse
 import com.lagradost.cloudstream3.newLiveStreamLoadResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
+import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 
 /** Live channels with verified public HLS endpoints; no scraping at runtime. */
@@ -50,6 +51,9 @@ class CanliYayinKanallariProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
         if (!data.startsWith("http")) throw ErrorLoadingException("$name: geçersiz kanal")
+        if (data.contains("youtube.com") || data.contains("youtu.be")) {
+            return loadExtractor(data, mainUrl + "/", subtitleCallback, callback)
+        }
         callback.invoke(
             newExtractorLink(name, "Canlı", data, ExtractorLinkType.M3U8) {
                 this.referer = mainUrl + "/"
@@ -61,6 +65,7 @@ class CanliYayinKanallariProvider : MainAPI() {
     companion object {
         val ROWS = listOf("Kanallar")
         val CHANNELS = listOf(
+            "TV100" to "https://www.youtube.com/watch?v=4WSvLRk83-c",
         "TVNET" to "https://tvnet-live.lg.mncdn.com/tvnet-live/tvnet/playlist.m3u8",
         "TGRT Haber" to "https://canli.tgrthaber.com/tgrt.m3u8",
         "A Haber" to "https://trkvz-live.ercdn.net/ahaberhd/ahaberhd.m3u8",
