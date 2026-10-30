@@ -59,7 +59,9 @@ sayı arttığında güncelleme sunar.
 +  HDFilmizle v2, JetFilmizle v3, KoreanTurk v2, LoveFilm v2, SelcukFlix v2, SetFilmIzle v3,
 +  SinemaCX v2, TLCtr v3, WebdramaTurkey2 v3, CanliTV v2, CanliTVMe v3: eklenti ayarlarına
 +  ana sayfa/kanal kategori satırı aç/kapat anahtarları eklendi; kalite/altyazı seçimleri korundu.
-+- **Poster düzeltmesi (21 modül)**: Anizm, AsyaAnimeleri, AsyaLog, BelgeselX, Cizgimax,
++- **FullHDFilm v4**: ana sayfa kart seçicisi `group/poster` sınıfına göre düzeltildi; 24 kart
++  gerçek başlık ve posterle geliyor.
+- **Poster düzeltmesi (21 modül)**: Anizm, AsyaAnimeleri, AsyaLog, BelgeselX, Cizgimax,
 +  DiziBal, DiziMom, DiziPod, DiziYou, Dizibox, DiziboxIzle, Dizilla, DramaDizilerim,
 +  FilmEkseni, FilmModu, FullHDFilm, HDFilmCehennemi, JetFilmizle, KoreanTurk, Kultfilmler,
 +  SetFilmIzle: kart posterleri `data-src` lazy kaynağından okunuyor; placeholder azaltıldı.
