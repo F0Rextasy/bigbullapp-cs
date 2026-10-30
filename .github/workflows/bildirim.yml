@@ -27,18 +27,25 @@ jobs:
             echo "TELEGRAM_BOT_TOKEN veya TELEGRAM_CHAT_ID yok; bildirim atlandı."
             exit 0
           fi
-          SUBJECT=$(git log -1 --pretty=%s)
           CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD -- providers \
             | cut -d/ -f2 | sort -u)
           NL=$'\n'
           DETAILS=""
           for M in $CHANGED; do
-            V=$(grep -m1 -o 'version[[:space:]]*=[[:space:]]*[0-9]\+' "providers/$M/build.gradle.kts" 2>/dev/null | grep -o '[0-9]\+' || true)
+            if [ ! -f "providers/$M/build.gradle.kts" ]; then
+              DETAILS="${DETAILS}• Sağlayıcı kaldırıldı: ${M}${NL}"
+              continue
+            fi
+            V=$(grep -m1 -o 'version[[:space:]]*=[[:space:]]*[0-9]\+' "providers/$M/build.gradle.kts" | grep -o '[0-9]\+' || true)
             E=$(grep -m1 "\\*\\*$M v" CHANGELOG.md || true)
-            [ -n "$E" ] && DETAILS="${DETAILS}${E}${NL}"
-            [ -n "$V" ] && DETAILS="${DETAILS}   (modül v${V})${NL}"
+            if echo "$E" | grep -q "sıfırdan eklendi"; then
+              DETAILS="${DETAILS}• Yeni sağlayıcı eklendi: ${M} (v${V})${NL}"
+            else
+              DETAILS="${DETAILS}• Sağlayıcı güncellendi: ${M} (v${V})${NL}"
+            fi
           done
-          TEXT=$(printf '🚀 Güncelleme: %s\n📦 BigBullApp\n%s' "$SUBJECT" "$DETAILS")
+          [ -z "$DETAILS" ] && DETAILS="• Depo güncellemesi yapıldı.${NL}"
+          TEXT=$(printf '🚀 BigBullApp güncellemesi%s%s%s📦 BigBullApp' "$NL" "$NL" "$DETAILS")
           curl -sf -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${CHAT}" \
             --data-urlencode "text=${TEXT}" \
