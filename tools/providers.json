@@ -1045,6 +1045,86 @@
    "checked": "2026-10-30T05:48:38Z",
    "latencyMs": 0,
    "module": "Filmizleya"
+  },
+  "weboo.com.tr": {
+   "id": "weboo-com-tr",
+   "name": "Weboo",
+   "mainUrl": "https://weboo.com.tr",
+   "status": "implemented",
+   "http": 200,
+   "title": "Level One Loser, Maxxx Level Lover 1. Bölüm",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "Weboo"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T06:17:42Z",
+   "latencyMs": 0,
+   "module": "Weboo"
+  },
+  "dizifon.cc": {
+   "id": "dizifon-cc",
+   "name": "Dizifon",
+   "mainUrl": "https://www.dizifon.cc",
+   "status": "implemented",
+   "http": 200,
+   "title": "Built in Love 2026 Tayland",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "Dizifon"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T06:29:15Z",
+   "latencyMs": 0,
+   "module": "Dizifon"
+  },
+  "asyadizi.com": {
+   "id": "asyadizi-com",
+   "name": "AsyaDizi",
+   "mainUrl": "https://asyadizi.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "Love on Hire 2026 Tayland 2.Bölüm",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "AsyaDizi"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T06:31:26Z",
+   "latencyMs": 0,
+   "module": "AsyaDizi"
+  },
+  "birasyadizi.cx": {
+   "id": "birasyadizi-cx",
+   "name": "BirAsyaDizi",
+   "mainUrl": "https://www.birasyadizi.cx",
+   "status": "implemented",
+   "http": 200,
+   "title": "Built in Love 2026 Tayland",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "BirAsyaDizi"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T06:34:24Z",
+   "latencyMs": 0,
+   "module": "BirAsyaDizi"
   }
  }
 }

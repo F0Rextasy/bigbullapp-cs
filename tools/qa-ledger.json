@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-30",
-  "note": "56 TR modül runner benchmark (2026-10-30)",
+  "note": "60 TR modül runner benchmark (2026-10-30)",
   "modules": [
     {
       "module": "AnimeciX",
@@ -39,6 +39,12 @@
       "runner": "autopilot.py 2026-10-30"
     },
     {
+      "module": "AsyaDizi",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=1",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
       "module": "Asyadizileriizle",
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=7, ep=8",
@@ -67,6 +73,12 @@
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=1, ep=2",
       "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "BirAsyaDizi",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=2, ep=2",
+      "runner": "autopilot.py 2026-10-30"
     },
     {
       "module": "CanliDizi",
@@ -126,6 +138,12 @@
       "module": "DiziCaN",
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=2, ep=0",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "Dizifon",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=2",
       "runner": "autopilot.py 2026-10-30"
     },
     {
@@ -325,6 +343,12 @@
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=2, ep=25",
       "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Weboo",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "autopilot.py 2026-10-30"
     },
     {
       "module": "Yabancidizi",
