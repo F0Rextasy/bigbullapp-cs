@@ -8,6 +8,8 @@ sayı arttığında güncelleme sunar.
 ## [1.5.0] - 2026-10-29
 
 ### Eklendi
+- **Animeler v1**: `animeler.live` sıfırdan eklendi; `/filtre?search=` arama, bölüm listesi ve
++  ok.ru `videoPlayerMetadata` ile 4 HLS/MP4 linki. Bot keşif zincirinden üretildi.
 
 - Altı yeni beta sağlayıcı (host zinciri canlı doğrulandı; cihaz testi diğer ajanda):
   **AsyaWatch**, **DiziBal**, **DramaDizilerim**, **FilmEkseni**, **HDFilmizle**, **LoveFilm**.
