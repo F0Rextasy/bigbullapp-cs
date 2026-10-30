@@ -1,7 +1,13 @@
 {
  "generated": "2026-10-30",
- "note": "53 TR modül runner benchmark (2026-10-30)",
+ "note": "63 TR modül runner benchmark (2026-10-30)",
  "modules": [
+  {
+   "module": "Ahaber",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
+  },
   {
    "module": "AnimeciX",
    "result": "pass",
@@ -25,6 +31,12 @@
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=4, ep=293",
    "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "ASpor",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
   },
   {
    "module": "AsyaAnimeleri",
@@ -231,10 +243,22 @@
    "runner": "bench_runner.py 2026-10-30"
   },
   {
+   "module": "HtSpor",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
    "module": "JetFilmizle",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=1, ep=0",
    "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "KanalD",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
   },
   {
    "module": "KoreanTurk",
@@ -291,15 +315,51 @@
    "runner": "autopilot.py 2026-10-30"
   },
   {
+   "module": "StarTV",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
+   "module": "TgrtHaber",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
    "module": "TLCtr",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=3, ep=1",
    "runner": "bench_runner.py 2026-10-30"
   },
   {
+   "module": "TRTLive",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
    "module": "TurkceDizi",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=4, ep=0",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
+   "module": "Tv8",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
+   "module": "Tv8Bucuk",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
+   "module": "Tvnet",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
    "runner": "autopilot.py 2026-10-30"
   },
   {

@@ -985,6 +985,206 @@
    "checked": "2026-10-30T03:41:00Z",
    "latencyMs": 0,
    "module": "Asyadizileriizle"
+  },
+  "tvnet.com.tr": {
+   "id": "tvnet-com-tr",
+   "name": "Tvnet",
+   "mainUrl": "https://www.tvnet.com.tr",
+   "status": "implemented",
+   "http": 200,
+   "title": "TVNET",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "Tvnet"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:02:06Z",
+   "latencyMs": 0,
+   "module": "Tvnet"
+  },
+  "tgrthaber.com": {
+   "id": "tgrthaber-com",
+   "name": "TgrtHaber",
+   "mainUrl": "https://www.tgrthaber.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "TGRT Haber",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "TgrtHaber"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:02:07Z",
+   "latencyMs": 0,
+   "module": "TgrtHaber"
+  },
+  "ahaber.com.tr": {
+   "id": "ahaber-com-tr",
+   "name": "Ahaber",
+   "mainUrl": "https://www.ahaber.com.tr",
+   "status": "implemented",
+   "http": 200,
+   "title": "A Haber",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "Ahaber"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:02:07Z",
+   "latencyMs": 0,
+   "module": "Ahaber"
+  },
+  "aspor.com.tr": {
+   "id": "aspor-com-tr",
+   "name": "ASpor",
+   "mainUrl": "https://www.aspor.com.tr",
+   "status": "implemented",
+   "http": 200,
+   "title": "A Spor",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "ASpor"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:02:07Z",
+   "latencyMs": 0,
+   "module": "ASpor"
+  },
+  "htspor.com": {
+   "id": "htspor-com",
+   "name": "HtSpor",
+   "mainUrl": "https://www.htspor.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "HT Spor",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "HtSpor"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:02:07Z",
+   "latencyMs": 0,
+   "module": "HtSpor"
+  },
+  "kanald.com.tr": {
+   "id": "kanald-com-tr",
+   "name": "KanalD",
+   "mainUrl": "https://www.kanald.com.tr",
+   "status": "implemented",
+   "http": 200,
+   "title": "Kanal D",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "KanalD"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:02:07Z",
+   "latencyMs": 0,
+   "module": "KanalD"
+  },
+  "tv8.com.tr": {
+   "id": "tv8-com-tr",
+   "name": "Tv8",
+   "mainUrl": "https://www.tv8.com.tr",
+   "status": "implemented",
+   "http": 200,
+   "title": "TV8",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "Tv8"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:02:07Z",
+   "latencyMs": 0,
+   "module": "Tv8"
+  },
+  "startv.com.tr": {
+   "id": "startv-com-tr",
+   "name": "StarTV",
+   "mainUrl": "https://www.startv.com.tr",
+   "status": "implemented",
+   "http": 200,
+   "title": "Star TV",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "StarTV"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:02:08Z",
+   "latencyMs": 0,
+   "module": "StarTV"
+  },
+  "tv8bucuk.com": {
+   "id": "tv8bucuk-com",
+   "name": "Tv8Bucuk",
+   "mainUrl": "https://www.tv8bucuk.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "TV8,5",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "Tv8Bucuk"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:02:08Z",
+   "latencyMs": 0,
+   "module": "Tv8Bucuk"
+  },
+  "tabii.com": {
+   "id": "tabii-com",
+   "name": "TRTLive",
+   "mainUrl": "https://www.tabii.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "TRT Canlı",
+   "language": "tr",
+   "tvTypes": [
+    "Live"
+   ],
+   "poolNames": [
+    "TRTLive"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T04:02:08Z",
+   "latencyMs": 0,
+   "module": "TRTLive"
   }
  }
 }

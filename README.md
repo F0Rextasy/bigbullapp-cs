@@ -73,10 +73,12 @@ Tek modül derleme ve cihaza kurulum:
 
 | Eklenti | Kaynak | Tür | Sayfalama | Öneri | Fragman | Kadro | Süre | Puan |
 |---|---|---|---|---|---|---|---|---|
+| `Ahaber` **beta** | ahaber.com.tr | Canlı TV | — | — | — | — | — | — |
 | `AnimeciX` **beta** | animecix.tv | Anime | — | — | — | — | — | ✓ |
 | `Animeler` **beta** | animeler.live | Anime | — | — | — | — | — | — |
 | `Anizm` **beta** | turkanime.info | Anime | — | — | ✓ | — | — | ✓ |
 | `Anizium` | anizium.co | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
+| `ASpor` **beta** | aspor.com.tr | Canlı TV | — | — | — | — | — | — |
 | `AsyaAnimeleri` | asyaanimeleri.top | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `AsyaBox` **beta** | asyabox.co | Dizi | — | — | — | — | — | — |
 | `Asyadizileriizle` **beta** | asyadizileriizle.com | Dizi | — | — | — | — | — | — |
@@ -109,7 +111,9 @@ Tek modül derleme ve cihaza kurulum:
 | `HDFilmCehennemi` **beta** | hdfilmcehennemi.nl | Film | — | — | — | — | — | — |
 | `HDFilmDelisi` **beta** | hdfilmdelisi.one | Film | ✓ | — | — | — | ✓ | ✓ |
 | `HDFilmizle` **beta** | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `HtSpor` **beta** | htspor.com | Canlı TV | — | — | — | — | — | — |
 | `JetFilmizle` **beta** | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
+| `KanalD` **beta** | kanald.com.tr | Canlı TV | — | — | — | — | — | — |
 | `KoreanTurk` **beta** | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
 | `Kultfilmler` | kultfilmler.net | Film | ✓ | — | — | ✓ | ✓ | ✓ |
 | `LoveFilm` **beta** | lovefilmizle.net | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
@@ -119,8 +123,14 @@ Tek modül derleme ve cihaza kurulum:
 | `Sezonlukdizi` **beta** | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
 | `SinemaCX` **beta** | sinemacc.com | Film | — | — | — | ✓ | ✓ | ✓ |
 | `SonAnime` **beta** | sonanime.com | Dizi | — | — | — | — | — | — |
+| `StarTV` **beta** | startv.com.tr | Canlı TV | — | — | — | — | — | — |
+| `TgrtHaber` **beta** | tgrthaber.com | Canlı TV | — | — | — | — | — | — |
 | `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
+| `TRTLive` **beta** | tabii.com | Canlı TV | — | — | — | — | — | — |
 | `TurkceDizi` **beta** | turkcedizi.com | Film | — | — | — | — | — | ✓ |
+| `Tv8` **beta** | tv8.com.tr | Canlı TV | — | — | — | — | — | — |
+| `Tv8Bucuk` **beta** | tv8bucuk.com | Canlı TV | — | — | — | — | — | — |
+| `Tvnet` **beta** | tvnet.com.tr | Canlı TV | — | — | — | — | — | — |
 | `WebdramaTurkey2` | webdramaturkey2.com | Asya dizi/film | ✓ | — | — | ✓ | ✓ | — |
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
 | `YesilCamTv` **beta** | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
@@ -156,7 +166,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          53 modül
+  Yabancidizi/          63 modül
 ```
 
 ## Geliştirme
