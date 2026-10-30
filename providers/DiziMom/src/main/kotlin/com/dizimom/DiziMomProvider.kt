@@ -11,6 +11,7 @@ import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
+import com.lagradost.cloudstream3.fixUrlNull
 import com.lagradost.cloudstream3.mainPageOf
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
@@ -52,14 +53,16 @@ class DiziMomProvider : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data, headers = uaHeaders).document
-        val items = doc.select("main a[href]").mapNotNull { card ->
-            val href = card.attr("href")
+        val items = doc.select("a[href*='/dizi/']").mapNotNull { card ->
+            val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
             if (!seriesLink.matches(href)) return@mapNotNull null
-            val title = card.selectFirst("h3")?.text()?.trim()?.takeIf { it.isNotBlank() }
+            val title = card.selectFirst("img[alt]")?.attr("alt")
+                ?.removeSuffix(" Dizi izle")?.removeSuffix(" izle")?.trim()
+                ?.takeIf { it.isNotBlank() }
+                ?: card.attr("title").trim().takeIf { it.isNotBlank() }
                 ?: return@mapNotNull null
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
                 this.posterUrl = card.selectFirst("img")?.attr("src")
-                this.year = card.selectFirst("p")?.text()?.trim()?.toIntOrNull()
             }
         }.distinctBy { it.url }
         return newHomePageResponse(request.name, items, hasNext = false)

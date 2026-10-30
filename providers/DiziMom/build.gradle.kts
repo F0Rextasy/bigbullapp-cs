@@ -1,5 +1,5 @@
 // Use an integer for version numbers
-version = 4
+version = 5
 
 cloudstream {
     description = "DiziMom — yabancı dizi izle, Türkçe dublaj & altyazı (ddizimom.net)"
