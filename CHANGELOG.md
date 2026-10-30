@@ -8,6 +8,16 @@ sayı arttığında güncelleme sunar.
 ## [1.5.1] - 2026-10-30
 
 ### Eklendi
+- **Asyadizileriizle v1**: `asyadizileriizle.com` sıfırdan eklendi; dizi; runner doğrulaması: arama 1, bağlantı 7. Bot (autopilot) tarafından üretildi.
+
+- **TurkceDizi v1**: `turkcedizi.com` sıfırdan eklendi; film; runner doğrulaması: arama 12, bağlantı 4. Bot (autopilot) tarafından üretildi.
+
+- **DDizimag v1**: `ddizimag.com` sıfırdan eklendi; dizi; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **DiziBoxTv v1**: `diziboxtv.com` sıfırdan eklendi; dizi; runner doğrulaması: arama 2, bağlantı 5. Bot (autopilot) tarafından üretildi.
+
+- **AsyaBox v1**: `asyabox.co` sıfırdan eklendi; dizi; runner doğrulaması: arama 21, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
 - **Dizirella v1**: `dizirella.one` sıfırdan eklendi; dizi; runner doğrulaması: arama 20, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
 - **DiziCaN v1**: `dizican.cc` sıfırdan eklendi; dizi; runner doğrulaması: arama 12, bağlantı 2. Bot (autopilot) tarafından üretildi.
@@ -24,7 +34,9 @@ sayı arttığında güncelleme sunar.
 
 ### Eklendi
 - **Animeler v1**: `animeler.live` sıfırdan eklendi; `/filtre?search=` arama, bölüm listesi ve
-+  ok.ru `videoPlayerMetadata` ile 4 HLS/MP4 linki. Bot keşif zincirinden üretildi.
+  ok.ru `videoPlayerMetadata` ile 4 HLS/MP4 linki. Bot keşif zincirinden üretildi.
+- **Animeler v2**: bölüm sayfasında JS ile enjekte edilen ok.ru iframe'i için ham HTML'deki
+  `videoembed` kimliği doğrudan çözülür; eski oynatıcı 0 link hatası giderildi.
 
 - Altı yeni beta sağlayıcı (host zinciri canlı doğrulandı; cihaz testi diğer ajanda):
   **AsyaWatch**, **DiziBal**, **DramaDizilerim**, **FilmEkseni**, **HDFilmizle**, **LoveFilm**.

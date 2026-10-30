@@ -885,6 +885,106 @@
    "checked": "2026-10-30T03:28:30Z",
    "latencyMs": 0,
    "module": "Dizirella"
+  },
+  "asyabox.co": {
+   "id": "asyabox-co",
+   "name": "AsyaBox",
+   "mainUrl": "https://asyabox.co",
+   "status": "implemented",
+   "http": 200,
+   "title": "Turbulent Love 2026 Çin",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "AsyaBox"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T03:33:17Z",
+   "latencyMs": 0,
+   "module": "AsyaBox"
+  },
+  "diziboxtv.com": {
+   "id": "diziboxtv-com",
+   "name": "DiziBoxTv",
+   "mainUrl": "https://diziboxtv.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "Film",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "DiziBoxTv"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T03:36:03Z",
+   "latencyMs": 0,
+   "module": "DiziBoxTv"
+  },
+  "ddizimag.com": {
+   "id": "ddizimag-com",
+   "name": "DDizimag",
+   "mainUrl": "https://ddizimag.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "Breaking Bad",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "DDizimag"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T03:37:24Z",
+   "latencyMs": 0,
+   "module": "DDizimag"
+  },
+  "turkcedizi.com": {
+   "id": "turkcedizi-com",
+   "name": "TurkceDizi",
+   "mainUrl": "https://turkcedizi.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "Breaking 2022",
+   "language": "tr",
+   "tvTypes": [
+    "Movie"
+   ],
+   "poolNames": [
+    "TurkceDizi"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T03:39:13Z",
+   "latencyMs": 0,
+   "module": "TurkceDizi"
+  },
+  "asyadizileriizle.com": {
+   "id": "asyadizileriizle-com",
+   "name": "Asyadizileriizle",
+   "mainUrl": "https://asyadizileriizle.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "Blind Woman",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "Asyadizileriizle"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T03:41:00Z",
+   "latencyMs": 0,
+   "module": "Asyadizileriizle"
   }
  }
 }
