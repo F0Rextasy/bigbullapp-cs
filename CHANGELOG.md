@@ -14,8 +14,6 @@ sayı arttığında güncelleme sunar.
 
 
 
-- **RareFilmm v1**: `rarefilmm.com` sıfırdan eklendi; film; runner doğrulaması: arama 1, bağlantı 11. Bot (autopilot) tarafından üretildi.
-
 - **HDFilmDiziIzle v1**: `hdfilmdiziizle.com` sıfırdan eklendi; film; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
 - **Dizigom v1**: `dizigom.news` sıfırdan eklendi; film; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
