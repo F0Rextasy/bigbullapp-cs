@@ -17,6 +17,8 @@ import com.lagradost.cloudstream3.newSearchResponseList
 import com.lagradost.cloudstream3.newTvSeriesLoadResponse
 import com.lagradost.cloudstream3.newTvSeriesSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
+import com.lagradost.cloudstream3.utils.newExtractorLink
 import com.lagradost.cloudstream3.utils.loadExtractor
 import org.json.JSONObject
 import java.net.URLEncoder
@@ -45,9 +47,12 @@ class OnepacetrProvider : MainAPI() {
     /** The Strapi API has one listing (all seasons); the row label is purely cosmetic. */
     override val mainPage get() = ROWS.filter { Settings.rowEnabled(it) }.map { MainPageData(it, mainUrl) }
 
-    // Encrypted JS players with no CloudStream extractor (clone/abyss, Google Drive, gettsu, vidguard, upnshare).
+    // Encrypted JS players with no CloudStream extractor (clone/abyss, Google Drive, upnshare).
     private val jsOnlyPlayers =
-        listOf("abyssplayer", "short.icu", "short.ink", "drive.google.com", "gett.su", "listeamed.net", "upns.live")
+        listOf("abyssplayer", "short.icu", "short.ink", "gett.su", "listeamed.net", "upns.live")
+
+    // The site hides these two itself (index-*.js: name!=="gettsu" && name!=="vidguard"); Vidguard's domains answer 522 or are parked.
+    private val hiddenPlayers = listOf("gettsu", "vidguard")
 
     private suspend fun getJson(url: String): JSONObject =
         JSONObject(app.get(url, headers = auth).text)
@@ -134,17 +139,35 @@ class OnepacetrProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
-        val subtitleFilter: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
         val players = runCatching { getJson(data).optJSONObject("data")?.optJSONArray("players") }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
         var loaded = false
+        val linkCallback: (ExtractorLink) -> Unit = {
+            loaded = true
+            if (Settings.qualityAllowed(it.quality)) callback(it)
+        }
+        val subtitleFilter: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
         val seenPlayers = HashSet<String>()
         for (index in 0 until players.length()) {
-            val embed = players.optJSONObject(index)?.optString("url").orEmpty()
+            val player = players.optJSONObject(index) ?: continue
+            val embed = player.optString("url")
             if (embed.isBlank() || !seenPlayers.add(embed)) continue
+            if (player.optString("name") in hiddenPlayers) continue
             if (jsOnlyPlayers.any { embed.contains(it) }) continue
-            if (loadExtractor(embed, mainUrl, subtitleFilter, linkCallback)) loaded = true
+            if (embed.contains("drive.google.com")) {
+                val fileId = Regex("""/file/d/([^/]+)""").find(embed)?.groupValues?.get(1)
+                if (fileId != null) {
+                    linkCallback(
+                        newExtractorLink(
+                            name, "Google Drive",
+                            "https://drive.usercontent.google.com/download?id=$fileId&export=download&confirm=t",
+                            ExtractorLinkType.VIDEO,
+                        )
+                    )
+                }
+                continue
+            }
+            loadExtractor(embed, mainUrl, subtitleFilter, linkCallback)
         }
         if (!loaded) throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
         return loaded

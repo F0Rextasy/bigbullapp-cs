@@ -19,80 +19,75 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 /**
- * CanliTVMe — canlitv.me canlı kanal dizini.
+ * CanliTVMe — canlitv.me canlı kanal dizini, aynı yayıncının erişilebilir aynası üzerinden.
  *
- * Bu modül aslen GolgeTV (panel.cloudgolge.shop) için istenmişti; panel yazım sırasında ölüydü
- * (alan adı NXDOMAIN), bu yüzden canlı olan canlitv.me üzerinden yazıldı.
+ * canlitv.me Türkiye'de BTK kararıyla engelli (HTTP'de ESB yönlendirmesi, TLS'te SNI reset'i);
+ * aynı yayıncının aynası blog.canlitvizle.tv erişilebilir ve aynı kanal listesini kullanır.
  *
- * Akış: /live/<kanal> → geolive.php → yayin.php oynatıcısındaki `file` dizesi. Oynatıcı HLS adresini
- * 35 sembollük döngüsel yerine-koyma ile saklar; anahtar, dizenin başındaki sayıdır.
+ * Akış: /kategori/<kategori> → /<kanal> → geolive.php → yayinim.php oynatıcısındaki `file` dizesi.
+ * Oynatıcı HLS adresini 35 sembollük döngüsel yerine-koyma ile saklar; anahtar, dizenin başındaki sayıdır.
  */
 class CanliTVMeProvider : MainAPI() {
-    override var mainUrl = "https://www.canlitv.me"
+    override var mainUrl = "https://blog.canlitvizle.tv"
     override var name = "CanliTVMe"
     override var lang = "tr"
     override val supportedTypes = setOf(TvType.Live)
     override val hasMainPage = true
 
     override val mainPage = mainPageOf(
-        "$mainUrl/category/ulusalkanallar" to "Ulusal",
-        "$mainUrl/category/haber-kanallari-izle" to "Haber",
-        "$mainUrl/category/spor-kanallari-hd" to "Spor",
-        "$mainUrl/category/muzik-kanallari" to "Müzik",
-        "$mainUrl/category/belgesel-kanallari" to "Belgesel",
-        "$mainUrl/category/cocuk-kanallari" to "Çocuk",
-        "$mainUrl/category/dini-kanallar" to "Dini",
-        "$mainUrl/category/yerel-kanallar" to "Yerel",
-        "$mainUrl/category/kktc-tv-kanallari" to "KKTC",
-        "$mainUrl/category/azerbaycan-kanallari" to "Azerbaycan",
-        "$mainUrl/category/deutsche-fernsehsender" to "Almanca",
-        "$mainUrl/category/iran-tv-kanallari-izle" to "İran",
-        "$mainUrl/category/yabanci-kanallar" to "Yabancı",
-        "$mainUrl/category/diger-kanallar" to "Diğer",
-        "$mainUrl/category/trt-eba-tv-kanallari" to "TRT EBA",
+        "$mainUrl/kategori/ulusal" to "Ulusal",
+        "$mainUrl/kategori/haber" to "Haber",
+        "$mainUrl/kategori/spor" to "Spor",
+        "$mainUrl/kategori/cocuk" to "Çocuk",
+        "$mainUrl/kategori/muzik" to "Müzik",
+        "$mainUrl/kategori/belgesel" to "Belgesel",
+        "$mainUrl/kategori/dini" to "Dini",
+        "$mainUrl/kategori/yerel" to "Yerel",
     )
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data).document
         // Kategori sayfaları tüm kanalları tek sayfada listeler.
-        return newHomePageResponse(request.name, parseCards(doc.select("li.canlitvlist")), hasNext = false)
+        return newHomePageResponse(request.name, parseCards(doc.select("a.channel-card")), hasNext = false)
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        // /s yalnızca ana sayfadaki form jetonuyla yanıt verir.
+        // /arama yalnızca ana sayfadaki form jetonuyla yanıt verir.
         val security = app.get(mainUrl).document
-            .selectFirst("form#arama input[name=security]")
+            .selectFirst("form[action*=arama] input[name=security]")
             ?.attr("value")
             ?.takeIf { it.isNotBlank() }
             ?: throw ErrorLoadingException("$name: arama jetonu alınamadı. $REPORT_HINT")
-        val doc = app.get("$mainUrl/s", params = mapOf("s" to query, "security" to security)).document
-        return parseCards(doc.select("li.canlitvlist"))
+        val doc = app.get("$mainUrl/arama", params = mapOf("s" to query, "security" to security)).document
+        return parseCards(doc.select("a.channel-card"))
     }
 
     override suspend fun load(url: String): LoadResponse? {
         val doc = runCatching { app.get(url).document }.getOrNull()
             ?: throw ErrorLoadingException("$name: kanal sayfası açılamadı. $REPORT_HINT")
-        val channelName = doc.selectFirst("h1.baslik")?.text()?.trim()?.takeIf { it.isNotBlank() }
+        val channelName = doc.selectFirst("span.breadcrumb-current")?.text()?.trim()?.takeIf { it.isNotBlank() }
             ?: throw ErrorLoadingException("$name: kanal adı okunamadı. $REPORT_HINT")
         val streamUrl = resolveStream(doc, url)
             ?: throw ErrorLoadingException("$name: $channelName için HLS yayını bulunamadı. $REPORT_HINT")
-        return newLiveStreamLoadResponse(channelName, url, streamUrl) {
-            this.posterUrl = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
-        }
+        return newLiveStreamLoadResponse(channelName, url, streamUrl)
     }
 
-    /** /live/<kanal> → geolive.php → yayin.php zincirindeki gizlenmiş HLS adresini çözer. */
+    /** /<kanal> → geolive.php → yayinim.php zincirindeki gizlenmiş HLS adresini çözer. */
     private suspend fun resolveStream(doc: Document, pageUrl: String): String? {
         val geoUrl = doc.selectFirst("iframe[src*=geolive.php]")?.attr("src")?.let { fixUrl(it) } ?: return null
-        val playerPage = runCatching { app.get(geoUrl, referer = pageUrl).document }.getOrNull() ?: return null
-        val yayinUrl = playerPage.selectFirst("iframe[src*=yayin.php]")?.attr("src")?.let { fixUrl(it) }
-        val playerHtml = if (yayinUrl != null) {
-            runCatching { app.get(yayinUrl, referer = geoUrl).text }.getOrNull() ?: return null
-        } else {
-            playerPage.html()
+        // Bazı kanallarda varsayılan sekme boştur; yayın sekmeleri de denenir.
+        for (candidate in listOf(geoUrl, "$geoUrl&yayin=1", "$geoUrl&yayin=2")) {
+            val playerPage = runCatching { app.get(candidate, referer = pageUrl).document }.getOrNull() ?: continue
+            val yayinUrl = playerPage.selectFirst("iframe[src*=yayinim.php]")?.attr("src")?.let { fixUrl(it) }
+            val playerHtml = if (yayinUrl != null) {
+                runCatching { app.get(yayinUrl, referer = candidate).text }.getOrNull() ?: continue
+            } else {
+                playerPage.html()
+            }
+            val encoded = FILE_PATTERN.find(playerHtml)?.groupValues?.get(1) ?: continue
+            return if (encoded.contains(MARKER)) decodePlayerUrl(encoded) else encoded
         }
-        val encoded = FILE_PATTERN.find(playerHtml)?.groupValues?.get(1) ?: return null
-        return if (encoded.contains(MARKER)) decodePlayerUrl(encoded) else encoded
+        return null
     }
 
     private fun decodePlayerUrl(encoded: String): String {
@@ -107,20 +102,17 @@ class CanliTVMeProvider : MainAPI() {
     }
 
     private fun parseCards(cards: List<Element>): List<LiveSearchResponse> = cards.mapNotNull { card ->
-        val anchor = card.selectFirst("a[href*=/live/]") ?: return@mapNotNull null
-        val channelUrl = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
-        val channelName = anchor.attr("title").trim().ifBlank { anchor.text().trim() }
+        val channelUrl = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
+        val channelName = card.attr("title").trim().ifBlank { card.text().trim() }
         if (channelName.isBlank()) return@mapNotNull null
-        newLiveSearchResponse(channelName, channelUrl, TvType.Live) {
-            this.posterUrl = fixUrlNull(card.selectFirst("img")?.attr("src"))
-        }
+        newLiveSearchResponse(channelName, channelUrl, TvType.Live)
     }.distinctBy { it.url }
 
     companion object {
         private const val MARKER = "\u00C4x|Xf|x"
         private val FILE_PATTERN = Regex("""file\s*:\s*'([^']+)'""")
 
-        // Oynatıcının sembol alfabesi ve karşılıkları (yayin.php içindeki x34fcag3).
+        // Oynatıcının sembol alfabesi ve karşılıkları (yayinim.php içindeki x34fcag3).
         private val CIPHER = charArrayOf(
             '\u20AC', '\u0024', '\u0102', '\u00C4', '\u00CB', '\u0122', '\u1E28', '\u0136', '\u1E3C',
             '\u0145', '\u0147', '\u0160', '\u021A', '\u017D', '\u04D8', '\u0404', '\u0411', '\u0496',

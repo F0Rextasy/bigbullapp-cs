@@ -1,4 +1,4 @@
-version = 4
+version = 5
 
 cloudstream {
     description = "Anizium — 4K Türkçe dublaj & altyazılı anime (anizium.co)"

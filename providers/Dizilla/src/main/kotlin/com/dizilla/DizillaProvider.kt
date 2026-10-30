@@ -39,7 +39,11 @@ import java.net.URLEncoder
  * the episode page carries its player iframes in the RSC payload ("sources").
  */
 class DizillaProvider : MainAPI() {
-    override var mainUrl = "https://dizilla.nl"
+    private val uaHeaders = mapOf(
+        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+        "Accept-Language" to "tr-TR,tr;q=0.9",
+    )
+    override var mainUrl = "https://dizilla.now"
     override var name = "Dizilla"
     override var lang = "tr"
     override val hasMainPage = true
@@ -60,7 +64,7 @@ class DizillaProvider : MainAPI() {
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val doc = app.get(request.data.replace("SAYFA", page.toString())).document
+        val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = uaHeaders).document
         return newHomePageResponse(request.name, doc.cards(), hasNext = doc.hasNextPage())
     }
 
@@ -69,7 +73,7 @@ class DizillaProvider : MainAPI() {
 
     override suspend fun search(query: String, page: Int): SearchResponseList? {
         val url = "$mainUrl/ara?q=${URLEncoder.encode(query, "UTF-8")}&page=$page"
-        val doc = app.get(url).document
+        val doc = app.get(url, headers = uaHeaders).document
         return newSearchResponseList(doc.cards(), doc.hasNextPage())
     }
 
@@ -89,7 +93,7 @@ class DizillaProvider : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val response = runCatching { app.get(url) }.getOrNull()
+        val response = runCatching { app.get(url, headers = uaHeaders) }.getOrNull()
             ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
         val doc = response.document
         // Flight payload escapes its JSON inside a JS string, so unescape before slicing.
@@ -183,7 +187,7 @@ class DizillaProvider : MainAPI() {
         val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
         val subtitleFilter: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
         // Flight payload escapes its JSON inside a JS string, so unescape before slicing.
-        val page = runCatching { app.get(data).text }.getOrNull()?.replace("\\\"", "\"")
+        val page = runCatching { app.get(data, headers = uaHeaders).text }.getOrNull()?.replace("\\\"", "\"")
             ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
         val players = jsonArrayAfter(page, "\"sources\":[")?.let { array ->
             (0 until array.length()).mapNotNull { index ->
@@ -226,7 +230,7 @@ class DizillaProvider : MainAPI() {
         seenSubtitles: MutableSet<String>,
     ): Boolean {
         // The player host only answers to a referer on the dizilla host, i.e. the episode page itself.
-        val html = app.get(player.url, referer = episodeUrl).text
+        val html = app.get(player.url, referer = episodeUrl, headers = uaHeaders).text
         val config = jsonObjectAfter(html, "window.NP_CONFIG") ?: return false
         val linkName = listOf(this.name, player.lang, player.label)
             .filter { it.isNotBlank() }.joinToString(" ")

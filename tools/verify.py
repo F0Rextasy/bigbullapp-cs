@@ -22,6 +22,7 @@ import sys
 import time
 import urllib.parse
 import urllib.request
+import http.client
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 REGISTRY = ROOT / "tools" / "providers.json"
@@ -45,9 +46,14 @@ def get(url: str, ref: str | None = None, data: bytes | None = None, timeout: in
             time.sleep(5)
             return get(url, ref, data, timeout, retries - 1)
         raise
+    except (http.client.RemoteDisconnected, ConnectionError, TimeoutError, urllib.error.URLError):
+        if retries:
+            time.sleep(5)
+            return get(url, ref, data, timeout, retries - 1)
+        raise
     except Exception:
         if retries:
-            time.sleep(3)
+            time.sleep(5)
             return get(url, ref, data, timeout, retries - 1)
         raise
 

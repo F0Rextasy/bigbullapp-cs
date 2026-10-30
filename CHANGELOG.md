@@ -5,6 +5,88 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.5.0] - 2026-10-29
+
+### Eklendi
+
+- Altı yeni beta sağlayıcı (host zinciri canlı doğrulandı; cihaz testi diğer ajanda):
+  **AsyaWatch**, **DiziBal**, **DramaDizilerim**, **FilmEkseni**, **HDFilmizle**, **LoveFilm**.
+- **DramaDizilerim**: `/search?q=` + `/izle/...?s=&e=` → `embed.php` → HLS/mp4; Türkçe WebVTT.
+- **DiziBal**: `/ara?q=` arama, LD+JSON künye, `s.php` oynatıcı (Referer zorunlu) → master HLS + TR/EN VTT.
+  Filmler (`/movie/<slug>`, `/filmler?page=N`) da destekli: Movie künyesi + aynı oynatıcı; kaynağı
+  olmayan filmlerde "kaynak hazırlanıyor" hatası.
+- **AsyaWatch**: `searchContent` API + NP/legacy oynatıcı; Kore/Asya web dramaları.
+- **FilmEkseni**: `/api/search` + player JSON → m3u8.
+- **HDFilmizle**: film + dizi; mobil UA ile oynatıcı zinciri.
+- **LoveFilm**: film arşivi; çok kaynaklı oynatıcı döngüsü (vidmoly vb.).
+
+### Kaldırıldı
+
+- TR olmayan 21 sağlayıcı deposu kaldırıldı (içerik dili de yabancı doğrulandı):
+  AllCalidad, AnimeIndo, AnimeWorld, AnimeYTX, AreaDocumental, Cinecalidad, CineHdPlus,
+  DoramasYT, Flixlatam, Hdfilme, HiAnime, JKAnime, LaMovie, Latanime, Monoschinos,
+  MoviesDrive, Serienstream, Supercartoons, TioAnime, UHDmovies, UltraCine.
+
+### Değişti
+
+- **QA runner**: `loadLinks` çağrıları 90 sn timeout ve tek kullanımlık thread havuzuyla
+  izole edildi; takılan bir extractor sonraki modüllerin link isteklerini kilitlemiyor.
+- **Dizilla** README kaynağı `dizilla.now` olarak düzeltildi (modül zaten bu adresi kullanıyordu).
+- **AsyaAnimeleri v4**: Rumble embed isteğine tarayıcı UA ve site Referer'ı eklendi; Rumble
+  mirror'ı yeniden HLS üretiyor (`playlist.m3u8`).
+- **Ddizi v2**: oynatıcıdaki `sources` dizisi artık tam regex ile okunuyor; göreli
+  `redirector.googlevideo.com` MP4 kaynağı yeniden çıkarılıyor.
+- **Anizm v2**: fragman girdileri bölüm listesinden çıkarıldı; çevirmen API çağrıları
+  paralelleştirildi, böylece tek yavaş çevirmen tüm linkleri sırayla bekletmiyor.
+- **Cizgimax v6**: `tau-video` SPA'sı yerine `tau-video.xyz/api/video/<id>` doğrudan okunuyor;
+  göreli `resolveUrl` mutlak adrese çevrildi, 1080p/720p/480p MP4 kaynakları dönüyor.
+- **Anizium v5**: `api.anizium.co/anime/source` isteğine tarayıcı User-Agent'ı eklendi;
+  kaynak API'si yeniden `success=true` dönüyor, 480/720/1080 MP4 linkleri çıkıyor.
+- **AsyaAnimeleri v6**: Rumble UA/Referer; ok.ru `videoPlayerMetadata` JSON `ondemandHls`;
+  GDrive `drive.usercontent.google.com/download?...confirm=t` doğrudan MP4; streamtape
+  `#ideoolink` yalnız gerçek medya dönerse yayınlanıyor.
+- **Ddizi v2**: göreli `/player/oynat/...` iframe adresi mutlak URL'ye çevrildi; runner'ın
+  thread havuzunda `fixUrl` tabanı taşınarak link üretimi düzeltildi.
+- **Anizm v4**: `/player/{id}` yönlendirmesi `Location` yoksa yanıtın son URL'sinden okunuyor;
+  ayna sayısı çevirmen başına ilk 10 ve toplam ilk 4 link ile sınırlı, `/links` ~26 sn'de 4 HLS.
+- **JetFilmizle v2**: videopark/jetembed kaynakları için moviesapi/vidora üzerinden doğrudan
+  HLS akışı ve VTT altyazıları eklendi.
+- **Onepacetr v5**: Vidguard/gettsu (site kendi gizliyor, alan adları 522/park) atlanıyor;
+  Google Drive player'ı `drive.usercontent.google.com` üzerinden doğrudan MP4 olarak veriliyor.
+- **CanliTVMe v2**: `canlitv.me` BTK/SNI engeli nedeniyle aynı yayıncının erişilebilir aynası
+  `blog.canlitvizle.tv` üzerine taşındı; `yayinim.php` oynatıcısı ve kanal sekmeleri destekli.
+
+Bu depodaki önemli değişiklikler burada tutulur.
+Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümleri ayrıdır; her eklenti
+`providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
+sayı arttığında güncelleme sunar.
+
+## [1.4.1] - 2026-10-29
+
+### Değişti
+
+- **DiziPal v2, DiziPod v2, SetFilmIzle v2, TLCtr v2, WebdramaTurkey2 v2**: `status = 1`
+  (doğrulanmış). Beş sağlayıcıda da emülatörde arama → detay → bölüm → oynatma zinciri
+  `Rendered first frame` + `state=PLAYING` ile kanıtlandı.
+
+## [1.4.0] - 2026-10-29
+
+### Eklendi
+
+- Yeni beta sağlayıcılar (host zinciri canlı doğrulandı; cihaz testi yok): **DiziPal**,
+  **DiziPod**, **SetFilmIzle**, **TLCtr**, **WebdramaTurkey2**.
+- **DiziPal**: AES ile şifrelenmiş bölüm verisi çözülüyor; HLS master + altyazı (WebVTT).
+- **DiziPod**: `admin-ajax` oynatıcısı Dean Edwards packer çözülerek m3u8'e iniliyor.
+- **SetFilmIzle**: iki katmanlı `SPG.cerceve`/`STF_KOPRU` köprüsü; HLS master + TR/EN VTT.
+- **TLCtr**: `POST /ajax/more` program/bölüm akışı + `dygvideo` yönlendirmesi; kalite etiketli HLS.
+- **WebdramaTurkey2**: `POST /ajax/embed` → FirePlayer `securedLink` akışı; tek kaynakta duran
+  hız sınırı koruması.
+
+### Düzeltildi
+
+- **DiziPod v1**: arama kartları `<li>` kapsamından okunuyor — kart içindeki tür bağlantıları
+  jsoup'ta iç içe `<a>` üretip dış bağlantıyı boşalttığı için arama 0 sonuç dönüyordu.
+
 ## [1.3.0] - 2026-10-29
 
 ### Eklendi

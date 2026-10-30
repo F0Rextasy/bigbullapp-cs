@@ -176,10 +176,13 @@ class AsyaAnimeleriProvider : MainAPI() {
         embeds.forEach { embed ->
             // A dead mirror must not take the other ones down with it.
             val ok = runCatching {
-                if (embed.contains("rumble.com/embed")) {
-                    loadRumble(embed, emit)
-                } else {
-                    loadExtractor(embed, "$mainUrl/", subtitleFilter, emit)
+                when {
+                    embed.contains("rumble.com/embed") -> loadRumble(embed, emit)
+                    embed.contains("ok.ru/videoembed") || embed.contains("odnoklassniki.ru/videoembed") ->
+                        loadOkRu(embed, emit)
+                    embed.contains("streamtape.com/") -> loadStreamTape(embed, emit)
+                    embed.contains("drive.google.com/file/d/") -> loadGDrive(embed, emit)
+                    else -> loadExtractor(embed, "$mainUrl/", subtitleFilter, emit)
                 }
             }.getOrDefault(false)
             if (ok) found = true
@@ -201,7 +204,10 @@ class AsyaAnimeleriProvider : MainAPI() {
      */
     private suspend fun loadRumble(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
         val id = Regex("""rumble\.com/embed/([^/?"]+)""").find(embed)?.groupValues?.get(1) ?: return false
-        val body = app.get("https://rumble.com/embed/$id/").text
+        val body = app.get(
+            "https://rumble.com/embed/$id/",
+            headers = mapOf("User-Agent" to BROWSER_UA, "Referer" to "$mainUrl/"),
+        ).text
         val stream = body.substringAfter("\"hls\":{\"url\":\"", "").substringBefore('"')
             .replace("\\/", "/")
         if (stream.isBlank()) return false
@@ -213,7 +219,68 @@ class AsyaAnimeleriProvider : MainAPI() {
         return true
     }
 
+    /**
+     * The ok.ru embed page is a JS shell; `/dk?cmd=videoPlayerMetadata` answers the same config as
+     * JSON with the signed HLS master in `ondemandHls`. Blocked uploads omit that field.
+     */
+    private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
+        val id = Regex("""videoembed/(\d+)""").find(embed)?.groupValues?.get(1) ?: return false
+        val body = runCatching {
+            app.post(
+                "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
+                data = mapOf("cmd" to "videoPlayerMetadata", "mid" to id),
+                headers = mapOf("User-Agent" to BROWSER_UA),
+                referer = "https://ok.ru/videoembed/$id",
+            ).text
+        }.getOrNull() ?: return false
+        val stream = JSONObject(body).optString("ondemandHls").takeIf { it.isNotBlank() } ?: return false
+        callback.invoke(
+            newExtractorLink(name, "OK.RU", stream, ExtractorLinkType.M3U8) {
+                this.referer = "https://ok.ru/"
+            }
+        )
+        return true
+    }
+
+    /**
+     * streamtape keeps the file path in `#ideoolink` without a scheme. Deleted uploads still get a
+     * page and token, but `/get_video` then answers a JSON error as `text/html`.
+     */
+    private suspend fun loadStreamTape(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
+        val path = app.get(embed, headers = mapOf("User-Agent" to BROWSER_UA)).text
+            .substringAfter("id=\"ideoolink\"", "").substringAfter('>').substringBefore('<')
+            .trim().removePrefix("/")
+        if (!path.startsWith("streamtape.com/")) return false
+        val url = "https://$path"
+        val probe = app.get(url, headers = mapOf("Range" to "bytes=0-0", "Referer" to embed))
+        val type = probe.headers["content-type"] ?: probe.headers["Content-Type"] ?: return false
+        if (type.startsWith("text/")) return false
+        callback.invoke(
+            newExtractorLink(name, "StreamTape", url, ExtractorLinkType.VIDEO) {
+                this.referer = embed
+            }
+        )
+        return true
+    }
+
+    /** GDrive's `/preview` iframe is JS-only; the download endpoint serves the same file as mp4. */
+    private suspend fun loadGDrive(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
+        val id = Regex("""/file/d/([^/]+)""").find(embed)?.groupValues?.get(1) ?: return false
+        callback.invoke(
+            newExtractorLink(
+                name,
+                "GDrive",
+                "https://drive.usercontent.google.com/download?id=$id&export=download&confirm=t",
+                ExtractorLinkType.VIDEO,
+            )
+        )
+        return true
+    }
+
     companion object {
+        private const val BROWSER_UA =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
+                "Chrome/130.0.0.0 Safari/537.36"
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

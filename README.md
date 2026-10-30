@@ -7,7 +7,7 @@ canlı TV kaynakları. Her site ayrı bir Gradle modülü ve ayrı bir `.cs3` ek
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-22-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-41-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/BigBull_App)
 
@@ -73,30 +73,40 @@ Tek modül derleme ve cihaza kurulum:
 
 | Eklenti | Kaynak | Tür | Sayfalama | Öneri | Fragman | Kadro | Süre | Puan |
 |---|---|---|---|---|---|---|---|---|
+| `AnimeciX` **beta** | animecix.tv | Anime | — | — | — | — | — | ✓ |
 | `Anizium` | anizium.co | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `AsyaAnimeleri` | asyaanimeleri.top | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `AsyaLog` | asyalog.co | Asya dizi/film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
+| `AsyaWatch` **beta** | asyawatch.com | Asya dizi/film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
+| `DiziBal` **beta** | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |
 | `DiziLife` | dizi82.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
 | `DiziYou` | diziyou.one | Dizi | — | — | ✓ | ✓ | — | ✓ |
 | `Diziasia` | diziasia.com | Asya dizi | ✓ | ✓ | — | — | — | — |
 | `Dizibox` | dizibox.live | Dizi | — | — | ✓ | ✓ | — | ✓ |
 | `DiziboxIzle` | diziboxizle.com | Dizi | ✓ | — | ✓ | ✓ | — | ✓ |
 | `Dizikorea3` | dizikorea3.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | film | ✓ |
-| `Dizilla` | dizilla.nl | Dizi | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `Dizilla` | dizilla.now | Dizi | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `DiziMom` **beta** | ddizimom.net | Dizi | — | — | — | — | — | — |
+| `DiziPal` | dizipal1592.com | Dizi/Film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
+| `DiziPod` | dizipod.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `DramaDizilerim` **beta** | dramadizilerim.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
+| `FilmEkseni` **beta** | filmekseni.vip | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `HDFilmCehennemi` **beta** | hdfilmcehennemi.nl | Film | — | — | — | — | — | — |
+| `HDFilmizle` **beta** | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `Kultfilmler` | kultfilmler.net | Film | ✓ | — | — | ✓ | ✓ | ✓ |
+| `LoveFilm` **beta** | lovefilmizle.net | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
+| `SelcukFlix` **beta** | selcukflix.app | Dizi/Film | — | — | — | — | ✓ | ✓ |
+| `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `Sezonlukdizi` **beta** | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
+| `SinemaCX` **beta** | sinemacc.com | Film | — | — | — | ✓ | ✓ | ✓ |
+| `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
+| `WebdramaTurkey2` | webdramaturkey2.com | Asya dizi/film | ✓ | — | — | ✓ | ✓ | — |
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
 
 Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
 `README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.
-
-| `AllCalidad` **beta** | allcalidad.re | Film | — | — | — | — | — | — |
-| `DiziMom` **beta** | ddizimom.net | Dizi | — | — | — | — | — | — |
-| `HDFilmCehennemi` **beta** | hdfilmcehennemi.nl | Film | — | — | — | — | — | — |
-| `Monoschinos` **beta** | monoschinos.st | Anime | — | — | — | — | — | — |
-| `MoviesDrive` **beta** | new1.moviesdrive.cyou | Film | — | — | — | — | — | — |
 
 ## Canlı TV (beta)
 
@@ -126,7 +136,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          15 modül
+  Yabancidizi/          41 modül
 ```
 
 ## Geliştirme
