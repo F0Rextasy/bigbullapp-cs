@@ -79,11 +79,13 @@ Tek modül derleme ve cihaza kurulum:
 | `Anizium` | anizium.co | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `AsyaAnimeleri` | asyaanimeleri.top | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `AsyaBox` **beta** | asyabox.co | Dizi | — | — | — | — | — | — |
+| `AsyaDizi` **beta** | asyadizi.com | Dizi | — | — | — | — | — | — |
 | `Asyadizileriizle` **beta** | asyadizileriizle.com | Dizi | — | — | — | — | — | — |
 | `AsyaLog` | asyalog.co | Asya dizi/film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
 | `AsyaLuna` **beta** | asyaluna.com | Dizi | — | — | — | — | — | — |
 | `AsyaWatch` **beta** | asyawatch.com | Asya dizi/film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `BelgeselX` **beta** | belgeselx.com | Belgesel | — | — | — | — | — | — |
+| `BirAsyaDizi` **beta** | birasyadizi.cx | Dizi | — | — | — | — | — | — |
 | `CanliDizi` **beta** | canlidizi.sbs | Dizi | — | — | — | — | — | — |
 | `CanliYayinKanallari` **beta** | tabii.com | Canlı TV | — | — | — | — | — | — |
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
@@ -92,6 +94,7 @@ Tek modül derleme ve cihaza kurulum:
 | `DiziBal` **beta** | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |
 | `DiziBoxTv` **beta** | diziboxtv.com | Dizi | — | — | — | — | — | — |
 | `DiziCaN` **beta** | dizican.cc | Dizi | — | — | — | — | — | — |
+| `Dizifon` **beta** | dizifon.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi82.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
 | `Dizirella` **beta** | dizirella.one | Dizi | — | — | — | — | — | — |
 | `DiziYou` | diziyou.one | Dizi | — | — | ✓ | ✓ | — | ✓ |
@@ -125,6 +128,7 @@ Tek modül derleme ve cihaza kurulum:
 | `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
 | `TurkceDizi` **beta** | turkcedizi.com | Film | — | — | — | — | — | ✓ |
 | `WebdramaTurkey2` | webdramaturkey2.com | Asya dizi/film | ✓ | — | — | ✓ | ✓ | — |
+| `Weboo` **beta** | weboo.com.tr | Dizi | — | — | — | — | — | — |
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
 | `YesilCamTv` **beta** | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
@@ -159,7 +163,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          56 modül
+  Yabancidizi/          60 modül
 ```
 
 ## Geliştirme

@@ -14,6 +14,14 @@ sayı arttığında güncelleme sunar.
 
 
 
+- **BirAsyaDizi v1**: `birasyadizi.cx` sıfırdan eklendi; dizi; runner doğrulaması: arama 1, bağlantı 2. Bot (autopilot) tarafından üretildi.
+
+- **AsyaDizi v1**: `asyadizi.com` sıfırdan eklendi; dizi; runner doğrulaması: arama 20, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **Dizifon v1**: `dizifon.cc` sıfırdan eklendi; dizi; runner doğrulaması: arama 21, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **Weboo v1**: `weboo.com.tr` sıfırdan eklendi; dizi; runner doğrulaması: arama 2, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
 - **Filmizleya v1**: `filmizleya.com` sıfırdan eklendi; film; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
 - **CanliYayinKanallari v1**: `tabii.com` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 24, bağlantı 1. Bot (autopilot) tarafından üretildi.
