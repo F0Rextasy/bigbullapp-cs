@@ -17,6 +17,12 @@ sayı arttığında güncelleme sunar.
 
 
 
+- **HDFilmDiziIzle v1**: `hdfilmdiziizle.com` sıfırdan eklendi; film; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **Dizigom v1**: `dizigom.news` sıfırdan eklendi; film; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **DiziAbi v1**: `diziabi.net` sıfırdan eklendi; film; runner doğrulaması: arama 10, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
 - **Filmizyon v1**: `filmizyon.net` sıfırdan eklendi; film; runner doğrulaması: arama 2, bağlantı 4. Bot (autopilot) tarafından üretildi.
 
 - **BirAsyaDizi v1**: `birasyadizi.cx` sıfırdan eklendi; dizi; runner doğrulaması: arama 1, bağlantı 2. Bot (autopilot) tarafından üretildi.

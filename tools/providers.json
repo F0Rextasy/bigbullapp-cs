@@ -1145,6 +1145,66 @@
    "checked": "2026-10-30T06:50:49Z",
    "latencyMs": 0,
    "module": "Filmizyon"
+  },
+  "diziabi.net": {
+   "id": "diziabi-net",
+   "name": "DiziAbi",
+   "mainUrl": "https://www.diziabi.net",
+   "status": "implemented",
+   "http": 200,
+   "title": "Love of Your Life",
+   "language": "tr",
+   "tvTypes": [
+    "Movie"
+   ],
+   "poolNames": [
+    "DiziAbi"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T08:17:08Z",
+   "latencyMs": 0,
+   "module": "DiziAbi"
+  },
+  "dizigom.news": {
+   "id": "dizigom-news",
+   "name": "Dizigom",
+   "mainUrl": "https://www.dizigom.news",
+   "status": "implemented",
+   "http": 200,
+   "title": "Saplantı",
+   "language": "tr",
+   "tvTypes": [
+    "Movie"
+   ],
+   "poolNames": [
+    "Dizigom"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T08:23:25Z",
+   "latencyMs": 0,
+   "module": "Dizigom"
+  },
+  "hdfilmdiziizle.com": {
+   "id": "hdfilmdiziizle-com",
+   "name": "HDFilmDiziIzle",
+   "mainUrl": "https://www.hdfilmdiziizle.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "Street Fighter",
+   "language": "tr",
+   "tvTypes": [
+    "Movie"
+   ],
+   "poolNames": [
+    "HDFilmDiziIzle"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T08:33:39Z",
+   "latencyMs": 0,
+   "module": "HDFilmDiziIzle"
   }
  }
 }
