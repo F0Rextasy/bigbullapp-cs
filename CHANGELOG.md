@@ -14,6 +14,8 @@ sayı arttığında güncelleme sunar.
 
 
 
+- **Filmizleya v1**: `filmizleya.com` sıfırdan eklendi; film; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
 - **CanliYayinKanallari v1**: `tabii.com` sıfırdan eklendi; canlı TV; runner doğrulaması: arama 24, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
 - **CanliDizi v1**: `canlidizi.sbs` sıfırdan eklendi; dizi; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
