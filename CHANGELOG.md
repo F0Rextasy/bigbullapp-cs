@@ -5,6 +5,13 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.5.1] - 2026-10-30
+
+### Eklendi
+- **YesilCamTv v1**: `yesilcamtv.com.tr` sıfırdan eklendi; film; runner doğrulaması: arama 1, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
+- **HDFilmDelisi v1**: `hdfilmdelisi.one` sıfırdan eklendi; film; runner doğrulaması: arama 4, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
 ## [1.5.0] - 2026-10-29
 
 ### Eklendi

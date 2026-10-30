@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-30",
- "note": "41 TR modül runner benchmark (2026-10-30)",
+ "note": "44 TR modül runner benchmark (2026-10-30)",
  "modules": [
   {
    "module": "AnimeciX",
@@ -177,6 +177,12 @@
    "runner": "bench_runner.py 2026-10-30"
   },
   {
+   "module": "HDFilmDelisi",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
+  },
+  {
    "module": "HDFilmizle",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=1, ep=0",
@@ -253,6 +259,12 @@
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=1, ep=0",
    "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "YesilCamTv",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-10-30"
   }
  ]
 }
