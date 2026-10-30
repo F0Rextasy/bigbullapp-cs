@@ -1,5 +1,6 @@
 package com.diziboxizle
 
+import org.jsoup.nodes.Element
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -35,6 +36,9 @@ import org.json.JSONArray
  * Search hits are episode posts, so results are folded back to their series page
  * (`<slug>-<n>-sezon-<m>-bolum` -> `<slug>`). The player is a plain ok.ru iframe.
  */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class DiziboxIzleProvider : MainAPI() {
     override var mainUrl = "https://diziboxizle.com"
     override var name = "DiziboxIzle"
@@ -84,7 +88,7 @@ class DiziboxIzleProvider : MainAPI() {
         val anchor = selectFirst(".categorytitle a") ?: selectFirst(".cat-img a") ?: return null
         val href = fixUrlNull(anchor.attr("href")) ?: return null
         return newTvSeriesSearchResponse(anchor.text().trim(), href, TvType.TvSeries) {
-            this.posterUrl = fixUrlNull(selectFirst(".cat-img img")?.attr("src"))
+            this.posterUrl = fixUrlNull(selectFirst(".cat-img img")?.posterSrcLazy())
         }
     }
 
@@ -132,7 +136,7 @@ class DiziboxIzleProvider : MainAPI() {
             val series = seriesUrl(href) ?: href
             val title = anchor.text().trim().ifBlank { series.trimEnd('/').substringAfterLast('/') }
             newTvSeriesSearchResponse(title, series, TvType.TvSeries) {
-                this.posterUrl = fixUrlNull(element.selectFirst(".search-cat-img img")?.attr("src"))
+                this.posterUrl = fixUrlNull(element.selectFirst(".search-cat-img img")?.posterSrcLazy())
                 this.year = element.selectFirst("#search-cat-year")?.text()?.trim()?.toIntOrNull()
             }
         }.distinctBy { it.url }

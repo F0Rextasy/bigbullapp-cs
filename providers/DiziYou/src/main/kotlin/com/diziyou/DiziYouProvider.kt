@@ -1,5 +1,6 @@
 package com.diziyou
 
+import org.jsoup.nodes.Element
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
 import com.lagradost.cloudstream3.ActorRole
@@ -27,6 +28,9 @@ import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
 
 /** DiziYou — diziyou.one (CSS: storage.diziyou.one, m3u8 + VTT) */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class DiziYouProvider : MainAPI() {
     override var mainUrl = "https://www.diziyou.one"
     override var name = "DiziYou"
@@ -60,7 +64,7 @@ class DiziYouProvider : MainAPI() {
             val anchor = card.selectFirst("#categorytitle a") ?: card.selectFirst(".cat-img a") ?: return@mapNotNull null
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
             newTvSeriesSearchResponse(anchor.text().trim(), href, TvType.TvSeries) {
-                this.posterUrl = fixUrlNull(card.selectFirst("img")?.attr("src"))
+                this.posterUrl = fixUrlNull(card.selectFirst("img")?.posterSrcLazy())
                 this.score = com.lagradost.cloudstream3.Score.from10(
                     card.selectFirst("#imdbp")?.text()?.trim()?.trim('(', ')')
                 )
@@ -76,7 +80,7 @@ class DiziYouProvider : MainAPI() {
             val anchor = card.selectFirst("#categorytitle a") ?: return@mapNotNull null
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
             newTvSeriesSearchResponse(anchor.text().trim(), href, TvType.TvSeries) {
-                this.posterUrl = fixUrlNull(card.selectFirst("img")?.attr("src"))
+                this.posterUrl = fixUrlNull(card.selectFirst("img")?.posterSrcLazy())
                 this.score = com.lagradost.cloudstream3.Score.from10(
                     card.selectFirst("#imdbp")?.text()?.trim()?.trim('(', ')')
                 )
@@ -92,7 +96,7 @@ class DiziYouProvider : MainAPI() {
             val anchor = block.select("a[href]").lastOrNull() ?: return@mapNotNull null
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
             newTvSeriesSearchResponse(anchor.text().trim(), href, TvType.TvSeries) {
-                this.posterUrl = fixUrlNull(block.selectFirst(".search-cat-img img")?.attr("src"))
+                this.posterUrl = fixUrlNull(block.selectFirst(".search-cat-img img")?.posterSrcLazy())
             }
         }.distinctBy { it.url }
 

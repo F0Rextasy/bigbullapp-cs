@@ -1,5 +1,6 @@
 package com.belgeselx
 
+import org.jsoup.nodes.Element
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -29,6 +30,9 @@ import org.json.JSONArray
  * plus three source slot codes. Slot codes pick a `/video/data/<file>.php` endpoint that returns
  * either an embed iframe (Drive / ok.ru / Dailymotion / Yandex) or a jwplayer `file:` source.
  */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class BelgeselXProvider : MainAPI() {
     override var mainUrl = "https://belgeselx.com"
     override var name = "BelgeselX"
@@ -118,7 +122,7 @@ class BelgeselXProvider : MainAPI() {
         val channel = page.selectFirst(".px-stat a[href*=/belgeselkanali/]")?.text()?.trim()
 
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
-            this.posterUrl = fixUrlNull(page.selectFirst(".px-info-poster img")?.attr("src"))
+            this.posterUrl = fixUrlNull(page.selectFirst(".px-info-poster img")?.posterSrcLazy())
             this.plot = page.selectFirst(".px-info-desc")?.text()?.trim()
             this.year = year
             if (!channel.isNullOrBlank()) this.tags = listOf(channel)
@@ -244,7 +248,7 @@ class BelgeselXProvider : MainAPI() {
         val doc = runCatching { get(url).document }.getOrNull()
         val title = doc?.selectFirst("h2.px-info-title")?.ownText()?.trim()?.takeIf { it.isNotBlank() }
         return newTvSeriesSearchResponse(title ?: humanize(slug), url, TvType.TvSeries) {
-            this.posterUrl = fixUrlNull(doc?.selectFirst(".px-info-poster img")?.attr("src"))
+            this.posterUrl = fixUrlNull(doc?.selectFirst(".px-info-poster img")?.posterSrcLazy())
         }
     }
 

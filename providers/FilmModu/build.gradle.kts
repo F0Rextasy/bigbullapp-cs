@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "Filmmodu — Türkçe dublaj & altyazılı film arşivi (filmmodu.news)"

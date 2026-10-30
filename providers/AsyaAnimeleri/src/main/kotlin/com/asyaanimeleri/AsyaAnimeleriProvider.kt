@@ -38,6 +38,9 @@ import java.net.URLEncoder
  * The watch page keeps every mirror as a base64-encoded iframe in `select.mirror`,
  * one of them being `rumble.com/embed/<id>`.
  */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class AsyaAnimeleriProvider : MainAPI() {
     override var mainUrl = "https://asyaanimeleri.top"
     override var name = "AsyaAnimeleri"
@@ -70,7 +73,7 @@ class AsyaAnimeleriProvider : MainAPI() {
         if (title.isBlank()) return null
         val type = if (selectFirst(".typez")?.text().equals("Movie", true)) TvType.Movie else TvType.Anime
         return newTvSeriesSearchResponse(title, href, type) {
-            this.posterUrl = fixUrlNull(selectFirst("img")?.attr("src"))
+            this.posterUrl = fixUrlNull(selectFirst("img")?.posterSrcLazy())
         }
     }
 

@@ -43,6 +43,9 @@ import java.util.concurrent.CancellationException
  *    uqload, …), which the core extractors understand.
  *  - `resolveUrl` — `dzen` rows; the site itself resolves these to a tau-video key.
  */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class CizgimaxProvider : MainAPI() {
     override var mainUrl = "https://cizgimax.online"
     private val uaHeaders = mapOf(
@@ -163,7 +166,7 @@ class CizgimaxProvider : MainAPI() {
             .mapNotNull { seriesOf(it) }.distinctBy { it.url }
 
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
-            posterUrl = fixUrlNull(doc.selectFirst("div.anime-poster img")?.attr("src"))
+            posterUrl = fixUrlNull(doc.selectFirst("div.anime-poster img")?.posterSrcLazy())
             plot = doc.selectFirst("p.anime-desc")?.text()?.trim()
             this.year = year
             this.tags = tags

@@ -47,6 +47,9 @@ import java.net.URLEncoder
  * aranmıyor; bu yüzden link mobil bir UA ile veriliyor. Segmentler yalnızca izinli origin'den
  * gelen `Referer` istiyor.
  */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class SetFilmIzleProvider : MainAPI() {
     override var mainUrl = "https://www.setfilmizle.ltd"
     override var name = "SetFilmIzle"
@@ -260,7 +263,7 @@ class SetFilmIzleProvider : MainAPI() {
                     this.episode = number
                     this.name = link.selectFirst(".fep-title")?.text()?.trim()?.takeIf { it.isNotBlank() }
                         ?: "$season. Sezon $number. Bölüm"
-                    this.posterUrl = fixUrlNull(link.selectFirst("img.fep-cover")?.attr("src"))
+                    this.posterUrl = fixUrlNull(link.selectFirst("img.fep-cover")?.posterSrcLazy())
                 }
             }
         }

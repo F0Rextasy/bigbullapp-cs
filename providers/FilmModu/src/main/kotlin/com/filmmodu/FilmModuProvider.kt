@@ -34,6 +34,9 @@ import org.jsoup.nodes.Element
  * `<player>/assets/js/s.php?s=<slug>` → window.__PLAYER__ {stream, subs, audios}.
  * Oynatıcı host'u sayfadaki core.js kaynağından türetilir (pilavyerplay.top).
  */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class FilmModuProvider : MainAPI() {
     override var mainUrl = "https://filmmodu.news"
     override var name = "Filmmodu"
@@ -75,7 +78,7 @@ class FilmModuProvider : MainAPI() {
         val href = fixUrlNull(attr("href")) ?: return null
         val title = selectFirst("h3")?.text()?.trim()?.takeIf { it.isNotBlank() } ?: return null
         return newMovieSearchResponse(title, href, TvType.Movie) {
-            this.posterUrl = fixUrlNull(selectFirst("img")?.attr("src"))
+            this.posterUrl = fixUrlNull(selectFirst("img")?.posterSrcLazy())
             this.year = selectFirst("p")?.text()?.trim()?.toIntOrNull()
             this.score = Score.from10(selectFirst("span.badge-rating")?.text()?.trim())
         }

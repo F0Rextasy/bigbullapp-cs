@@ -38,6 +38,9 @@ import java.net.URLEncoder
  * Next.js site: series metadata + episode list live in the JSON-LD blocks,
  * the episode page carries its player iframes in the RSC payload ("sources").
  */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class DizillaProvider : MainAPI() {
     private val uaHeaders = mapOf(
         "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
@@ -88,7 +91,7 @@ class DizillaProvider : MainAPI() {
             ?: attr("aria-label").substringBefore(",").trim().takeIf { it.isNotBlank() }
             ?: return null
         return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-            this.posterUrl = fixUrlNull(selectFirst("img")?.attr("src"))
+            this.posterUrl = fixUrlNull(selectFirst("img")?.posterSrcLazy())
         }
     }
 

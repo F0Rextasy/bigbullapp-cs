@@ -23,6 +23,9 @@ import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.jsoup.nodes.Element
 
 /** KoreanTurk — koreanturk.tv (koreanturk.com erişime engelli, .tv güncel adres) */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class KoreanTurkProvider : MainAPI() {
     override var mainUrl = "https://koreanturk.tv"
     private val uaHeaders = mapOf(
@@ -66,7 +69,7 @@ class KoreanTurkProvider : MainAPI() {
             .ifBlank { selectFirst("span.serietitle")?.text()?.trim().orEmpty() }
         if (title.isBlank()) return null
         return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-            posterUrl = fixUrlNull(selectFirst("img")?.attr("src"))
+            posterUrl = fixUrlNull(selectFirst("img")?.posterSrcLazy())
         }
     }
 
@@ -79,7 +82,7 @@ class KoreanTurkProvider : MainAPI() {
                 .ifBlank { box.selectFirst("span.serietitle")?.text()?.trim().orEmpty() }
             if (title.isBlank()) return@mapNotNull null
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-                posterUrl = fixUrlNull(box.selectFirst("img")?.attr("src"))
+                posterUrl = fixUrlNull(box.selectFirst("img")?.posterSrcLazy())
             }
         }
     }

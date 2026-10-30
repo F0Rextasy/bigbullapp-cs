@@ -27,6 +27,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 /** Kült Filmler — kultfilmler.net (WordPress + vidpapi.xyz FirePlayer embed) */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class KultfilmlerProvider : MainAPI() {
     override var mainUrl = "https://kultfilmler.net"
     override var name = "Kült Filmler"
@@ -62,7 +65,7 @@ class KultfilmlerProvider : MainAPI() {
         val href = fixUrlNull(attr("href")) ?: return null
         val title = selectFirst("h3")?.text()?.trim() ?: return null
         return newMovieSearchResponse(title, href, TvType.Movie) {
-            this.posterUrl = fixUrlNull(selectFirst("img")?.attr("src"))
+            this.posterUrl = fixUrlNull(selectFirst("img")?.posterSrcLazy())
             this.year = selectFirst("span.pyear")?.text()?.trim()?.toIntOrNull()
             this.score = Score.from10(selectFirst("span.mscore b")?.text()?.trim())
         }

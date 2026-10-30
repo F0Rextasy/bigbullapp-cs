@@ -29,6 +29,9 @@ import org.jsoup.nodes.Element
  * Search is JSON (`/api/search?q=`), players come from the base64 template in the
  * `data-video-player` Alpine attribute and resolve to an hdload.top JW Player embed.
  */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class FullHDFilmProvider : MainAPI() {
     override var mainUrl = "https://fullhdfilmizlebox.vip"
     override var name = "FullHDFilm"
@@ -73,7 +76,7 @@ class FullHDFilmProvider : MainAPI() {
         val href = fixUrlNull(attr("href")) ?: return null
         val title = selectFirst("h3")?.text()?.trim()?.takeIf { it.isNotEmpty() } ?: return null
         return newMovieSearchResponse(title, href, TvType.Movie) {
-            this.posterUrl = fixUrlNull(selectFirst("img[src]")?.attr("src")?.takeIf { it.startsWith("http") })
+            this.posterUrl = fixUrlNull(selectFirst("img[src]")?.posterSrcLazy()?.takeIf { it.startsWith("http") })
             this.year = selectFirst("span.text-gray-300")?.text()?.trim()?.toIntOrNull()
             this.score = selectFirst("span.text-accent")?.text()?.trim()?.toDoubleOrNull()
                 ?.let { Score.from10(it) }

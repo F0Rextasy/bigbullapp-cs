@@ -24,6 +24,7 @@ import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONObject
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 
 /**
  * DiziMom — ddizimom.net (dizimom.plus adresi parked).
@@ -31,6 +32,9 @@ import org.jsoup.nodes.Document
  * Bölüm sayfasındaki `data-pv` slug'ı → play2.pilavyerplay.top s.php →
  * `window.__PLAYER__` (master HLS + ses/altyazı) → stream.php.
  */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class DiziMomProvider : MainAPI() {
     private val uaHeaders = mapOf(
         "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
@@ -63,7 +67,7 @@ class DiziMomProvider : MainAPI() {
                 ?: card.attr("title").trim().takeIf { it.isNotBlank() }
                 ?: return@mapNotNull null
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-                this.posterUrl = card.selectFirst("img")?.attr("src")
+                this.posterUrl = card.selectFirst("img")?.posterSrcLazy()
             }
         }.distinctBy { it.url }
         return newHomePageResponse(request.name, items, hasNext = false)
@@ -77,7 +81,7 @@ class DiziMomProvider : MainAPI() {
             val title = card.selectFirst("h3")?.text()?.trim()?.takeIf { it.isNotBlank() }
                 ?: return@mapNotNull null
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-                this.posterUrl = card.selectFirst("img")?.attr("src")
+                this.posterUrl = card.selectFirst("img")?.posterSrcLazy()
                 this.year = card.selectFirst("p")?.text()?.trim()?.toIntOrNull()
             }
         }.distinctBy { it.url }
@@ -106,7 +110,7 @@ class DiziMomProvider : MainAPI() {
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
             this.year = meta["Yapım Yılı"]?.toIntOrNull()
             this.plot = doc.selectFirst("main p.max-w-2xl")?.text()?.trim()
-            this.posterUrl = doc.selectFirst("img[src*='/storage/tmdb/posters/']")?.attr("src")
+            this.posterUrl = doc.selectFirst("img[src*='/storage/tmdb/posters/']")?.posterSrcLazy()
             this.score = Score.from10(meta["IMDB Puanı"]?.filter { it.isDigit() || it == '.' })
             this.tags = doc.select("main a[href*='/tur/']").map { it.text().trim() }.distinct()
         }

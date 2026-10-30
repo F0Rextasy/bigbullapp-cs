@@ -43,6 +43,9 @@ import java.net.URLDecoder
  * `window._captionUrl` doluysa Türkçe WebVTT altyazısı vardır. Melolo kaynakları AES-CTR ile
  * şifreli mp4'tür; tarayıcıda çözüldüğü için oynatıcıya verilemez.
  */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class DramaDizilerimProvider : MainAPI() {
     override var mainUrl = "https://dramadizilerim.com"
     override var name = "DramaDizilerim"
@@ -123,7 +126,7 @@ class DramaDizilerimProvider : MainAPI() {
             newEpisode(link) {
                 this.season = anchor.attr("data-season").toIntOrNull()
                 this.episode = anchor.attr("data-episode").toIntOrNull()
-                this.posterUrl = fixUrlNull(anchor.selectFirst("img")?.attr("src"))
+                this.posterUrl = fixUrlNull(anchor.selectFirst("img")?.posterSrcLazy())
             }
         }.sortedWith(compareBy({ it.season ?: Int.MAX_VALUE }, { it.episode ?: Int.MAX_VALUE }))
             .distinctBy { it.data }
@@ -209,7 +212,7 @@ class DramaDizilerimProvider : MainAPI() {
             ?: selectFirst("img")?.attr("alt")?.trim()?.takeIf { it.isNotEmpty() }
             ?: return null
         return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-            this.posterUrl = fixUrlNull(selectFirst("img")?.attr("src"))
+            this.posterUrl = fixUrlNull(selectFirst("img")?.posterSrcLazy())
         }
     }
 

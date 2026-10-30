@@ -29,6 +29,9 @@ import java.net.URLEncoder
 import java.util.Collections
 
 /** Anizm (turkanime.info) — Türkçe altyazılı anime; anizm.net Cloudflare arkasında. */
+private fun Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 class AnizmProvider : MainAPI() {
     override var mainUrl = "https://turkanime.info"
     override var name = "Anizm"
@@ -69,7 +72,7 @@ class AnizmProvider : MainAPI() {
         val href = fixUrlNull(selectFirst("a.v3-catalog-poster")?.attr("href")) ?: return null
         val title = selectFirst("h2 a")?.text()?.trim()?.takeIf { it.isNotBlank() } ?: return null
         return newTvSeriesSearchResponse(title, href, TvType.Anime) {
-            this.posterUrl = fixUrlNull(selectFirst("a.v3-catalog-poster img")?.attr("src"))
+            this.posterUrl = fixUrlNull(selectFirst("a.v3-catalog-poster img")?.posterSrcLazy())
             this.year = selectFirst(".v3-catalog-card-copy p")?.text()?.trim()?.toIntOrNull()
         }
     }
@@ -101,7 +104,7 @@ class AnizmProvider : MainAPI() {
         }
 
         return newTvSeriesLoadResponse(title, url, TvType.Anime, episodes) {
-            this.posterUrl = fixUrlNull(doc.selectFirst(".v3-anime-detail-cover img")?.attr("src"))
+            this.posterUrl = fixUrlNull(doc.selectFirst(".v3-anime-detail-cover img")?.posterSrcLazy())
             this.plot = doc.selectFirst(".v3-anime-summary p")?.text()?.trim()?.takeIf { it.isNotBlank() }
             this.year = doc.select(".v3-anime-detail-meta span").firstNotNullOfOrNull { span ->
                 span.text().trim().toIntOrNull()?.takeIf { it in 1900..2100 }
