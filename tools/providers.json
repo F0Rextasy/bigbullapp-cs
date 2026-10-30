@@ -1210,6 +1210,26 @@
       "checked": "2026-10-30T00:00:00Z",
       "latencyMs": 0,
       "module": "MinikaGO"
+    },
+    "startv.com.tr": {
+      "id": "startv-com-tr",
+      "name": "StarTV",
+      "mainUrl": "https://www.startv.com.tr",
+      "status": "implemented",
+      "http": 200,
+      "title": "StarTV",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "StarTV"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T00:00:00Z",
+      "latencyMs": 0,
+      "module": "StarTV"
     }
   }
 }
