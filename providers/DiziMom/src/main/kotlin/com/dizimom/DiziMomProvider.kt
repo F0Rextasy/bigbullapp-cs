@@ -2,6 +2,8 @@ package com.dizimom
 
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.ErrorLoadingException
+import com.lagradost.cloudstream3.HomePageResponse
+import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.MainAPI
 import com.lagradost.cloudstream3.Score
@@ -9,7 +11,9 @@ import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
+import com.lagradost.cloudstream3.mainPageOf
 import com.lagradost.cloudstream3.newEpisode
+import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newTvSeriesLoadResponse
 import com.lagradost.cloudstream3.newSubtitleFile
 import com.lagradost.cloudstream3.newTvSeriesSearchResponse
@@ -34,7 +38,8 @@ class DiziMomProvider : MainAPI() {
     override var mainUrl = "https://ddizimom.net"
     override var name = "DiziMom"
     override var lang = "tr"
-    override val hasMainPage = false
+    override val hasMainPage = true
+    override val mainPage = mainPageOf("$mainUrl/" to "Son Eklenenler")
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.TvSeries)
 
@@ -44,6 +49,21 @@ class DiziMomProvider : MainAPI() {
     private val playerSlug = Regex("""data-pv="([A-Za-z0-9_\-]{8,})"""")
     private val playerConfig = Regex("""window\.__PLAYER__\s*=\s*(\{.*?\});""", RegexOption.DOT_MATCHES_ALL)
     private val masterHeight = Regex("""RESOLUTION=\d+x(\d+)""")
+
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
+        val doc = app.get(request.data, headers = uaHeaders).document
+        val items = doc.select("main a[href]").mapNotNull { card ->
+            val href = card.attr("href")
+            if (!seriesLink.matches(href)) return@mapNotNull null
+            val title = card.selectFirst("h3")?.text()?.trim()?.takeIf { it.isNotBlank() }
+                ?: return@mapNotNull null
+            newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
+                this.posterUrl = card.selectFirst("img")?.attr("src")
+                this.year = card.selectFirst("p")?.text()?.trim()?.toIntOrNull()
+            }
+        }.distinctBy { it.url }
+        return newHomePageResponse(request.name, items, hasNext = false)
+    }
 
     override suspend fun search(query: String): List<SearchResponse> {
         val doc = app.get("$mainUrl/ara", params = mapOf("q" to query)).document
