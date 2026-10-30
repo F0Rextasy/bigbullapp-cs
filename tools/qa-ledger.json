@@ -59,7 +59,7 @@
     {
       "module": "AsyaLuna",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "evidence": "runner 2026-10-30: pass, links=2, ep=2",
       "runner": "autopilot.py 2026-10-30"
     },
     {
@@ -149,7 +149,7 @@
     {
       "module": "Dizifon",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=2",
+      "evidence": "runner 2026-10-30: pass, links=2, ep=2",
       "runner": "autopilot.py 2026-10-30"
     },
     {

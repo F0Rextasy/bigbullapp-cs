@@ -7,7 +7,7 @@ canlı TV kaynakları. Her site ayrı bir Gradle modülü ve ayrı bir `.cs3` ek
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-41-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-64-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/BigBull_App)
 
@@ -117,7 +117,7 @@ Tek modül derleme ve cihaza kurulum:
 | `FullHDFilmizlesene` **beta** | fullhdfilmizlesene.now | Film | — | — | ✓ | — | — | ✓ |
 | `HDFilmCehennemi` **beta** | hdfilmcehennemi.nl | Film | — | — | — | — | — | — |
 | `HDFilmDelisi` **beta** | hdfilmdelisi.one | Film | ✓ | — | — | — | ✓ | ✓ |
-| `HDFilmDiziIzle` **beta** | hdfilmdiziizle.com | Film | — | — | — | — | — | — |
+| `HDFilmDiziIzle` **beta** | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` **beta** | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `JetFilmizle` **beta** | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
 | `KoreanTurk` **beta** | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |

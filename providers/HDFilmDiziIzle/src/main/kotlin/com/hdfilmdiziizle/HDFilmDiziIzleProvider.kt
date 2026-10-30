@@ -64,14 +64,43 @@ class HDFilmDiziIzleProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Son Eklenenler" -> "https://www.hdfilmdiziizle.com/"
+            "Filmler" -> "https://www.hdfilmdiziizle.com/film/"
+            "Diziler" -> "https://www.hdfilmdiziizle.com/dizi/"
+            "Aile" -> "https://www.hdfilmdiziizle.com/film-tur/aile/"
+            "Aksiyon" -> "https://www.hdfilmdiziizle.com/film-tur/aksiyon/"
+            "Bilim Kurgu" -> "https://www.hdfilmdiziizle.com/film-tur/bilim-kurgu/"
+            "Dram" -> "https://www.hdfilmdiziizle.com/film-tur/dram/"
+            "Fantastik" -> "https://www.hdfilmdiziizle.com/film-tur/fantastik/"
+            "Gerilim" -> "https://www.hdfilmdiziizle.com/film-tur/gerilim/"
+            "Komedi" -> "https://www.hdfilmdiziizle.com/film-tur/komedi/"
+            "Korku" -> "https://www.hdfilmdiziizle.com/film-tur/korku/"
+            "Macera" -> "https://www.hdfilmdiziizle.com/film-tur/macera/"
+            "Romantik" -> "https://www.hdfilmdiziizle.com/film-tur/romantik/"
+            "Suç" -> "https://www.hdfilmdiziizle.com/film-tur/suc/"
+            "Aile" -> "https://www.hdfilmdiziizle.com/dizi-tur/aile-dizileri/"
+            "Aksiyon" -> "https://www.hdfilmdiziizle.com/dizi-tur/aksiyon-dizileri/"
+            "Bilim Kurgu" -> "https://www.hdfilmdiziizle.com/dizi-tur/bilim-kurgu-dizileri/"
+            "Belgesel" -> "https://www.hdfilmdiziizle.com/dizi-tur/belgesel/"
+            "Dram" -> "https://www.hdfilmdiziizle.com/dizi-tur/dram-dizileri/"
+            "Fantastik" -> "https://www.hdfilmdiziizle.com/dizi-tur/fantastik-diziler/"
+            "Gerilim" -> "https://www.hdfilmdiziizle.com/dizi-tur/gerilim-dizileri/"
+            "Gizem" -> "https://www.hdfilmdiziizle.com/dizi-tur/gizem-dizileri/"
+            "Korku" -> "https://www.hdfilmdiziizle.com/dizi-tur/korku-dizileri/"
+            "Komedi" -> "https://www.hdfilmdiziizle.com/dizi-tur/komedi-dizileri/"
+            "Macera" -> "https://www.hdfilmdiziizle.com/dizi-tur/macera-dizileri/"
+            "Suç" -> "https://www.hdfilmdiziizle.com/dizi-tur/suc-dizileri/"
+            "Seri Filmler" -> "https://www.hdfilmdiziizle.com/seri-boxset-filmler/"
+            "Tümünü Gör" -> "https://www.playhdizle.com/yakinda-gelecek-filmler/"
+            "Türkçe Dublaj Filmler" -> "https://www.hdfilmdiziizle.com/turkce-dublaj-filmler/"
+            "Türkçe Altyazılı Filmler" -> "https://www.hdfilmdiziizle.com/turkce-altyazili-filmler/"
+            "Tümünü Gör" -> "https://www.hdfilmdiziizle.com/en-cok-izlenen-filmler/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Son Eklenenler")) {
+            if (request.name in listOf("Filmler", "Diziler", "Aile", "Aksiyon", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Komedi", "Korku", "Macera", "Romantik", "Suç", "Aile", "Aksiyon", "Bilim Kurgu", "Belgesel", "Dram", "Fantastik", "Gerilim", "Gizem", "Korku", "Komedi", "Macera", "Suç", "Seri Filmler", "Tümünü Gör", "Türkçe Dublaj Filmler", "Türkçe Altyazılı Filmler", "Tümünü Gör")) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -80,10 +109,10 @@ class HDFilmDiziIzleProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Son Eklenenler")
+        val ROWS = listOf("Filmler", "Diziler", "Aile", "Aksiyon", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Komedi", "Korku", "Macera", "Romantik", "Suç", "Aile", "Aksiyon", "Bilim Kurgu", "Belgesel", "Dram", "Fantastik", "Gerilim", "Gizem", "Korku", "Komedi", "Macera", "Suç", "Seri Filmler", "Tümünü Gör", "Türkçe Dublaj Filmler", "Türkçe Altyazılı Filmler", "Tümünü Gör")
     }
 
-    private val pathPrefixes = listOf("/film/")
+    private val pathPrefixes = listOf("/dizi/", "/film/", "/film_series/")
 
     override suspend fun search(query: String): List<SearchResponse> {
         val q = if (false) asciiFold(query) else query
@@ -94,7 +123,7 @@ class HDFilmDiziIzleProvider : MainAPI() {
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
-        if (listOf("/film/").none { path.startsWith(it) }) return@mapNotNull null
+        if (listOf("/dizi/", "/film/", "/film_series/").none { path.startsWith(it) }) return@mapNotNull null
         
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null

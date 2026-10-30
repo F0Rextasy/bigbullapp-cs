@@ -1192,17 +1192,17 @@
    "mainUrl": "https://www.hdfilmdiziizle.com",
    "status": "implemented",
    "http": 200,
-   "title": "Street Fighter",
+   "title": "Matrix Resurrections",
    "language": "tr",
    "tvTypes": [
-    "Movie"
+    "TvSeries"
    ],
    "poolNames": [
     "HDFilmDiziIzle"
    ],
    "source": "provider-source",
    "health": "ok",
-   "checked": "2026-10-30T08:33:39Z",
+   "checked": "2026-10-30T11:50:29Z",
    "latencyMs": 0,
    "module": "HDFilmDiziIzle"
   }

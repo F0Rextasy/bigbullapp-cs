@@ -64,14 +64,16 @@ class DiziBoxTvProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Son Eklenenler" -> "https://diziboxtv.com/"
+            "Diziler" -> "https://diziboxtv.com/diziler"
+            "Filmler" -> "https://diziboxtv.com/filmler"
+            "Dram ›" -> "https://diziboxtv.com/?kategori=Dram#icerikler"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Son Eklenenler")) {
+            if (request.name in listOf("Diziler", "Filmler", "Dram ›")) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -80,7 +82,7 @@ class DiziBoxTvProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Son Eklenenler")
+        val ROWS = listOf("Diziler", "Filmler", "Dram ›")
     }
 
     private val pathPrefixes = listOf("/dizi/", "/film/")

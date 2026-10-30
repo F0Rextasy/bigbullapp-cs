@@ -69,6 +69,14 @@ sayı arttığında güncelleme sunar.
 - **HDFilmDelisi v1**: `hdfilmdelisi.one` sıfırdan eklendi; film; runner doğrulaması: arama 4, bağlantı 1. Bot (autopilot) tarafından üretildi.
 
 ### Değişti
+- **Dizifon v2**: taban adres https://dizifon.cc -> https://www.dizifon.cc; runner doğrulaması: arama 21, bağlantı 2. Bot (autopilot) tarafından üretildi.
+
+- **Asyadizileriizle v2**: taban adres https://asyadizileriizle.com -> https://asyadizileriizle.com; runner doğrulaması: arama 1, bağlantı 7. Bot (autopilot) tarafından üretildi.
+
+- **AsyaLuna v2**: taban adres https://asyaluna.com -> https://asyaluna.com; runner doğrulaması: arama 10, bağlantı 2. Bot (autopilot) tarafından üretildi.
+
+- **AsyaBox v2**: taban adres https://asyabox.co -> https://asyabox.co; runner doğrulaması: arama 21, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
 - **CanliTV v3**: M3U kanal URL'si doğrudan `loadLinks` ile HLS olarak verilir; eski
   `loadLinks returned false` hatası giderildi.
 - **HDFilmDelisi v2**: site kategorilerinin tamamı (22 satır) ana sayfa seçicisine eklendi;
