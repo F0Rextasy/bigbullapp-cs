@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "CanliYayinKanallari — Türkçe canlı TV (doğrulanmış HLS)"
