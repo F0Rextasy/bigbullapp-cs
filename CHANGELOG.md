@@ -74,6 +74,8 @@ sayı arttığında güncelleme sunar.
   ayarlara eklendi; "Son Eklenenler" korunur.
 - **CanliYayinKanallari v3**: TV100 denemesi runner'da `extractor-unsupported` verdiği için
   listeden çıkarıldı; doğrulanmış HLS kanalları korunuyor.
+- **CanliTVMe kaldırıldı**: eski HLS oynatıcısı Tabii yönlendirmesine döndü; runner'da
+  doğrulanamadığı için sağlayıcı listeden çıkarıldı.
 
 - **Asyadizileriizle v2**: taban adres https://asyadizileriizle.com -> https://asyadizileriizle.com; runner doğrulaması: arama 1, bağlantı 7. Bot (autopilot) tarafından üretildi.
 
