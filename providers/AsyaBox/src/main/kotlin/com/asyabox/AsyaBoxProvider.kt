@@ -64,14 +64,27 @@ class AsyaBoxProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Son Eklenenler" -> "https://asyabox.co/"
+            "Diziler" -> "https://asyabox.co/tum-diziler/"
+            "Çin" -> "https://asyabox.co/diziler/cin-dizileri-izle/"
+            "Güney Kore" -> "https://asyabox.co/diziler/guney-kore-dizileri-izle/"
+            "Japon" -> "https://asyabox.co/diziler/japon-dizileri-izle/"
+            "Tayland" -> "https://asyabox.co/diziler/tayland-dizileri-izle/"
+            "Tayvan" -> "https://asyabox.co/diziler/tayvan-dizileri-izle/"
+            "Dram" -> "https://asyabox.co/diziler/dram-dizileri-izle/"
+            "Fantastik" -> "https://asyabox.co/diziler/fantastik-dizileri-izle/"
+            "Gençlik" -> "https://asyabox.co/diziler/genclik-dizileri-izle/"
+            "Komedi" -> "https://asyabox.co/diziler/komedi-dizileri-izle/"
+            "Romantik" -> "https://asyabox.co/diziler/romantik-dizileri-izle/"
+            "Tarihi" -> "https://asyabox.co/diziler/tarihi-dizileri-izle/"
+            "Tümünü Gör" -> "https://asyabox.co/diziler/bl-dizileri-izle/"
+            "asya dizileri" -> "https://asyabox.co/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Son Eklenenler")) {
+            if (request.name in listOf("Diziler", "Çin", "Güney Kore", "Japon", "Tayland", "Tayvan", "Dram", "Fantastik", "Gençlik", "Komedi", "Romantik", "Tarihi", "Tümünü Gör", "asya dizileri")) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -80,7 +93,7 @@ class AsyaBoxProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Son Eklenenler")
+        val ROWS = listOf("Diziler", "Çin", "Güney Kore", "Japon", "Tayland", "Tayvan", "Dram", "Fantastik", "Gençlik", "Komedi", "Romantik", "Tarihi", "Tümünü Gör", "asya dizileri")
     }
 
     private val pathPrefixes = listOf("/dizi/")

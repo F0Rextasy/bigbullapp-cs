@@ -177,11 +177,13 @@ class SonAnimeProvider : MainAPI() {
         )
         val basePath = url.substringAfter(mainUrl).substringBefore('?').trimEnd('/')
         val slug = basePath.trim('/').split('/').lastOrNull().orEmpty()
+        val slugBase = slug.removeSuffix("-izle").removeSuffix("-film-izle")
         val episodes = doc.select("a[href]").mapNotNull { anchor ->
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
             val path = href.substringAfter(mainUrl).substringBefore('?')
-            if (basePath.isNotBlank() && !path.startsWith(basePath) && !path.contains(slug)) return@mapNotNull null
-            val match = Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path) ?: return@mapNotNull null
+            if (basePath.isNotBlank() && !path.startsWith(basePath) &&
+                !path.contains(slug) && !path.contains(slugBase)) return@mapNotNull null
+            if (!Regex("""(?:bolum|episode|sezon|season)""", RegexOption.IGNORE_CASE).containsMatchIn(path)) return@mapNotNull null
             val number = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
                 .find(path)?.groupValues?.getOrNull(2)?.toIntOrNull()
                 ?: Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
@@ -246,7 +248,10 @@ class SonAnimeProvider : MainAPI() {
             val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(inner)
             for (m in innerMedia) emit(m.value, "Embed", absolute)
         }
-        val frames = resp.document.select("iframe[src]").mapNotNull { fixUrlNull(it.attr("src")) }.distinct()
+        val frames = resp.document.select("iframe").mapNotNull {
+            val raw = it.attr("src").ifBlank { it.attr("data-src") }.ifBlank { it.attr("vdo-src") }
+            fixUrlNull(raw)
+        }.distinct()
         for (frame in frames) {
             if (frame.contains(".mp4") || frame.contains(".m3u8")) {
                 emit(frame, "Embed", data)

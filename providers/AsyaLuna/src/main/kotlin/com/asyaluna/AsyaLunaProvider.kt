@@ -64,14 +64,43 @@ class AsyaLunaProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Son Eklenenler" -> "https://asyaluna.com/"
+            "Aile" -> "https://asyaluna.com/diziler/aile/"
+            "Aksiyon" -> "https://asyaluna.com/diziler/aksiyon/"
+            "Askeri" -> "https://asyaluna.com/diziler/askeri/"
+            "Asya'nın Yıldızları" -> "https://asyaluna.com/diziler/asyanin-yildizlari/"
+            "Bilim Kurgu" -> "https://asyaluna.com/diziler/bilim-kurgu/"
+            "Çin Dizileri" -> "https://asyaluna.com/diziler/cin-dizileri/"
+            "Devam Eden Diziler" -> "https://asyaluna.com/diziler/devam-eden-diziler/"
+            "Doğaüstü" -> "https://asyaluna.com/diziler/dogaustu/"
+            "Dövüş Sanatları" -> "https://asyaluna.com/diziler/dovus-sanatlari/"
+            "Dram" -> "https://asyaluna.com/diziler/dram/"
+            "Endonezya Dizileri" -> "https://asyaluna.com/diziler/endonezya-dizileri/"
+            "Fantastik" -> "https://asyaluna.com/diziler/fantastik/"
+            "Filipinler Dizileri" -> "https://asyaluna.com/diziler/filipinler-dizileri/"
+            "Final Yapmış Diziler" -> "https://asyaluna.com/diziler/final-yapmis-diziler/"
+            "Gençlik" -> "https://asyaluna.com/diziler/genclik/"
+            "Gerilim" -> "https://asyaluna.com/diziler/gerilim/"
+            "Gizem" -> "https://asyaluna.com/diziler/gizem/"
+            "Hong Kong" -> "https://asyaluna.com/diziler/hong-kong/"
+            "Hukuk" -> "https://asyaluna.com/diziler/hukuk/"
+            "İş" -> "https://asyaluna.com/diziler/is/"
+            "Japon dizileri" -> "https://asyaluna.com/diziler/japon-dizileri/"
+            "Komedi" -> "https://asyaluna.com/diziler/komedi/"
+            "Kore Dizileri" -> "https://asyaluna.com/diziler/kore-dizileri/"
+            "Kore Tarihi Dizileri Türkçe altyazılı" -> "https://asyaluna.com/diziler/kore-tarihi-dizileri-turkce-altyazili/"
+            "Korku" -> "https://asyaluna.com/diziler/korku/"
+            "LBGTQ+" -> "https://asyaluna.com/diziler/lbgtq/"
+            "Macera" -> "https://asyaluna.com/diziler/macera/"
+            "Melodram" -> "https://asyaluna.com/diziler/melodram/"
+            "Müzik" -> "https://asyaluna.com/diziler/muzik/"
+            "Politik" -> "https://asyaluna.com/diziler/politik/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Son Eklenenler")) {
+            if (request.name in listOf("Aile", "Aksiyon", "Askeri", "Asya'nın Yıldızları", "Bilim Kurgu", "Çin Dizileri", "Devam Eden Diziler", "Doğaüstü", "Dövüş Sanatları", "Dram", "Endonezya Dizileri", "Fantastik", "Filipinler Dizileri", "Final Yapmış Diziler", "Gençlik", "Gerilim", "Gizem", "Hong Kong", "Hukuk", "İş", "Japon dizileri", "Komedi", "Kore Dizileri", "Kore Tarihi Dizileri Türkçe altyazılı", "Korku", "LBGTQ+", "Macera", "Melodram", "Müzik", "Politik")) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -80,10 +109,10 @@ class AsyaLunaProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Son Eklenenler")
+        val ROWS = listOf("Aile", "Aksiyon", "Askeri", "Asya'nın Yıldızları", "Bilim Kurgu", "Çin Dizileri", "Devam Eden Diziler", "Doğaüstü", "Dövüş Sanatları", "Dram", "Endonezya Dizileri", "Fantastik", "Filipinler Dizileri", "Final Yapmış Diziler", "Gençlik", "Gerilim", "Gizem", "Hong Kong", "Hukuk", "İş", "Japon dizileri", "Komedi", "Kore Dizileri", "Kore Tarihi Dizileri Türkçe altyazılı", "Korku", "LBGTQ+", "Macera", "Melodram", "Müzik", "Politik")
     }
 
-    private val pathPrefixes = listOf("/bolum/", "/dizi/")
+    private val pathPrefixes = listOf("/dizi/", "/haber/")
 
     override suspend fun search(query: String): List<SearchResponse> {
         val q = if (false) asciiFold(query) else query
@@ -94,7 +123,7 @@ class AsyaLunaProvider : MainAPI() {
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
-        if (listOf("/bolum/", "/dizi/").none { path.startsWith(it) }) return@mapNotNull null
+        if (listOf("/dizi/", "/haber/").none { path.startsWith(it) }) return@mapNotNull null
         
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
@@ -143,7 +172,7 @@ class AsyaLunaProvider : MainAPI() {
             val path = href.substringAfter(mainUrl).substringBefore('?')
             if (basePath.isNotBlank() && !path.startsWith(basePath) &&
                 !path.contains(slug) && !path.contains(slugBase)) return@mapNotNull null
-            val match = Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path) ?: return@mapNotNull null
+            if (!Regex("""(?:bolum|episode|sezon|season)""", RegexOption.IGNORE_CASE).containsMatchIn(path)) return@mapNotNull null
             val number = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
                 .find(path)?.groupValues?.getOrNull(2)?.toIntOrNull()
                 ?: Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
@@ -190,7 +219,7 @@ class AsyaLunaProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>("https://ok6-29.vkuser.net/?expires=1793417129920&srcIp=176.33.107.59&pr=10&srcAg=CHROME&ms=95.142.206.33&type=3&sig=1hY23yLn2PM&ct=0&urls=176.112.172.39%3B185.180.203.46&clientType=0&zs=65&id=21243771685599")
+        val known = listOf<String>("https://ok6-29.vkuser.net/?expires=1793448109242&srcIp=176.33.107.59&pr=10&srcAg=CHROME&ms=95.142.206.33&type=3&sig=1z3fQmeNDqI&ct=0&urls=176.112.172.39%3B185.180.203.46&clientType=0&zs=65&id=21243771685599")
         for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)

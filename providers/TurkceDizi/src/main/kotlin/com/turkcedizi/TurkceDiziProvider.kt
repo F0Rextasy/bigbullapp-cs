@@ -64,14 +64,16 @@ class TurkceDiziProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Son Eklenenler" -> "https://turkcedizi.com/"
+            "Diziler" -> "https://turkcedizi.com/#diziler"
+            "Filmler" -> "https://turkcedizi.com/filmler"
+            "DİZİ Komedi Kulübü" -> "https://turkcedizi.com/komedi-kulubu-turkce-izle"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Son Eklenenler")) {
+            if (request.name in listOf("Diziler", "Filmler", "DİZİ Komedi Kulübü")) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -80,7 +82,7 @@ class TurkceDiziProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Son Eklenenler")
+        val ROWS = listOf("Diziler", "Filmler", "DİZİ Komedi Kulübü")
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
@@ -111,7 +113,7 @@ class TurkceDiziProvider : MainAPI() {
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
-        if (listOf("/").none { path.startsWith(it) }) return@mapNotNull null
+        if (listOf("/", "/film/").none { path.startsWith(it) }) return@mapNotNull null
         
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null

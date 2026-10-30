@@ -64,14 +64,39 @@ class DizifonProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Son Eklenenler" -> "https://www.dizifon.cc/"
+            "Diziler" -> "https://www.dizifon.cc/tum-diziler/"
+            "Dram" -> "https://www.dizifon.cc/diziler/dram/"
+            "Fantastik" -> "https://www.dizifon.cc/diziler/fantastik/"
+            "Gençlik" -> "https://www.dizifon.cc/diziler/genclik/"
+            "Komedi" -> "https://www.dizifon.cc/diziler/komedi/"
+            "Okul" -> "https://www.dizifon.cc/diziler/okul/"
+            "Romantik" -> "https://www.dizifon.cc/diziler/romantik/"
+            "Tarihi" -> "https://www.dizifon.cc/diziler/tarihi/"
+            "Yaşam" -> "https://www.dizifon.cc/diziler/yasam/"
+            "Anime" -> "https://www.dizifon.cc/diziler/anime/"
+            "Çin Dizileri" -> "https://www.dizifon.cc/diziler/cin-dizileri/"
+            "Japon Dizileri" -> "https://www.dizifon.cc/diziler/japon-dizileri/"
+            "Kore Dizileri" -> "https://www.dizifon.cc/diziler/kore-dizileri/"
+            "Tayland Dizileri" -> "https://www.dizifon.cc/diziler/tayland-dizileri/"
+            "Aksiyon" -> "https://www.dizifon.cc/diziler/aksiyon/"
+            "Arkadaşlık" -> "https://www.dizifon.cc/diziler/arkadaslik/"
+            "Doğaüstü" -> "https://www.dizifon.cc/diziler/dogaustu/"
+            "Gerilim" -> "https://www.dizifon.cc/diziler/gerilim/"
+            "Gizem" -> "https://www.dizifon.cc/diziler/gizem/"
+            "Hukuk" -> "https://www.dizifon.cc/diziler/hukuk/"
+            "İş" -> "https://www.dizifon.cc/diziler/is/"
+            "Korku" -> "https://www.dizifon.cc/diziler/korku/"
+            "Medikal" -> "https://www.dizifon.cc/diziler/medikal/"
+            "Müzik" -> "https://www.dizifon.cc/diziler/muzik/"
+            "Spor" -> "https://www.dizifon.cc/diziler/spor/"
+            "Suç" -> "https://www.dizifon.cc/diziler/suc/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Son Eklenenler")) {
+            if (request.name in listOf("Diziler", "Dram", "Fantastik", "Gençlik", "Komedi", "Okul", "Romantik", "Tarihi", "Yaşam", "Anime", "Çin Dizileri", "Japon Dizileri", "Kore Dizileri", "Tayland Dizileri", "Aksiyon", "Arkadaşlık", "Doğaüstü", "Gerilim", "Gizem", "Hukuk", "İş", "Korku", "Medikal", "Müzik", "Spor", "Suç")) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -80,7 +105,7 @@ class DizifonProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Son Eklenenler")
+        val ROWS = listOf("Diziler", "Dram", "Fantastik", "Gençlik", "Komedi", "Okul", "Romantik", "Tarihi", "Yaşam", "Anime", "Çin Dizileri", "Japon Dizileri", "Kore Dizileri", "Tayland Dizileri", "Aksiyon", "Arkadaşlık", "Doğaüstü", "Gerilim", "Gizem", "Hukuk", "İş", "Korku", "Medikal", "Müzik", "Spor", "Suç")
     }
 
     private val pathPrefixes = listOf("/dizi/")
@@ -190,7 +215,7 @@ class DizifonProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>()
+        val known = listOf<String>("https://ok6-30.vkuser.net/?expires=1793448334623&srcIp=176.33.107.59&pr=10&srcAg=CHROME&ms=95.142.206.34&type=3&sig=01ecvoBOZ9I&ct=0&urls=185.180.203.46%3B176.112.172.39&clientType=0&zs=65&id=21292777474783")
         for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)

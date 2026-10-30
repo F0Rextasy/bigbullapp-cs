@@ -64,14 +64,17 @@ class WebooProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Son Eklenenler" -> "https://weboo.com.tr/"
+            "Dublajlı Diziler" -> "https://weboo.com.tr/dublajli-diziler.php"
+            "Altyazılı Diziler" -> "https://weboo.com.tr/altyazili-diziler.php"
+            "İngilizce Diziler" -> "https://weboo.com.tr/ingilizce-diziler.php"
+            "Aslanlar ailesinin sırları" -> "https://weboo.com.tr/dizi-talep.php"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Son Eklenenler")) {
+            if (request.name in listOf("Dublajlı Diziler", "Altyazılı Diziler", "İngilizce Diziler", "Aslanlar ailesinin sırları")) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -80,7 +83,7 @@ class WebooProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Son Eklenenler")
+        val ROWS = listOf("Dublajlı Diziler", "Altyazılı Diziler", "İngilizce Diziler", "Aslanlar ailesinin sırları")
     }
 
     private val pathPrefixes = listOf("/dizi/")
