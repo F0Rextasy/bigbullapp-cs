@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-30",
-  "note": "55 TR modül runner benchmark (2026-10-30)",
+  "note": "56 TR modül runner benchmark (2026-10-30)",
   "modules": [
     {
       "module": "AnimeciX",
@@ -205,6 +205,12 @@
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=1, ep=0",
       "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Filmizleya",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "autopilot.py 2026-10-30"
     },
     {
       "module": "FilmModu",
