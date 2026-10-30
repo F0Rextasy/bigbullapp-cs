@@ -13,7 +13,7 @@ import com.lagradost.cloudstream3.SearchResponseList
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newAnimeSearchResponse
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
@@ -47,11 +47,15 @@ class AnimeciXProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.Anime)
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/secure/last-episodes?perPage=10" to "Son Bölümler",
-        "$mainUrl/secure/titles?type=series&onlyStreamable=true&perPage=16" to "Seriler",
-        "$mainUrl/secure/titles?type=movie&onlyStreamable=true&perPage=16" to "Filmler",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Bölümler" -> MainPageData(name, "$mainUrl/secure/last-episodes?perPage=10")
+            "Seriler" -> MainPageData(name, "$mainUrl/secure/titles?type=series&onlyStreamable=true&perPage=16")
+            "Filmler" -> MainPageData(name, "$mainUrl/secure/titles?type=movie&onlyStreamable=true&perPage=16")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val body = api("${request.data}&page=$page")
@@ -231,6 +235,13 @@ class AnimeciXProvider : MainAPI() {
     private fun uaHeaders() = mapOf("User-Agent" to UA)
 
     companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf(
+            "Son Bölümler",
+            "Seriler",
+            "Filmler",
+        )
+
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
         private const val TAU_HOST = "https://tau-video.xyz"

@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "HDFilmizle — Full HD film ve yabancı dizi arşivi (hdfilmizle.ink)"

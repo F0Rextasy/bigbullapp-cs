@@ -15,7 +15,7 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
@@ -50,18 +50,22 @@ class LoveFilmProvider : MainAPI() {
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/page/SAYFA/" to "Son Eklenen Filmler",
-        "$mainUrl/turkce-dublaj/page/SAYFA/" to "Türkçe Dublaj",
-        "$mainUrl/turkce-altyazili/page/SAYFA/" to "Türkçe Altyazılı",
-        "$mainUrl/yerli-film/page/SAYFA/" to "Yerli Filmler",
-        "$mainUrl/aksiyon/page/SAYFA/" to "Aksiyon",
-        "$mainUrl/dram/page/SAYFA/" to "Dram",
-        "$mainUrl/komedi/page/SAYFA/" to "Komedi",
-        "$mainUrl/korku/page/SAYFA/" to "Korku",
-        "$mainUrl/bilim-kurgu/page/SAYFA/" to "Bilim Kurgu",
-        "$mainUrl/yapim/2026/page/SAYFA/" to "2026 Filmleri",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Eklenen Filmler" -> MainPageData(name, "$mainUrl/page/SAYFA/")
+            "Türkçe Dublaj" -> MainPageData(name, "$mainUrl/turkce-dublaj/page/SAYFA/")
+            "Türkçe Altyazılı" -> MainPageData(name, "$mainUrl/turkce-altyazili/page/SAYFA/")
+            "Yerli Filmler" -> MainPageData(name, "$mainUrl/yerli-film/page/SAYFA/")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/aksiyon/page/SAYFA/")
+            "Dram" -> MainPageData(name, "$mainUrl/dram/page/SAYFA/")
+            "Komedi" -> MainPageData(name, "$mainUrl/komedi/page/SAYFA/")
+            "Korku" -> MainPageData(name, "$mainUrl/korku/page/SAYFA/")
+            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/bilim-kurgu/page/SAYFA/")
+            "2026 Filmleri" -> MainPageData(name, "$mainUrl/yapim/2026/page/SAYFA/")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = uaHeaders).document
@@ -247,6 +251,20 @@ class LoveFilmProvider : MainAPI() {
             .substringBefore('.').replaceFirstChar { it.uppercase() }.ifBlank { name }
 
     companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf(
+            "Son Eklenen Filmler",
+            "Türkçe Dublaj",
+            "Türkçe Altyazılı",
+            "Yerli Filmler",
+            "Aksiyon",
+            "Dram",
+            "Komedi",
+            "Korku",
+            "Bilim Kurgu",
+            "2026 Filmleri",
+        )
+
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =

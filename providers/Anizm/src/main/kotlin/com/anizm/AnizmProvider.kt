@@ -13,7 +13,7 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.amap
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newTvSeriesLoadResponse
@@ -43,9 +43,13 @@ class AnizmProvider : MainAPI() {
     )
     private val ajaxHeaders = uaHeaders + mapOf("X-Requested-With" to "XMLHttpRequest")
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/arama?sayfa=SAYFA" to "Katalog",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Katalog" -> MainPageData(name, "$mainUrl/arama?sayfa=SAYFA")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = uaHeaders).document
@@ -248,6 +252,9 @@ class AnizmProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf("Katalog")
+
         private const val MAX_LINKS = 4
         private const val MAX_MIRRORS = 10
         private const val UA =

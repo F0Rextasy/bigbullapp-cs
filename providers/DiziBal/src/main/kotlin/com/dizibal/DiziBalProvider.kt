@@ -61,7 +61,7 @@ class DiziBalProvider : MainAPI() {
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 
-    override val mainPage = mainPageOf(
+    override val mainPage get() = mainPageOf(
         "$mainUrl/diziler?page=SAYFA" to "Popüler Diziler",
         "$mainUrl/diziler?sirala=yeni&page=SAYFA" to "Son Eklenenler",
         "$mainUrl/diziler?sirala=puan&page=SAYFA" to "En Yüksek Puan",
@@ -74,7 +74,7 @@ class DiziBalProvider : MainAPI() {
         "$mainUrl/diziler?tur=macera&page=SAYFA" to "Macera",
         "$mainUrl/diziler?tur=belgesel&page=SAYFA" to "Belgesel",
         "$mainUrl/filmler?page=SAYFA" to "Filmler",
-    )
+    ).filter { Settings.rowEnabled(it.name) }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = uaHeaders).document
@@ -318,6 +318,11 @@ class DiziBalProvider : MainAPI() {
         text?.substringBefore('/')?.trim()?.replace(',', '.')?.toDoubleOrNull()?.let { Score.from10(it) }
 
     companion object {
+        /** Ana sayfa satırları; ayarlardan kapatılabilir. */
+        val ROWS = listOf(
+            "Popüler Diziler", "Son Eklenenler", "En Yüksek Puan", "Dram", "Aksiyon",
+            "Komedi", "Bilim Kurgu", "Gizem", "Suç", "Macera", "Belgesel", "Filmler",
+        )
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =

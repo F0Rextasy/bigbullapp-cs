@@ -9,6 +9,6 @@ class AnizmPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(AnizmProvider())
-        this.openSettings = { Settings.showDialog(it, "Anizm Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "Anizm Ayarları", AnizmProvider.ROWS) }
     }
 }

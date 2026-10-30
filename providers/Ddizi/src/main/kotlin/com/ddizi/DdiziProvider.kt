@@ -31,10 +31,10 @@ class DdiziProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.TvSeries)
 
-    override val mainPage = mainPageOf(
+    override val mainPage get() = mainPageOf(
         "$mainUrl/yabanci-dizi-izle" to "Yabancı Diziler",
         "$mainUrl/eski.diziler" to "Eski Diziler",
-    )
+    ).filter { Settings.rowEnabled(it.name) }
 
     private val uaHeaders = mapOf(
         "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
@@ -230,6 +230,8 @@ class DdiziProvider : MainAPI() {
         img.attr("data-src").ifBlank { img.attr("src") }.trim().takeIf { it.isNotBlank() }?.let { fixUrl(it) }
 
     companion object {
+        /** Ana sayfa satırları; ayarlardan kapatılabilir. */
+        val ROWS = listOf("Yabancı Diziler", "Eski Diziler")
         private val YOUTUBE_ID = Regex("""(?:[?&]v=|youtu\.be/|/embed/|/shorts/)([\w-]{11})""")
         private val SEASON = Regex("""(\d+)\.\s*Sezon""")
         private val EPISODE = Regex("""(\d+)\.\s*Bölüm""")

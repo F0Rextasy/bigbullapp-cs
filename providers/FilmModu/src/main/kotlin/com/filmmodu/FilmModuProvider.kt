@@ -6,6 +6,7 @@ import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
 import com.lagradost.cloudstream3.MainAPI
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SearchResponse
@@ -13,7 +14,6 @@ import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
@@ -46,11 +46,15 @@ class FilmModuProvider : MainAPI() {
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/filmler?page=SAYFA" to "Filmler",
-        "$mainUrl/filmler?sirala=yeni&page=SAYFA" to "En Yeni",
-        "$mainUrl/filmler?sirala=puan&page=SAYFA" to "En Yüksek Puan",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Filmler" -> MainPageData(name, "$mainUrl/filmler?page=SAYFA")
+            "En Yeni" -> MainPageData(name, "$mainUrl/filmler?sirala=yeni&page=SAYFA")
+            "En Yüksek Puan" -> MainPageData(name, "$mainUrl/filmler?sirala=puan&page=SAYFA")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = uaHeaders).document
@@ -171,6 +175,9 @@ class FilmModuProvider : MainAPI() {
             .mapNotNull { array.optJSONObject(it)?.optString("name")?.takeIf { s -> s.isNotBlank() } }
 
     companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf("Filmler", "En Yeni", "En Yüksek Puan")
+
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val CARD = "a[class*=group][href*='/film/']"

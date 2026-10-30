@@ -95,7 +95,10 @@ class DiziboxProvider : MainAPI() {
             .filter { it.isNotBlank() }.joinToString(" - ")
             .ifBlank { anchor.attr("title") }
         return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-            this.posterUrl = fixUrlNull(selectFirst("img")?.attr("src"))
+            val img = selectFirst("img")
+            this.posterUrl = fixUrlNull(
+                img?.attr("data-src")?.takeIf { it.isNotBlank() } ?: img?.attr("src")
+            )
         }
     }
 
@@ -108,7 +111,10 @@ class DiziboxProvider : MainAPI() {
         val anchor = selectFirst("h3 a") ?: return null
         val href = fixUrlNull(anchor.attr("href")) ?: return null
         return newTvSeriesSearchResponse(anchor.text().trim(), href, TvType.TvSeries) {
-            this.posterUrl = fixUrlNull(selectFirst("figure img")?.attr("src"))
+            val img = selectFirst("figure img")
+            this.posterUrl = fixUrlNull(
+                img?.attr("data-src")?.takeIf { it.isNotBlank() } ?: img?.attr("src")
+            )
         }
     }
 

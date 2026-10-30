@@ -9,6 +9,6 @@ class AnimeciXPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(AnimeciXProvider())
-        this.openSettings = { Settings.showDialog(it, "AnimeciX Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "AnimeciX Ayarları", AnimeciXProvider.ROWS) }
     }
 }

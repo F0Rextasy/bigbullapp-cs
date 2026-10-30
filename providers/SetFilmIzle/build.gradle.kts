@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "SetFilmIzle — Türkçe dublaj & altyazılı film ve dizi arşivi (setfilmizle.ltd)"

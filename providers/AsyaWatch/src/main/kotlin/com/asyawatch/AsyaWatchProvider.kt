@@ -14,7 +14,7 @@ import com.lagradost.cloudstream3.SearchResponseList
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
@@ -56,10 +56,14 @@ class AsyaWatchProvider : MainAPI() {
         "X-Requested-With" to "XMLHttpRequest",
     )
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/dizi-izle" to "Son Bölümler",
-        "$mainUrl/film-izle" to "Son Filmler",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Bölümler" -> MainPageData(name, "$mainUrl/dizi-izle")
+            "Son Filmler" -> MainPageData(name, "$mainUrl/film-izle")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val movies = request.data.contains("film")
@@ -375,6 +379,12 @@ class AsyaWatchProvider : MainAPI() {
     private data class Play(val url: String, val label: String, val quality: Int, val referer: String)
 
     companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf(
+            "Son Bölümler",
+            "Son Filmler",
+        )
+
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val PAGE_SIZE = 18

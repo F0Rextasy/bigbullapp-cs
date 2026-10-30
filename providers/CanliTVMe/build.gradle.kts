@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "CanliTVMe — Türkçe canlı TV kanalları (canlitv.me / canlitvizle.tv)"

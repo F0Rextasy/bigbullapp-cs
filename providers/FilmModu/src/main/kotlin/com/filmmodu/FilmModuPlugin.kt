@@ -9,6 +9,6 @@ class FilmModuPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(FilmModuProvider())
-        this.openSettings = { Settings.showDialog(it, "Filmmodu Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "Filmmodu Ayarları", FilmModuProvider.ROWS) }
     }
 }

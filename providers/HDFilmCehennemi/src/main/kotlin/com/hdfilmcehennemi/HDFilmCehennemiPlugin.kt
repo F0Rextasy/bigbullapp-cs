@@ -9,6 +9,6 @@ class HDFilmCehennemiPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(HDFilmCehennemiProvider())
-        this.openSettings = { Settings.showDialog(it, "HDFilmCehennemi Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "HDFilmCehennemi Ayarları", HDFilmCehennemiProvider.ROWS) }
     }
 }

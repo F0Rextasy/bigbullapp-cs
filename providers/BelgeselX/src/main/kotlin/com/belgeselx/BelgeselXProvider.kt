@@ -11,7 +11,7 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newTvSeriesLoadResponse
@@ -37,13 +37,17 @@ class BelgeselXProvider : MainAPI() {
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.TvSeries)
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/son-eklenenler" to "Son Eklenenler",
-        "$mainUrl/en-cok-izlenen-belgeseller" to "En Çok İzlenen",
-        "$mainUrl/konu/bilim-belgeselleri" to "Bilim",
-        "$mainUrl/konu/doga-belgeselleri" to "Doğa",
-        "$mainUrl/konu/tarih-belgeselleri" to "Tarih",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Eklenenler" -> MainPageData(name, "$mainUrl/son-eklenenler")
+            "En Çok İzlenen" -> MainPageData(name, "$mainUrl/en-cok-izlenen-belgeseller")
+            "Bilim" -> MainPageData(name, "$mainUrl/konu/bilim-belgeselleri")
+            "Doğa" -> MainPageData(name, "$mainUrl/konu/doga-belgeselleri")
+            "Tarih" -> MainPageData(name, "$mainUrl/konu/tarih-belgeselleri")
+            else -> null
+        }
+    }
 
     private suspend fun get(url: String, referer: String? = null, followRedirects: Boolean = true) =
         app.get(url, referer = referer ?: "$mainUrl/", headers = UA, allowRedirects = followRedirects)
@@ -277,6 +281,15 @@ class BelgeselXProvider : MainAPI() {
     private var sitemap: Pair<Long, List<String>>? = null
 
     companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf(
+            "Son Eklenenler",
+            "En Çok İzlenen",
+            "Bilim",
+            "Doğa",
+            "Tarih",
+        )
+
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
         private const val SEARCH_LIMIT = 8

@@ -9,6 +9,6 @@ class SetFilmIzlePlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(SetFilmIzleProvider())
-        this.openSettings = { Settings.showDialog(it, "SetFilmIzle Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "SetFilmIzle Ayarları", SetFilmIzleProvider.ROWS) }
     }
 }

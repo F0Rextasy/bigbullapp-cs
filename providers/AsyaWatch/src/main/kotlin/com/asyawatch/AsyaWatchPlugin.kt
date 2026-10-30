@@ -9,6 +9,6 @@ class AsyaWatchPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(AsyaWatchProvider())
-        this.openSettings = { Settings.showDialog(it, "AsyaWatch Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "AsyaWatch Ayarları", AsyaWatchProvider.ROWS) }
     }
 }

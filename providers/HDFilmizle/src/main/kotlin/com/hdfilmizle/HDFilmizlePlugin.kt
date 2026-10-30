@@ -9,6 +9,6 @@ class HDFilmizlePlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(HDFilmizleProvider())
-        this.openSettings = { Settings.showDialog(it, "HDFilmizle Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "HDFilmizle Ayarları", HDFilmizleProvider.ROWS) }
     }
 }

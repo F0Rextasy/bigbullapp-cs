@@ -11,7 +11,7 @@ import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newTvSeriesLoadResponse
@@ -34,13 +34,17 @@ class KoreanTurkProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.TvSeries)
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/" to "Yeni Bölümler",
-        "$mainUrl/dizi-arsivi/" to "Dizi Arşivi",
-        "$mainUrl/dizi-kategori/romantik-dizileri-izle/" to "Romantik",
-        "$mainUrl/dizi-kategori/aksiyon-dizileri-izle/" to "Aksiyon",
-        "$mainUrl/dizi-kategori/komedi-dizileri-izle/" to "Komedi",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Yeni Bölümler" -> MainPageData(name, "$mainUrl/")
+            "Dizi Arşivi" -> MainPageData(name, "$mainUrl/dizi-arsivi/")
+            "Romantik" -> MainPageData(name, "$mainUrl/dizi-kategori/romantik-dizileri-izle/")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/dizi-kategori/aksiyon-dizileri-izle/")
+            "Komedi" -> MainPageData(name, "$mainUrl/dizi-kategori/komedi-dizileri-izle/")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val url = when {
@@ -170,6 +174,9 @@ class KoreanTurkProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf("Yeni Bölümler", "Dizi Arşivi", "Romantik", "Aksiyon", "Komedi")
+
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

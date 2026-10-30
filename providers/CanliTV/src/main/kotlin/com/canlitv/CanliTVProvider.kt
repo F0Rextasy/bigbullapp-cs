@@ -4,11 +4,11 @@ import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.MainAPI
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
-import com.lagradost.cloudstream3.mainPageOf
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newLiveSearchResponse
 import com.lagradost.cloudstream3.newLiveStreamLoadResponse
@@ -21,14 +21,17 @@ class CanliTVProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.Live)
 
-    // Pair is (playlist group-title, display name); the groups are the ones present in the list.
-    override val mainPage = mainPageOf(
-        "General" to "Ulusal",
-        "News" to "Haber",
-        "Sports" to "Spor",
-        "Kids" to "Çocuk",
-        "Music" to "Müzik",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Ulusal" -> MainPageData(name, "General")
+            "Haber" -> MainPageData(name, "News")
+            "Spor" -> MainPageData(name, "Sports")
+            "Çocuk" -> MainPageData(name, "Kids")
+            "Müzik" -> MainPageData(name, "Music")
+            else -> null
+        }
+    }
 
     private var channels: List<Channel>? = null
 
@@ -111,6 +114,9 @@ class CanliTVProvider : MainAPI() {
     )
 
     companion object {
+        /** Homepage rows in display order; each maps to a playlist group-title. */
+        val ROWS = listOf("Ulusal", "Haber", "Spor", "Çocuk", "Müzik")
+
         private val ATTR = Regex("""([\w-]+)="([^"]*)"""")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"

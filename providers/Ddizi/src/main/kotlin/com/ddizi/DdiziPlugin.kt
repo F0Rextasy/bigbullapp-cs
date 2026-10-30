@@ -9,6 +9,6 @@ class DdiziPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(DdiziProvider())
-        this.openSettings = { Settings.showDialog(it, "Ddizi Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "Ddizi Ayarları", DdiziProvider.ROWS) }
     }
 }

@@ -15,7 +15,7 @@ import com.lagradost.cloudstream3.TrailerData
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newSearchResponseList
@@ -46,7 +46,13 @@ class AsyaAnimeleriProvider : MainAPI() {
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.Anime, TvType.Movie)
 
-    override val mainPage = mainPageOf("$mainUrl/series/" to "Son Eklenenler")
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Eklenenler" -> MainPageData(name, "$mainUrl/series/")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         // `/series/page/N/` repeats the newest 20 (page 2 == page 1), so there is no next page.
@@ -278,6 +284,9 @@ class AsyaAnimeleriProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf("Son Eklenenler")
+
         private const val BROWSER_UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
                 "Chrome/130.0.0.0 Safari/537.36"

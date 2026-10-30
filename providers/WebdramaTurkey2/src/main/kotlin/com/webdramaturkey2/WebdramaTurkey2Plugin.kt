@@ -9,6 +9,6 @@ class WebdramaTurkey2Plugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(WebdramaTurkey2Provider())
-        this.openSettings = { Settings.showDialog(it, "WebdramaTurkey2 Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "WebdramaTurkey2 Ayarları", WebdramaTurkey2Provider.ROWS) }
     }
 }

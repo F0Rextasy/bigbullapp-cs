@@ -13,7 +13,7 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
@@ -40,11 +40,15 @@ class JetFilmizleProvider : MainAPI() {
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.Movie)
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/filmler/sayfa-SAYFA" to "Son Eklenenler",
-        "$mainUrl/turkce-dublaj/sayfa-SAYFA" to "Türkçe Dublaj",
-        "$mainUrl/turkce-altyazili/sayfa-SAYFA" to "Türkçe Altyazılı",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        when (name) {
+            "Son Eklenenler" -> MainPageData(name, "$mainUrl/filmler/sayfa-SAYFA")
+            "Türkçe Dublaj" -> MainPageData(name, "$mainUrl/turkce-dublaj/sayfa-SAYFA")
+            "Türkçe Altyazılı" -> MainPageData(name, "$mainUrl/turkce-altyazili/sayfa-SAYFA")
+            else -> null
+        }
+    }
 
     override suspend fun getMainPage(page: Int, request: com.lagradost.cloudstream3.MainPageRequest): com.lagradost.cloudstream3.HomePageResponse {
         val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = uaHeaders).document
@@ -369,6 +373,9 @@ class JetFilmizleProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage rows in display order; all map to live listing pages. */
+        val ROWS = listOf("Son Eklenenler", "Türkçe Dublaj", "Türkçe Altyazılı")
+
         // shortcut: moviesapi.to oynatıcı paketindeki sabit anahtar; 401 alınırsa paketten yenilenmeli.
         private const val MOVIESAPI_KEY =
             "3a67e8866ae1d2bb9e81fe7f73315a56eb3bdf5e3e755c7554c8be6910aa6b13"

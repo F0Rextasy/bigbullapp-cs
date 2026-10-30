@@ -13,7 +13,7 @@ import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.mainPageOf
+import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
@@ -45,17 +45,22 @@ class SinemaCXProvider : MainAPI() {
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 
-    override val mainPage = mainPageOf(
-        "$mainUrl/page/SAYFA/" to "Son Eklenen Filmler",
-        "$mainUrl/tur/aksiyon-filmleri/page/SAYFA/" to "Aksiyon",
-        "$mainUrl/tur/komedi-filmleri/page/SAYFA/" to "Komedi",
-        "$mainUrl/tur/korku-filmleri/page/SAYFA/" to "Korku",
-        "$mainUrl/tur/bilim-kurgu-filmleri/page/SAYFA/" to "Bilim Kurgu",
-        "$mainUrl/tur/animasyon-filmleri/page/SAYFA/" to "Animasyon",
-        "$mainUrl/tur/gerilim-filmleri/page/SAYFA/" to "Gerilim",
-        "$mainUrl/tur/dram-filmleri/page/SAYFA/" to "Dram",
-        "$mainUrl/tur/belgesel/page/SAYFA/" to "Belgesel",
-    )
+    override val mainPage get() = ROWS.mapNotNull { name ->
+        if (!Settings.rowEnabled(name)) return@mapNotNull null
+        val data = when (name) {
+            "Son Eklenen Filmler" -> "$mainUrl/page/SAYFA/"
+            "Aksiyon" -> "$mainUrl/tur/aksiyon-filmleri/page/SAYFA/"
+            "Komedi" -> "$mainUrl/tur/komedi-filmleri/page/SAYFA/"
+            "Korku" -> "$mainUrl/tur/korku-filmleri/page/SAYFA/"
+            "Bilim Kurgu" -> "$mainUrl/tur/bilim-kurgu-filmleri/page/SAYFA/"
+            "Animasyon" -> "$mainUrl/tur/animasyon-filmleri/page/SAYFA/"
+            "Gerilim" -> "$mainUrl/tur/gerilim-filmleri/page/SAYFA/"
+            "Dram" -> "$mainUrl/tur/dram-filmleri/page/SAYFA/"
+            "Belgesel" -> "$mainUrl/tur/belgesel/page/SAYFA/"
+            else -> return@mapNotNull null
+        }
+        MainPageData(name, data)
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = uaHeaders).document
@@ -224,6 +229,18 @@ class SinemaCXProvider : MainAPI() {
     }
 
     companion object {
+        /** Homepage rows in display order. */
+        val ROWS = listOf(
+            "Son Eklenen Filmler",
+            "Aksiyon",
+            "Komedi",
+            "Korku",
+            "Bilim Kurgu",
+            "Animasyon",
+            "Gerilim",
+            "Dram",
+            "Belgesel",
+        )
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =

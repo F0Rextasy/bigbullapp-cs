@@ -9,6 +9,6 @@ class KoreanTurkPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(KoreanTurkProvider())
-        this.openSettings = { Settings.showDialog(it, "KoreanTurk Ayarları") }
+        this.openSettings = { Settings.showDialog(it, "KoreanTurk Ayarları", KoreanTurkProvider.ROWS) }
     }
 }

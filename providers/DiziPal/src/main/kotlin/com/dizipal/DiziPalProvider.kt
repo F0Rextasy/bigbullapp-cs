@@ -64,7 +64,7 @@ class DiziPalProvider : MainAPI() {
     /** Yalnız bu iki bölüm `?page=N` ile sayfalanıyor; diğerleri tek istekte tüm listeyi verir. */
     private val pagedSections = setOf("$mainUrl/yabanci-dizi-izle", "$mainUrl/film-izle")
 
-    override val mainPage = mainPageOf(
+    override val mainPage get() = mainPageOf(
         "$mainUrl/yabanci-dizi-izle" to "Yeni Diziler",
         "$mainUrl/film-izle" to "Yeni Filmler",
         "$mainUrl/trendler" to "Trendler",
@@ -72,7 +72,7 @@ class DiziPalProvider : MainAPI() {
         "$mainUrl/platform-bolumler/netflix" to "Netflix",
         "$mainUrl/platform-bolumler/prime" to "Amazon Prime",
         "$mainUrl/platform-bolumler/disneyplus" to "Disney+",
-    )
+    ).filter { Settings.rowEnabled(it.name) }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val paged = request.data in pagedSections
@@ -506,6 +506,11 @@ class DiziPalProvider : MainAPI() {
         if (this == null) emptyList() else (0 until length()).mapNotNull { optJSONObject(it) }
 
     companion object {
+        /** Ana sayfa satırları; ayarlardan kapatılabilir. */
+        val ROWS = listOf(
+            "Yeni Diziler", "Yeni Filmler", "Trendler", "Keşfet",
+            "Netflix", "Amazon Prime", "Disney+",
+        )
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =
