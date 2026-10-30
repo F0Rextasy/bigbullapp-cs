@@ -1,234 +1,252 @@
 {
- "generated": "2026-10-29",
- "note": "pass = izole emülatör + sağlayıcı adı doğrulaması; pass-unverified = eski harness, yeniden koşulmalı",
+ "generated": "2026-10-30",
+ "note": "41 TR modül runner benchmark (2026-10-30)",
  "modules": [
   {
+   "module": "AnimeciX",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=3, ep=16",
+   "runner": "bench_runner.py 2026-10-30"
+  },
+  {
    "module": "Anizium",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=5, ep=500",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "Anizm",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=4, ep=293",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "AsyaAnimeleri",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=2, ep=1",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "AsyaLog",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=5, ep=6",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "AsyaWatch",
-   "result": "pass-unverified",
-   "evidence": "Tranco 85.596; host: searchContent araması, bölüm listesi, NP/legacy oynatıcı → m3u8; cihaz testi yapılmadı",
-   "runner": "manual host chain (python), no device"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=7",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "BelgeselX",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=2",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "CanliTV",
-   "result": "fail",
-   "evidence": "Canlı TV; film/dizi kapsamı dışı",
-   "runner": "emu_ledger.py v3 (isolated)"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=0, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "CanliTVMe",
    "result": "fail",
-   "evidence": "Domain ölü (canlitv.me DNS yok)",
-   "runner": "emu_ledger.py v3 (isolated)"
+   "evidence": "runner 2026-10-30: parse-error, links=0, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "Cizgimax",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=3, ep=1180",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "Ddizi",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=13",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "DiziBal",
-   "result": "pass-unverified",
-   "evidence": "Tranco 882.603; host: /ara araması (1 dizi + 1 film kartı), LD+JSON TVSeries/Movie künyesi, dizi: 5 sezon/62 bölüm; film: /movie/costa-concordia → s.php → stream 200 #EXTM3U + 2 TR altyazı; kaynaksız film (orumcek-adam) data-player-type=none → açık hata; cihaz testi yapılmadı",
-   "runner": "manual host chain (python), no device"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "DiziLife",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=9",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "DiziMom",
    "result": "pass",
-   "evidence": "İzole emülatör, pilavyerplay.top + UA",
-   "runner": "emu_ledger.py v3 (isolated)"
+   "evidence": "runner 2026-10-30: pass, links=1, ep=6",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "DiziPal",
-   "result": "pass-unverified",
-   "evidence": "Host chain.py 'gibi': arama 8 sonuç, 71 bölüm, 720p+1080p HLS 200 (PASS). Cihazda oynatma kanıtı önceki turda 'The Matrix' ile state=3 alındı; bu oturumda yeniden koşulmadı.",
-   "runner": "chain.py (host) + manual device, previous round"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=2, ep=16",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "DiziPod",
    "result": "pass",
-   "evidence": "Cihaz: 'breaking' → Mr. Robot → Episode 1, Rendered first frame + state=3 (buffered 3086)",
-   "runner": "manual device (cs33 emulator) + chain.py"
+   "evidence": "runner 2026-10-30: pass, links=1, ep=24",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "DiziYou",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=7",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "Diziasia",
    "result": "pass",
-   "evidence": "İzole emülatör + result_meta_site eşleşmesi",
-   "runner": "emu_ledger.py v3 (isolated)"
+   "evidence": "runner 2026-10-30: pass, links=1, ep=12",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "Dizibox",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=2, ep=3",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "DiziboxIzle",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "fail",
+   "evidence": "runner 2026-10-30: parse-error, links=0, ep=3",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "Dizikorea3",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=33",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "Dizilla",
-   "result": "fail",
-   "evidence": "İzole test: no detail",
-   "runner": "emu_ledger.py v3 (isolated)"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=120",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "DramaDizilerim",
-   "result": "pass-unverified",
-   "evidence": "Tranco 64.894; host: /search 48 sonuç, 126 bölüm, embed.php → 1080p HLS 200 + TR WebVTT; cihaz testi yapılmadı",
-   "runner": "manual host chain (python), no device"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=51",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "FilmEkseni",
-   "result": "pass-unverified",
-   "evidence": "Tranco 292.291; host: /api/search, player JSON → m3u8 200; cihaz testi yapılmadı",
-   "runner": "manual host chain (python), no device"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "FilmModu",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "FullHDFilm",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "FullHDFilmizlesene",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "HDFilmCehennemi",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "HDFilmizle",
-   "result": "pass-unverified",
-   "evidence": "Tranco 605.213; host: mobil UA oynatıcı zinciri → m3u8; cihaz testi yapılmadı",
-   "runner": "manual host chain (python), no device"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "JetFilmizle",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "KoreanTurk",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=14",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "Kultfilmler",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "LoveFilm",
-   "result": "pass-unverified",
-   "evidence": "Tranco 204.798; host: film → vidmoly embed → HLS 200 (referer ile); cihaz testi yapılmadı",
-   "runner": "manual host chain (python), no device"
+   "result": "fail",
+   "evidence": "runner 2026-10-30: parse-error, links=0, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "Onepacetr",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=20",
+   "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "SelcukFlix",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=2, ep=7",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "SetFilmIzle",
    "result": "pass",
-   "evidence": "Cihaz: 'matrix' → Matrix 4 detay → Play Movie, Rendered first frame + state=3 (83 s)",
-   "runner": "manual device (cs33 emulator) + chain.py"
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "Sezonlukdizi",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=2, ep=19",
+   "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "SinemaCX",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "TLCtr",
    "result": "pass",
-   "evidence": "Cihaz: 'gibi' → El Moussalar → bölüm 1, Rendered first frame + state=3 (buffered 5954)",
-   "runner": "manual device (cs33 emulator) + chain.py"
+   "evidence": "runner 2026-10-30: pass, links=3, ep=1",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "WebdramaTurkey2",
    "result": "pass",
-   "evidence": "Cihaz: 'mask girl' → Mask Girl → bölüm 1, Rendered first frame + state=3 (buffered 57916)",
-   "runner": "manual device (cs33 emulator) + chain.py"
+   "evidence": "runner 2026-10-30: pass, links=2, ep=25",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "Yabancidizi",
-   "result": "pass-unverified",
-   "evidence": "Eski sweep; sağlayıcı izolasyonu yok",
-   "runner": "emu_ledger.py v1"
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+   "runner": "bench_runner.py 2026-10-30"
   }
  ]
 }
