@@ -36,6 +36,8 @@ omp-md-placeholder
 /tools/revive-suggestions.md
 /tools/history.jsonl
 /tools/dashboard.html
+# local QA runner / bot tooling is never published
+/tools/jvm-runner/
 *.har
 
 # Python
