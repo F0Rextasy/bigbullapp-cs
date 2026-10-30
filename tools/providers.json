@@ -1205,6 +1205,26 @@
    "checked": "2026-10-30T11:50:29Z",
    "latencyMs": 0,
    "module": "HDFilmDiziIzle"
+  },
+  "rarefilmm.com": {
+   "id": "rarefilmm-com",
+   "name": "RareFilmm",
+   "mainUrl": "https://rarefilmm.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "Malevil",
+   "language": "tr",
+   "tvTypes": [
+    "Movie"
+   ],
+   "poolNames": [
+    "RareFilmm"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T12:26:33Z",
+   "latencyMs": 0,
+   "module": "RareFilmm"
   }
  }
 }
