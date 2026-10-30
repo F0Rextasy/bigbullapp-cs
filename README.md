@@ -109,6 +109,7 @@ Tek modül derleme ve cihaza kurulum:
 | `DramaDizilerim` **beta** | dramadizilerim.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
 | `FilmEkseni` **beta** | filmekseni.vip | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `Filmizleya` **beta** | filmizleya.com | Film | — | — | — | — | — | — |
+| `Filmizyon` **beta** | filmizyon.net | Film | — | — | — | — | — | — |
 | `FilmModu` **beta** | filmmodu.news | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `FullHDFilm` **beta** | fullhdfilmizlebox.vip | Film | — | — | — | — | — | ✓ |
 | `FullHDFilmizlesene` **beta** | fullhdfilmizlesene.now | Film | — | — | ✓ | — | — | ✓ |
@@ -163,7 +164,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          60 modül
+  Yabancidizi/          61 modül
 ```
 
 ## Geliştirme

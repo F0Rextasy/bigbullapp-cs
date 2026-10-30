@@ -1125,6 +1125,26 @@
    "checked": "2026-10-30T06:34:24Z",
    "latencyMs": 0,
    "module": "BirAsyaDizi"
+  },
+  "filmizyon.net": {
+   "id": "filmizyon-net",
+   "name": "Filmizyon",
+   "mainUrl": "https://www.filmizyon.net",
+   "status": "implemented",
+   "http": 200,
+   "title": "Sisu 2, Sisu: Road to Revenge",
+   "language": "tr",
+   "tvTypes": [
+    "Movie"
+   ],
+   "poolNames": [
+    "Filmizyon"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-10-30T06:50:49Z",
+   "latencyMs": 0,
+   "module": "Filmizyon"
   }
  }
 }
