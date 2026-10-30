@@ -30,12 +30,13 @@ jobs:
           SUBJECT=$(git log -1 --pretty=%s)
           CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD -- providers \
             | cut -d/ -f2 | sort -u)
+          NL=$'\n'
           DETAILS=""
           for M in $CHANGED; do
             V=$(grep -m1 -o 'version[[:space:]]*=[[:space:]]*[0-9]\+' "providers/$M/build.gradle.kts" 2>/dev/null | grep -o '[0-9]\+' || true)
             E=$(grep -m1 "\\*\\*$M v" CHANGELOG.md || true)
-            [ -n "$E" ] && DETAILS="${DETAILS}${E}\n"
-            [ -n "$V" ] && DETAILS="${DETAILS}   (modül v${V})\n"
+            [ -n "$E" ] && DETAILS="${DETAILS}${E}${NL}"
+            [ -n "$V" ] && DETAILS="${DETAILS}   (modül v${V})${NL}"
           done
           TEXT=$(printf '🚀 Güncelleme: %s\n📦 BigBullApp\n%s' "$SUBJECT" "$DETAILS")
           curl -sf -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
