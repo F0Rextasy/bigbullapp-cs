@@ -29,6 +29,7 @@ import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONArray
+import org.json.JSONObject
 
 /**
  * DiziboxIzle — diziboxizle.com
@@ -236,28 +237,32 @@ class DiziboxIzleProvider : MainAPI() {
      * only unescapes `\&quot;`. Unescape before reading the `videos` array.
      */
     private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
-        val body = app.get(embed, referer = "$mainUrl/").text
-            .replace("&quot;", "\"")
-            .replace("\\\\", "\\")
-        val videos = Regex(""""videos"\s*:\s*(\[.*?])""", RegexOption.DOT_MATCHES_ALL)
-            .find(body)?.groupValues?.get(1) ?: return false
-
+        val id = Regex("""videoembed/(\d+)""").find(embed)?.groupValues?.get(1) ?: return false
+        val body = runCatching {
+            app.post(
+                "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
+                data = emptyMap(),
+                headers = mapOf(
+                    "User-Agent" to "Mozilla/5.0 (Linux; Android 13)",
+                    "Referer" to "https://ok.ru/",
+                ),
+            ).text
+        }.getOrNull() ?: return false
+        val json = runCatching { JSONObject(body) }.getOrNull() ?: return false
+        val videos = json.optJSONArray("videos") ?: return false
         var found = false
-        Regex(""""name"\s*:\s*"([^"]+)"\s*,\s*"url"\s*:\s*"([^"]+)"""")
-            .findAll(videos)
-            .forEach { match ->
-                val stream = match.groupValues[2]
-                    .replace("\\u0026", "&")
-                    .replace("\\/", "/")
-                    .let { if (it.startsWith("//")) "https:$it" else it }
-                callback.invoke(
-                    newExtractorLink(name, "OkRu ${match.groupValues[1]}", stream, INFER_TYPE) {
-                        this.referer = "https://ok.ru/"
-                        this.quality = getQualityFromName(match.groupValues[1].uppercase())
-                    }
-                )
-                found = true
-            }
+        for (i in 0 until videos.length()) {
+            val item = videos.optJSONObject(i) ?: continue
+            val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
+            val label = item.optString("name").ifBlank { "OkRu" }
+            callback.invoke(
+                newExtractorLink(name, "OkRu $label", stream, INFER_TYPE) {
+                    this.referer = "https://ok.ru/"
+                    this.quality = getQualityFromName(label.uppercase())
+                }
+            )
+            found = true
+        }
         return found
     }
 }
