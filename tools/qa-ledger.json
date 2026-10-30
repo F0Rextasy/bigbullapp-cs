@@ -52,8 +52,8 @@
   },
   {
    "module": "CanliTVMe",
-   "result": "fail",
-   "evidence": "runner 2026-10-30: parse-error, links=0, ep=0",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=0, ep=0",
    "runner": "bench_runner.py 2026-10-30"
   },
   {
@@ -118,8 +118,8 @@
   },
   {
    "module": "DiziboxIzle",
-   "result": "fail",
-   "evidence": "runner 2026-10-30: parse-error, links=0, ep=3",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=6, ep=6",
    "runner": "bench_runner.py 2026-10-30"
   },
   {
@@ -196,8 +196,8 @@
   },
   {
    "module": "LoveFilm",
-   "result": "fail",
-   "evidence": "runner 2026-10-30: parse-error, links=0, ep=0",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=0",
    "runner": "bench_runner.py 2026-10-30"
   },
   {
