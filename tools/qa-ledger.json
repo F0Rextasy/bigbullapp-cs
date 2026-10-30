@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-30",
-  "note": "61 TR modül runner benchmark (2026-10-30)",
+  "note": "64 TR modül runner benchmark (2026-10-30)",
   "modules": [
     {
       "module": "AnimeciX",
@@ -123,6 +123,12 @@
       "runner": "autopilot.py 2026-10-30"
     },
     {
+      "module": "DiziAbi",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=14",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
       "module": "DiziBal",
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=1, ep=0",
@@ -144,6 +150,12 @@
       "module": "Dizifon",
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=1, ep=2",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "Dizigom",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
       "runner": "autopilot.py 2026-10-30"
     },
     {
@@ -262,6 +274,12 @@
     },
     {
       "module": "HDFilmDelisi",
+      "result": "pass",
+      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "HDFilmDiziIzle",
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=1, ep=0",
       "runner": "autopilot.py 2026-10-30"

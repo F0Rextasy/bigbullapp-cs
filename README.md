@@ -91,10 +91,12 @@ Tek modül derleme ve cihaza kurulum:
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
 | `Ddizi` **beta** | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
 | `DDizimag` **beta** | ddizimag.com | Dizi | — | — | — | — | — | — |
+| `DiziAbi` **beta** | diziabi.net | Film | — | — | — | — | — | — |
 | `DiziBal` **beta** | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |
 | `DiziBoxTv` **beta** | diziboxtv.com | Dizi | — | — | — | — | — | — |
 | `DiziCaN` **beta** | dizican.cc | Dizi | — | — | — | — | — | — |
 | `Dizifon` **beta** | dizifon.cc | Dizi | — | — | — | — | — | — |
+| `Dizigom` **beta** | dizigom.news | Film | — | — | — | — | — | — |
 | `DiziLife` | dizi82.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
 | `Dizirella` **beta** | dizirella.one | Dizi | — | — | — | — | — | — |
 | `DiziYou` | diziyou.one | Dizi | — | — | ✓ | ✓ | — | ✓ |
@@ -115,6 +117,7 @@ Tek modül derleme ve cihaza kurulum:
 | `FullHDFilmizlesene` **beta** | fullhdfilmizlesene.now | Film | — | — | ✓ | — | — | ✓ |
 | `HDFilmCehennemi` **beta** | hdfilmcehennemi.nl | Film | — | — | — | — | — | — |
 | `HDFilmDelisi` **beta** | hdfilmdelisi.one | Film | ✓ | — | — | — | ✓ | ✓ |
+| `HDFilmDiziIzle` **beta** | hdfilmdiziizle.com | Film | — | — | — | — | — | — |
 | `HDFilmizle` **beta** | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `JetFilmizle` **beta** | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
 | `KoreanTurk` **beta** | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
@@ -164,7 +167,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          61 modül
+  Yabancidizi/          64 modül
 ```
 
 ## Geliştirme
