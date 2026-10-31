@@ -131,6 +131,7 @@ Tek modül derleme ve cihaza kurulum:
 | `SelcukFlix` **beta** | selcukflix.app | Dizi/Film | — | — | — | — | ✓ | ✓ |
 | `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `Sezonlukdizi` **beta** | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
+| `ShowTV` **beta** | showtv.com.tr | Dizi | — | — | — | — | — | — |
 | `SinemaCX` **beta** | sinemacc.com | Film | — | — | — | ✓ | ✓ | ✓ |
 | `Sinemakolik` **beta** | sinemakolik.com | Film | — | — | — | — | — | — |
 | `SonAnime` **beta** | sonanime.com | Dizi | — | — | — | — | — | — |
@@ -173,7 +174,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          70 modül
+  Yabancidizi/          71 modül
 ```
 
 ## Geliştirme
