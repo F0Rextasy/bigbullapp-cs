@@ -68,3 +68,9 @@ AGENTS.md
 /tools/scratch/
 /tools/local/
 /tools/*.bak
+# local bot tooling (never publish; live under ~/.omp or tools/)
+/tools/rose_setup.py
+/tools/bot/
+/tools/bots/
+/tools/*-bot/
+/tools/bigbull-bot/
