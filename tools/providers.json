@@ -1510,6 +1510,26 @@
       "checked": "2026-10-31T12:50:30Z",
       "latencyMs": 0,
       "module": "HDFilmCehennemi2"
+    },
+    "minikacocuk.com.tr": {
+      "id": "minikacocuk-com-tr",
+      "name": "MinikaCocuk",
+      "mainUrl": "https://www.minikacocuk.com.tr",
+      "status": "implemented",
+      "http": 200,
+      "title": "MinikaCocuk",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "MinikaCocuk"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T13:05:27Z",
+      "latencyMs": 0,
+      "module": "MinikaCocuk"
     }
   }
 }

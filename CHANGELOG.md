@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.5.9] - 2026-10-31
+
+### Eklendi
+- **MinikaCocuk v1**: `minikacocuk.com.tr` eklendi.
+
 ## [1.5.8] - 2026-10-31
 
 ### Eklendi
