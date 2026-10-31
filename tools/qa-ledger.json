@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-31",
-  "note": "73 TR modül runner benchmark (2026-10-31)",
+  "note": "74 TR modül runner benchmark (2026-10-31)",
   "modules": [
     {
       "module": "AniArsiv",
@@ -229,6 +229,12 @@
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=1, ep=120",
       "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "DMAX",
+      "result": "pass",
+      "evidence": "runner 2026-10-31: pass, links=1, ep=5",
+      "runner": "autopilot.py 2026-10-31"
     },
     {
       "module": "DramaDizilerim",

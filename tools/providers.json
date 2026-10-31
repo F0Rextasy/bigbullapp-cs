@@ -1390,6 +1390,26 @@
       "checked": "2026-10-31T07:42:16Z",
       "latencyMs": 0,
       "module": "TV8"
+    },
+    "dmax.com.tr": {
+      "id": "dmax-com-tr",
+      "name": "DMAX",
+      "mainUrl": "https://www.dmax.com.tr",
+      "status": "implemented",
+      "http": 200,
+      "title": "Alaska'nın Mega Makineleri",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "DMAX"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T07:53:04Z",
+      "latencyMs": 0,
+      "module": "DMAX"
     }
   }
 }

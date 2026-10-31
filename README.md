@@ -110,6 +110,7 @@ Tek modül derleme ve cihaza kurulum:
 | `DiziMom` **beta** | ddizimom.net | Dizi | — | — | — | — | — | — |
 | `DiziPal` | dizipal1592.com | Dizi/Film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
 | `DiziPod` | dizipod.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `DMAX` **beta** | dmax.com.tr | Dizi | — | — | — | — | — | — |
 | `DramaDizilerim` **beta** | dramadizilerim.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
 | `FilmEkseni` **beta** | filmekseni.vip | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `Filmizleya` **beta** | filmizleya.com | Film | — | — | — | — | — | — |
@@ -176,7 +177,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          73 modül
+  Yabancidizi/          74 modül
 ```
 
 ## Geliştirme
