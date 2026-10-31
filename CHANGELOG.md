@@ -8,6 +8,8 @@ sayı arttığında güncelleme sunar.
 ## [1.5.2] - 2026-10-31
 
 ### Eklendi
+- **Sinemakolik v1**: `sinemakolik.com` eklendi.
+
 - **DiziBol v1**: `dizibol.org` eklendi.
 
 ## [1.5.1] - 2026-10-30

@@ -1270,6 +1270,26 @@
       "checked": "2026-10-31T06:08:36Z",
       "latencyMs": 0,
       "module": "DiziBol"
+    },
+    "sinemakolik.com": {
+      "id": "sinemakolik-com",
+      "name": "Sinemakolik",
+      "mainUrl": "https://sinemakolik.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Street Fighter",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "Sinemakolik"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T06:51:23Z",
+      "latencyMs": 0,
+      "module": "Sinemakolik"
     }
   }
 }
