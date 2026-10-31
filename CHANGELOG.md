@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.5.5] - 2026-10-31
+
+### Değişti
+- **DiziFilmIzle v2**: gerçek `/api/search` uç noktası ve tüm bölümlere ait vidmixi/dosyaload `bePlayer` Çözümleyicisi kullanılıyor.
+
 ## [1.5.4] - 2026-10-31
 
 ### Eklendi

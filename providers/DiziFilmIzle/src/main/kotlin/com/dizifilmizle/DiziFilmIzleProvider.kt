@@ -27,6 +27,11 @@ import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONArray
 import org.json.JSONObject
+import java.security.MessageDigest
+import java.util.Base64
+import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
 import org.jsoup.nodes.Document
 
 private fun org.jsoup.nodes.Element.posterSrcLazy(): String? =
@@ -87,15 +92,40 @@ class DiziFilmIzleProvider : MainAPI() {
 
     companion object {
         val ROWS = listOf("Diziler", "Türkçe Dublaj", "Türkçe Altyazı", "Yerli Filmler", "Seri Filmler", "Tümünü Gör", "Filmler")
+        private val BE_PLAYER = Regex("""bePlayer\('([^']+)'\s*,\s*'(\{.*?\})'""", RegexOption.DOT_MATCHES_ALL)
+        private val MEDIA = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""")
+        private val SUBS = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""")
+    }
+
+    override suspend fun search(query: String): List<SearchResponse> {
+        val response = runCatching {
+            app.get("$mainUrl/api/search", params = mapOf("q" to query.trim()), headers = uaHeaders).text
+        }.getOrNull() ?: return emptyList()
+        val results = runCatching { JSONObject(response).optJSONArray("results") }.getOrNull()
+            ?: return emptyList()
+        return (0 until results.length()).mapNotNull { index ->
+            val item = results.optJSONObject(index) ?: return@mapNotNull null
+            val slug = item.optString("slug").trim().takeIf { it.isNotEmpty() } ?: return@mapNotNull null
+            val title = item.optString("title").trim().takeIf { it.isNotEmpty() } ?: return@mapNotNull null
+            val isSeries = item.optString("content_type") == "series"
+            val href = if (isSeries) "$mainUrl/dizi/$slug" else "$mainUrl/film/$slug"
+            if (isSeries) {
+                newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
+                    this.posterUrl = item.optString("poster_url").takeIf { it.startsWith("http") }
+                    this.year = item.optInt("start_year").takeIf { it > 1900 }
+                    this.score = Score.from10(item.optString("imdb_rating"))
+                }
+            } else {
+                newMovieSearchResponse(title, href, TvType.Movie) {
+                    this.posterUrl = item.optString("poster_url").takeIf { it.startsWith("http") }
+                    this.year = item.optInt("start_year").takeIf { it > 1900 }
+                    this.score = Score.from10(item.optString("imdb_rating"))
+                }
+            }
+        }
     }
 
     private val pathPrefixes = listOf("/dizi/", "/film/", "/serifilm/")
-
-    override suspend fun search(query: String): List<SearchResponse> {
-        val q = if (false) asciiFold(query) else query
-        val url = "https://dizifilmizle.to".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
-        return cards(app.get(url, headers = uaHeaders).document, q)
-    }
 
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
@@ -151,7 +181,7 @@ class DiziFilmIzleProvider : MainAPI() {
         val episodes = doc.select("a[href]").mapNotNull { anchor ->
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
             val path = href.substringAfter(mainUrl).substringBefore('?')
-            if (!Regex("""(?:bolum|episode|sezon|season)""", RegexOption.IGNORE_CASE).containsMatchIn(path)) return@mapNotNull null
+            if (!Regex("""(?:bolum|episode)[-_/]?\d+""", RegexOption.IGNORE_CASE).containsMatchIn(path)) return@mapNotNull null
             val number = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
                 .find(path)?.groupValues?.getOrNull(2)?.toIntOrNull()
                 ?: Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
@@ -188,12 +218,13 @@ class DiziFilmIzleProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
         val resp = app.get(data, headers = uaHeaders)
-        val text = resp.text.replace("\\/", "/").replace("\\\"", "\"")
+        val text = resp.text.replace("\\\\/", "/").replace("\\/", "/").replace("\\\"", "\"")
         var found = false
         val seen = mutableSetOf<String>()
         suspend fun emit(stream: String, label: String, referer: String) {
             if (!stream.startsWith("http") || !seen.add(stream)) return
-            val type = if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+            val type = if (stream.contains(".m3u8") || referer.contains("vidmixi") ||
+                referer.contains("dosyaload")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
             val quality = getQualityFromName(label)
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
@@ -202,24 +233,20 @@ class DiziFilmIzleProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>("https://vidmixi.com/list/OE9hc2JuSTBXQitpY3RyWkorSmpiT3B0dlBld01QdFFZTEhuUkcrY0pBZVBnRXRmZFZuQWRFNnkxd0VzdzhiTmxiWEpXeFg3NVZHYnFKc0lYdlZ2Qm5CZVM2aGJGSVZVOGQxSnB4b0grUkVJYU4vMy9lM01iNzBHdGFiL3RzMjU2WVNwK3RIZ1N6bmcwK1JRTzFZQ3dBPT0=")
-        for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
-        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
-        for (m in media) emit(m.value, "Direct", data)
-        val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
-            .findAll(text).map { it.groupValues[1] }.toList()
+
+        val allEmbeds = Regex("""https?://[^"'\s<>]+/embed/[^"'\s<>]+""")
+            .findAll(text).map { it.value }.filter { it != data }.toList()
+        val currentEpisode = Regex("""/bolum-(\d+)""").find(data)?.groupValues?.get(1)?.toIntOrNull()
+        val embeds = currentEpisode?.let { number -> allEmbeds.getOrNull(number - 1)?.let { setOf(it) } }
+            ?: allEmbeds.toSet()
         for (embed in embeds) {
-            val absolute = fixUrl(embed)
-            if (absolute == data) continue
-            if (!absolute.contains("embed") && !absolute.contains(".mp4") && !absolute.contains(".m3u8")) continue
-            if (absolute.matches(Regex(""".*\.(?:mp4|m3u8).*"""))) {
-                emit(absolute, "Embed", data)
-                continue
-            }
-            val inner = runCatching { app.get(absolute, headers = uaHeaders, referer = data).text }.getOrNull() ?: continue
-            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(inner)
-            for (m in innerMedia) emit(m.value, "Embed", absolute)
+            val player = runCatching {
+                app.get(embed, headers = uaHeaders, referer = data).text
+            }.getOrNull() ?: continue
+            decryptBePlayer(player)?.let { emit(it, "Vidmixi", embed) }
         }
+
+        for (m in MEDIA.findAll(text)) emit(m.value, "Direct", data)
         val frames = resp.document.select("iframe").mapNotNull {
             val raw = it.attr("src").ifBlank { it.attr("data-src") }.ifBlank { it.attr("vdo-src") }
             fixUrlNull(raw)
@@ -231,25 +258,41 @@ class DiziFilmIzleProvider : MainAPI() {
             }
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
-                val innerText = inner.replace("\\/", "/")
-                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(innerText)) {
-                    emit(m.value, "Embed", frame)
-                }
-                for (sub in Regex("""<iframe[^>]+(?:src|data-src)="([^"]+)""").findAll(innerText)) {
-                    val subUrl = fixUrl(sub.groupValues[1])
-                    if (loadExtractor(subUrl, frame, subtitleCallback, callback)) found = true
-                }
+                for (m in MEDIA.findAll(inner.replace("\\/", "/"))) emit(m.value, "Embed", frame)
             }
             if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
-        val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
-        for (m in subs) {
+
+        for (m in SUBS.findAll(text)) {
             if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))
         }
-        if (!found && frames.isEmpty() && embeds.isEmpty() && media.none()) {
-            throw ErrorLoadingException("$name: oynatılabilir akış yok")
-        }
-        return found
+        if (!found) throw ErrorLoadingException("$name: oynatılabilir akış yok")
+        return true
     }
+
+    private fun decryptBePlayer(html: String): String? {
+        val match = BE_PLAYER.find(html) ?: return null
+        val params = JSONObject(match.groupValues[2])
+        val password = match.groupValues[1].toByteArray(Charsets.UTF_8)
+        val salt = hex(params.optString("s"))
+        val iv = hex(params.optString("iv"))
+        val cipherText = Base64.getDecoder().decode(params.optString("ct"))
+        val first = md5(password, salt)
+        val second = md5(first, password, salt)
+        val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+        cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec((first + second).copyOf(32), "AES"), IvParameterSpec(iv))
+        val json = JSONObject(String(cipher.doFinal(cipherText), Charsets.UTF_8))
+        return json.optString("video_location").trim().takeIf { it.startsWith("http") }
+    }
+
+    private fun md5(vararg parts: ByteArray): ByteArray {
+        val digest = MessageDigest.getInstance("MD5")
+        parts.forEach { digest.update(it) }
+        return digest.digest()
+    }
+
+    private fun hex(value: String): ByteArray =
+        value.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
+
 
 }
