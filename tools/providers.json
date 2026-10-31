@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-30",
+  "generated": "2026-10-31",
   "providers": {
     "asyalog.co": {
       "id": "asyalog-co",
@@ -1550,6 +1550,26 @@
       "checked": "2026-10-31T13:53:15Z",
       "latencyMs": 0,
       "module": "CizgiSite"
+    },
+    "sinezy.si": {
+      "id": "sinezy-si",
+      "name": "Sinezy",
+      "mainUrl": "https://sinezy.si",
+      "status": "implemented",
+      "http": 200,
+      "title": "Sinezy",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "Sinezy"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T17:55:00Z",
+      "latencyMs": 0,
+      "module": "Sinezy"
     }
   }
 }
