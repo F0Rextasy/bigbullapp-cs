@@ -1250,6 +1250,26 @@
       "checked": "2026-10-30T22:39:28Z",
       "latencyMs": 0,
       "module": "AniArsiv"
+    },
+    "dizibol.org": {
+      "id": "dizibol-org",
+      "name": "DiziBol",
+      "mainUrl": "https://dizibol.org",
+      "status": "implemented",
+      "http": 200,
+      "title": "Breaking Bad",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "DiziBol"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T06:08:36Z",
+      "latencyMs": 0,
+      "module": "DiziBol"
     }
   }
 }

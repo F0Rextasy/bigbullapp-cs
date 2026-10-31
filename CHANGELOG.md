@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.5.2] - 2026-10-31
+
+### Eklendi
+- **DiziBol v1**: `dizibol.org` sıfırdan eklendi; dizi; runner doğrulaması: arama 44, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
 ## [1.5.1] - 2026-10-30
 
 ### Eklendi
