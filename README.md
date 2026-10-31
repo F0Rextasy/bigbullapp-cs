@@ -142,7 +142,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Sezonlukdizi` **beta** | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
 | `ShowTV` **beta** | showtv.com.tr | Dizi | — | — | — | — | — | — |
 | `SinemaCX` **beta** | sinemacc.com | Film | — | — | — | ✓ | ✓ | ✓ |
-| `Sinezy` **beta** | sinezy.si | Film | — | — | — | — | — | — |
+| `Sinezy` | sinezy.si | Film | — | — | — | — | — | — |
 | `Sinemakolik` **beta** | sinemakolik.com | Film | — | — | — | — | — | — |
 | `SonAnime` **beta** | sonanime.com | Dizi | — | — | — | — | — | — |
 | `StarTV` | startv.com.tr | Dizi | — | — | — | — | — | — |
