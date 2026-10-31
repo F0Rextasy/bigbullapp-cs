@@ -5,11 +5,14 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
-## [1.5.2] - 2026-10-31
+## [1.5.3] - 2026-10-31
 
 ### Eklendi
 - **ATV v1**: `atv.com.tr` eklendi.
 
+## [1.5.2] - 2026-10-31
+
+### Eklendi
 - **DMAX v1**: `dmax.com.tr` eklendi.
 
 - **TV8 v1**: `tv8.com.tr` eklendi.
