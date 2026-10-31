@@ -132,6 +132,7 @@ Tek modül derleme ve cihaza kurulum:
 | `KoreanTurk` **beta** | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
 | `Kultfilmler` | kultfilmler.net | Film | ✓ | — | — | ✓ | ✓ | ✓ |
 | `LoveFilm` **beta** | lovefilmizle.net | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `MinikaCocuk` **beta** | minikacocuk.com.tr | Dizi | — | — | — | — | — | — |
 | `MinikaGO` | minikago.com.tr | Çocuk | — | — | — | — | — | — |
 | `NetFilmizle` **beta** | netfilmizle.com | Film | — | — | — | — | — | — |
 | `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
@@ -182,7 +183,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          79 modül
+  Yabancidizi/          80 modül
 ```
 
 ## Geliştirme
