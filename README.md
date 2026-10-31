@@ -73,6 +73,7 @@ Tek modül derleme ve cihaza kurulum:
 
 | Eklenti | Kaynak | Tür | Sayfalama | Öneri | Fragman | Kadro | Süre | Puan |
 |---|---|---|---|---|---|---|---|---|
+| `AniArsiv` **beta** | aniarsiv.com | Dizi | — | — | — | — | — | — |
 | `AnimeciX` **beta** | animecix.tv | Anime | — | — | — | — | — | ✓ |
 | `Animeler` **beta** | animeler.live | Anime | — | — | — | — | — | — |
 | `Anizm` **beta** | turkanime.info | Anime | — | — | ✓ | — | — | ✓ |
@@ -168,7 +169,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          65 modül
+  Yabancidizi/          66 modül
 ```
 
 ## Geliştirme
