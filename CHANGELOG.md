@@ -9,6 +9,8 @@ sayı arttığında güncelleme sunar.
 
 ### Eklendi
 
+- **AniArsiv v1**: `aniarsiv.com` sıfırdan eklendi; dizi; runner doğrulaması: arama 24, bağlantı 1. Bot (autopilot) tarafından üretildi.
+
 - **MinikaGO v1**: `minikago.com.tr` çocuk VOD'u eklendi; bölüm sayfasındaki doğrudan MP4
   kaynakları kullanılıyor. Runner: arama 1, bağlantı 1.
 - **StarTV v2**: arama yalnızca gerçek `/dizi/` sayfası olan sonuçları döndürür; `Star Haber`

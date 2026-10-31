@@ -1230,6 +1230,26 @@
       "checked": "2026-10-30T00:00:00Z",
       "latencyMs": 0,
       "module": "StarTV"
+    },
+    "aniarsiv.com": {
+      "id": "aniarsiv-com",
+      "name": "AniArsiv",
+      "mainUrl": "https://aniarsiv.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "One Piece",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "AniArsiv"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-30T22:39:28Z",
+      "latencyMs": 0,
+      "module": "AniArsiv"
     }
   }
 }
