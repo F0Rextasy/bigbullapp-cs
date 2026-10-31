@@ -8,6 +8,8 @@ sayı arttığında güncelleme sunar.
 ## [1.5.2] - 2026-10-31
 
 ### Eklendi
+- **KanalD v1**: `kanald.com.tr` eklendi.
+
 - **ShowTV v1**: `showtv.com.tr` eklendi.
 
 - **UltraFilmizle v1**: `ufilmizle.com` eklendi.
