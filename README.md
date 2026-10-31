@@ -7,9 +7,9 @@ canlı TV kaynakları. Her site ayrı bir Gradle modülü ve ayrı bir `.cs3` ek
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-84-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-85-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
-[![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/+x4TC4_lD0f03Njk0)
+[![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
 > **Kurulum:** Cloudstream → **Ayarlar → Eklentiler → Depo Ekle**:
 >
@@ -103,6 +103,7 @@ Tek modül derleme ve cihaza kurulum:
 | `DiziCaN` **beta** | dizican.cc | Dizi | — | — | — | — | — | — |
 | `DiziFilmIzle` **beta** | dizifilmizle.to | Film | — | — | — | — | — | — |
 | `Dizifon` **beta** | dizifon.cc | Dizi | — | — | — | — | — | — |
+| `Dizigecesi` | dizigecesi.com | Film | — | — | — | — | — | — |
 | `Dizigom` **beta** | dizigom.news | Film | — | — | — | — | — | — |
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi82.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
@@ -187,7 +188,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          84 modül
+  Yabancidizi/          85 modül
 ```
 
 ## Geliştirme

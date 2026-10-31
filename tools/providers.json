@@ -1610,6 +1610,26 @@
       "checked": "2026-10-31T17:55:00Z",
       "latencyMs": 0,
       "module": "Sinezy"
+    },
+    "dizigecesi.com": {
+      "id": "dizigecesi-com",
+      "name": "Dizigecesi",
+      "mainUrl": "https://dizigecesi.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Dizigecesi",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "Dizigecesi"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T20:41:00Z",
+      "latencyMs": 0,
+      "module": "Dizigecesi"
     }
   }
 }

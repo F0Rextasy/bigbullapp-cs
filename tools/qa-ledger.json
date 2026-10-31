@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-31",
-  "note": "84 TR modül; Sinezy, Dizilab ve Dizibaba runner pass (2026-10-31), diğerleri 2026-10-30 benchmark",
+  "note": "85 TR modül; Dizigecesi cihazda Filemoon HLS ile pass (2026-10-31), diğerleri benchmark",
   "modules": [
     {
       "module": "AniArsiv",
@@ -505,6 +505,12 @@
       "result": "pass",
       "evidence": "runner 2026-10-31: pass, links=1, search=24, main=24",
       "runner": "REA+manual 2026-10-31"
+    },
+    {
+      "module": "Dizigecesi",
+      "result": "pass",
+      "evidence": "device 2026-10-31: Filemoon v2 -> HLS master, Rendered first frame",
+      "runner": "emulator cs33 2026-10-31"
     }
   ]
 }
