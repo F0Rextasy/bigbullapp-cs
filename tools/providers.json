@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-31",
+  "generated": "2026-11-01",
   "providers": {
     "asyalog.co": {
       "id": "asyalog-co",
@@ -1630,6 +1630,23 @@
       "checked": "2026-10-31T20:41:00Z",
       "latencyMs": 0,
       "module": "Dizigecesi"
+    },
+    "diziboxen.help": {
+      "id": "diziboxen-help",
+      "name": "InatBox",
+      "mainUrl": "https://diziboxen.help",
+      "status": "implemented",
+      "http": 520,
+      "title": "",
+      "language": "tr",
+      "tvTypes": [
+        "Live",
+        "Movie",
+        "TvSeries"
+      ],
+      "source": "provider-source",
+      "health": "unknown",
+      "module": "InatBox"
     }
   }
 }

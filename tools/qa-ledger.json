@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-31",
-  "note": "85 TR modül; Dizigecesi cihazda Filemoon HLS ile pass (2026-10-31), diğerleri benchmark",
+  "generated": "2026-11-01",
+  "note": "86 TR modül; Dizigecesi cihazda Filemoon HLS ile pass (2026-10-31), InatBox upstream 520 nedeniyle blocked (2026-11-01), diğerleri benchmark",
   "modules": [
     {
       "module": "AniArsiv",
@@ -511,6 +511,12 @@
       "result": "pass",
       "evidence": "device 2026-10-31: Filemoon v2 -> HLS master, Rendered first frame",
       "runner": "emulator cs33 2026-10-31"
+    },
+    {
+      "module": "InatBox",
+      "result": "blocked",
+      "evidence": "upstream 520, 35 providers registered, compile OK",
+      "runner": "manual 2026-11-01"
     }
   ]
 }
