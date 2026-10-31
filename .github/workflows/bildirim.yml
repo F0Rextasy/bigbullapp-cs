@@ -44,8 +44,16 @@ jobs:
             fi
           done
           [ -z "$DETAILS" ] && DETAILS="• Depo güncellemesi yapıldı.${NL}"
-          TEXT=$(printf '🚀 BigBullApp güncellemesi%s%s%s📦 BigBullApp' "$NL" "$NL" "$DETAILS")
+          DETAILS=$(printf '%s' "$DETAILS" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
+          HEADING=$(grep -m1 '^## \[' CHANGELOG.md || true)
+          ANCHOR=$(printf '%s' "$HEADING" | tr '[:upper:]' '[:lower:]' \
+            | sed -E 's/^##[[:space:]]*//; s/[^a-z0-9 -]//g; s/ +/-/g; s/^-+//; s/-+$//')
+          LINK="https://github.com/F0Rextasy/bigbullapp-cs/blob/master/CHANGELOG.md"
+          [ -n "$ANCHOR" ] && LINK="${LINK}#${ANCHOR}"
+          TEXT=$(printf '<b>🚀 BigBullApp güncellemesi</b>%s%s%s%s<a href="%s">→ Güncelleme notu</a>' \
+            "$NL" "$NL" "$DETAILS" "$NL" "$LINK")
           curl -sf -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${CHAT}" \
+            --data-urlencode "parse_mode=HTML" \
             --data-urlencode "text=${TEXT}" \
             --data-urlencode "disable_web_page_preview=true" >/dev/null
