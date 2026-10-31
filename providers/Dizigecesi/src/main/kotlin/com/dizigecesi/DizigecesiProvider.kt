@@ -204,7 +204,8 @@ class DizigecesiProvider : MainAPI() {
             }
             val quality = Regex("""(\d{3,4})p""").find(label)?.groupValues?.get(1)?.toIntOrNull()
                 ?: Qualities.Unknown.value
-            callback(
+            if (!Settings.qualityAllowed(quality)) continue
+             callback(
                 newExtractorLink(name, "Filemoon ${label}".trim(), stream, type) {
                     this.referer = frame
                     this.quality = quality
