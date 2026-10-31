@@ -1551,6 +1551,26 @@
       "latencyMs": 0,
       "module": "CizgiSite"
     },
+    "dizibaba.net": {
+      "id": "dizibaba-net",
+      "name": "Dizibaba",
+      "mainUrl": "https://dizibaba.net",
+      "status": "implemented",
+      "http": 200,
+      "title": "Dizibaba",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "Dizibaba"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T19:42:00Z",
+      "latencyMs": 0,
+      "module": "Dizibaba"
+    },
     "dizilab.cc": {
       "id": "dizilab-cc",
       "name": "Dizilab",
