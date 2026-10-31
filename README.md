@@ -1,5 +1,6 @@
 # BigBullApp
 
+
 [Cloudstream](https://github.com/recloudstream/cloudstream) için Türkçe film, dizi, anime, çizgi film ve
 canlı TV kaynakları. Her site ayrı bir Gradle modülü ve ayrı bir `.cs3` eklentisidir.
 
