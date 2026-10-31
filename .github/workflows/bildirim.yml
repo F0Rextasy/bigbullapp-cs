@@ -31,18 +31,13 @@ jobs:
             | cut -d/ -f2 | sort -u)
           NL=$'\n'
           DETAILS=""
-          for M in $CHANGED; do
-            if [ ! -f "providers/$M/build.gradle.kts" ]; then
-              DETAILS="${DETAILS}• ${M} kaldırıldı${NL}"
-              continue
-            fi
-            V=$(grep -m1 -o 'version[[:space:]]*=[[:space:]]*[0-9]\+' "providers/$M/build.gradle.kts" | grep -o '[0-9]\+' || true)
-            if git diff-tree --no-commit-id --name-status -r HEAD -- "providers/$M" | grep -q '^A'; then
-              DETAILS="${DETAILS}• ${M} eklendi (v${V})${NL}"
-            else
-              DETAILS="${DETAILS}• ${M} güncellendi (v${V})${NL}"
-            fi
-          done
+          if [ -n "$CHANGED" ]; then
+            SECTION=$(awk 'BEGIN { s = 0 } /^## \[/ { s++; next } s == 1 { print }' CHANGELOG.md)
+            DETAILS=$(printf '%s\n' "$SECTION" \
+              | grep -oE '^- \*\*[^*]+\*\*' \
+              | sed -E 's/^- \*\*([^*]+)\*\*/• \1/' || true)
+            [ -n "$DETAILS" ] && DETAILS="${DETAILS}${NL}"
+          fi
           [ -z "$DETAILS" ] && DETAILS="• Depo güncellemesi yapıldı.${NL}"
           DETAILS=$(printf '%s' "$DETAILS" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
           HEADING=$(grep -m1 '^## \[' CHANGELOG.md || true)
