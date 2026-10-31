@@ -125,6 +125,7 @@ Tek modül derleme ve cihaza kurulum:
 | `HDFilmDelisi` **beta** | hdfilmdelisi.one | Film | ✓ | — | — | — | ✓ | ✓ |
 | `HDFilmDiziIzle` **beta** | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` **beta** | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `HDFilmizleBest` **beta** | hdfilmizle.best | Dizi | — | — | — | — | — | — |
 | `JetFilmizle` **beta** | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
 | `KanalD` **beta** | kanald.com.tr | Dizi | — | — | — | — | — | — |
 | `KoreanTurk` **beta** | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
@@ -180,7 +181,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          77 modül
+  Yabancidizi/          78 modül
 ```
 
 ## Geliştirme
