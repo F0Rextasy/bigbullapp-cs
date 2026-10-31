@@ -98,6 +98,7 @@ Tek modül derleme ve cihaza kurulum:
 | `DiziBol` **beta** | dizibol.org | Dizi | — | — | — | — | — | — |
 | `DiziBoxTv` **beta** | diziboxtv.com | Dizi | — | — | — | — | — | — |
 | `DiziCaN` **beta** | dizican.cc | Dizi | — | — | — | — | — | — |
+| `DiziFilmIzle` **beta** | dizifilmizle.to | Film | — | — | — | — | — | — |
 | `Dizifon` **beta** | dizifon.cc | Dizi | — | — | — | — | — | — |
 | `Dizigom` **beta** | dizigom.news | Film | — | — | — | — | — | — |
 | `DiziLife` | dizi82.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
@@ -178,7 +179,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          75 modül
+  Yabancidizi/          76 modül
 ```
 
 ## Geliştirme

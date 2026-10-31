@@ -1430,6 +1430,26 @@
       "checked": "2026-10-31T08:06:49Z",
       "latencyMs": 0,
       "module": "ATV"
+    },
+    "dizifilmizle.to": {
+      "id": "dizifilmizle-to",
+      "name": "DiziFilmIzle",
+      "mainUrl": "https://dizifilmizle.to",
+      "status": "implemented",
+      "http": 200,
+      "title": "Aşk ve Yaşam",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "DiziFilmIzle"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T10:43:13Z",
+      "latencyMs": 0,
+      "module": "DiziFilmIzle"
     }
   }
 }
