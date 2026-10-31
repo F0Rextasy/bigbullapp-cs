@@ -93,6 +93,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
 | `Ddizi` **beta** | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
 | `DDizimag` **beta** | ddizimag.com | Dizi | — | — | — | — | — | — |
+| `Deokwave` **beta** | deokwave.com | Dizi | — | — | — | — | — | — |
 | `DiziAbi` **beta** | diziabi.net | Film | — | — | — | — | — | — |
 | `DiziBal` **beta** | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |
 | `DiziBol` **beta** | dizibol.org | Dizi | — | — | — | — | — | — |
@@ -179,7 +180,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          76 modül
+  Yabancidizi/          77 modül
 ```
 
 ## Geliştirme
