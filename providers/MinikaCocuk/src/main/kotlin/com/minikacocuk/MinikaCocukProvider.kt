@@ -41,7 +41,6 @@ class MinikaCocukProvider : MainAPI() {
         if (!Settings.rowEnabled(name)) return@mapNotNull null
         when (name) {
             "Web TV" -> MainPageData(name, "$mainUrl/webtv")
-            "Canlı Yayın" -> MainPageData(name, "$mainUrl/webtv/canli-yayin")
             else -> null
         }
     }
@@ -120,6 +119,6 @@ class MinikaCocukProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Web TV", "Canlı Yayın")
+        val ROWS = listOf("Web TV")
     }
 }
