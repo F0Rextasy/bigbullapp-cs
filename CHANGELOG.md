@@ -8,6 +8,8 @@ sayı arttığında güncelleme sunar.
 ## [1.5.2] - 2026-10-31
 
 ### Eklendi
+- **UltraFilmizle v1**: `ufilmizle.com` eklendi.
+
 - **NetFilmizle v1**: `netfilmizle.com` eklendi.
 
 - **Sinemakolik v1**: `sinemakolik.com` eklendi.
