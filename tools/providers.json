@@ -1310,6 +1310,26 @@
       "checked": "2026-10-31T06:54:32Z",
       "latencyMs": 0,
       "module": "NetFilmizle"
+    },
+    "ufilmizle.com": {
+      "id": "ufilmizle-com",
+      "name": "UltraFilmizle",
+      "mainUrl": "https://ufilmizle.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "İlk Bakışta Aşk’ın İstatistiksel Olasılığı",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "UltraFilmizle"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T07:05:09Z",
+      "latencyMs": 0,
+      "module": "UltraFilmizle"
     }
   }
 }

@@ -137,6 +137,7 @@ Tek modül derleme ve cihaza kurulum:
 | `StarTV` | startv.com.tr | Dizi | — | — | — | — | — | — |
 | `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
 | `TurkceDizi` **beta** | turkcedizi.com | Film | — | — | — | — | — | ✓ |
+| `UltraFilmizle` **beta** | ufilmizle.com | Film | — | — | — | — | — | — |
 | `WebdramaTurkey2` | webdramaturkey2.com | Asya dizi/film | ✓ | — | — | ✓ | ✓ | — |
 | `Weboo` **beta** | weboo.com.tr | Dizi | — | — | — | — | — | — |
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
@@ -172,7 +173,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          69 modül
+  Yabancidizi/          70 modül
 ```
 
 ## Geliştirme
