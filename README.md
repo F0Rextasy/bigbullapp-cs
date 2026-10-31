@@ -85,6 +85,7 @@ Tek modül derleme ve cihaza kurulum:
 | `AsyaLog` | asyalog.co | Asya dizi/film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
 | `AsyaLuna` **beta** | asyaluna.com | Dizi | — | — | — | — | — | — |
 | `AsyaWatch` **beta** | asyawatch.com | Asya dizi/film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `ATV` **beta** | atv.com.tr | Dizi | — | — | — | — | — | — |
 | `BelgeselX` **beta** | belgeselx.com | Belgesel | — | — | — | — | — | — |
 | `BirAsyaDizi` **beta** | birasyadizi.cx | Dizi | — | — | — | — | — | — |
 | `CanliDizi` **beta** | canlidizi.sbs | Dizi | — | — | — | — | — | — |
@@ -177,7 +178,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          74 modül
+  Yabancidizi/          75 modül
 ```
 
 ## Geliştirme

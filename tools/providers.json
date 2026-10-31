@@ -1410,6 +1410,26 @@
       "checked": "2026-10-31T07:53:04Z",
       "latencyMs": 0,
       "module": "DMAX"
+    },
+    "atv.com.tr": {
+      "id": "atv-com-tr",
+      "name": "ATV",
+      "mainUrl": "https://www.atv.com.tr",
+      "status": "implemented",
+      "http": 200,
+      "title": "Aşk ve Taht Dizisi",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "ATV"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T08:06:49Z",
+      "latencyMs": 0,
+      "module": "ATV"
     }
   }
 }
