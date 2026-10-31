@@ -21,10 +21,15 @@ jobs:
       - name: Telegram'a gönder
         env:
           TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          if [ -z "$TOKEN" ] || [ -z "$CHAT" ]; then
-            echo "TELEGRAM_BOT_TOKEN veya TELEGRAM_CHAT_ID yok; bildirim atlandı."
+          if [ -z "$TOKEN" ]; then
+            echo "TELEGRAM_BOT_TOKEN yok; bildirim atlandı."
+            exit 0
+          fi
+          CHAT=$(python3 -c "import json;print(json.load(open('tools/telegram-topics.json'))['chat_id'])")
+          THREAD=$(python3 -c "import json;print(json.load(open('tools/telegram-topics.json'))['topics']['duyuru']['thread_id'])")
+          if [ -z "$CHAT" ] || [ -z "$THREAD" ]; then
+            echo "tools/telegram-topics.json eksik; bildirim atlandı."
             exit 0
           fi
           CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD -- providers \
@@ -54,6 +59,7 @@ jobs:
             "$VERSION_LABEL" "$NL" "$NL" "$DETAILS" "$NL" "$LINK")
           curl -sf -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${CHAT}" \
+            --data-urlencode "message_thread_id=${THREAD}" \
             --data-urlencode "parse_mode=HTML" \
             --data-urlencode "text=${TEXT}" \
             --data-urlencode "disable_web_page_preview=true" >/dev/null
