@@ -1,4 +1,4 @@
-version = 1
+version = 5
 
 cloudstream {
     description = "Inat Baks — 35 listeli canlı TV, spor ve film/dizi arşivi (imzalı Inat API)"

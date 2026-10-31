@@ -421,7 +421,9 @@ data class InatCfg(
     val sha: String,
 ) {
     val displayName: String get() = "Inat — $name"
-    val isLiveList: Boolean get() = type == "tv_mode"
+    val isMovieList: Boolean get() = name.contains("4K Film", true) || name.contains("Sinema", true) ||
+        name.contains("Yerli Filmler", true) || name.contains("Mubi", true)
+    val isLiveList: Boolean get() = type == "tv_mode" && !isMovieList
     val isEmbedOnly: Boolean get() = type == "link_mode" || type == "web_mode"
 }
 
@@ -836,7 +838,7 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
         InatClient.entries(url, host, pin, dataType)
 
     private fun embedSearch(): SearchResponse =
-        newLiveSearchResponse(cfg.name, token(MODE_EMBED, cfg.url, 0, cfg.name), TvType.Live)
+        newLiveSearchResponse(cfg.name, tokenUrl(MODE_EMBED, cfg.url, 0, cfg.name), TvType.Live, false)
 
     private fun embedEntry(url: String) = InatEntry(
         name = cfg.name,
@@ -857,12 +859,12 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
         val title = this.name
         if (title.isBlank()) return null
         if (season || episode) return null
-        val target = token(MODE_ITEM, cfg.url, index, title)
+        val target = tokenUrl(MODE_ITEM, cfg.url, index, title)
         val image = img.ifBlank { null }
         return when {
-            cfg.isLiveList -> newLiveSearchResponse(title, target, TvType.Live) { posterUrl = image }
-            isSeriesRow(this) -> newTvSeriesSearchResponse(title, target, TvType.TvSeries) { posterUrl = image }
-            else -> newMovieSearchResponse(title, target, TvType.Movie) { posterUrl = image }
+            cfg.isLiveList -> newLiveSearchResponse(title, target, TvType.Live, false) { posterUrl = image }
+            isSeriesRow(this) -> newTvSeriesSearchResponse(title, target, TvType.TvSeries, false) { posterUrl = image }
+            else -> newMovieSearchResponse(title, target, TvType.Movie, false) { posterUrl = image }
         }
     }
 
@@ -893,7 +895,7 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
             }
             val episodes = seasons.flatMap { (seasonNumber, season) ->
                 rows(season).mapIndexed { index, row ->
-                    newEpisode(token(MODE_ROW, season.url, index, row.name, season.host, season.pin, season.dataType)) {
+                    newEpisode(tokenUrl(MODE_ROW, season.url, index, row.name, season.host, season.pin, season.dataType)) {
                         this.name = row.name.ifBlank { "${index + 1}. Bölüm" }
                         this.season = seasonNumber
                         this.episode = episodeNumber(row.name) ?: (index + 1)
@@ -910,7 +912,7 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
 
         if (isSeriesRow(entry) || children.any { it.episode }) {
             val episodes = children.mapIndexed { index, row ->
-                newEpisode(token(MODE_ROW, entry.url, index, row.name, entry.host, entry.pin, entry.dataType)) {
+                newEpisode(tokenUrl(MODE_ROW, entry.url, index, row.name, entry.host, entry.pin, entry.dataType)) {
                     this.name = row.name.ifBlank { "${index + 1}. Bölüm" }
                     this.season = 1
                     this.episode = episodeNumber(row.name) ?: (index + 1)
@@ -927,7 +929,7 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
             entry.name,
             url,
             TvType.Movie,
-            token(MODE_LIST, entry.url, 0, entry.name, entry.host, entry.pin, entry.dataType),
+            tokenUrl(MODE_LIST, entry.url, 0, entry.name, entry.host, entry.pin, entry.dataType),
         ) {
             this.posterUrl = poster.ifBlank { null }
             this.plot = plot.ifBlank { null }
@@ -972,6 +974,20 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
         return result
     }
 
+    private fun tokenUrl(
+        mode: String,
+        url: String,
+        index: Int,
+        name: String,
+        host: String = cfg.host,
+        pin: String = cfg.sha,
+        dataType: String = cfg.dataType,
+    ): String {
+        val separator = if (cfg.url.contains('?')) "&" else "?"
+        return cfg.url + separator + "inat=" +
+            base64UrlEncode(token(mode, url, index, name, host, pin, dataType))
+    }
+
     private fun token(
         mode: String,
         url: String,
@@ -992,8 +1008,15 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
     ).joinToString("|")
 
     private fun parseToken(data: String): ItemRef? {
-        if (!data.startsWith("$TOKEN_PREFIX|")) return null
-        val parts = data.split("|")
+        val raw = if (data.startsWith("$TOKEN_PREFIX|")) {
+            data
+        } else {
+            val query = runCatching { URI(data).rawQuery }.getOrNull() ?: return null
+            val value = query.split("&").firstOrNull { it.startsWith("inat=") }?.substringAfter('=') ?: return null
+            base64UrlDecode(value)
+        }
+        if (!raw.startsWith("$TOKEN_PREFIX|")) return null
+        val parts = raw.split("|")
         if (parts.size != 8) return null
         return ItemRef(
             mode = parts[1],

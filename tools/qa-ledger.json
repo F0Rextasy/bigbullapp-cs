@@ -515,8 +515,8 @@
     {
       "module": "InatBox",
       "result": "blocked",
-      "evidence": "upstream 520, 35 providers registered, compile OK",
-      "runner": "manual 2026-11-01"
+      "evidence": "emulator 2026-11-01: 35 Inat provider registered, token/detail works; upstream 520 blocks stream; compile OK",
+      "runner": "manual emulator cs33 2026-11-01"
     }
   ]
 }
