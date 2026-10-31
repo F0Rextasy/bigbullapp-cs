@@ -160,8 +160,15 @@ Tek modül derleme ve cihaza kurulum:
 | `YesilCamTv` **beta** | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
 **InatBox notu:** tek modül **35 alt sağlayıcı** kaydeder; her biri `Inat — <platform>` adıyla
-listelenir. Depoda toplam **120 Cloudstream sağlayıcısı** ve **86 modül** var. Upstream doğrulama
-anında 520 döndüğü için tabloda **beta**.
+listelenir. Depoda toplam **120 Cloudstream sağlayıcısı** ve **86 modül** var. Bot probe’u
+(`inat-probe.json`, 2026-11-01) **27/35 platformu listeledi: 21 oynatılabilir, 18 HLS, 2 MP4,
+5 embed**. Cloudstream provider’ından doğrudan `/run-all` ve HLS kanıtı upstream **520/403**
+nedeniyle alınamadı; bu yüzden tabloda **beta** ve modülde `status = 3`.
+
+Bot kanıtı olan platformlar: Liste 1/3, Spor, Derbiler, Sinema, Belgesel, Ulusal, Haber, EBA TV,
+Çocuk, Dini, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii, 4K Film 03 Exo, 4K Film 04 Web,
+4K Film 06 Exo/Web. Kanıtsız kalanlar: Liste 2, Premium, Yerli Filmler, 4K Film 01/02/03-Web/07,
+EXXEN, Mubi, TOD, Yabancı/Yerli Diziler (bazıları upstream 520, bazıları handler kanıtı yok).
 
 Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
 `README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.

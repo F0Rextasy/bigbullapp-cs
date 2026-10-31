@@ -27,6 +27,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.net.URI
+import java.net.URLDecoder
 import java.security.MessageDigest
 import java.security.SecureRandom
 import android.util.Base64
@@ -60,9 +61,12 @@ private const val CACHE_LIMIT = 16
 
 // Upstream rotates the catalogue host (diziboxen.help -> dizilabmedia.click) while keeping the
 // CDN paths and the signing scheme, so a failed host is retried on its alternate.
-// shortcut: assumes the alternate serves the identical paths; only diziboxen.help has an observed
-// rotation, so sprboxs.bar and 4k.filmizleeeee.cfd keep their single host.
-private val HOST_ALTERNATES = mapOf("diziboxen.help" to "dizilabmedia.click")
+// `str.filmizleeeee.cfd` is the sibling CDN observed during the protocol probe.
+// shortcut: assumes the alternate serves identical paths; sprboxs.bar has no observed alternate.
+private val HOST_ALTERNATES = mapOf(
+    "diziboxen.help" to "dizilabmedia.click",
+    "4k.filmizleeeee.cfd" to "str.filmizleeeee.cfd",
+)
 private val HOST_FAILURE_CODES = setOf(403, 520)
 
 private val SIGNING_KEY: ByteArray = run {
@@ -340,6 +344,15 @@ private fun originOf(value: String): String {
     return "${uri.scheme}://${uri.host}$port"
 }
 
+private fun webTarget(value: String): String {
+    val uri = httpUri(value)
+    if (!uri.rawPath.orEmpty().endsWith("/web.php")) return value
+    val encoded = uri.rawQuery.orEmpty().split("&")
+        .firstOrNull { it.startsWith("url=") }?.substringAfter('=') ?: return value
+    return runCatching { URLDecoder.decode(encoded, "UTF-8") }
+        .getOrNull()?.takeIf { it.startsWith("http") } ?: value
+}
+
 /** Rewrites the same path onto the rotated host; null when the host has no known alternate. */
 private fun alternateUrl(uri: URI): String? {
     val host = uri.host?.lowercase() ?: return null
@@ -531,7 +544,7 @@ internal object InatClient {
         return when {
             handler == "web_mode" || handler == "link_mode" -> {
                 httpUri(entry.url)
-                InatStream.Embed(entry.url, entry.headers)
+                InatStream.Embed(webTarget(entry.url), entry.headers)
             }
             handler == "SSprDrm_event" -> {
                 val body = request(
