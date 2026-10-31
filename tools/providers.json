@@ -1370,6 +1370,26 @@
       "checked": "2026-10-31T07:36:58Z",
       "latencyMs": 0,
       "module": "KanalD"
+    },
+    "tv8.com.tr": {
+      "id": "tv8-com-tr",
+      "name": "TV8",
+      "mainUrl": "https://www.tv8.com.tr",
+      "status": "implemented",
+      "http": 200,
+      "title": "MasterChef Türkiye",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "TV8"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T07:42:16Z",
+      "latencyMs": 0,
+      "module": "TV8"
     }
   }
 }

@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-31",
-  "note": "72 TR modül runner benchmark (2026-10-31)",
+  "note": "73 TR modül runner benchmark (2026-10-31)",
   "modules": [
     {
       "module": "AniArsiv",
@@ -391,6 +391,12 @@
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=4, ep=0",
       "runner": "autopilot.py 2026-10-30"
+    },
+    {
+      "module": "TV8",
+      "result": "pass",
+      "evidence": "runner 2026-10-31: pass, links=1, ep=30",
+      "runner": "autopilot.py 2026-10-31"
     },
     {
       "module": "UltraFilmizle",
