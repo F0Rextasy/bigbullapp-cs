@@ -1290,6 +1290,26 @@
       "checked": "2026-10-31T06:51:23Z",
       "latencyMs": 0,
       "module": "Sinemakolik"
+    },
+    "netfilmizle.com": {
+      "id": "netfilmizle-com",
+      "name": "NetFilmizle",
+      "mainUrl": "https://netfilmizle.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Yok Böyle Bir Aşk!",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "NetFilmizle"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T06:54:32Z",
+      "latencyMs": 0,
+      "module": "NetFilmizle"
     }
   }
 }
