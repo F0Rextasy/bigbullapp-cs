@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.5.16] - 2026-10-31
+
+### Düzeltildi
+- **Dizigecesi v3**: Filemoon kaynağı yayınlanmadan önce `Settings.qualityAllowed()` kontrolü yapılıyor; kalite üst sınırı artık uygulanıyor.
+
 ## [1.5.15] - 2026-10-31
 
 ### Eklendi
