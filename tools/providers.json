@@ -1470,6 +1470,26 @@
       "checked": "2026-10-31T11:48:07Z",
       "latencyMs": 0,
       "module": "Deokwave"
+    },
+    "hdfilmizle.best": {
+      "id": "hdfilmizle-best",
+      "name": "HDFilmizleBest",
+      "mainUrl": "https://www.hdfilmizle.best",
+      "status": "implemented",
+      "http": 200,
+      "title": "Bir Başkadır",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "HDFilmizleBest"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T12:50:29Z",
+      "latencyMs": 0,
+      "module": "HDFilmizleBest"
     }
   }
 }
