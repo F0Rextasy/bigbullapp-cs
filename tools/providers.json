@@ -1330,6 +1330,26 @@
       "checked": "2026-10-31T07:05:09Z",
       "latencyMs": 0,
       "module": "UltraFilmizle"
+    },
+    "showtv.com.tr": {
+      "id": "showtv-com-tr",
+      "name": "ShowTV",
+      "mainUrl": "https://www.showtv.com.tr",
+      "status": "implemented",
+      "http": 200,
+      "title": "Sevdan Bir Ateş",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "ShowTV"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T07:26:57Z",
+      "latencyMs": 0,
+      "module": "ShowTV"
     }
   }
 }
