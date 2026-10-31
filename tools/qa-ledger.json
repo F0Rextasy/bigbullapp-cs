@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-31",
-  "note": "82 TR modül; Sinezy runner pass (2026-10-31), diğerleri 2026-10-30 benchmark",
+  "note": "83 TR modül; Sinezy ve Dizilab runner pass (2026-10-31), diğerleri 2026-10-30 benchmark",
   "modules": [
     {
       "module": "AniArsiv",
@@ -493,6 +493,12 @@
       "result": "pass",
       "evidence": "runner 2026-10-31: pass, links=1, subs=1, main=12, search=32",
       "runner": "autopilot.py 2026-10-31"
+    },
+    {
+      "module": "Dizilab",
+      "result": "pass",
+      "evidence": "runner 2026-10-31: pass, links=1, ep=145, search=4, main=10",
+      "runner": "llm-assisted 2026-10-31"
     }
   ]
 }

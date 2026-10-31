@@ -1551,6 +1551,26 @@
       "latencyMs": 0,
       "module": "CizgiSite"
     },
+    "dizilab.cc": {
+      "id": "dizilab-cc",
+      "name": "Dizilab",
+      "mainUrl": "https://dizilab.cc",
+      "status": "implemented",
+      "http": 200,
+      "title": "Dizilab",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "Dizilab"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T19:35:00Z",
+      "latencyMs": 0,
+      "module": "Dizilab"
+    },
     "sinezy.si": {
       "id": "sinezy-si",
       "name": "Sinezy",
