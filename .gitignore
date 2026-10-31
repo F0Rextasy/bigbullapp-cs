@@ -58,3 +58,13 @@ AGENTS.md
 /okjar.txt
 /prefs_*.xml
 /subs.json
+# local design/UI scratch (never publish)
+/design.md
+/design/
+/web-ui/
+/webui/
+/tools/design.md
+/tools/web-ui/
+/tools/scratch/
+/tools/local/
+/tools/*.bak
