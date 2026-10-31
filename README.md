@@ -7,7 +7,7 @@ canlı TV kaynakları. Her site ayrı bir Gradle modülü ve ayrı bir `.cs3` ek
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-85-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-86-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -131,6 +131,7 @@ Tek modül derleme ve cihaza kurulum:
 | `HDFilmDiziIzle` **beta** | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` **beta** | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `HDFilmizleBest` **beta** | hdfilmizle.best | Dizi | — | — | — | — | — | — |
+| `InatBox` **beta** | diziboxen.help | Canlı TV/Spor/Film/Dizi | — | — | — | — | — | — |
 | `JetFilmizle` **beta** | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
 | `KanalD` **beta** | kanald.com.tr | Dizi | — | — | — | — | — | — |
 | `KoreanTurk` **beta** | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
@@ -157,6 +158,10 @@ Tek modül derleme ve cihaza kurulum:
 | `Weboo` **beta** | weboo.com.tr | Dizi | — | — | — | — | — | — |
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
 | `YesilCamTv` **beta** | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
+
+**InatBox notu:** tek modül **35 alt sağlayıcı** kaydeder; her biri `Inat — <platform>` adıyla
+listelenir. Depoda toplam **120 Cloudstream sağlayıcısı** ve **86 modül** var. Upstream doğrulama
+anında 520 döndüğü için tabloda **beta**.
 
 Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
 `README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.
@@ -188,7 +193,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          85 modül
+  Yabancidizi/          86 modül
 ```
 
 ## Geliştirme

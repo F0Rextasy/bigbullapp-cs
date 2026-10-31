@@ -5,6 +5,16 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.5.17] - 2026-11-01
+
+### Eklendi
+- **InatBox v1**: `diziboxen.help` (spor listeleri `sprboxs.bar`) üzerinden imzalı Inat API'sini kullanan yeni modül; `Inat — <platform>` adıyla **35 alt sağlayıcı** kaydeder (liste 1/2/3, Spor, Derbiler, Sinema, Belgesel, Ulusal, Haber, EBA TV, Çocuk, Dini, EXXEN, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii, Mubi, TOD vb.). `Live`, `Movie`, `TvSeries` türlerini kapsar; liste tanımları SHA-256 ile doğrulanır. Modül derlemesi ve 35 kayıt doğrulandı; depo toplamı **120 sağlayıcı / 86 modül**.
+
+### Bilinen eksikler
+- Upstream `diziboxen.help` doğrulama anında **HTTP 520** döndü; hiçbir alt sağlayıcı canlı veya emülatörde test edilemedi. Arama → detay → bölüm → oynatma zinciri ve HLS çıktısı doğrulanmadı; bu yüzden README'de **beta** işaretli. Modülde `status = 1` tanımlı olsa da saha kanıtı yok.
+- `Premium` listesi (`inattv257.cfd`) içerik yapılandırması olmadan yalnızca bağlantı (`link_mode`) modunda; embed-only listelerde doğrudan oynatma akışı yok.
+- Özellik matrisi kolonları (sayfalama, öneri, fragman, kadro, süre, puan) upstream erişilemediği için `—`; canlı doğrulama sonrası doldurulacak.
+
 ## [1.5.16] - 2026-10-31
 
 ### Düzeltildi
