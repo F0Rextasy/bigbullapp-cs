@@ -58,6 +58,13 @@ private const val RESPONSE_LIMIT = 32 * 1024 * 1024
 // The 4K lists hold 17k rows, so keep the cache small instead of counting 128 large lists.
 private const val CACHE_LIMIT = 16
 
+// Upstream rotates the catalogue host (diziboxen.help -> dizilabmedia.click) while keeping the
+// CDN paths and the signing scheme, so a failed host is retried on its alternate.
+// shortcut: assumes the alternate serves the identical paths; only diziboxen.help has an observed
+// rotation, so sprboxs.bar and 4k.filmizleeeee.cfd keep their single host.
+private val HOST_ALTERNATES = mapOf("diziboxen.help" to "dizilabmedia.click")
+private val HOST_FAILURE_CODES = setOf(403, 520)
+
 private val SIGNING_KEY: ByteArray = run {
     val encoded = hexToBytes(ENCODED_KEY_HEX)
     ByteArray(40) { index ->
@@ -331,6 +338,17 @@ private fun originOf(value: String): String {
     val uri = httpUri(value)
     val port = if (uri.port > 0) ":${uri.port}" else ""
     return "${uri.scheme}://${uri.host}$port"
+}
+
+/** Rewrites the same path onto the rotated host; null when the host has no known alternate. */
+private fun alternateUrl(uri: URI): String? {
+    val host = uri.host?.lowercase() ?: return null
+    val alternate = HOST_ALTERNATES[host] ?: return null
+    val port = if (uri.port > 0) ":${uri.port}" else ""
+    val path = uri.rawPath?.takeIf { it.isNotEmpty() } ?: "/"
+    val query = uri.rawQuery?.let { "?$it" } ?: ""
+    val fragment = uri.rawFragment?.let { "#$it" } ?: ""
+    return "${uri.scheme}://$alternate$port$path$query$fragment"
 }
 
 private fun entryObject(value: Any?): JSONObject {
@@ -609,6 +627,9 @@ internal object InatClient {
         val path = uri.rawPath?.takeIf { it.isNotEmpty() } ?: "/"
         val body = form?.entries?.joinToString("&") { "${it.key}=${it.value}" } ?: ""
         var attempt = 0
+        var target = url
+        var rotated = false
+        val alternate = alternateUrl(uri)
         while (true) {
             val requestHeaders = LinkedHashMap(headers)
             if (signed) {
@@ -623,13 +644,18 @@ internal object InatClient {
             }
             val response = try {
                 if (method == "POST") {
-                    app.post(url, data = form ?: emptyMap(), headers = requestHeaders)
+                    app.post(target, data = form ?: emptyMap(), headers = requestHeaders)
                 } else {
-                    app.get(url, headers = requestHeaders)
+                    app.get(target, headers = requestHeaders)
                 }
-            } catch (e: ErrorLoadingException) {
-                throw e
             } catch (e: Exception) {
+                // IO failures rotate like upstream errors do; path, body and signature stay as-is.
+                if (!rotated && alternate != null) {
+                    rotated = true
+                    target = alternate
+                    continue
+                }
+                if (e is ErrorLoadingException) throw e
                 throw ErrorLoadingException("Inat: istek başarısız (${e.javaClass.simpleName}: ${e.message}). $REPORT_HINT")
             }
             // shortcut: a 403 thrown by the client never reaches here, so clock skew is only
@@ -645,6 +671,11 @@ internal object InatClient {
             }
             if (response.code == 403 && signed && corrected && attempt == 0) {
                 attempt++
+                continue
+            }
+            if (!rotated && alternate != null && response.code in HOST_FAILURE_CODES) {
+                rotated = true
+                target = alternate
                 continue
             }
             if (response.code !in 200..299) {
@@ -705,7 +736,7 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.Live, TvType.Movie, TvType.TvSeries)
 
-    override val mainPage get() = listOf(MainPageData(cfg.name, cfg.url))
+    override val mainPage get() = if (Settings.rowEnabled(cfg.name)) listOf(MainPageData(cfg.name, cfg.url)) else emptyList()
 
     private val hasList: Boolean get() = cfg.dataType.isNotEmpty() && !cfg.isEmbedOnly
 
