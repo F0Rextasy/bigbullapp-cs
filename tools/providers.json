@@ -1350,6 +1350,26 @@
       "checked": "2026-10-31T07:26:57Z",
       "latencyMs": 0,
       "module": "ShowTV"
+    },
+    "kanald.com.tr": {
+      "id": "kanald-com-tr",
+      "name": "KanalD",
+      "mainUrl": "https://www.kanald.com.tr",
+      "status": "implemented",
+      "http": 200,
+      "title": "Uzak Şehir",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "KanalD"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T07:36:58Z",
+      "latencyMs": 0,
+      "module": "KanalD"
     }
   }
 }
