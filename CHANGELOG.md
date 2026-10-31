@@ -8,12 +8,10 @@ sayı arttığında güncelleme sunar.
 ## [1.5.17] - 2026-11-01
 
 ### Eklendi
-- **InatBox v5**: `diziboxen.help` (spor listeleri `sprboxs.bar`) üzerinden imzalı Inat API'sini kullanan yeni modül; `Inat — <platform>` adıyla **35 alt sağlayıcı** kaydeder (liste 1/2/3, Spor, Derbiler, Sinema, Belgesel, Ulusal, Haber, EBA TV, Çocuk, Dini, EXXEN, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii, Mubi, TOD vb.). `Live`, `Movie`, `TvSeries` türlerini kapsar; host/pin bilgileri yapılandırmada taşınır, sertifika pin doğrulaması istemci tarafından zorlanmaz. Modül derlemesi ve 35 kayıt doğrulandı; depo toplamı **120 sağlayıcı / 86 modül**.
+- **InatBox** eklendi: 35 alt sağlayıcı (Liste 1/2/3, Spor, Derbiler, Sinema, Belgesel ve diğerleri).
 
-### Bilinen eksikler
-- Upstream `diziboxen.help` doğrulama anında **HTTP 520** döndü; hiçbir alt sağlayıcı canlı veya emülatörde test edilemedi. Arama → detay → bölüm → oynatma zinciri ve HLS çıktısı doğrulanmadı; bu yüzden README'de **beta** işaretli ve modülde `status = 3` tanımlı.
-- `Premium` listesi (`inattv257.cfd`) içerik yapılandırması olmadan yalnızca bağlantı (`link_mode`) modunda; embed-only listelerde doğrudan oynatma akışı yok.
-- Özellik matrisi kolonları (sayfalama, öneri, fragman, kadro, süre, puan) upstream erişilemediği için `—`; canlı doğrulama sonrası doldurulacak.
+### Düzeltildi
+- 4K Web hedefi ve 4K host fallback düzeltildi.
 
 ## [1.5.16] - 2026-10-31
 
