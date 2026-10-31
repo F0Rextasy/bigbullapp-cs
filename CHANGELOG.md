@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.5.14] - 2026-10-31
+
+### Eklendi
+- **Dizibaba v1**: `dizibaba.net` eklendi; Pilavyer `__PLAYER__.stream` HLS master.
+
 ## [1.5.13] - 2026-10-31
 
 ### Eklendi
