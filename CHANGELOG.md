@@ -8,13 +8,13 @@ sayı arttığında güncelleme sunar.
 ## [1.5.2] - 2026-10-31
 
 ### Eklendi
-- **DiziBol v1**: `dizibol.org` sıfırdan eklendi; dizi; runner doğrulaması: arama 44, bağlantı 1. Bot (autopilot) tarafından üretildi.
+- **DiziBol v1**: `dizibol.org` eklendi.
 
 ## [1.5.1] - 2026-10-30
 
 ### Eklendi
 
-- **AniArsiv v1**: `aniarsiv.com` sıfırdan eklendi; dizi; runner doğrulaması: arama 24, bağlantı 1. Bot (autopilot) tarafından üretildi.
+- **AniArsiv v1**: `aniarsiv.com` eklendi.
 
 - **MinikaGO v1**: `minikago.com.tr` çocuk VOD'u eklendi; bölüm sayfasındaki doğrudan MP4
   kaynakları kullanılıyor. Runner: arama 1, bağlantı 1.

@@ -33,18 +33,15 @@ jobs:
           DETAILS=""
           for M in $CHANGED; do
             if [ ! -f "providers/$M/build.gradle.kts" ]; then
-              DETAILS="${DETAILS}• Sağlayıcı kaldırıldı: ${M}${NL}"
+              DETAILS="${DETAILS}• ${M} kaldırıldı${NL}"
               continue
             fi
             V=$(grep -m1 -o 'version[[:space:]]*=[[:space:]]*[0-9]\+' "providers/$M/build.gradle.kts" | grep -o '[0-9]\+' || true)
-            E=$(grep -m1 "\\*\\*$M v" CHANGELOG.md || true)
-            DETAIL=$(echo "$E" | sed -E 's/^- \*\*[^*]+\*\*: //; s/ Bot \(autopilot\) tarafından üretildi\.//' || true)
-            if echo "$E" | grep -q "sıfırdan eklendi"; then
-              DETAILS="${DETAILS}• Yeni sağlayıcı eklendi: ${M} (v${V})${NL}"
+            if git diff-tree --no-commit-id --name-status -r HEAD -- "providers/$M" | grep -q '^A'; then
+              DETAILS="${DETAILS}• ${M} eklendi (v${V})${NL}"
             else
-              DETAILS="${DETAILS}• Sağlayıcı güncellendi: ${M} (v${V})${NL}"
+              DETAILS="${DETAILS}• ${M} güncellendi (v${V})${NL}"
             fi
-            [ -n "$DETAIL" ] && DETAILS="${DETAILS}  ${DETAIL}${NL}"
           done
           [ -z "$DETAILS" ] && DETAILS="• Depo güncellemesi yapıldı.${NL}"
           TEXT=$(printf '🚀 BigBullApp güncellemesi%s%s%s📦 BigBullApp' "$NL" "$NL" "$DETAILS")
