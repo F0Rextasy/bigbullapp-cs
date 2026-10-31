@@ -91,6 +91,7 @@ Tek modül derleme ve cihaza kurulum:
 | `CanliDizi` **beta** | canlidizi.sbs | Dizi | — | — | — | — | — | — |
 | `CanliYayinKanallari` **beta** | tabii.com | Canlı TV | — | — | — | — | — | — |
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
+| `CizgiSite` **beta** | www.cizgi.site | Dizi | — | — | — | — | — | — |
 | `Ddizi` **beta** | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
 | `DDizimag` **beta** | ddizimag.com | Dizi | — | — | — | — | — | — |
 | `Deokwave` **beta** | deokwave.com | Dizi | — | — | — | — | — | — |
@@ -183,7 +184,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          80 modül
+  Yabancidizi/          81 modül
 ```
 
 ## Geliştirme
