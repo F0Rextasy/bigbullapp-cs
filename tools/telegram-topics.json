@@ -1,0 +1,23 @@
+{
+  "chat_id": "-1003994138025",
+  "topics": {
+    "duyuru": {
+      "thread_id": 3,
+      "welcomed": true,
+      "closed": true
+    },
+    "sohbet": {
+      "thread_id": 6,
+      "welcomed": true
+    },
+    "hata": {
+      "thread_id": 8,
+      "welcomed": true
+    },
+    "istek": {
+      "thread_id": 10,
+      "welcomed": true
+    }
+  },
+  "general_closed": true
+}
