@@ -33,10 +33,12 @@ jobs:
           DETAILS=""
           if [ -n "$CHANGED" ]; then
             SECTION=$(awk 'BEGIN { s = 0 } /^## \[/ { s++; next } s == 1 { print }' CHANGELOG.md)
-            DETAILS=$(printf '%s\n' "$SECTION" \
-              | grep -oE '^- \*\*[^*]+\*\*' \
-              | sed -E 's/^- \*\*([^*]+)\*\*/• \1/' || true)
+            DETAILS=$(printf '%s\n' "$SECTION" | awk '
+              /^### / { sub(/^### /, ""); print "— " $0; next }
+              /^- / { sub(/^- /, "• "); print }
+            ' || true)
             [ -n "$DETAILS" ] && DETAILS="${DETAILS}${NL}"
+          DETAILS=$(printf '%s' "$DETAILS" | sed 's/\*\*//g; s/`//g')
           fi
           [ -z "$DETAILS" ] && DETAILS="• Depo güncellemesi yapıldı.${NL}"
           DETAILS=$(printf '%s' "$DETAILS" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
