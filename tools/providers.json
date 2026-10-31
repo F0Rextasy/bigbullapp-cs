@@ -1450,6 +1450,26 @@
       "checked": "2026-10-31T10:43:13Z",
       "latencyMs": 0,
       "module": "DiziFilmIzle"
+    },
+    "deokwave.com": {
+      "id": "deokwave-com",
+      "name": "Deokwave",
+      "mainUrl": "https://deokwave.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Deokwave",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "Deokwave"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T11:48:07Z",
+      "latencyMs": 0,
+      "module": "Deokwave"
     }
   }
 }
