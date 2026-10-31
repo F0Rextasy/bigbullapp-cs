@@ -1490,6 +1490,26 @@
       "checked": "2026-10-31T12:50:29Z",
       "latencyMs": 0,
       "module": "HDFilmizleBest"
+    },
+    "hdfilmcehennemi2.biz": {
+      "id": "hdfilmcehennemi2-biz",
+      "name": "HDFilmCehennemi2",
+      "mainUrl": "https://www.hdfilmcehennemi2.biz",
+      "status": "implemented",
+      "http": 200,
+      "title": "Aşk ve Yaşam",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "HDFilmCehennemi2"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T12:50:30Z",
+      "latencyMs": 0,
+      "module": "HDFilmCehennemi2"
     }
   }
 }

@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.5.8] - 2026-10-31
+
+### Eklendi
+- **HDFilmCehennemi2 v1**: `hdfilmcehennemi2.biz` eklendi.
+
 ## [1.5.7] - 2026-10-31
 
 ### Eklendi
