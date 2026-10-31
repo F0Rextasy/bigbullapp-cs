@@ -8,6 +8,8 @@ sayı arttığında güncelleme sunar.
 ## [1.5.2] - 2026-10-31
 
 ### Eklendi
+- **DMAX v1**: `dmax.com.tr` eklendi.
+
 - **TV8 v1**: `tv8.com.tr` eklendi.
 
 - **KanalD v1**: `kanald.com.tr` eklendi.
