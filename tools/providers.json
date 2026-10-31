@@ -1530,6 +1530,26 @@
       "checked": "2026-10-31T13:05:27Z",
       "latencyMs": 0,
       "module": "MinikaCocuk"
+    },
+    "www.cizgi.site": {
+      "id": "www-cizgi-site",
+      "name": "CizgiSite",
+      "mainUrl": "https://www.cizgi.site",
+      "status": "implemented",
+      "http": 200,
+      "title": "CizgiSite",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "CizgiSite"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-10-31T13:53:15Z",
+      "latencyMs": 0,
+      "module": "CizgiSite"
     }
   }
 }
