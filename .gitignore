@@ -46,3 +46,15 @@ __pycache__/
 *.log
 # local agent notes only
 AGENTS.md
+# local agent / device debug dumps (never publish)
+/.omp/
+/.upstream/
+/.upstream-cache/
+/ep.json
+/ep_ids.txt
+/kkey.json
+/ok_card.txt
+/ok_meta.json
+/okjar.txt
+/prefs_*.xml
+/subs.json
