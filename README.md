@@ -131,6 +131,7 @@ Tek modül derleme ve cihaza kurulum:
 | `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `Sezonlukdizi` **beta** | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
 | `SinemaCX` **beta** | sinemacc.com | Film | — | — | — | ✓ | ✓ | ✓ |
+| `Sinemakolik` **beta** | sinemakolik.com | Film | — | — | — | — | — | — |
 | `SonAnime` **beta** | sonanime.com | Dizi | — | — | — | — | — | — |
 | `StarTV` | startv.com.tr | Dizi | — | — | — | — | — | — |
 | `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
@@ -170,7 +171,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          67 modül
+  Yabancidizi/          68 modül
 ```
 
 ## Geliştirme

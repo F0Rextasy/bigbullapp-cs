@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-31",
-  "note": "67 TR modül runner benchmark (2026-10-31)",
+  "note": "68 TR modül runner benchmark (2026-10-31)",
   "modules": [
     {
       "module": "AniArsiv",
@@ -349,6 +349,12 @@
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=1, ep=0",
       "runner": "bench_runner.py 2026-10-30"
+    },
+    {
+      "module": "Sinemakolik",
+      "result": "pass",
+      "evidence": "runner 2026-10-31: pass, links=1, ep=0",
+      "runner": "autopilot.py 2026-10-31"
     },
     {
       "module": "SonAnime",
