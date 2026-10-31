@@ -9,7 +9,7 @@ canlı TV kaynakları. Her site ayrı bir Gradle modülü ve ayrı bir `.cs3` ek
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
 [![Modül](https://img.shields.io/badge/mod%C3%BCl-65-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
-[![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/BigBull_App)
+[![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/+x4TC4_lD0f03Njk0)
 
 > **Kurulum:** Cloudstream → **Ayarlar → Eklentiler → Depo Ekle**:
 >
