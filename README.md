@@ -7,7 +7,7 @@ canlı TV kaynakları. Her site ayrı bir Gradle modülü ve ayrı bir `.cs3` ek
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-86-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-85-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -120,7 +120,6 @@ Tek modül derleme ve cihaza kurulum:
 | `DMAX` **beta** | dmax.com.tr | Dizi | — | — | — | — | — | — |
 | `DramaDizilerim` | dramadizilerim.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
 | `FilmEkseni` **beta** | filmekseni.vip | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `Filmizleya` **beta** | filmizleya.com | Film | — | — | — | — | — | — |
 | `Filmizyon` **beta** | filmizyon.net | Film | — | — | — | — | — | — |
 | `FilmModu` **beta** | filmmodu.news | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `FullHDFilm` **beta** | fullhdfilmizlebox.vip | Film | — | — | — | — | — | ✓ |
@@ -160,7 +159,7 @@ Tek modül derleme ve cihaza kurulum:
 | `YesilCamTv` **beta** | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
 **InatBox notu:** tek modül **35 alt sağlayıcı** kaydeder; her biri `Inat — <platform>` adıyla
-listelenir. Depoda toplam **120 Cloudstream sağlayıcısı** ve **86 modül** var. Bot probe’u
+listelenir. Depoda toplam **119 Cloudstream sağlayıcısı** ve **85 modül** var. Bot probe’u
 (`inat-probe.json`, 2026-11-01) **24/35 platformu listeledi: 20 oynatılabilir, 16 HLS**. Cloudstream provider’ından doğrudan `/run-all` ve HLS kanıtı upstream **520/403**
 nedeniyle alınamadı; bu yüzden tabloda **beta** ve modülde `status = 3`.
 
@@ -199,7 +198,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          86 modül
+  Yabancidizi/          85 modül
 ```
 
 ## Geliştirme

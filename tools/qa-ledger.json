@@ -273,12 +273,6 @@
       "runner": "bench_runner.py 2026-10-30"
     },
     {
-      "module": "Filmizleya",
-      "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-      "runner": "autopilot.py 2026-10-30"
-    },
-    {
       "module": "Filmizyon",
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=4, ep=0",

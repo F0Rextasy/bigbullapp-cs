@@ -1011,26 +1011,6 @@
       "latencyMs": 0,
       "module": "CanliYayinKanallari"
     },
-    "filmizleya.com": {
-      "id": "filmizleya-com",
-      "name": "Filmizleya",
-      "mainUrl": "https://filmizleya.com",
-      "status": "implemented",
-      "http": 200,
-      "title": "Pizza Movie",
-      "language": "tr",
-      "tvTypes": [
-        "Movie"
-      ],
-      "poolNames": [
-        "Filmizleya"
-      ],
-      "source": "provider-source",
-      "health": "ok",
-      "checked": "2026-10-30T05:48:38Z",
-      "latencyMs": 0,
-      "module": "Filmizleya"
-    },
     "weboo.com.tr": {
       "id": "weboo-com-tr",
       "name": "Weboo",
