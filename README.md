@@ -130,7 +130,41 @@ Tek modül derleme ve cihaza kurulum:
 | `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` **beta** | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `HDFilmizleBest` **beta** | hdfilmizle.best | Dizi | — | — | — | — | — | — |
-| `InatBox` **beta** | diziboxen.help | Canlı TV/Spor/Film/Dizi | — | — | — | — | — | — |
+| `InatListe1Tr` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatListe2Glb` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatListe3Tr` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatSpor` **beta** | sprboxs.bar | Canlı TV | — | — | — | — | — | — |
+| `InatDerbiler` **beta** | sprboxs.bar | Canlı TV | — | — | — | — | — | — |
+| `InatPremium` **beta** | inattv257.cfd | Canlı TV | — | — | — | — | — | — |
+| `InatSinema` **beta** | diziboxen.help | Film | — | — | — | — | — | — |
+| `InatBelgesel` **beta** | diziboxen.help | Belgesel | — | — | — | — | — | — |
+| `InatUlusal` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatHaber` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatEbaTv` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatCocuk` **beta** | diziboxen.help | Çocuk | — | — | — | — | — | — |
+| `InatDini` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatExxen` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatGain` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatNetflix` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatHboMax` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatDisney` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatAmazonPrime` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatTabii` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatMubi` **beta** | diziboxen.help | Film | — | — | — | — | — | — |
+| `InatTod` **beta** | sprboxs.bar | Dizi | — | — | — | — | — | — |
+| `InatYabanciDiziler` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatYerliDiziler` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatYerliFilmler` **beta** | diziboxen.help | Film | — | — | — | — | — | — |
+| `Inat4k01Exo` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k01Web` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k02Web` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k03Exo` | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k03Web` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k04Exo` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k04Web` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k06Exo` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k06Web` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k07Web` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `JetFilmizle` **beta** | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
 | `KanalD` | kanald.com.tr | Dizi | — | — | — | — | — | — |
 | `KoreanTurk` **beta** | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
@@ -158,10 +192,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
 | `YesilCamTv` **beta** | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**InatBox notu:** tek modül **35 alt sağlayıcı** kaydeder; her biri `Inat — <platform>` adıyla
-listelenir. Depoda toplam **119 Cloudstream sağlayıcısı** ve **85 modül** var. Bot probe’u
-(`inat-probe.json`, 2026-11-01) **24/35 platformu listeledi: 20 oynatılabilir, 16 HLS**. Cloudstream provider’ından doğrudan `/run-all` ve HLS kanıtı upstream **520/403**
-nedeniyle alınamadı; bu yüzden tabloda **beta** ve modülde `status = 3`.
+**Inat notu:** Inat'ın **35 platformu ayrı modül** olarak yayınlanır; her modül `Inat — <platform>` adıyla tek sağlayıcı kaydeder. Depoda toplam **119 modül ve 119 Cloudstream sağlayıcısı** var. Platformların upstream durumu ayrı ayrı doğrulanır; erişilemeyen platformlar **beta** ve `status = 3` kalır.
 
 Bot kanıtı olan platformlar: Liste 1/3, Spor, Derbiler, Sinema, Belgesel, Ulusal, Haber, EBA TV,
 Çocuk, Dini, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii, 4K Film 03 Exo, 4K Film 04 Web,

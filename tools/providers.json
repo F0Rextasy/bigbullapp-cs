@@ -1613,7 +1613,7 @@
     },
     "diziboxen.help": {
       "id": "diziboxen-help",
-      "name": "InatBox",
+      "name": "Inat Baks",
       "mainUrl": "https://diziboxen.help",
       "status": "implemented",
       "http": 520,
@@ -1626,7 +1626,101 @@
       ],
       "source": "provider-source",
       "health": "unknown",
-      "module": "InatBox"
+      "module": "Inat",
+      "modules": [
+        "InatListe1Tr",
+        "InatListe2Glb",
+        "InatListe3Tr",
+        "InatSinema",
+        "InatBelgesel",
+        "InatUlusal",
+        "InatHaber",
+        "InatEbaTv",
+        "InatCocuk",
+        "InatDini",
+        "InatExxen",
+        "InatGain",
+        "InatNetflix",
+        "InatHboMax",
+        "InatDisney",
+        "InatAmazonPrime",
+        "InatTabii",
+        "InatMubi",
+        "InatYabanciDiziler",
+        "InatYerliDiziler",
+        "InatYerliFilmler"
+      ]
+    },
+    "sprboxs.bar": {
+      "id": "sprboxs-bar",
+      "name": "Inat Baks",
+      "mainUrl": "https://sprboxs.bar",
+      "status": "implemented",
+      "http": 520,
+      "title": "",
+      "language": "tr",
+      "tvTypes": [
+        "Live",
+        "Movie",
+        "TvSeries"
+      ],
+      "source": "provider-source",
+      "health": "unknown",
+      "module": "Inat",
+      "modules": [
+        "InatSpor",
+        "InatDerbiler",
+        "InatTod"
+      ]
+    },
+    "inattv257.cfd": {
+      "id": "inattv257-cfd",
+      "name": "Inat Baks",
+      "mainUrl": "https://inattv257.cfd",
+      "status": "implemented",
+      "http": 520,
+      "title": "",
+      "language": "tr",
+      "tvTypes": [
+        "Live",
+        "Movie",
+        "TvSeries"
+      ],
+      "source": "provider-source",
+      "health": "unknown",
+      "module": "Inat",
+      "modules": [
+        "InatPremium"
+      ]
+    },
+    "4k.filmizleeeee.cfd": {
+      "id": "4k-filmizleeeee-cfd",
+      "name": "Inat Baks",
+      "mainUrl": "https://4k.filmizleeeee.cfd",
+      "status": "implemented",
+      "http": 520,
+      "title": "",
+      "language": "tr",
+      "tvTypes": [
+        "Live",
+        "Movie",
+        "TvSeries"
+      ],
+      "source": "provider-source",
+      "health": "unknown",
+      "module": "Inat",
+      "modules": [
+        "Inat4k01Exo",
+        "Inat4k01Web",
+        "Inat4k02Web",
+        "Inat4k03Exo",
+        "Inat4k03Web",
+        "Inat4k04Exo",
+        "Inat4k04Web",
+        "Inat4k06Exo",
+        "Inat4k06Web",
+        "Inat4k07Web"
+      ]
     }
   }
 }

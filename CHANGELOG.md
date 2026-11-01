@@ -5,6 +5,14 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.5.28] - 2026-11-01
+
+### Değişti
+- **InatBox**: 35 platform ayrı modüle bölündü; her platform kendi sağlayıcısı ve kategorisiyle yayınlanıyor.
+
+### Düzeltildi
+- Inat 4K platformlarında kalite etiketi 2160p olarak düzeltildi.
+
 ## [1.5.27] - 2026-11-01
 
 ### Düzeltildi
