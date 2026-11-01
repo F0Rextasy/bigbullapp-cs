@@ -25,6 +25,10 @@ import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
+import java.util.Base64
+import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
 import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.nodes.Document
@@ -115,9 +119,22 @@ class HDFilmDiziIzleProvider : MainAPI() {
     private val pathPrefixes = listOf("/dizi/", "/film/", "/film_series/")
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val q = if (false) asciiFold(query) else query
-        val url = "https://www.hdfilmdiziizle.com/?s={q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
-        return cards(app.get(url, headers = uaHeaders).document, q)
+        val body = app.get(
+            "$mainUrl/wp-json/wp/v2/search",
+            params = mapOf("search" to query.trim(), "per_page" to "20"),
+            headers = uaHeaders,
+        ).text
+        val results = JSONArray(body)
+        return (0 until results.length()).mapNotNull { index ->
+            val row = results.optJSONObject(index) ?: return@mapNotNull null
+            val href = fixUrlNull(row.optString("url")) ?: return@mapNotNull null
+            val path = href.substringAfter(mainUrl).substringBefore('?')
+            if (pathPrefixes.none { path.startsWith(it) }) return@mapNotNull null
+            val title = cleanTitle(row.optString("title")).ifBlank { return@mapNotNull null }
+            val isSeries = path.startsWith("/dizi/") || path.contains("/seri/") || path.contains("/series/")
+            if (isSeries) newTvSeriesSearchResponse(title, href, TvType.TvSeries)
+            else newMovieSearchResponse(title, href, TvType.Movie)
+        }.distinctBy { it.url }
     }
 
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
@@ -210,6 +227,7 @@ class HDFilmDiziIzleProvider : MainAPI() {
         val seen = mutableSetOf<String>()
         suspend fun emit(stream: String, label: String, referer: String) {
             if (!stream.startsWith("http") || !seen.add(stream)) return
+            if (stream.contains("cloudflare.com/static/")) return
             val type = if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
             val quality = getQualityFromName(label)
             if (!Settings.qualityAllowed(quality)) return
@@ -219,8 +237,52 @@ class HDFilmDiziIzleProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>("https://www.cloudflare.com/static/hero-background-video.mp4")
-        for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
+        val postId = Regex("""postid-(\d+)""").find(text)?.groupValues?.get(1)
+            ?: Regex("""data-id="(\d+)""").find(text)?.groupValues?.get(1)
+        if (postId != null) {
+            val sources = resp.document.select("button.playhd-btn[data-source]")
+                .mapNotNull { it.attr("data-source").takeIf { source -> source != "fragman_url" } }
+                .distinct()
+            for (source in sources) {
+                val encrypted = runCatching {
+                    app.post(
+                        "$mainUrl/wp-admin/admin-ajax.php",
+                        data = mapOf("action" to "get_source_url", "post_id" to postId, "source" to source),
+                        headers = uaHeaders,
+                        referer = data,
+                    ).text.trim()
+                }.getOrNull() ?: continue
+                if (encrypted == "0" || encrypted == "error") continue
+                val target = runCatching { decryptSource(encrypted) }.getOrNull()
+                    ?.let(::fixUrlNull) ?: continue
+                if (target.contains(".m3u8") || target.contains(".mp4")) {
+                    emit(target, "Player", data)
+                    continue
+                }
+                if (loadExtractor(target, data, subtitleCallback, callback)) {
+                    found = true
+                    continue
+                }
+                val inner = runCatching { app.get(target, headers = uaHeaders, referer = data).document }
+                    .getOrNull() ?: continue
+                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""")
+                    .findAll(inner.outerHtml().replace("\\/", "/"))) {
+                    emit(m.value, "Player", target)
+                }
+                for (m in Regex("""["'](/[^"']+\.m3u8(?:\?[^"']*)?)["']""").findAll(inner.outerHtml())) {
+                    emit(fixUrl(m.groupValues[1]), "Player", target)
+                }
+                for (frame in inner.select("iframe[src]")) {
+                    val sub = fixUrlNull(frame.attr("src")) ?: continue
+                    if (loadExtractor(sub, target, subtitleCallback, callback)) found = true
+                    val subDoc = runCatching { app.get(sub, headers = uaHeaders, referer = target).document }
+                        .getOrNull() ?: continue
+                    for (m in Regex("""["'](/[^"']+\.m3u8(?:\?[^"']*)?)["']""").findAll(subDoc.outerHtml())) {
+                        emit(fixUrl(m.groupValues[1]), "Player", sub)
+                    }
+                }
+            }
+        }
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
@@ -267,6 +329,13 @@ class HDFilmDiziIzleProvider : MainAPI() {
             throw ErrorLoadingException("$name: oynatılabilir akış yok")
         }
         return found
+    }
+    private fun decryptSource(value: String): String {
+        val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+        val key = "0123456789abcdef0123456789abcdef".toByteArray(Charsets.ISO_8859_1)
+        val iv = "abcdef9876543210".toByteArray(Charsets.ISO_8859_1)
+        cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(iv))
+        return String(cipher.doFinal(Base64.getDecoder().decode(value.trim())), Charsets.UTF_8)
     }
 
 }

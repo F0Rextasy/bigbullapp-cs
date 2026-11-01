@@ -432,6 +432,7 @@ data class InatCfg(
     val url: String,
     val host: String,
     val sha: String,
+    val fallbackUrl: String = "",
 ) {
     val displayName: String get() = "Inat — $name"
     val isMovieList: Boolean get() = name.contains("4K Film", true) || name.contains("Sinema", true) ||
@@ -478,12 +479,12 @@ object InatCfgRegistry {
         InatCfg("plat_Eezq0PIaOgfuROrP97RMrve8", "Yabancı Diziler", "DİZİLER", "dizi_mode", "tv_mode", "https://diziboxen.help/CDN/001/002/dizibox/v2/yabanci-dizi/index.php", DIZIBOX, DIZIBOX_SHA),
         InatCfg("plat__LKyrd8ppH12JNFYVgUX1rJO", "Yerli Diziler", "DİZİLER", "dizi_mode", "tv_mode", "https://diziboxen.help/CDN/001/002/dizibox/v2/yerli-dizi/index.php", DIZIBOX, DIZIBOX_SHA),
         InatCfg("plat_Q9tlKwxINorm6gHWwjkJigM9", "Yerli Filmler", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://diziboxen.help/CDN/001/002/dizibox/v2/film/yerli-filmler.php", DIZIBOX, DIZIBOX_SHA),
-        InatCfg("plat_OzD_GAgae020FLn469Yovxu6", "4K Film 01 | Exo", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/01/public/catalog-exo.php", FOURK, FOURK_SHA),
-        InatCfg("plat_wxEuxB5TlyyVLJArm_5c3DBM", "4K Film 01 | Web", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/01/public/catalog-web.php", FOURK, FOURK_SHA),
+        InatCfg("plat_OzD_GAgae020FLn469Yovxu6", "4K Film 01 | Exo", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/01/public/catalog-exo.php", FOURK, FOURK_SHA, "https://4k.filmizleeeee.cfd/4k/01/public/catalog-web.php"),
+        InatCfg("plat_wxEuxB5TlyyVLJArm_5c3DBM", "4K Film 01 | Web", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/01/public/catalog-web.php", FOURK, FOURK_SHA, "https://4k.filmizleeeee.cfd/4k/01/public/catalog-exo.php"),
         InatCfg("plat_ieEMdam3q5hzCPiZLQaAgEeF", "4K Film 02 | Web", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/02/public/catalog-web.php", FOURK, FOURK_SHA),
         InatCfg("plat_Y4HmB7sMjvY66BrS0pt6gGGY", "4K Film 03 | Exo", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/03/public/catalog-exo.php", FOURK, FOURK_SHA),
-        InatCfg("plat_MZnH69UAsd7FH44OlNWkGgv8", "4K Film 03 | Web", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/03/public/catalog-web.php", FOURK, FOURK_SHA),
-        InatCfg("plat_t7JZ3C-uIcJSLkkhYwXYzgxO", "4K Film 04 | Exo", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/04/public/catalog-exo.php", FOURK, FOURK_SHA),
+        InatCfg("plat_MZnH69UAsd7FH44OlNWkGgv8", "4K Film 03 | Web", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/03/public/catalog-web.php", FOURK, FOURK_SHA, "https://4k.filmizleeeee.cfd/4k/03/public/catalog-exo.php"),
+        InatCfg("plat_t7JZ3C-uIcJSLkkhYwXYzgxO", "4K Film 04 | Exo", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/04/public/catalog-exo.php", FOURK, FOURK_SHA, "https://4k.filmizleeeee.cfd/4k/04/public/catalog-web.php"),
         InatCfg("plat_BLrJGGw4JpbX2e5aXlrYd57y", "4K Film 04 | Web", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/04/public/catalog-web.php", FOURK, FOURK_SHA),
         InatCfg("plat_a058YtcuPSN0YdqLdc-_b6YU", "4K Film 06 | Exo", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/06/public/catalog-exo.php", FOURK, FOURK_SHA),
         InatCfg("plat_k2jK8cUekQuL1CcWqMAzuE2d", "4K Film 06 | Web", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/06/public/catalog-web.php", FOURK, FOURK_SHA),
@@ -842,7 +843,12 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
         return true
     }
 
-    private suspend fun rows(): List<InatEntry> = InatClient.entries(cfg.url, cfg.host, cfg.sha, cfg.dataType)
+    private suspend fun rows(): List<InatEntry> = try {
+        InatClient.entries(cfg.url, cfg.host, cfg.sha, cfg.dataType)
+    } catch (e: ErrorLoadingException) {
+        if (cfg.fallbackUrl.isBlank()) throw e
+        InatClient.entries(cfg.fallbackUrl, cfg.host, cfg.sha, cfg.dataType)
+    }
 
     private suspend fun rows(entry: InatEntry): List<InatEntry> =
         InatClient.entries(entry.url, entry.host, entry.pin, entry.dataType)

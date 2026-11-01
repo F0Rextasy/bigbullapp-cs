@@ -1,6 +1,6 @@
 {
   "generated": "2026-11-01",
-  "note": "86 TR modül; Dizigecesi cihazda Filemoon HLS ile pass (2026-10-31), InatBox upstream 520 nedeniyle blocked (2026-11-01), diğerleri benchmark",
+  "note": "86 TR modül; DramaDizilerim ve HDFilmDiziIzle canlı runner/HLS pass (2026-11-01); Dizigecesi/Dizilab upstream blocker; InatBox 27/35 bot probe, status=3.",
   "modules": [
     {
       "module": "AniArsiv",
@@ -263,8 +263,8 @@
     {
       "module": "DramaDizilerim",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=51",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "runner 2026-11-01: pass, links=1, ep=56; bot streams=1",
+      "runner": "qa 2026-11-01"
     },
     {
       "module": "FilmEkseni",
@@ -323,8 +323,8 @@
     {
       "module": "HDFilmDiziIzle",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-      "runner": "autopilot.py 2026-10-30"
+      "evidence": "runner 2026-11-01: pass, links=1; bot streams=1 (gerçek HLS)",
+      "runner": "qa 2026-11-01"
     },
     {
       "module": "HDFilmizle",
@@ -496,9 +496,9 @@
     },
     {
       "module": "Dizilab",
-      "result": "pass",
-      "evidence": "runner 2026-10-31: pass, links=1, ep=145, search=4, main=10",
-      "runner": "llm-assisted 2026-10-31"
+      "result": "blocked",
+      "evidence": "runner 2026-11-01: parse-error; ksdpictures 504; fallback eklendi",
+      "runner": "qa 2026-11-01"
     },
     {
       "module": "Dizibaba",
@@ -508,15 +508,15 @@
     },
     {
       "module": "Dizigecesi",
-      "result": "pass",
-      "evidence": "device 2026-10-31: Filemoon v2 -> HLS master, Rendered first frame",
-      "runner": "emulator cs33 2026-10-31"
+      "result": "blocked",
+      "evidence": "runner 2026-11-01: parse-error; short.icu DNS ve Filemoon captcha; fallback eklendi",
+      "runner": "qa 2026-11-01"
     },
     {
       "module": "InatBox",
       "result": "blocked",
-      "evidence": "bot inat-probe 2026-11-01: 27/35 listed, 21 playable, 18 HLS, 2 MP4, 5 embed; provider 35 registered + detail token fixed; direct /run-all blocked by upstream 520",
-      "runner": "bot inat_probe.mjs + manual emulator 2026-11-01"
+      "evidence": "bot probe 2026-11-01: 27/35 listeli; upstream 520/403; status=3",
+      "runner": "qa 2026-11-01"
     }
   ]
 }

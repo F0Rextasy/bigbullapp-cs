@@ -25,6 +25,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.newExtractorLink
+import org.json.JSONObject
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.net.URLDecoder
@@ -33,15 +34,11 @@ import java.net.URLDecoder
  * DramaDizilerim — dramadizilerim.com (dikey mini dizi / kısa drama arşivi, Türkçe dublaj + altyazı).
  *
  * Listeler: `/dizi?page=N` katalog, `/drama-izle?page=N` popüler, `/turkce-dublaj-drama?page=N`,
- * platform hub'ları `/p/<platform>?page=N`. Arama `/search?q=<sorgu>&page=N` (48 sonuç/sayfa).
+ * platform hub'ları `/p/<platform>?page=N`. Arama `/diziler?q=<sorgu>`.
  *
- * Detay `/dizi/<slug>`: bölüm kartları `a.wp-ecard[data-season][data-episode]` ve izleme adresleri
- * `/izle/<slug>?s=<sezon>&e=<bölüm>`; künye `div.wp-infobox` tablosunda, puan `span.wp-imdb`'de.
- *
- * Oynatıcı: izleme sayfası `embed.php` iframe'i basar; embed gövdesindeki `let source = "..."`
- * ya `hls_proxy.php` üzerinden m3u8 (çoğu platform) ya da doğrudan mp4 (NetShort/DramaBox) verir.
- * `window._captionUrl` doluysa Türkçe WebVTT altyazısı vardır. Melolo kaynakları AES-CTR ile
- * şifreli mp4'tür; tarayıcıda çözüldüğü için oynatıcıya verilemez.
+ * Detay `/dizi/<slug>`: bölüm bağlantıları `/izle/<slug>?s=<sezon>&e=<bölüm>`.
+ * Oynatıcı `/izle/` sayfasındaki `data-episode-id` ile `/api/playback` çağırır; yanıt
+ * HLS/MP4 adresini `/api/media?ticket=` olarak verir.
  */
 private fun Element.posterSrcLazy(): String? =
     attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
@@ -83,7 +80,7 @@ class DramaDizilerimProvider : MainAPI() {
 
     override suspend fun search(query: String, page: Int): SearchResponseList? {
         val doc = app.get(
-            "$mainUrl/search",
+            "$mainUrl/diziler",
             params = mapOf("q" to query.trim(), "page" to page.toString()),
             headers = uaHeaders,
         ).document
@@ -94,19 +91,22 @@ class DramaDizilerimProvider : MainAPI() {
         val pageUrl = fixUrl(url)
         val doc = runCatching { app.get(pageUrl, headers = uaHeaders).document }.getOrNull()
             ?: throw ErrorLoadingException("$name: dizi sayfası yüklenemedi. $REPORT_HINT")
-        val title = doc.selectFirst("h1#video-title")?.text()?.trim()?.takeIf { it.isNotEmpty() }
+        val title = doc.selectFirst("h1#series-title")?.text()?.trim()?.takeIf { it.isNotEmpty() }
+            ?: doc.selectFirst("h1")?.text()?.trim()?.takeIf { it.isNotEmpty() }
             ?: throw ErrorLoadingException("$name: dizi adı okunamadı. $REPORT_HINT")
 
         val info = doc.infoTable()
-        val poster = fixUrlNull(doc.selectFirst("div.wp-poster img")?.attr("src"))
-        val plot = doc.selectFirst("div.wp-desc")?.text()?.trim()?.takeIf { it.isNotEmpty() }
+        val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
+        val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+            ?.takeIf { it.isNotEmpty() }
         // Sitede tür/oyuncu/süre/fragman alanı yok; tek sınıflandırma platform kategorisi.
-        val tags = info["Kategoriler"]?.select("a")?.map { it.text().trim() }?.filter { it.isNotEmpty() }
+        val tags = doc.select("a[href^=/kategori/]").map { it.text().trim() }
+            .filter { it.isNotEmpty() }.ifEmpty { info["Kategoriler"]?.select("a")?.map { it.text().trim() } ?: emptyList() }
         val score = Score.from10(
             SCORE.find(doc.selectFirst("span.wp-imdb")?.text().orEmpty())
                 ?.groupValues?.get(1)?.replace(',', '.')?.toDoubleOrNull()
         )
-        val recommendations = doc.select("a.wp-hcard").mapNotNull { it.toSearchCard() }
+        val recommendations = doc.select("a.card-link").mapNotNull { it.toSearchCard() }
             .distinctBy { it.url }
 
         // Sitede film kaydı yok; tür etiketi "Film" olursa tek parça olarak sunulur.
@@ -121,12 +121,18 @@ class DramaDizilerimProvider : MainAPI() {
             }
         }
 
-        val episodes = doc.select("a.wp-ecard[href]").mapNotNull { anchor ->
+        val slug = pageUrl.substringAfter("/dizi/").substringBefore('?').trim('/')
+        val watchBase = "$mainUrl/izle/$slug"
+        val episodes = doc.select("a[href*=/izle/]").mapNotNull { anchor ->
             val link = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
+            if (link.substringBefore('?').trimEnd('/') != watchBase) return@mapNotNull null
+            val query = link.substringAfter('?', "")
+            val season = Regex("""(?:^|&)s=(\d+)""").find(query)?.groupValues?.get(1)?.toIntOrNull() ?: 1
+            val number = Regex("""(?:^|&)e=(\d+)""").find(query)?.groupValues?.get(1)?.toIntOrNull() ?: 1
             newEpisode(link) {
-                this.season = anchor.attr("data-season").toIntOrNull()
-                this.episode = anchor.attr("data-episode").toIntOrNull()
-                this.posterUrl = fixUrlNull(anchor.selectFirst("img")?.posterSrcLazy())
+                this.season = season
+                this.episode = number
+                this.name = "S$season B$number"
             }
         }.sortedWith(compareBy({ it.season ?: Int.MAX_VALUE }, { it.episode ?: Int.MAX_VALUE }))
             .distinctBy { it.data }
@@ -148,53 +154,36 @@ class DramaDizilerimProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
         val pageUrl = fixUrl(data)
-        val doc = runCatching { app.get(pageUrl, headers = uaHeaders).document }.getOrNull()
+        val html = runCatching { app.get(pageUrl, headers = uaHeaders).text }.getOrNull()
             ?: throw ErrorLoadingException("$name: bölüm sayfası yüklenemedi. $REPORT_HINT")
-        val embeds = doc.select("iframe[src]").mapNotNull { fixUrlNull(it.attr("src")) }.distinct()
-        if (embeds.isEmpty()) throw ErrorLoadingException("$name: oynatıcı bulunamadı. $REPORT_HINT")
-
-        val found = LinkedHashMap<String, Stream>()
-        for (embed in embeds) {
-            val html = runCatching {
-                app.get(embed, headers = uaHeaders, referer = pageUrl).text
-            }.getOrNull() ?: continue
-            // Melolo mp4'ü AES-CTR ile şifreli; anahtar tarayıcıda uygulanıyor, ham URL oynatmaz.
-            if (MELOLO_KEY.containsMatchIn(html)) continue
-
-            val caption = fixUrlNull(CAPTION.find(html)?.groupValues?.get(1)?.trim())
-            if (caption != null) {
-                val label = CAPTION_LABEL.find(html)?.groupValues?.get(1)?.trim().orEmpty()
-                    .ifEmpty { "Türkçe" }
-                if (Settings.subtitleAllowed(label)) subtitleCallback.invoke(SubtitleFile(label, caption))
-            }
-
-            val stream = fixUrlNull(SOURCE.find(html)?.groupValues?.get(1)?.trim()) ?: continue
-            // Çözülemeyen özel şemalar (dramabox:, shortmax:, ...) oynatıcıya verilemez.
-            if (!stream.startsWith("http")) continue
-            val type = TYPE.find(html)?.groupValues?.get(1).orEmpty()
-            val isHls = type.contains("mpegurl", true) || stream.contains(".m3u8") || stream.contains("hls_proxy")
-            val quality = qualityOf(stream)
-            found[stream] = Stream(stream, quality, isHls)
-        }
-        if (found.isEmpty()) throw ErrorLoadingException("$name: oynatılabilir kaynak bulunamadı. $REPORT_HINT")
-
-        val streams = found.values.toList()
-        val chosen = streams.filter { Settings.qualityAllowed(it.quality) }
-            .ifEmpty { listOfNotNull(streams.minByOrNull { it.quality }) }
-        chosen.forEach { stream ->
-            callback.invoke(
-                newExtractorLink(
-                    name,
-                    if (stream.quality > 0) "${stream.quality}p" else "Otomatik",
-                    stream.url,
-                    if (stream.isHls) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO,
-                ) {
-                    this.referer = "$mainUrl/"
-                    this.headers = mapOf("User-Agent" to UA)
-                    this.quality = stream.quality
-                }
+        val episodeId = Regex("""data-episode-id="([^"]+)"""").find(html)?.groupValues?.get(1)
+            ?: throw ErrorLoadingException("$name: oynatıcı kimliği bulunamadı. $REPORT_HINT")
+        val playback = runCatching {
+            JSONObject(
+                app.get(
+                    "$mainUrl/api/playback",
+                    params = mapOf("episodeId" to episodeId),
+                    headers = uaHeaders,
+                    referer = pageUrl,
+                ).text,
             )
+        }.getOrNull() ?: throw ErrorLoadingException("$name: oynatıcı yanıtı okunamadı. $REPORT_HINT")
+        val stream = fixUrlNull(playback.optString("url"))
+            ?: fixUrlNull(playback.optString("compatibilityUrl"))
+            ?: throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
+        val quality = qualityOf(stream)
+        if (!Settings.qualityAllowed(quality)) {
+            throw ErrorLoadingException("$name: akış kalite sınırının üstünde. $REPORT_HINT")
         }
+        val isHls = playback.optString("kind").contains("hls", true) || stream.contains(".m3u8")
+        callback.invoke(
+            newExtractorLink(name, if (quality > 0) "${quality}p" else "Otomatik", stream,
+                if (isHls) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO) {
+                this.referer = pageUrl
+                this.headers = uaHeaders
+                this.quality = quality
+            },
+        )
         return true
     }
 
@@ -207,7 +196,8 @@ class DramaDizilerimProvider : MainAPI() {
     private fun Element.toSearchCard(): SearchResponse? {
         val href = fixUrlNull(attr("href")) ?: return null
         if (!href.contains("/dizi/")) return null
-        val title = selectFirst("h1, h2, h3")?.text()?.trim()?.takeIf { it.isNotEmpty() }
+        val title = selectFirst("h3")?.text()?.trim()?.takeIf { it.isNotEmpty() }
+            ?: attr("aria-label").substringBefore(" — ").trim().takeIf { it.isNotEmpty() }
             ?: selectFirst("p[title]")?.attr("title")?.trim()?.takeIf { it.isNotEmpty() }
             ?: selectFirst("img")?.attr("alt")?.trim()?.takeIf { it.isNotEmpty() }
             ?: return null
@@ -239,7 +229,6 @@ class DramaDizilerimProvider : MainAPI() {
         return getQualityFromName("${height}p")
     }
 
-    private data class Stream(val url: String, val quality: Int, val isHls: Boolean)
 
     companion object {
         /** Homepage rows in display order; every entry maps to a live listing page. */
@@ -260,13 +249,8 @@ class DramaDizilerimProvider : MainAPI() {
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
 
         /** Katalog kartı, platform hub kartı ve arama satırı. */
-        private const val CARD = "a.video-item-card, a.drama-card, a.video-link"
+        private const val CARD = "a.card-link, a.video-item-card, a.drama-card, a.video-link"
         private val SCORE = Regex("""(\d+(?:[.,]\d+)?)""")
         private val QUALITY = Regex("""(?:[_.]|q=)(\d{3,4})p?(?=[/&.]|$)""")
-        private val SOURCE = Regex("""let source\s*=\s*"([^"]*)"""")
-        private val TYPE = Regex("""let type\s*=\s*"([^"]*)"""")
-        private val CAPTION = Regex("""window\._captionUrl\s*=\s*"([^"]*)"""")
-        private val CAPTION_LABEL = Regex("""window\._captionLabel\s*=\s*"([^"]*)"""")
-        private val MELOLO_KEY = Regex("""window\._meloloKey\s*=\s*"[0-9a-fA-F]{8,}"""")
     }
 }

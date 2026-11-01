@@ -103,9 +103,9 @@ Tek modül derleme ve cihaza kurulum:
 | `DiziCaN` **beta** | dizican.cc | Dizi | — | — | — | — | — | — |
 | `DiziFilmIzle` **beta** | dizifilmizle.to | Film | — | — | — | — | — | — |
 | `Dizifon` **beta** | dizifon.cc | Dizi | — | — | — | — | — | — |
-| `Dizigecesi` | dizigecesi.com | Film | — | — | — | — | — | — |
+| `Dizigecesi` **beta** | dizigecesi.com | Film | — | — | — | — | — | — |
 | `Dizigom` **beta** | dizigom.news | Film | — | — | — | — | — | — |
-| `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
+| `Dizilab` **beta** | dizilab.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi82.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
 | `Dizirella` **beta** | dizirella.one | Dizi | — | — | — | — | — | — |
 | `DiziYou` | diziyou.one | Dizi | — | — | ✓ | ✓ | — | ✓ |
@@ -118,7 +118,7 @@ Tek modül derleme ve cihaza kurulum:
 | `DiziPal` | dizipal1592.com | Dizi/Film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
 | `DiziPod` | dizipod.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `DMAX` **beta** | dmax.com.tr | Dizi | — | — | — | — | — | — |
-| `DramaDizilerim` **beta** | dramadizilerim.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
+| `DramaDizilerim` | dramadizilerim.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
 | `FilmEkseni` **beta** | filmekseni.vip | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `Filmizleya` **beta** | filmizleya.com | Film | — | — | — | — | — | — |
 | `Filmizyon` **beta** | filmizyon.net | Film | — | — | — | — | — | — |
@@ -128,7 +128,7 @@ Tek modül derleme ve cihaza kurulum:
 | `HDFilmCehennemi` **beta** | hdfilmcehennemi.nl | Film | — | — | — | — | — | — |
 | `HDFilmCehennemi2` **beta** | hdfilmcehennemi2.biz | Film | — | — | — | — | — | — |
 | `HDFilmDelisi` **beta** | hdfilmdelisi.one | Film | ✓ | — | — | — | ✓ | ✓ |
-| `HDFilmDiziIzle` **beta** | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
+| `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` **beta** | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `HDFilmizleBest` **beta** | hdfilmizle.best | Dizi | — | — | — | — | — | — |
 | `InatBox` **beta** | diziboxen.help | Canlı TV/Spor/Film/Dizi | — | — | — | — | — | — |

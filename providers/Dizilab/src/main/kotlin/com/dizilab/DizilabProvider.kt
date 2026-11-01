@@ -19,6 +19,7 @@ import com.lagradost.cloudstream3.newTvSeriesSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
+import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.jsoup.nodes.Element
 
@@ -125,6 +126,7 @@ class DizilabProvider : MainAPI() {
                 )
                 found = true
             }
+            if (!streams.any() && loadExtractor(frame, pageUrl, subtitleCallback, callback)) found = true
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
         return true

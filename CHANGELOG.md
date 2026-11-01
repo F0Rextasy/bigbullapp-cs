@@ -5,6 +5,16 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.5.18] - 2026-11-01
+
+### Eklendi
+- **InatBox v6**: 4K Web/Exo yedek kaynakları eklendi.
+
+### Düzeltildi
+- **DramaDizilerim v5**: yeni arama ve oynatıcı API'si düzeltildi.
+- **HDFilmDiziIzle v2**: arama ve gerçek oynatıcı kaynağı düzeltildi.
+- **Dizigecesi v4** ve **Dizilab v2**: oynatıcı yedek çözümü eklendi.
+
 ## [1.5.17] - 2026-11-01
 
 ### Eklendi

@@ -121,11 +121,9 @@ class DizigecesiProvider : MainAPI() {
                 .getOrNull() ?: continue
             val inner = Regex("""<iframe[^>]+src=["']([^"']+)""")
                 .find(wrapperHtml)?.groupValues?.get(1)?.let(::fixUrl) ?: wrapper
-            val handled = if (inner.contains("filemoon")) {
+            var handled = inner.contains("filemoon") &&
                 resolveFilemoon(inner, pageUrl, subtitleCallback, callback)
-            } else {
-                loadExtractor(inner, pageUrl, subtitleCallback, callback)
-            }
+            if (!handled) handled = loadExtractor(inner, pageUrl, subtitleCallback, callback)
             if (handled) found = true
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
