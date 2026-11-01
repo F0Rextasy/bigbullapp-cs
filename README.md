@@ -105,7 +105,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Dizifon` **beta** | dizifon.cc | Dizi | — | — | — | — | — | — |
 | `Dizigecesi` **beta** | dizigecesi.com | Film | — | — | — | — | — | — |
 | `Dizigom` **beta** | dizigom.news | Film | — | — | — | — | — | — |
-| `Dizilab` **beta** | dizilab.cc | Dizi | — | — | — | — | — | — |
+| `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi82.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
 | `Dizirella` **beta** | dizirella.one | Dizi | — | — | — | — | — | — |
 | `DiziYou` | diziyou.one | Dizi | — | — | ✓ | ✓ | — | ✓ |

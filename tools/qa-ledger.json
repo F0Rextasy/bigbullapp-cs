@@ -496,8 +496,8 @@
     },
     {
       "module": "Dizilab",
-      "result": "blocked",
-      "evidence": "runner 2026-11-01: parse-error; ksdpictures 504; fallback eklendi",
+      "result": "pass",
+      "evidence": "runner 2026-11-01: pass, links=1, canlı HLS (ksdpictures)",
       "runner": "qa 2026-11-01"
     },
     {
