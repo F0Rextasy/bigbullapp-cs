@@ -103,7 +103,7 @@ Tek modül derleme ve cihaza kurulum:
 | `DiziCaN` **beta** | dizican.cc | Dizi | — | — | — | — | — | — |
 | `DiziFilmIzle` **beta** | dizifilmizle.to | Film | — | — | — | — | — | — |
 | `Dizifon` **beta** | dizifon.cc | Dizi | — | — | — | — | — | — |
-| `Dizigecesi` **beta** | dizigecesi.com | Film | — | — | — | — | — | — |
+| `Dizigecesi` | dizigecesi.com | Film | — | — | — | — | — | — |
 | `Dizigom` **beta** | dizigom.news | Film | — | — | — | — | — | — |
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi82.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |

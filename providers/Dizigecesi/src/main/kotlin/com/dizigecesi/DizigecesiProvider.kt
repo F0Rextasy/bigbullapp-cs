@@ -225,12 +225,15 @@ class DizigecesiProvider : MainAPI() {
     )
 
     private suspend fun fmAttest(base: String, requestHeaders: Map<String, String>): JSONObject? {
+        val accessHeaders = requestHeaders.filterKeys {
+            it.lowercase() in setOf("user-agent", "referer", "origin", "accept", "accept-language")
+        }
         val challenge = runCatching {
             JSONObject(
                 app.post(
                     "$base/api/videos/access/challenge",
                     json = JSONObject(),
-                    headers = requestHeaders,
+                    headers = accessHeaders,
                 ).text,
             )
         }.getOrNull() ?: return null
@@ -243,23 +246,26 @@ class DizigecesiProvider : MainAPI() {
             update(challenge.optString("nonce").toByteArray())
             fmDerToRaw(sign())
         }
+        val sigText = fmB64(signature)
         val jwk = JSONObject()
             .put("kty", "EC")
             .put("crv", "P-256")
             .put("x", fmB64(fmFixed(publicKey.w.affineX.toByteArray())))
             .put("y", fmB64(fmFixed(publicKey.w.affineY.toByteArray())))
+            .put("ext", true)
+            .put("key_ops", JSONArray().put("verify"))
         val body = JSONObject()
             .put("viewer_id", "")
             .put("device_id", "")
             .put("challenge_id", challenge.optString("challenge_id"))
             .put("nonce", challenge.optString("nonce"))
-            .put("signature", fmB64(signature))
+            .put("signature", sigText)
             .put("public_key", jwk)
             .put("client", JSONObject().put("user_agent", headers["User-Agent"]))
             .put("storage", JSONObject())
-            .put("attributes", JSONObject().put("entropy", "low"))
+            .put("attributes", JSONObject().put("entropy", "high"))
         val attest = runCatching {
-            JSONObject(app.post("$base/api/videos/access/attest", json = body, headers = requestHeaders).text)
+            JSONObject(app.post("$base/api/videos/access/attest", json = body, headers = accessHeaders).text)
         }.getOrNull() ?: return null
         if (attest.optString("token").isBlank()) return null
         return JSONObject()
@@ -409,6 +415,7 @@ class DizigecesiProvider : MainAPI() {
 
     private fun fmB64(bytes: ByteArray): String =
         Base64.encodeToString(bytes, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
+            .trimEnd('=').replace('+', '-').replace('/', '_')
 
     private fun fmB64d(value: String): ByteArray =
         Base64.decode(value, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
