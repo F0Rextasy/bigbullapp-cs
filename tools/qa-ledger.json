@@ -5,8 +5,8 @@
     {
       "module": "AniArsiv",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=1180",
-      "runner": "autopilot.py 2026-10-30"
+      "evidence": "runner 2026-11-01: TAU API, 8 links, 19 bölüm",
+      "runner": "qa 2026-11-01"
     },
     {
       "module": "AnimeciX",

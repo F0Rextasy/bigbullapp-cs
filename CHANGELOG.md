@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.5.22] - 2026-11-01
+
+### Düzeltildi
+- **AniArsiv v2**: TAU Video kaynakları ve kısa önizleme filtresi düzeltildi.
+
 ## [1.5.21] - 2026-11-01
 
 ### Düzeltildi

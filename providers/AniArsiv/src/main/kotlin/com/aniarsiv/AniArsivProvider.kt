@@ -146,9 +146,10 @@ class AniArsivProvider : MainAPI() {
             })
             found = true
         }
-        root.optJSONObject("cdn_video")?.optString("video_url")
-            ?.takeIf { it.startsWith("http") }
-            ?.let { emit(it, "AniArsiv") }
+        val cdn = root.optJSONObject("cdn_video")
+        if (cdn != null && !cdn.optBoolean("is_short", false)) {
+            cdn.optString("video_url").takeIf { it.startsWith("http") }?.let { emit(it, "AniArsiv") }
+        }
         val links = root.optJSONArray("links")
         if (links != null) {
             for (i in 0 until links.length()) {
@@ -156,14 +157,40 @@ class AniArsivProvider : MainAPI() {
                 val embed = link.optString("url").trim()
                 if (!embed.startsWith("http") || !seen.add(embed)) continue
                 val player = link.optString("player").ifBlank { "Kaynak" }
-                val hermes = runCatching {
-                    loadExtractor(embed, "$mainUrl/", subtitleCallback, callback)
-                }.getOrDefault(false)
-                if (hermes) found = true else if (embed.contains(".mp4")) emit(embed, player)
+                val handled = if (embed.contains("tau-video.xyz")) {
+                    resolveTau(embed, callback)
+                } else {
+                    runCatching { loadExtractor(embed, "$mainUrl/", subtitleCallback, callback) }
+                        .getOrDefault(false)
+                }
+                if (handled) found = true else if (embed.contains(".mp4")) emit(embed, player)
             }
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir kaynak yok. $REPORT_HINT")
         return true
+    }
+    private suspend fun resolveTau(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
+        val id = Regex("""/embed/([^/?#]+)""").find(embed)?.groupValues?.get(1) ?: return false
+        val root = runCatching {
+            JSONObject(app.get("https://tau-video.xyz/api/video/$id", headers = headers).text)
+        }.getOrNull() ?: return false
+        val urls = root.optJSONArray("urls") ?: return false
+        var sent = false
+        for (index in 0 until urls.length()) {
+            val row = urls.optJSONObject(index) ?: continue
+            val stream = row.optString("url").trim()
+            if (!stream.startsWith("http")) continue
+            val label = row.optString("label").ifBlank { "Kaynak" }
+            val quality = getQualityFromName(label)
+            if (!Settings.qualityAllowed(quality)) continue
+            callback(newExtractorLink(name, "TAU $label", stream, ExtractorLinkType.VIDEO) {
+                this.referer = embed
+                this.quality = quality
+                this.headers = mapOf("User-Agent" to UA)
+            })
+            sent = true
+        }
+        return sent
     }
 
     companion object {
