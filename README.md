@@ -133,13 +133,13 @@ Tek modül derleme ve cihaza kurulum:
 | `HDFilmizleBest` **beta** | hdfilmizle.best | Dizi | — | — | — | — | — | — |
 | `InatBox` **beta** | diziboxen.help | Canlı TV/Spor/Film/Dizi | — | — | — | — | — | — |
 | `JetFilmizle` **beta** | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
-| `KanalD` **beta** | kanald.com.tr | Dizi | — | — | — | — | — | — |
+| `KanalD` | kanald.com.tr | Dizi | — | — | — | — | — | — |
 | `KoreanTurk` **beta** | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
 | `Kultfilmler` | kultfilmler.net | Film | ✓ | — | — | ✓ | ✓ | ✓ |
 | `LoveFilm` **beta** | lovefilmizle.net | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `MinikaCocuk` **beta** | minikacocuk.com.tr | Dizi | — | — | — | — | — | — |
 | `MinikaGO` | minikago.com.tr | Çocuk | — | — | — | — | — | — |
-| `NetFilmizle` **beta** | netfilmizle.com | Film | — | — | — | — | — | — |
+| `NetFilmizle` | netfilmizle.com | Film | — | — | — | — | — | — |
 | `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
 | `SelcukFlix` **beta** | selcukflix.app | Dizi/Film | — | — | — | — | ✓ | ✓ |
 | `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
