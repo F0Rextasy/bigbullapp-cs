@@ -161,8 +161,7 @@ Tek modül derleme ve cihaza kurulum:
 
 **InatBox notu:** tek modül **35 alt sağlayıcı** kaydeder; her biri `Inat — <platform>` adıyla
 listelenir. Depoda toplam **120 Cloudstream sağlayıcısı** ve **86 modül** var. Bot probe’u
-(`inat-probe.json`, 2026-11-01) **27/35 platformu listeledi: 21 oynatılabilir, 18 HLS, 2 MP4,
-5 embed**. Cloudstream provider’ından doğrudan `/run-all` ve HLS kanıtı upstream **520/403**
+(`inat-probe.json`, 2026-11-01) **24/35 platformu listeledi: 20 oynatılabilir, 16 HLS**. Cloudstream provider’ından doğrudan `/run-all` ve HLS kanıtı upstream **520/403**
 nedeniyle alınamadı; bu yüzden tabloda **beta** ve modülde `status = 3`.
 
 Bot kanıtı olan platformlar: Liste 1/3, Spor, Derbiler, Sinema, Belgesel, Ulusal, Haber, EBA TV,
