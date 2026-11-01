@@ -108,10 +108,10 @@ class AnimelerProvider : MainAPI() {
         val frames = doc.select("iframe[src]").mapNotNull { fixUrlNull(it.attr("src")) }.distinct().take(6)
         var found = false
         for (frame in frames) {
-            val ok = if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) {
-                loadOkRu(frame, callback)
-            } else {
-                loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)
+            val ok = when {
+                frame.contains("my.mail.ru") -> loadMailRu(frame, callback)
+                frame.contains("ok.ru") || frame.contains("odnoklassniki") -> loadOkRu(frame, callback)
+                else -> loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)
             }
             if (ok) found = true
         }
@@ -122,6 +122,34 @@ class AnimelerProvider : MainAPI() {
             if (loadOkRu("https://ok.ru/videoembed/$id", callback)) found = true
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir akış yok")
+        return found
+    }
+    private suspend fun loadMailRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
+        val id = Regex("""/video/embed/(\d+)""").find(embed)?.groupValues?.get(1) ?: return false
+        val body = runCatching {
+            app.get(
+                "https://my.mail.ru/+/video/meta/$id",
+                headers = mapOf(
+                    "User-Agent" to "Mozilla/5.0",
+                    "Referer" to "https://my.mail.ru/video/embed/$id",
+                ),
+            ).text
+        }.getOrNull() ?: return false
+        val videos = runCatching { JSONObject(body).optJSONArray("videos") }.getOrNull() ?: return false
+        var found = false
+        for (index in 0 until videos.length()) {
+            val item = videos.optJSONObject(index) ?: continue
+            val raw = item.optString("url")
+            val stream = if (raw.startsWith("//")) "https:$raw" else raw
+            if (!stream.startsWith("http")) continue
+            val label = item.optString("key").ifBlank { "MailRu" }
+            callback(newExtractorLink(name, "MailRu $label", stream, ExtractorLinkType.VIDEO) {
+                this.referer = "https://my.mail.ru/"
+                this.quality = getQualityFromName(label.uppercase())
+                this.headers = mapOf("User-Agent" to "Mozilla/5.0")
+            })
+            found = true
+        }
         return found
     }
 

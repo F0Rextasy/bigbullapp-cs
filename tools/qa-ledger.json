@@ -17,8 +17,8 @@
     {
       "module": "Animeler",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=4, ep=1",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "runner 2026-11-01: Mail.ru MP4 HTTP 200 (Range GET), 1 link",
+      "runner": "qa 2026-11-01"
     },
     {
       "module": "Anizium",
