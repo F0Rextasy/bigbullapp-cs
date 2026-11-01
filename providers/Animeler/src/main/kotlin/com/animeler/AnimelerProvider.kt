@@ -105,7 +105,7 @@ class AnimelerProvider : MainAPI() {
     ): Boolean {
         val resp = app.get(data, headers = uaHeaders)
         val doc = resp.document
-        val frames = doc.select("iframe[src]").mapNotNull { fixUrlNull(it.attr("src")) }.distinct()
+        val frames = doc.select("iframe[src]").mapNotNull { fixUrlNull(it.attr("src")) }.distinct().take(6)
         var found = false
         for (frame in frames) {
             val ok = if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) {

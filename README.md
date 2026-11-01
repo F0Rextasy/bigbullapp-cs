@@ -74,7 +74,7 @@ Tek modül derleme ve cihaza kurulum:
 | Eklenti | Kaynak | Tür | Sayfalama | Öneri | Fragman | Kadro | Süre | Puan |
 |---|---|---|---|---|---|---|---|---|
 | `AniArsiv` | aniarsiv.com | Dizi | — | — | — | — | — | — |
-| `AnimeciX` **beta** | animecix.tv | Anime | — | — | — | — | — | ✓ |
+| `AnimeciX` | animecix.tv | Anime | — | — | — | — | — | ✓ |
 | `Animeler` **beta** | animeler.live | Anime | — | — | — | — | — | — |
 | `Anizm` **beta** | turkanime.info | Anime | — | — | ✓ | — | — | ✓ |
 | `Anizium` | anizium.co | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |

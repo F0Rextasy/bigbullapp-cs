@@ -11,8 +11,8 @@
     {
       "module": "AnimeciX",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=3, ep=16",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "runner 2026-11-01: 14 arama, 16 bölüm, 3 canlı MP4",
+      "runner": "qa 2026-11-01"
     },
     {
       "module": "Animeler",
