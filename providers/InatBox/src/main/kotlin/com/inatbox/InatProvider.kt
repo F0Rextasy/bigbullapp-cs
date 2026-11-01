@@ -43,6 +43,7 @@ private const val TOKEN_PREFIX = "inatbox:v1"
 private const val MODE_ITEM = "item"
 private const val MODE_LIST = "list"
 private const val MODE_ROW = "row"
+private const val MODE_SINGLE = "single"
 private const val MODE_EMBED = "embed"
 
 // Keys of the Inat Android client: the signing key is XOR-derived from the encoded
@@ -487,7 +488,7 @@ object InatCfgRegistry {
         InatCfg("plat_t7JZ3C-uIcJSLkkhYwXYzgxO", "4K Film 04 | Exo", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/04/public/catalog-exo.php", FOURK, FOURK_SHA, "https://4k.filmizleeeee.cfd/4k/04/public/catalog-web.php"),
         InatCfg("plat_BLrJGGw4JpbX2e5aXlrYd57y", "4K Film 04 | Web", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/04/public/catalog-web.php", FOURK, FOURK_SHA),
         InatCfg("plat_a058YtcuPSN0YdqLdc-_b6YU", "4K Film 06 | Exo", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/06/public/catalog-exo.php", FOURK, FOURK_SHA),
-        InatCfg("plat_k2jK8cUekQuL1CcWqMAzuE2d", "4K Film 06 | Web", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/06/public/catalog-web.php", FOURK, FOURK_SHA),
+        InatCfg("plat_k2jK8cUekQuL1CcWqMAzuE2d", "4K Film 06 | Web", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/06/public/catalog-web.php", FOURK, FOURK_SHA, "https://4k.filmizleeeee.cfd/4k/06/public/catalog-exo.php"),
         InatCfg("plat_LILDAcQf-pW0mx2p_ZhFL2XS", "4K Film 07 | Web", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://4k.filmizleeeee.cfd/4k/07/public/catalog-web.php", FOURK, FOURK_SHA),
     )
 }
@@ -779,7 +780,15 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
             MODE_ITEM -> {
                 val entry = pick(rows(), ref)
                     ?: throw ErrorLoadingException("$name: ${ref.name} bulunamadı. $REPORT_HINT")
-                if (cfg.isLiveList) liveLoad(entry, url) else catalogueLoad(entry, url)
+                val single = cfg.isMovieList && entry.type.isNotEmpty() &&
+                    entry.type !in setOf("tv_mode", "dizi_mode", "sezon_mode", "bolum_mode")
+                if (single) {
+                    newMovieLoadResponse(entry.name.ifBlank { cfg.name }, url, TvType.Movie,
+                        tokenUrl(MODE_SINGLE, entry.url, ref.index, entry.name, entry.host, entry.pin, entry.type)) {
+                        this.posterUrl = entry.img.ifBlank { null }
+                        this.plot = entry.plot.ifBlank { null }
+                    }
+                } else if (cfg.isLiveList) liveLoad(entry, url) else catalogueLoad(entry, url)
             }
             else -> {
                 val entry = pick(rows(ref.url, ref.host, ref.pin, ref.dataType), ref)
@@ -801,6 +810,32 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
         val ref = parseToken(data) ?: throw ErrorLoadingException("$name: kaynak bağlantısı okunamadı. $REPORT_HINT")
         val targets: List<Pair<String, InatEntry>> = when (ref.mode) {
             MODE_EMBED -> listOf(cfg.name to embedEntry(ref.url))
+            MODE_SINGLE -> {
+                val direct = InatEntry(
+                    name = ref.name,
+                    url = ref.url,
+                    type = ref.dataType,
+                    img = "",
+                    plot = "",
+                    headers = emptyMap(),
+                    params = emptyMap(),
+                    host = ref.host,
+                    pin = ref.pin,
+                    dataType = ref.dataType,
+                    season = false,
+                    episode = false,
+                )
+                val candidates = mutableListOf(direct)
+                if (cfg.fallbackUrl.isNotBlank()) {
+                    try {
+                        InatClient.entries(cfg.fallbackUrl, cfg.host, cfg.sha, cfg.dataType)
+                            .firstOrNull { it.name == direct.name }
+                            ?.let { candidates += it }
+                    } catch (_: Exception) {
+                    }
+                }
+                candidates.map { it.name.ifBlank { "Kaynak" } to it }
+            }
             MODE_LIST -> rows(ref.url, ref.host, ref.pin, ref.dataType)
                 .filter { !it.season && it.url.isNotEmpty() }
                 .mapIndexed { index, entry -> entry.name.ifBlank { "Kaynak ${index + 1}" } to entry }
@@ -845,9 +880,13 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
 
     private suspend fun rows(): List<InatEntry> = try {
         InatClient.entries(cfg.url, cfg.host, cfg.sha, cfg.dataType)
-    } catch (e: ErrorLoadingException) {
+    } catch (e: Exception) {
         if (cfg.fallbackUrl.isBlank()) throw e
-        InatClient.entries(cfg.fallbackUrl, cfg.host, cfg.sha, cfg.dataType)
+        try {
+            InatClient.entries(cfg.fallbackUrl, cfg.host, cfg.sha, cfg.dataType)
+        } catch (_: Exception) {
+            throw e
+        }
     }
 
     private suspend fun rows(entry: InatEntry): List<InatEntry> =

@@ -515,7 +515,7 @@
     {
       "module": "InatBox",
       "result": "blocked",
-      "evidence": "bot probe 2026-11-01: 24/35 listeli, 20 oynatılabilir, 16 HLS; upstream 520/403; status=3",
+      "evidence": "runner 2026-11-01: 4K 03/06 Exo ve Web fallback pass; 24/35 bot probe, upstream 520/403; status=3",
       "runner": "qa 2026-11-01"
     }
   ]
