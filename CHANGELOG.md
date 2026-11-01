@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.5.29] - 2026-11-01
+
+### Düzeltildi
+- **CizgiSite v2**: bölüm sayfası engel/boş yanıtında retry ve ilk bölüm fallback'i eklendi.
+
 ## [1.5.28] - 2026-11-01
 
 ### Değişti

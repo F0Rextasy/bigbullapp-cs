@@ -21,6 +21,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.newExtractorLink
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
 private fun Element.posterSrcLazy(): String? =
@@ -109,18 +110,37 @@ class CizgiSiteProvider : MainAPI() {
         }
     }
 
+    private suspend fun pageHtml(url: String, referer: String? = null): String {
+        var last = ""
+        repeat(2) {
+            last = app.get(url, headers = uaHeaders, referer = referer).text
+            if (last.length > 20_000 || last.contains("article.icerik") || last.contains("video_ext")) return last
+        }
+        return last
+    }
+
+    private fun frameUrls(page: String): List<String> =
+        Regex("""(?:src|data-src)=["']([^"']*(?:vk\.com/video_ext|video_ext\.php)[^"']*)""", RegexOption.IGNORE_CASE)
+            .findAll(page).map {
+                val raw = it.groupValues[1]
+                if (raw.startsWith("//")) "https:$raw" else fixUrl(raw)
+            }.distinct().toList()
+
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val page = app.get(data, headers = uaHeaders).text
-        val frames = Regex("""(?:src|data-src)=["']([^"']*(?:vk\.com/video_ext|video_ext\.php)[^"']*)""", RegexOption.IGNORE_CASE)
-            .findAll(page).map {
-                val raw = it.groupValues[1]
-                if (raw.startsWith("//")) "https:$raw" else fixUrl(raw)
-            }.distinct().toList()
+        var page = pageHtml(data)
+        var frames = frameUrls(page)
+        if (frames.isEmpty()) {
+            val firstEpisode = Jsoup.parse(page).selectFirst("article.icerik a[href]")?.attr("href")
+            if (!firstEpisode.isNullOrBlank()) {
+                page = pageHtml(fixUrl(firstEpisode), data)
+                frames = frameUrls(page)
+            }
+        }
         var found = false
         for (frame in frames) {
             val embed = runCatching {

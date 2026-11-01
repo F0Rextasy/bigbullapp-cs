@@ -5,7 +5,7 @@
     {
       "module": "AniArsiv",
       "result": "pass",
-      "evidence": "runner 2026-11-01: TAU API, 8 links, 19 bölüm",
+      "evidence": "runner 2026-11-01: /api/animes 24 sonuç; bot statik HTML/JSON kart ayrımı nedeniyle 0 (SPA)",
       "runner": "qa 2026-11-01"
     },
     {
@@ -119,8 +119,8 @@
     {
       "module": "CizgiSite",
       "result": "pass",
-      "evidence": "runner 2026-10-31: pass, links=5, ep=10",
-      "runner": "autopilot.py 2026-10-31"
+      "evidence": "runner 2026-11-01: bölüm retry + ilk bölüm fallback, CizgiSite q=ari 5 link",
+      "runner": "qa 2026-11-01"
     },
     {
       "module": "Ddizi",
