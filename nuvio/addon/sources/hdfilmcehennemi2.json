@@ -1,0 +1,10 @@
+{
+  "id": "hdfilmcehennemi2",
+  "name": "HDFilmCehennemi2",
+  "type": "movie",
+  "url": "https://www.hdfilmcehennemi2.biz/",
+  "item": "<article[\\s\\S]*?</article>",
+  "title": "alt=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

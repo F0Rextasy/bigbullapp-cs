@@ -1,0 +1,10 @@
+{
+  "id": "hdfilmizle",
+  "name": "HDFilmizle",
+  "type": "movie",
+  "url": "https://www.hdfilmizle.ink/film/",
+  "item": "<article[^>]*class=\"item[^\"]*\"[\\s\\S]*?</article>",
+  "title": "<h2>([\\s\\S]*?)</h2>",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

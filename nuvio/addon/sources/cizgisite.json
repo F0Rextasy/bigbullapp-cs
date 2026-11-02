@@ -1,0 +1,10 @@
+{
+  "id": "cizgisite",
+  "name": "CizgiSite",
+  "type": "series",
+  "url": "https://www.cizgi.site/tr",
+  "item": "<div class=\"ikon-dis\">[\\s\\S]*?</a>",
+  "title": "title=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

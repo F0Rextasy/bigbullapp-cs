@@ -1,0 +1,1 @@
+{"id":"filmizyon","name":"Filmizyon","type":"movie","url":"https://www.filmizyon.net/","item":"<div class=\"col-lg-3 col-6 poster-container\"[\\s\\S]*?</a>","title":"title=\"([^\"]+)\"","href":"href=\"([^\"]+)\"","limit":40}

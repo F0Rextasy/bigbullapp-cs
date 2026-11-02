@@ -1,0 +1,9 @@
+{
+  "id": "dizilla",
+  "name": "Dizilla",
+  "type": "series",
+  "url": "https://dizilla.now/yabanci-dizi-izle",
+  "item": "<a[^>]*class=\"pcard\"[^>]*>[\\s\\S]*?</a>",
+  "title": "<span class=\"mvk-t\">([^<]+)</span>",
+  "href": "href=\"([^\"]+)\""
+}

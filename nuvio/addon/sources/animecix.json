@@ -1,0 +1,9 @@
+{
+  "id": "animecix",
+  "name": "AnimeciX",
+  "type": "series",
+  "url": "https://animecix.tv/secure/search/a",
+  "item": "\\{\"_id\":\"[^\"]+\",\"adult\":(?:true|false),\"backdrop\":\"[^\"]*\",\"budget\":(?:null|\\d+),[\\s\\S]{0,1500}?\"name\":\"[^\"]+\"",
+  "title": "\"name\":\"([^\"]+)\"",
+  "headers": { "Referer": "https://animecix.tv/" }
+}

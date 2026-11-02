@@ -1,0 +1,10 @@
+{
+  "id": "hdfilmcehennemi",
+  "name": "HDFilmCehennemi",
+  "type": "movie",
+  "url": "https://www.hdfilmcehennemi.nl/feed/",
+  "item": "<item>[\\s\\S]*?</item>",
+  "title": "&#45;\\s*([^<]+?)\\s+izle\\s*</title>",
+  "href": "<link>([^<]+)</link>",
+  "limit": 40
+}

@@ -1,0 +1,1 @@
+{"id":"diziyou","name":"DiziYou","type":"series","url":"https://www.diziyou.one/","item":"<div id=\"list-series-main\">[\\s\\S]*?</a>","title":"aria-label=\"([^\"]+)\"","href":"href=\"([^\"]+)\"","limit":40}

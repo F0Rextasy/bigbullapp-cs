@@ -1,0 +1,9 @@
+{
+  "id": "yesilcamtv",
+  "name": "Yeşilçam TV",
+  "type": "movie",
+  "url": "https://yesilcamtv.com.tr/",
+  "item": "<div class=\"movie-box\"[\\s\\S]*?class=\"film-ismi\">[\\s\\S]*?</a>",
+  "title": "class=\"film-ismi\">\\s*<a[^>]*>([^<]+)</a>",
+  "limit": 40
+}

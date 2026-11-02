@@ -1,0 +1,9 @@
+{
+  "id": "sinemacx",
+  "name": "SinemaCX",
+  "type": "movie",
+  "url": "https://sinemacc.com/tur/aksiyon-filmleri/",
+  "item": "<div[^>]*class=\"film_kutusu\\s*\"[\\s\\S]*?(?=<div[^>]*class=\"film_kutusu|</main>)",
+  "title": "class=\"text\">([^<]+)<",
+  "limit": 40
+}

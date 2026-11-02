@@ -1,0 +1,1 @@
+{"id":"dizirella","name":"Dizirella","type":"series","url":"https://dizirella.one/","item":"<a class=\"r-card\"[\\s\\S]*?</a>","title":"alt=\"([^\"]+?) izle\"","href":"href=\"([^\"]+)\"","limit":40}

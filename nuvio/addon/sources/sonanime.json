@@ -1,0 +1,9 @@
+{
+  "id": "sonanime",
+  "name": "SonAnime",
+  "type": "series",
+  "url": "https://api.sonanime.com/api/anime",
+  "item": "\\{\"anime_id\":[^{}]*\\}",
+  "title": "\"anime_name\":\"([^\"]+)\"",
+  "limit": 40
+}

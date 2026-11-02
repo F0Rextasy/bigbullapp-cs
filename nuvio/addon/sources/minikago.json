@@ -1,0 +1,9 @@
+{
+  "id": "minikago",
+  "name": "MinikaGO",
+  "type": "series",
+  "url": "https://www.minikago.com.tr/programlar/",
+  "item": "<a[^>]*href=\"/programlar/[^\"]+\"[^>]*>[\\s\\S]{0,600}?</a>",
+  "title": "<span>([\\s\\S]*?)</span>",
+  "href": "href=\"(/programlar/[^\"]+)\""
+}

@@ -1,0 +1,10 @@
+{
+  "id": "asyaluna",
+  "name": "AsyaLuna",
+  "type": "series",
+  "url": "https://asyaluna.com/diziler/dram/",
+  "item": "<a class=\"resim\"[\\s\\S]*?</a>",
+  "title": "title=\"([^\"]+?)(?: \\d{4,5} [^\\s\"]+)?\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

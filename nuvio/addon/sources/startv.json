@@ -1,0 +1,9 @@
+{
+  "id": "startv",
+  "name": "Star TV",
+  "type": "series",
+  "url": "https://www.startv.com.tr/dizi",
+  "item": "<div[^>]*class=\"poster-card[^\"]*\"[\\s\\S]{0,1600}?</figure>",
+  "title": "title=\"([^\"]+)\"",
+  "href": "href=\"(/dizi/[^\"]+)\""
+}

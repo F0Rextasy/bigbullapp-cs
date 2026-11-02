@@ -1,0 +1,9 @@
+{
+  "id": "tv8",
+  "name": "TV8",
+  "type": "series",
+  "url": "https://www.tv8.com.tr/programlar",
+  "item": "<div[^>]*class=\"list-type-one-content[^\"]*\"[\\s\\S]{0,1200}?</a>",
+  "title": "title=\"([^\"]+)\"",
+  "href": "href=\"https://www.tv8.com.tr/([^\"]+)\""
+}

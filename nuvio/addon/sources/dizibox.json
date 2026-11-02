@@ -1,0 +1,9 @@
+{
+  "id": "dizibox",
+  "name": "Dizibox",
+  "type": "series",
+  "url": "https://www.dizibox.live/diziler/",
+  "item": "<article[^>]*article-series-poster[\\s\\S]*?</article>",
+  "title": "title=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\""
+}

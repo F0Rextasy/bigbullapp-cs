@@ -1,0 +1,10 @@
+{
+  "id": "diziabi",
+  "name": "DiziAbi",
+  "type": "series",
+  "url": "https://www.diziabi.net/diziler",
+  "item": "<div class=\"mt-2\\.5 px-0\\.5\">[\\s\\S]*?</div>",
+  "title": "<h3[^>]*>([^<]+)</h3>",
+  "href": "href=\"([^\"]+/dizi/[^\"]+)\"",
+  "limit": 40
+}

@@ -1,0 +1,10 @@
+{
+  "id": "kultfilmler",
+  "name": "Kült Filmler",
+  "type": "movie",
+  "url": "https://kultfilmler.net/film-arsivi/",
+  "item": "<a class=\"mcard\"[\\s\\S]*?</a>",
+  "title": "<h3>([^<]*?)(?:\\s+[–-]\\s+[^<]*)?</h3>",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

@@ -1,0 +1,8 @@
+{
+  "id": "asyabox",
+  "name": "AsyaBox",
+  "type": "series",
+  "url": "https://asyabox.co/tum-diziler/",
+  "item": "<a[^>]*class=\"resim\"[^>]*>",
+  "title": "title=\"([^\"]+?) \\d{4}[^\"]*\""
+}

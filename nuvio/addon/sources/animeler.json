@@ -1,0 +1,8 @@
+{
+  "id": "animeler",
+  "name": "Animeler",
+  "type": "series",
+  "url": "https://animeler.live/filtre?sort=popular",
+  "item": "<article[^>]*class=\"mac\"[\\s\\S]*?</article>",
+  "title": "data-title-main=\"([^\"]+)\""
+}

@@ -1,0 +1,9 @@
+{
+  "id": "yabancidizi",
+  "name": "Yabancı Dizi",
+  "type": "series",
+  "url": "https://yabancidizi.live/",
+  "item": "<a class=\"v2-poster\"[\\s\\S]*?class=\"v2-poster-title\">[^<]*</span>",
+  "title": "v2-poster-title\">([^<]+)</span>",
+  "limit": 40
+}

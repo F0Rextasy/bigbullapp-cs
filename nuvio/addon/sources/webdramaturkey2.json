@@ -1,0 +1,9 @@
+{
+  "id": "webdramaturkey2",
+  "name": "Web Drama Turkey",
+  "type": "series",
+  "url": "https://webdramaturkey2.com/",
+  "item": "<div class=\"list-movie\"[\\s\\S]*?class=\"list-title\"[^>]*>[^<]*",
+  "title": "class=\"list-title\"[^>]*>\\s*([^<]+)",
+  "limit": 40
+}

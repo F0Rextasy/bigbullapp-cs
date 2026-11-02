@@ -1,0 +1,35 @@
+name: nuvio-katalog
+
+on:
+  schedule:
+    - cron: "23 5 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "nuvio/addon/sources/**"
+      - "nuvio/addon/build.mjs"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Katalog listelerini üret
+        run: node nuvio/addon/build.mjs
+      - name: Değişiklik varsa commit
+        run: |
+          if [ -n "$(git status --porcelain nuvio/addon)" ]; then
+            git config user.name "bigbull-bot"
+            git config user.email "bot@users.noreply.github.com"
+            git add nuvio/addon
+            git commit -m "Nuvio katalog listeleri güncellendi"
+            git push
+          else
+            echo "değişiklik yok"
+          fi

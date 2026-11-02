@@ -1,0 +1,9 @@
+{
+  "id": "setfilmizle-movie",
+  "name": "SetFilmIzle Film",
+  "type": "movie",
+  "url": "https://www.setfilmizle.ltd/film/",
+  "item": "<a class=\"card-link\"[\\s\\S]*?</article>",
+  "title": "alt=\"([^\"]+)\"",
+  "limit": 40
+}

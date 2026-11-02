@@ -1,0 +1,8 @@
+{
+  "id": "asyadizi",
+  "name": "AsyaDizi",
+  "type": "series",
+  "url": "https://asyadizi.com/",
+  "item": "<li[^>]*class=\"cat-item[\\s\\S]*?</li>",
+  "title": "<a[^>]*>([^<]+?)(?: \\d{4}[^<]*)?</a>"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "diziabi-movie",
+  "name": "DiziAbi Filmler",
+  "type": "movie",
+  "url": "https://www.diziabi.net/film-arsivi/",
+  "item": "<div class=\"mt-2\\.5 px-0\\.5\">[\\s\\S]*?</div>",
+  "title": "<h3[^>]*>([^<]+)</h3>",
+  "href": "href=\"([^\"]+/film/[^\"]+)\"",
+  "limit": 40
+}

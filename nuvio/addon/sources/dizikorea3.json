@@ -1,0 +1,9 @@
+{
+  "id": "dizikorea3",
+  "name": "Dizikorea3",
+  "type": "series",
+  "url": "https://dizikorea3.com/dizi-arsivi",
+  "item": "<a[^>]*class=\"poster-card\"[^>]*>[\\s\\S]*?</a>",
+  "title": "<span class=\"poster-card-title\">([^<]+)</span>",
+  "href": "href=\"([^\"]+)\""
+}

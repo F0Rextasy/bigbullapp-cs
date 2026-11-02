@@ -1,0 +1,10 @@
+{
+  "id": "asyawatch",
+  "name": "AsyaWatch",
+  "type": "series",
+  "url": "https://asyawatch.com/dizi-izle",
+  "item": "<a href=\"/dizi/[^\"]*\"[\\s\\S]*?</a>",
+  "title": "<h2[^>]*>([^<]+)</h2>",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

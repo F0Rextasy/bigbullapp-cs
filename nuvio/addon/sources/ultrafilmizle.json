@@ -1,0 +1,10 @@
+{
+  "id": "ultrafilmizle",
+  "name": "Ultra Film İzle",
+  "type": "movie",
+  "url": "https://ufilmizle.com/",
+  "item": "<div class=\"movie-box\"[\\s\\S]*?class=\"film-ismi\">[\\s\\S]*?</a>",
+  "title": "class=\"film-ismi\">\\s*<a[^>]*>([^<]+)</a>",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

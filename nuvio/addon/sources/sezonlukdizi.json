@@ -1,0 +1,9 @@
+{
+  "id": "sezonlukdizi",
+  "name": "Sezonlukdizi",
+  "type": "series",
+  "url": "https://sezonlukdizi.cc/diziler.asp",
+  "item": "<a href=\"/diziler/[^\"]*\" class=\"column\"[\\s\\S]*?</a>",
+  "title": "class=\"description\">([^<]+)<",
+  "limit": 40
+}

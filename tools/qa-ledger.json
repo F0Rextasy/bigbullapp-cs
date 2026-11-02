@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-01",
+  "generated": "2026-11-02",
   "note": "119 TR modül; Inat 35 platformu ayrı modüle bölündü (kategori + 4K kalite). Dizigecesi v5 canlı runner/HLS pass; Inat upstream durumu modül bazında doğrulanıyor.",
   "modules": [
     {
@@ -715,6 +715,12 @@
       "result": "blocked",
       "evidence": "runner 2026-11-01: ana sayfa/kategori upstream 502 veya InatDecodeException; runner parse-error",
       "runner": "qa 2026-11-01"
+    },
+    {
+      "module": "NuvioAddon",
+      "result": "pass",
+      "evidence": "emülatör cs33 2026-11-02: addon kuruldu (\"BigBull TR Katalog was validated and added successfully\"); ana sayfada 79 katalog satırı posterlerle (Anizm/Asya Animeleri/AnimeciX); satır→detay (Cinemeta)→kaynak listesinde plugin sağlayıcı; 1219 IMDb item; build 79 ok / 0 fail",
+      "runner": "nuvio/addon/build.mjs + emulator-5554"
     }
   ]
 }

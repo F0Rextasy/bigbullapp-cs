@@ -1,0 +1,10 @@
+{
+  "id": "hdfilmdelisi",
+  "name": "HDFilmDelisi",
+  "type": "movie",
+  "url": "https://hdfilmdelisi.one/api/films?limit=40",
+  "item": "\\{\"id\":\"[^\"]+\"[\\s\\S]*?\"orijinalBaslik\":\"[^\"]*\"",
+  "title": "\"orijinalBaslik\":\"([^\"]+)\"",
+  "href": "\"slug\":\"([^\"]+)\"",
+  "limit": 40
+}

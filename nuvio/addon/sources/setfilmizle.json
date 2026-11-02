@@ -1,0 +1,9 @@
+{
+  "id": "setfilmizle",
+  "name": "SetFilmIzle",
+  "type": "series",
+  "url": "https://www.setfilmizle.ltd/dizi/",
+  "item": "<a class=\"card-link\"[\\s\\S]*?</article>",
+  "title": "alt=\"([^\"]+)\"",
+  "limit": 40
+}

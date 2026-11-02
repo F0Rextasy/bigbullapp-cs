@@ -1,0 +1,9 @@
+{
+  "id": "minikacocuk",
+  "name": "MinikaÇOCUK",
+  "type": "series",
+  "url": "https://www.minikacocuk.com.tr/yayin-akisi",
+  "item": "<div class=\"streaming-item\"[^>]*>[\\s\\S]{0,900}?<h3>[\\s\\S]{0,90}?</h3>",
+  "title": "<h3>([\\s\\S]*?)</h3>",
+  "href": "href=\"(/programlar/[^\"]+)\""
+}

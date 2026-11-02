@@ -1,0 +1,10 @@
+{
+  "id": "dizican",
+  "name": "DiziCaN",
+  "type": "series",
+  "url": "https://dizican.cc/",
+  "item": "<a href=\"https://dizican\\.cc/dizi/[^\"]+\"[\\s\\S]*?</a>",
+  "title": "alt=\"([^\"]+)\"",
+  "href": "href=\"(https://dizican\\.cc/dizi/[^\"]+)\"",
+  "limit": 40
+}

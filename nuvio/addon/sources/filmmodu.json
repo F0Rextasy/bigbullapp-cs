@@ -1,0 +1,1 @@
+{"id":"filmmodu","name":"FilmModu","type":"movie","url":"https://filmmodu.news/filmler","item":"<a href=\"https://filmmodu\\.news/film/[^\"]*\" class=\"group block\"[\\s\\S]*?</a>","title":"alt=\"([^\"]+?) Film izle\"","href":"href=\"([^\"]+)\"","limit":40}

@@ -1,0 +1,9 @@
+{
+  "id": "sinezy",
+  "name": "Sinezy",
+  "type": "movie",
+  "url": "https://sinezy.si/",
+  "item": "<div class=\"movie_box move_k\">[\\s\\S]*?(?=<div class=\"movie_box move_k\">|</body>)",
+  "title": "<h2>([^<]+)</h2>",
+  "limit": 40
+}

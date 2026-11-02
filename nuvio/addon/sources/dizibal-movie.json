@@ -1,0 +1,10 @@
+{
+  "id": "dizibal-movie",
+  "name": "DiziBal Filmler",
+  "type": "movie",
+  "url": "https://dizibal.org/filmler",
+  "item": "<div class=\"mt-2\\.5 px-0\\.5\">[\\s\\S]*?</div>",
+  "title": "<h3[^>]*>([^<]+)</h3>",
+  "href": "href=\"([^\"]+/movie/[^\"]+)\"",
+  "limit": 40
+}

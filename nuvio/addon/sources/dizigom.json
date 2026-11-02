@@ -1,0 +1,8 @@
+{
+  "id": "dizigom",
+  "name": "Dizigom",
+  "type": "movie",
+  "url": "https://www.dizigom.news/filmler?page=2",
+  "item": "<h3[^>]*truncate[^>]*>([\\s\\S]*?)</h3>",
+  "title": "<h3[^>]*truncate[^>]*>([\\s\\S]*?)</h3>"
+}

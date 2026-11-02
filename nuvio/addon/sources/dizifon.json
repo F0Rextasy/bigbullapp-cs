@@ -1,0 +1,9 @@
+{
+  "id": "dizifon",
+  "name": "Dizifon",
+  "type": "series",
+  "url": "https://www.dizifon.cc/tum-diziler/",
+  "item": "<a[^>]*class=\"resim\"[^>]*>",
+  "title": "title=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\""
+}

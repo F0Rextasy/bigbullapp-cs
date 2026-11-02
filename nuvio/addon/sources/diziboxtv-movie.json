@@ -1,0 +1,10 @@
+{
+  "id": "diziboxtv-movie",
+  "name": "DiziBoxTv Filmler",
+  "type": "movie",
+  "url": "https://diziboxtv.com/filmler",
+  "item": "<a class=\"show catalogCard\"[\\s\\S]*?</a>",
+  "title": "<h3>([^<]+)</h3>",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

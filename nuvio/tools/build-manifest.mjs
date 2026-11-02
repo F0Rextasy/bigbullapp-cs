@@ -11,6 +11,13 @@ const root = path.resolve(import.meta.dirname, "..");
 const providersDir = path.join(root, "providers");
 const manifestPath = path.join(root, "manifest.json");
 
+// Depo sürümü tek yerde: CHANGELOG'un en üst başlığı.
+function repoVersion() {
+  const log = fs.readFileSync(path.join(root, "..", "CHANGELOG.md"), "utf8");
+  const m = /^## \[(\d+\.\d+\.\d+)\]/m.exec(log);
+  return m ? m[1] : current.version || "1.0.0";
+}
+
 const current = fs.existsSync(manifestPath)
   ? JSON.parse(fs.readFileSync(manifestPath, "utf8"))
   : { name: "BB Nuvio", version: "1.0.0", description: "Bigbull Turkish streaming providers for Nuvio, running on-device.", author: "bigbull", scrapers: [] };
@@ -61,6 +68,6 @@ if (problems.length) {
 }
 
 scrapers.sort((a, b) => a.id.localeCompare(b.id));
-const next = { ...current, scrapers };
+const next = { ...current, version: repoVersion(), scrapers };
 fs.writeFileSync(manifestPath, JSON.stringify(next, null, 2) + "\n");
 console.log(`manifest.json: ${scrapers.length} provider(s)`);

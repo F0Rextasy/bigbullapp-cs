@@ -1,0 +1,9 @@
+{
+  "id": "netfilmizle",
+  "name": "NetFilmizle",
+  "type": "movie",
+  "url": "https://netfilmizle.com/",
+  "item": "<div class=\"move_k\">[\\s\\S]*?(?=<div class=\"move_k\">|</body>)",
+  "title": "<h2>([^<]+)</h2>",
+  "limit": 40
+}

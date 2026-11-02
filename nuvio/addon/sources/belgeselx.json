@@ -1,0 +1,10 @@
+{
+  "id": "belgeselx",
+  "name": "BelgeselX",
+  "type": "series",
+  "url": "https://belgeselx.com/belgeselkanali/trt-belgesel",
+  "item": "<a class=\"px-card\"[\\s\\S]*?</a>",
+  "title": "alt=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

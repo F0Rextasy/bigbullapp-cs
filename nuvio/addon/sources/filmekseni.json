@@ -1,0 +1,1 @@
+{"id":"filmekseni","name":"FilmEkseni","type":"movie","url":"https://filmekseni.vip/","item":"<a href=\"https://filmekseni\\.vip/[^\"/]+/\" class=\"group/poster block\"[\\s\\S]*?</a>","title":"alt=\"([^\"]+)\"","href":"href=\"([^\"]+)\"","limit":40}

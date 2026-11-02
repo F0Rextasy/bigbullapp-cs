@@ -1,0 +1,9 @@
+{
+  "id": "dizifilmizle",
+  "name": "DiziFilmIzle",
+  "type": "movie",
+  "url": "https://dizifilmizle.to/turkce-dublaj-filmler",
+  "item": "<a[^>]*class=\"media-card__link\"[^>]*>",
+  "title": "aria-label=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\""
+}

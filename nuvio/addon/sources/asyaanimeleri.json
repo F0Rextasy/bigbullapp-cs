@@ -1,0 +1,8 @@
+{
+  "id": "asyaanimeleri",
+  "name": "Asya Animeleri",
+  "type": "series",
+  "url": "https://asyaanimeleri.top/seri/",
+  "item": "<article[^>]*class=\"bs\"[\\s\\S]*?</article>",
+  "title": "title=\"(?:&#8220;)?([^\"]+?)(?:&#8221;)?\""
+}

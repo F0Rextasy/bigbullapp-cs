@@ -1,0 +1,10 @@
+{
+  "id": "jetfilmizle",
+  "name": "JetFilmizle",
+  "type": "movie",
+  "url": "https://jetfilmizle.app/",
+  "item": "<a href=\"[^\"]*/film/[^\"]*\"[^>]*title=\"[^\"]*\"[\\s\\S]*?</a>",
+  "title": "<h3 class=\"fc-title\">([\\s\\S]*?)</h3>",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

@@ -1,0 +1,10 @@
+{
+  "id": "ddizi",
+  "name": "Ddizi",
+  "type": "series",
+  "url": "https://www.ddizi.tel/",
+  "item": "<a href=\"https://www.ddizi.tel/diziler/[^\"]*\"[^>]*title=\"[^\"]*\"[\\s\\S]*?</a>",
+  "title": ">([^<]+)</a>",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

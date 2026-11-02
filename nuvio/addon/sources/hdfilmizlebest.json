@@ -1,0 +1,10 @@
+{
+  "id": "hdfilmizlebest",
+  "name": "HDFilmizleBest",
+  "type": "movie",
+  "url": "https://www.hdfilmizle.best/film/",
+  "item": "<a class=\"item\"[\\s\\S]*?</a>",
+  "title": "data-title=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

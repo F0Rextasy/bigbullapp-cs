@@ -1,0 +1,10 @@
+{
+  "id": "dizibal",
+  "name": "DiziBal",
+  "type": "series",
+  "url": "https://dizibal.org/diziler",
+  "item": "<div class=\"mt-2\\.5 px-0\\.5\">[\\s\\S]*?</div>",
+  "title": "<h3[^>]*>([^<]+)</h3>",
+  "href": "href=\"([^\"]+/series/[^\"]+)\"",
+  "limit": 40
+}

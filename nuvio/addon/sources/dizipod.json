@@ -1,0 +1,1 @@
+{"id":"dizipod","name":"DiziPod","type":"series","url":"https://dizipod.com/trendler/","item":"<li><a href=\"https://dizipod\\.com/diziler/[^\"]*\"[\\s\\S]*?</li>","title":"<div class=\"title\">([\\s\\S]*?)</div>","href":"href=\"([^\"]+)\"","limit":40}

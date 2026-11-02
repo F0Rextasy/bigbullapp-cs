@@ -1,0 +1,10 @@
+{
+  "id": "cizgimax",
+  "name": "CizgiMax",
+  "type": "series",
+  "url": "https://cizgimax.online/diziler/",
+  "item": "<div class=\"film-item\"[^>]*>",
+  "title": "data-anime-name=\"([^\"]*)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

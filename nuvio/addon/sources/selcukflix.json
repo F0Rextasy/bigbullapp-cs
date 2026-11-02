@@ -1,0 +1,9 @@
+{
+  "id": "selcukflix",
+  "name": "SelcukFlix",
+  "type": "movie",
+  "url": "https://selcukflix.app/film-izle",
+  "item": "<a href=\"/film/[^\"]*\"[^>]*class=\"relative\"[\\s\\S]*?</a>",
+  "title": "<h3[^>]*>([\\s\\S]*?)</h3>",
+  "limit": 40
+}
