@@ -47,14 +47,18 @@ class CizgiSiteProvider : MainAPI() {
 
     private val client = OkHttpClient()
 
-    private fun fetchHtml(url: String, referer: String? = null): String {
+    private fun fetchHtml(url: String, referer: String? = null, browserHeaders: Boolean = true): String {
         val request = Request.Builder().url(url)
             .header("User-Agent", uaHeaders.getValue("User-Agent"))
             .header("Accept-Language", uaHeaders.getValue("Accept-Language"))
             .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-            .header("Sec-Fetch-Dest", "iframe")
-            .header("Sec-Fetch-Mode", "navigate")
-            .header("Sec-Fetch-Site", "cross-site")
+            .apply {
+                if (browserHeaders) {
+                    header("Sec-Fetch-Dest", "iframe")
+                    header("Sec-Fetch-Mode", "navigate")
+                    header("Sec-Fetch-Site", "cross-site")
+                }
+            }
             .apply { if (referer != null) header("Referer", referer) }
             .build()
         client.newCall(request).execute().use { response ->
@@ -178,12 +182,18 @@ class CizgiSiteProvider : MainAPI() {
         }
         var found = false
         for (frame in frames) {
-            val embed = runCatching { fetchHtml(frame, data) }.getOrNull() ?: continue
-            val media = Regex(""""(mp4_\d+|hls|hls_fmp4)"\s*:\s*"(https?:[^"]+)"""")
-                .findAll(embed).map {
-                    it.groupValues[1] to it.groupValues[2]
-                        .replace("\\\\/", "/").replace("\\/", "/").replace("\\u0026", "&")
-                }
+            var embed = runCatching { fetchHtml(frame, data) }.getOrNull() ?: continue
+            fun extract(html: String): List<Pair<String, String>> =
+                Regex(""""(mp4_\d+|hls|hls_fmp4)"\s*:\s*"(https?:[^"]+)"""")
+                    .findAll(html).map {
+                        it.groupValues[1] to it.groupValues[2]
+                            .replace("\\\\/", "/").replace("\\/", "/").replace("\\u0026", "&")
+                    }.toList()
+            var media = extract(embed)
+            if (media.isEmpty()) {
+                embed = runCatching { fetchHtml(frame, data, browserHeaders = false) }.getOrNull() ?: continue
+                media = extract(embed)
+            }
             for ((kind, url) in media) {
                 val quality = getQualityFromName(kind)
                 if (!Settings.qualityAllowed(quality)) continue
