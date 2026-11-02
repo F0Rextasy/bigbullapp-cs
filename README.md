@@ -128,7 +128,7 @@ Tek modül derleme ve cihaza kurulum:
 | `DiziMom` **beta** | ddizimom.net | Dizi | — | — | — | — | — | — |
 | `DiziPal` | dizipal1592.com | Dizi/Film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
 | `DiziPod` | dizipod.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `DMAX` **beta** | dmax.com.tr | Dizi | — | — | — | — | — | — |
+| `DMAX` | dmax.com.tr | Dizi | — | — | — | — | — | — |
 | `DramaDizilerim` | dramadizilerim.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
 | `FilmEkseni` **beta** | filmekseni.vip | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `Filmizyon` **beta** | filmizyon.net | Film | — | — | — | — | — | — |
@@ -224,9 +224,11 @@ Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Reposito
 **Refresh** → sağlayıcıları tek tek aç. Tam liste: [`nuvio/manifest.json`](nuvio/manifest.json).
 
 **Kapsam**: Cloudstream'deki VOD sağlayıcılarının tamamı Nuvio'da da var — **102 sağlayıcı**.
-91'i varsayılan açık; bu ağdan **91/102** canlı doğrulandı. Kalan 11'i (`AsyaWatch`, `SelcukFlix`,
-`DiziPal`, `FullHDFilmizlesene`, `Inat 4K 01/02/04/07`, `Inat Mubi`) Cloudflare/İnat CDN engeli
-veya upstream 502/404 nedeniyle canlı doğrulanamadığı için `"enabled": false` ile yayınlanır.
+91'i canlı doğrulanmış; manifest'te `"enabled": true` ile gelir. Kalan 11'i (`AsyaWatch`,
+`SelcukFlix`, `DiziPal`, `FullHDFilmizlesene`, `Inat 4K 01/02/04/07`, `Inat Mubi`) Cloudflare/
+İnat CDN engeli veya upstream 502/404 nedeniyle doğrulanamadı; `"enabled": false` ile yayınlanır.
+Repo eklemek sağlayıcıları çalıştırmaz: Plugins ekranında **Enable plugin providers globally** ve
+istediğin sağlayıcıların anahtarı ayrıca açılır.
 
 Kapsam dışı 17 modül: yalnız **canlı kanal** yayınlayanlar (`Canlı TV`, `Canlı Yayın Kanalları`,
 `Inat Spor/Haber/Ulusal/EBA TV/Derbiler/Liste 1-2-3/Belgesel/Çocuk/Dini/Sinema/Premium`) —
@@ -234,10 +236,24 @@ Nuvio eklentisi başlık (IMDb) → akış modelinde çalışır, bunlarda başl
 ölü site: `CanliDizi` (oynatıcı sunucusu kaldırılmış), `Dizigecesi` (attest duvarı + sunucu
 taraflı arama yok).
 
-Nuvio eklentisi yalnız **akış** üretir: ana sayfa, kategoriler, öneriler ve canlı TV yoktur;
-gezinme Nuvio'nun kendi kataloglarındadır (Cinemeta gibi bir addon ile). Başlık çözümü anahtarsız
-Cinemeta üzerinden yapılır, TMDB anahtarı gerekmez. Yalnız **sideload** edilen Nuvio sürümleri
-eklenti destekler; mağaza sürümlerinde Plugins bölümü yoktur.
+### Ana sayfa satırları (katalog addon'u)
+
+Plugin'ler yalnız **akış** verir; Nuvio ana sayfasına satır koyamazlar. Satırlar için ayrı,
+sunucusuz bir **katalog addon'u** var:
+
+1. Nuvio → **Settings → Content & Discovery → Addons → Add Addon**
+2. `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json`
+3. **Install Addon** → ana sayfada "Dizibox - Series", "Kultfilmler - Movie" gibi satırlar.
+
+Addon yalnız `catalog` kaynağı sunar: item'lar IMDb id'siyle yazılır, meta'yı Cinemeta, akışları
+yukarıdaki plugin sağlayıcıları verir — yani satır → detay → kaynak listesi → oynatma akışı
+uçtan uca çalışır. İçerik günde bir `.github/workflows/nuvio-catalog.yml` ile yenilenir; tarifler
+`nuvio/addon/sources/<id>.json`, üretici `node nuvio/addon/build.mjs`. Statik olduğu için katalog
+sonsuz kaydırma (`skip`) desteklemez: her satır ilk sayfayı gösterir. JS ile render edilen siteler
+(ör. Anizium) ve İnat CDN sağlayıcıları satır üretemez.
+
+Başlık çözümü anahtarsız Cinemeta üzerinden yapılır, TMDB anahtarı gerekmez. Yalnız **sideload**
+edilen Nuvio sürümleri plugin destekler; mağaza sürümlerinde Plugins bölümü yoktur.
 
 ## Canlı TV (beta)
 
@@ -266,7 +282,8 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          85 modül
+  Yabancidizi/          119 modül
+nuvio/                  Nuvio eklenti deposu (102 sağlayıcı, sağlayıcı başına tek dosya)
 ```
 
 ## Geliştirme

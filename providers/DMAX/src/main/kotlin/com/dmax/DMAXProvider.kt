@@ -56,10 +56,9 @@ class DMAXProvider : MainAPI() {
 
     override suspend fun search(query: String, page: Int): SearchResponseList? {
         if (page > 1) return newSearchResponseList(emptyList(), false)
-        val doc = app.get(mainUrl, headers = headers).document
-        val q = query.trim().lowercase()
+        val doc = app.get("$mainUrl/arama", params = mapOf("sorgu" to query.trim()), headers = headers).document
         return newSearchResponseList(
-            doc.cards().filter { it.name.lowercase().contains(q) || it.url.lowercase().contains(q) },
+            doc.cards().filter { fold(it.name).contains(fold(query.trim())) },
             false,
         )
     }
@@ -81,7 +80,7 @@ class DMAXProvider : MainAPI() {
             }
         }
 
-        val episodes = doc.select("a[href*='-bolum']").mapNotNull { card ->
+        val episodes = doc.select("a[href]").mapNotNull { card ->
             val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
             if (!href.startsWith(pageUrl.trimEnd('/') + "/")) return@mapNotNull null
             val match = EPISODE.find(href) ?: return@mapNotNull null
@@ -136,12 +135,19 @@ class DMAXProvider : MainAPI() {
             val path = href.removePrefix(mainUrl).substringBefore('?').trim('/')
             if (path.isBlank() || path.contains('/') || path in STATIC) return@mapNotNull null
             val title = card.selectFirst("img")?.attr("alt")?.trim()
-                ?.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
+                ?.takeIf { it.isNotEmpty() }
+                ?: card.attr("title").trim().takeIf { it.isNotEmpty() }
+                ?: Regex("""GAEventTracker\([^)]*,\s*'([^']+)'""")
+                    .find(card.attr("onclick"))?.groupValues?.get(1)?.trim()?.takeIf { it.isNotEmpty() }
+                ?: path.replace('-', ' ').replaceFirstChar { it.uppercase() }
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
                 this.posterUrl = fixUrlNull(card.selectFirst("img")?.attr("src"))
             }
         }.distinctBy { it.url }
 
+    private fun fold(value: String): String = value.lowercase()
+        .replace('ı', 'i').replace('ş', 's').replace('ğ', 'g')
+        .replace('ü', 'u').replace('ö', 'o').replace('ç', 'c')
     companion object {
         val ROWS = listOf("Programlar")
         private const val UA =

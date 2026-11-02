@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.1] - 2026-11-02
+
+### Düzeltildi
+- **DMAX v2**: arama sayfası ve bölüm listesi güncellendi.
+
 ## [1.6.0] - 2026-11-01
 
 ### Eklendi
@@ -12,6 +17,8 @@ sayı arttığında güncelleme sunar.
   cihazda çalışır. 91'i varsayılan açık; 11'i Cloudflare/İnat CDN engeli nedeniyle kapalı gelir.
 - Yalnız canlı kanal yayınlayan modüller ve iki ölü site (CanliDizi, Dizigecesi) Nuvio kapsamı
   dışında: eklenti başlık (IMDb) → akış modelinde çalışır, canlı kanal araması yoktur.
+- **Nuvio katalog addon'u**: ana sayfaya sağlayıcı satırları (79 katalog) — statik Stremio
+  addon'u, sunucu gerekmez, günde bir yenilenir.
 
 ## [1.5.29] - 2026-11-01
 
