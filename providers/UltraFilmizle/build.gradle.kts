@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "UltraFilmizle — Türkçe dublaj/altyazılı film arşivi"

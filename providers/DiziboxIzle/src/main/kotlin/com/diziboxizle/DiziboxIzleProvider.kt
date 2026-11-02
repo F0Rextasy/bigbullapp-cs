@@ -55,6 +55,14 @@ class DiziboxIzleProvider : MainAPI() {
             "Aksiyon" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=aksiyon")
             "Dram" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=drama")
             "IMDb 7+" -> MainPageData(name, "$mainUrl/dizi-arsivi/?filtrele=imdb&sirala=DESC&imdb=7")
+            "Komedi" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=komedi")
+            "Korku" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=korku")
+            "Romantik" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=romantik")
+            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=bilimkurgu")
+            "Gerilim" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=gerilim")
+            "Gizem" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=gizem")
+            "Macera" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=macera")
+            "Suç" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=suc")
             else -> null
         }
     }
@@ -153,7 +161,8 @@ class DiziboxIzleProvider : MainAPI() {
 
     companion object {
         /** Homepage rows in display order; genre rows map to live `/dizi-arsivi/` filters. */
-        val ROWS = listOf("Son Eklenenler", "Aksiyon", "Dram", "IMDb 7+")
+        val ROWS = listOf("Son Eklenenler", "Aksiyon", "Dram", "IMDb 7+", "Komedi", "Korku",
+            "Romantik", "Bilim Kurgu", "Gerilim", "Gizem", "Macera", "Suç")
 
         private var cachedQuickSearchNonce: String? = null
         private const val REPORT_HINT =

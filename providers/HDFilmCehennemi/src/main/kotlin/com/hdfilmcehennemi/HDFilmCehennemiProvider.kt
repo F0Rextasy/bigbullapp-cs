@@ -42,6 +42,15 @@ class HDFilmCehennemiProvider : MainAPI() {
         if (!Settings.rowEnabled(name)) return@mapNotNull null
         when (name) {
             "Son Eklenen Filmler" -> MainPageData(name, "$mainUrl/")
+            "Aile" -> MainPageData(name, "$mainUrl/tur/aile-filmleri-izleyin-7/")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/tur/aksiyon-filmleri-izleyin-9/")
+            "Animasyon" -> MainPageData(name, "$mainUrl/tur/animasyon-filmlerini-izleyin-5/")
+            "Belgesel" -> MainPageData(name, "$mainUrl/tur/belgesel-filmlerini-izle-2/")
+            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/tur/bilim-kurgu-filmlerini-izleyin-7/")
+            "Dram" -> MainPageData(name, "$mainUrl/tur/dram-filmlerini-izle-3/")
+            "Fantastik" -> MainPageData(name, "$mainUrl/tur/fantastik-filmlerini-izleyin-5/")
+            "Gerilim" -> MainPageData(name, "$mainUrl/tur/gerilim-filmlerini-izle-5/")
+            "Gizem" -> MainPageData(name, "$mainUrl/tur/gizem-filmleri-izle-6/")
             else -> null
         }
     }
@@ -174,7 +183,8 @@ class HDFilmCehennemiProvider : MainAPI() {
 
     companion object {
         /** Homepage row; maps to the live listing page. */
-        val ROWS = listOf("Son Eklenen Filmler")
+        val ROWS = listOf("Son Eklenen Filmler", "Aile", "Aksiyon", "Animasyon", "Belgesel",
+            "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem")
 
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"

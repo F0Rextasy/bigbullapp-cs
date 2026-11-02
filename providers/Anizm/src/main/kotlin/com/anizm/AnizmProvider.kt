@@ -50,6 +50,18 @@ class AnizmProvider : MainAPI() {
         if (!Settings.rowEnabled(name)) return@mapNotNull null
         when (name) {
             "Katalog" -> MainPageData(name, "$mainUrl/arama?sayfa=SAYFA")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/kategoriler/2?sayfa=SAYFA")
+            "Macera" -> MainPageData(name, "$mainUrl/kategoriler/1?sayfa=SAYFA")
+            "Komedi" -> MainPageData(name, "$mainUrl/kategoriler/3?sayfa=SAYFA")
+            "Dram" -> MainPageData(name, "$mainUrl/kategoriler/4?sayfa=SAYFA")
+            "Romantizm" -> MainPageData(name, "$mainUrl/kategoriler/5?sayfa=SAYFA")
+            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/kategoriler/8?sayfa=SAYFA")
+            "Doğaüstü" -> MainPageData(name, "$mainUrl/kategoriler/11?sayfa=SAYFA")
+            "Fantastik" -> MainPageData(name, "$mainUrl/kategoriler/13?sayfa=SAYFA")
+            "Gizem" -> MainPageData(name, "$mainUrl/kategoriler/15?sayfa=SAYFA")
+            "Okul" -> MainPageData(name, "$mainUrl/kategoriler/26?sayfa=SAYFA")
+            "Shounen" -> MainPageData(name, "$mainUrl/kategoriler/34?sayfa=SAYFA")
+            "Spor" -> MainPageData(name, "$mainUrl/kategoriler/37?sayfa=SAYFA")
             else -> null
         }
     }
@@ -256,7 +268,8 @@ class AnizmProvider : MainAPI() {
 
     companion object {
         /** Homepage rows in display order; all map to live listing pages. */
-        val ROWS = listOf("Katalog")
+        val ROWS = listOf("Katalog", "Aksiyon", "Macera", "Komedi", "Dram", "Romantizm",
+            "Bilim Kurgu", "Doğaüstü", "Fantastik", "Gizem", "Okul", "Shounen", "Spor")
 
         private const val MAX_LINKS = 4
         private const val MAX_MIRRORS = 10

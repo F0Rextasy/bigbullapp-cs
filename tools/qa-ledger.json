@@ -119,7 +119,7 @@
     {
       "module": "CizgiSite",
       "result": "pass",
-      "evidence": "runner 2026-11-02: Brotli çözümü sonrası pass, links=5, ep=10",
+      "evidence": "runner 2026-11-02: VK embed sonrası pass, links=5 (144p–1080p/HLS), ep=10",
       "runner": "qa 2026-11-02"
     },
     {
@@ -203,7 +203,7 @@
     {
       "module": "DiziPal",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=2, ep=16",
+      "evidence": "runner 2026-11-02: /arama-yap araması, links=2 (480p/1080p), ep=16",
       "runner": "bench_runner.py 2026-10-30"
     },
     {
@@ -323,7 +323,7 @@
     {
       "module": "HDFilmizle",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
+      "evidence": "runner 2026-11-02: div.playex player, links=1 (1080p HLS), subs=2",
       "runner": "bench_runner.py 2026-10-30"
     },
     {
@@ -347,7 +347,7 @@
     {
       "module": "KoreanTurk",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=14",
+      "evidence": "runner 2026-11-02: a.dz-card ve tür sayfaları, links=1, ep=14",
       "runner": "bench_runner.py 2026-10-30"
     },
     {

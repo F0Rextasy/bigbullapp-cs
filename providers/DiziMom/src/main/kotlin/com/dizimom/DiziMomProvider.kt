@@ -44,8 +44,20 @@ class DiziMomProvider : MainAPI() {
     override var name = "DiziMom"
     override var lang = "tr"
     override val hasMainPage = true
-    override val mainPage get() = mainPageOf("$mainUrl/" to "Son Eklenenler")
-        .filter { Settings.rowEnabled(it.name) }
+    override val mainPage get() = mainPageOf(
+        "$mainUrl/" to "Son Eklenenler",
+        "$mainUrl/tur/aile" to "Aile",
+        "$mainUrl/tur/aksiyon" to "Aksiyon",
+        "$mainUrl/tur/belgesel" to "Belgesel",
+        "$mainUrl/tur/bilim-kurgu" to "Bilim Kurgu",
+        "$mainUrl/tur/dram" to "Dram",
+        "$mainUrl/tur/fantastik" to "Fantastik",
+        "$mainUrl/tur/gerilim" to "Gerilim",
+        "$mainUrl/tur/gizem" to "Gizem",
+        "$mainUrl/tur/komedi" to "Komedi",
+        "$mainUrl/tur/korku" to "Korku",
+        "$mainUrl/tur/romantik" to "Romantik",
+    ).filter { Settings.rowEnabled(it.name) }
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.TvSeries)
 

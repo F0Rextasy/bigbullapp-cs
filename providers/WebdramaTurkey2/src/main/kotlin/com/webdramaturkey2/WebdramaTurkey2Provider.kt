@@ -65,6 +65,13 @@ class WebdramaTurkey2Provider : MainAPI() {
             "Kore Dizileri" -> countryUrl(1)
             "Çin Dizileri" -> countryUrl(2)
             "Japon Dizileri" -> countryUrl(3)
+            "Lise" -> "$mainUrl/tur/lise?page=SAYFA"
+            "Üniversite" -> "$mainUrl/tur/universite?page=SAYFA"
+            "Ofis Aşkı" -> "$mainUrl/tur/ofis-aski?page=SAYFA"
+            "Romantik" -> "$mainUrl/tur/romantik?page=SAYFA"
+            "Fantastik" -> "$mainUrl/tur/fantastik?page=SAYFA"
+            "Dram" -> "$mainUrl/tur/dram?page=SAYFA"
+            "Komedi" -> "$mainUrl/tur/komedi?page=SAYFA"
             else -> return@mapNotNull null
         }
         MainPageData(name, data)
@@ -363,6 +370,13 @@ class WebdramaTurkey2Provider : MainAPI() {
             "Kore Dizileri",
             "Çin Dizileri",
             "Japon Dizileri",
+            "Lise",
+            "Üniversite",
+            "Ofis Aşkı",
+            "Romantik",
+            "Fantastik",
+            "Dram",
+            "Komedi",
         )
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"

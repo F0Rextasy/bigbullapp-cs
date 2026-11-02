@@ -64,17 +64,27 @@ class DiziAbiProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Aile" -> "https://www.diziabi.net/tur/aile"
-            "Aksiyon" -> "https://www.diziabi.net/tur/aksiyon"
-            "Aksiyon &amp; Macera" -> "https://www.diziabi.net/tur/aksiyon-macera"
-            "Animasyon" -> "https://www.diziabi.net/tur/animasyon"
+            "Aile" -> "$mainUrl/tur/aile"
+            "Aksiyon" -> "$mainUrl/tur/aksiyon"
+            "Aksiyon &amp; Macera" -> "$mainUrl/tur/aksiyon-macera"
+            "Animasyon" -> "$mainUrl/tur/animasyon"
+            "Belgesel" -> "$mainUrl/tur/belgesel"
+            "Bilim Kurgu" -> "$mainUrl/tur/bilim-kurgu"
+            "Dram" -> "$mainUrl/tur/dram"
+            "Fantastik" -> "$mainUrl/tur/fantastik"
+            "Gerilim" -> "$mainUrl/tur/gerilim"
+            "Gizem" -> "$mainUrl/tur/gizem"
+            "Komedi" -> "$mainUrl/tur/komedi"
+            "Korku" -> "$mainUrl/tur/korku"
+            "Romantik" -> "$mainUrl/tur/romantik"
+            "Suç" -> "$mainUrl/tur/suc"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Aile", "Aksiyon", "Aksiyon &amp; Macera", "Animasyon")) {
+            if (request.name in ROWS) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -83,7 +93,11 @@ class DiziAbiProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Aile", "Aksiyon", "Aksiyon &amp; Macera", "Animasyon")
+        val ROWS = listOf(
+            "Aile", "Aksiyon", "Aksiyon &amp; Macera", "Animasyon", "Belgesel",
+            "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem", "Komedi",
+            "Korku", "Romantik", "Suç",
+        )
     }
 
     private val pathPrefixes = listOf("/dizi/")

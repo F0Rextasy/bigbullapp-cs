@@ -44,6 +44,16 @@ class DizilabProvider : MainAPI() {
 
     override val mainPage get() = listOf(
         MainPageData("Diziler", "$mainUrl/diziler"),
+        MainPageData("Kore", "$mainUrl/tur/kore/"),
+        MainPageData("Çin", "$mainUrl/tur/cin/"),
+        MainPageData("Japonya", "$mainUrl/tur/japonya/"),
+        MainPageData("Tayland", "$mainUrl/tur/tayland/"),
+        MainPageData("Aksiyon", "$mainUrl/tur/aksiyon/"),
+        MainPageData("Dram", "$mainUrl/tur/dram/"),
+        MainPageData("Fantastik", "$mainUrl/tur/fantastik/"),
+        MainPageData("Romantik", "$mainUrl/tur/romantik/"),
+        MainPageData("Komedi", "$mainUrl/tur/komedi/"),
+        MainPageData("Gerilim", "$mainUrl/tur/gerilim/"),
     )
 
     private fun Element.toCard(): SearchResponse? {
@@ -133,7 +143,8 @@ class DizilabProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Diziler")
+        val ROWS = listOf("Diziler", "Kore", "Çin", "Japonya", "Tayland", "Aksiyon", "Dram",
+            "Fantastik", "Romantik", "Komedi", "Gerilim")
         private val EPISODE = Regex("""-(\d+)-sezon-(\d+)-bolum""")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"

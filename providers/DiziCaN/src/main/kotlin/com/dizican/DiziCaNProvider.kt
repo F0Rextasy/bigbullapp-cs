@@ -67,14 +67,22 @@ class DiziCaNProvider : MainAPI() {
             "BL" -> "https://dizican.cc/category/bl-filmleri-izle/"
             "Fantastik" -> "https://dizican.cc/category/fantastik-filmleri-izle/"
             "Gençlik" -> "https://dizican.cc/category/genclik/"
-            "Gerilim" -> "https://dizican.cc/category/gerilim-filmleri-izle/"
+            "Gerilim" -> "$mainUrl/category/gerilim-filmleri-izle/"
+            "Aksiyon" -> "$mainUrl/dizi-kategori/aksiyon-dizileri-izle/"
+            "Dram" -> "$mainUrl/dizi-kategori/dram-dizileri-izle/"
+            "Komedi" -> "$mainUrl/dizi-kategori/komedi-dizileri-izle/"
+            "Korku" -> "$mainUrl/dizi-kategori/korku-dizileri-izle/"
+            "Romantik" -> "$mainUrl/dizi-kategori/romantik-dizileri-izle/"
+            "Bilim Kurgu" -> "$mainUrl/dizi-kategori/bilim-kurgu-dizileri-izle/"
+            "Gizem" -> "$mainUrl/dizi-kategori/gizem-dizileri-izle/"
+            "Suç" -> "$mainUrl/dizi-kategori/suc-dizileri-izle/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("BL", "Fantastik", "Gençlik", "Gerilim")) {
+            if (request.name in ROWS) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -83,7 +91,8 @@ class DiziCaNProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("BL", "Fantastik", "Gençlik", "Gerilim")
+        val ROWS = listOf("BL", "Fantastik", "Gençlik", "Gerilim", "Aksiyon", "Dram",
+            "Komedi", "Korku", "Romantik", "Bilim Kurgu", "Gizem", "Suç")
     }
 
     private val pathPrefixes = listOf("/", "/bolum/")

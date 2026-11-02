@@ -55,6 +55,18 @@ class FilmModuProvider : MainAPI() {
             "Filmler" -> MainPageData(name, "$mainUrl/filmler?page=SAYFA")
             "En Yeni" -> MainPageData(name, "$mainUrl/filmler?sirala=yeni&page=SAYFA")
             "En Yüksek Puan" -> MainPageData(name, "$mainUrl/filmler?sirala=puan&page=SAYFA")
+            "Aile" -> MainPageData(name, "$mainUrl/tur/aile?page=SAYFA")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/tur/aksiyon?page=SAYFA")
+            "Animasyon" -> MainPageData(name, "$mainUrl/tur/animasyon?page=SAYFA")
+            "Belgesel" -> MainPageData(name, "$mainUrl/tur/belgesel?page=SAYFA")
+            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/tur/bilim-kurgu?page=SAYFA")
+            "Dram" -> MainPageData(name, "$mainUrl/tur/dram?page=SAYFA")
+            "Fantastik" -> MainPageData(name, "$mainUrl/tur/fantastik?page=SAYFA")
+            "Gerilim" -> MainPageData(name, "$mainUrl/tur/gerilim?page=SAYFA")
+            "Gizem" -> MainPageData(name, "$mainUrl/tur/gizem?page=SAYFA")
+            "Komedi" -> MainPageData(name, "$mainUrl/tur/komedi?page=SAYFA")
+            "Korku" -> MainPageData(name, "$mainUrl/tur/korku?page=SAYFA")
+            "Romantik" -> MainPageData(name, "$mainUrl/tur/romantik?page=SAYFA")
             else -> null
         }
     }
@@ -179,7 +191,9 @@ class FilmModuProvider : MainAPI() {
 
     companion object {
         /** Homepage rows in display order; all map to live listing pages. */
-        val ROWS = listOf("Filmler", "En Yeni", "En Yüksek Puan")
+        val ROWS = listOf("Filmler", "En Yeni", "En Yüksek Puan", "Aile", "Aksiyon", "Animasyon",
+            "Belgesel", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem", "Komedi", "Korku",
+            "Romantik")
 
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"

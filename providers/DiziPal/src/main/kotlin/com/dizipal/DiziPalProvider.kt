@@ -84,29 +84,13 @@ class DiziPalProvider : MainAPI() {
 
     override suspend fun search(query: String): List<SearchResponse> {
         val term = query.trim()
-        // Servis üç karakterden kısa sorguları 400 ile reddediyor.
         if (term.length < 3) return emptyList()
-
-        val payload = JSONObject()
-            .put("action", "searchContent")
-            .put("params", JSONArray().put(term))
-        val body = runCatching {
-            app.post(
-                "$mainUrl/api/mj",
-                json = payload,
-                headers = uaHeaders + mapOf(
-                    "Accept" to "application/json, text/plain, */*",
-                    "Origin" to mainUrl,
-                ),
-                referer = "$mainUrl/",
-            ).text
-        }.getOrNull() ?: throw ErrorLoadingException("$name: arama servisi yanıt vermedi. $REPORT_HINT")
-
-        val root = runCatching { JSONObject(body) }.getOrNull()
-            ?: throw ErrorLoadingException("$name: arama yanıtı okunamadı. $REPORT_HINT")
-        return root.optJSONArray("result").objects()
-            .mapNotNull { it.toSearchResult() }
-            .distinctBy { it.url }
+        val doc = app.get(
+            "$mainUrl/arama-yap",
+            headers = uaHeaders,
+            params = mapOf("q" to term),
+        ).document
+        return doc.select("a.tc[href]").mapNotNull { it.toCard() }.distinctBy { it.url }
     }
 
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)

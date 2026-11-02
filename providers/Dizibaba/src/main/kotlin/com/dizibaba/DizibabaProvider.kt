@@ -44,6 +44,20 @@ class DizibabaProvider : MainAPI() {
 
     override val mainPage get() = listOf(
         MainPageData("Filmler", "$mainUrl/filmler"),
+        MainPageData("Aile", "$mainUrl/tur/aile"),
+        MainPageData("Aksiyon", "$mainUrl/tur/aksiyon"),
+        MainPageData("Animasyon", "$mainUrl/tur/animasyon"),
+        MainPageData("Belgesel", "$mainUrl/tur/belgesel"),
+        MainPageData("Bilim Kurgu", "$mainUrl/tur/bilim-kurgu"),
+        MainPageData("Dram", "$mainUrl/tur/dram"),
+        MainPageData("Fantastik", "$mainUrl/tur/fantastik"),
+        MainPageData("Gerilim", "$mainUrl/tur/gerilim"),
+        MainPageData("Gizem", "$mainUrl/tur/gizem"),
+        MainPageData("Komedi", "$mainUrl/tur/komedi"),
+        MainPageData("Korku", "$mainUrl/tur/korku"),
+        MainPageData("Macera", "$mainUrl/tur/macera"),
+        MainPageData("Romantik", "$mainUrl/tur/romantik"),
+        MainPageData("Suç", "$mainUrl/tur/suc"),
     )
 
     private fun Element.toCard(): SearchResponse? {

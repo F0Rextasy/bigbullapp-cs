@@ -5,6 +5,17 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.2] - 2026-11-02
+
+### Düzeltildi
+- **Kategoriler**: 25 sağlayıcıya gerçek tür sayfaları eklendi (DiziAbi, DDizimag, Dizigom, DiziMom, Dizigecesi, Dizibaba, CanliDizi, BirAsyaDizi, HDFilmCehennemi, FilmModu, Cizgimax, JetFilmizle, UltraFilmizle, YesilCamTv, WebdramaTurkey2, DiziboxIzle, DiziYou, KoreanTurk, Sezonlukdizi, Filmizyon, Dizirella, Animeler, Anizm, Dizilab, DiziCaN).
+- **DiziPal v4**: arama Next.js `/arama-yap?q=` akışına geçirildi; bölüm oynatıcısı doğrulandı.
+- **HDFilmizle v4**: yeni `div.playex` oynatıcı seçicisi; 1080p HLS + Türkçe/İngilizce altyazı.
+- **CizgiSite v5**: VK embed yanıtındaki kaçışlı URL'ler çözülüyor; MP4 kaliteleri (144p–1080p) dönüyor.
+- **KoreanTurk v5**: yeni `a.dz-card` kartları ve tür sayfaları.
+- **MinikaGO v2**: bölüm URL'sindeki eksik `/` ve tarayıcı başlıkları düzeltildi.
+- **Runner**: `/run-all` eşzamanlılık çökmesi giderildi; `/main?row=` ile kategori doğrulaması eklendi.
+
 ## [1.6.1] - 2026-11-02
 
 ### Düzeltildi
@@ -14,7 +25,7 @@ sayı arttığında güncelleme sunar.
 - **CizgiSite v3/v4**: Brotli sıkıştırılmış sayfalar çözülüyor; çözüm başarısız olursa sessiz boş sonuç yerine gerçek hata gösteriliyor.
 - **Inat**: runner’da pass olmayan 24 platform `settings.gradle.kts` pasif listesine alındı; kaynaklar korunuyor.
 - **Nuvio**: plugin deposu ve katalog addon'u aktif; 91/102 sağlayıcı açık, “Tümü - Filmler” ve “Tümü - Diziler” satırları yayında. Meta için Cinemeta şartı README’ye eklendi.
-- **SelcukSports v1**: portal kanal listesi eklendi; P2P/WebRTC oynatıcı doğrudan HLS vermediği için yayınlanmıyor, kaynak pasif ve backlog'da.
+- **SelcukSports kaldırıldı**: P2P/WebRTC oynatıcı doğrudan HLS vermediği için sağlayıcı kaynağı repodan çıkarıldı; ileride relay kanıtı olursa yeniden eklenebilir.
 - **CanliYayinKanallari v4**: HTTP 403/404 veren 7 ölü URL listeden çıkarıldı; **46 HLS adresi HTTP 200** ile doğrulandı (oynatma ayrıca test edilmedi).
 - Telegram: yalnız sağlayıcı değişikliklerinde tek bildirim gönderilir; katalog/docs commit'leri sessiz kalır.
 

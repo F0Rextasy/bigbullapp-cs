@@ -64,6 +64,12 @@ class SezonlukdiziProvider : MainAPI() {
             "Bilim Kurgu" -> MainPageData(name, "$mainUrl/diziler.asp?tur=bilimkurgu")
             "Korku" -> MainPageData(name, "$mainUrl/diziler.asp?tur=korku")
             "Aksiyon" -> MainPageData(name, "$mainUrl/diziler.asp?tur=aksiyon")
+            "Dram" -> MainPageData(name, "$mainUrl/diziler.asp?tur=dram")
+            "Komedi" -> MainPageData(name, "$mainUrl/diziler.asp?tur=komedi")
+            "Gerilim" -> MainPageData(name, "$mainUrl/diziler.asp?tur=gerilim")
+            "Gizem" -> MainPageData(name, "$mainUrl/diziler.asp?tur=gizem")
+            "Romantik" -> MainPageData(name, "$mainUrl/diziler.asp?tur=romantik")
+            "Suç" -> MainPageData(name, "$mainUrl/diziler.asp?tur=suc")
             else -> null
         }
     }
@@ -587,7 +593,8 @@ class SezonlukdiziProvider : MainAPI() {
 
     companion object {
         /** Homepage row labels, in display order; each maps to a live genre filter above. */
-        val ROWS = listOf("Son Eklenenler", "IMDb", "Bilim Kurgu", "Korku", "Aksiyon")
+        val ROWS = listOf("Son Eklenenler", "IMDb", "Bilim Kurgu", "Korku", "Aksiyon", "Dram",
+            "Komedi", "Gerilim", "Gizem", "Romantik", "Suç")
         const val MAX_POW_ATTEMPTS = 4_000_000
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"

@@ -281,9 +281,6 @@ Canlı yayın modülleri `TvType.Live` kullanır; `loadLinks` yoktur, kanal URL'
 `CanliYayinKanallari` için “doğrulanmış” yalnız **HTTP 200 HLS adresi** anlamındadır; oynatma
 tek başına bu testle garanti edilmez.
 
-`SelcukSports` kaynak olarak `providers/SelcukSports` altında korunuyor; WebRTC/P2P oynatıcı
-doğrudan medya vermediği için **pasif** ve yayınlanmıyor.
-
 ## Eklenti ayarları
 
 Her sağlayıcının kendi ayar ekranı vardır (**Ayarlar → Extensions → eklenti → dişli**):

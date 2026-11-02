@@ -67,14 +67,22 @@ class DizirellaProvider : MainAPI() {
             "Aile 41" -> "https://dizirella.one/tur/aile/"
             "Aksiyon 188" -> "https://dizirella.one/tur/aksiyon/"
             "Animasyon 56" -> "https://dizirella.one/tur/animasyon/"
-            "Belgesel 82" -> "https://dizirella.one/tur/belgesel/"
+            "Belgesel 82" -> "$mainUrl/tur/belgesel/"
+            "Dram" -> "$mainUrl/tur/dram/"
+            "Fantastik" -> "$mainUrl/tur/fantastik/"
+            "Gerilim" -> "$mainUrl/tur/gerilim/"
+            "Gizem" -> "$mainUrl/tur/gizem/"
+            "Komedi" -> "$mainUrl/tur/komedi/"
+            "Korku" -> "$mainUrl/tur/korku/"
+            "Romantik" -> "$mainUrl/tur/romantik/"
+            "Suç" -> "$mainUrl/tur/suc/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Aile 41", "Aksiyon 188", "Animasyon 56", "Belgesel 82")) {
+            if (request.name in ROWS) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -83,7 +91,8 @@ class DizirellaProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Aile 41", "Aksiyon 188", "Animasyon 56", "Belgesel 82")
+        val ROWS = listOf("Aile 41", "Aksiyon 188", "Animasyon 56", "Belgesel 82", "Dram",
+            "Fantastik", "Gerilim", "Gizem", "Komedi", "Korku", "Romantik", "Suç")
     }
 
     private val pathPrefixes = listOf("/", "/dizi/")

@@ -57,6 +57,19 @@ class UltraFilmizleProvider : MainAPI() {
     override val mainPage get() = mainPageOf(
         "$mainUrl/" to "Ana Sayfa",
         "$mainUrl/filmler9/" to "Filmler",
+        "$mainUrl/kategori/aksiyon/" to "Aksiyon",
+        "$mainUrl/kategori/aile/" to "Aile",
+        "$mainUrl/kategori/animasyon/" to "Animasyon",
+        "$mainUrl/kategori/belgesel/" to "Belgesel",
+        "$mainUrl/kategori/bilim-kurgu/" to "Bilim Kurgu",
+        "$mainUrl/kategori/dram/" to "Dram",
+        "$mainUrl/kategori/fantastik/" to "Fantastik",
+        "$mainUrl/kategori/gerilim/" to "Gerilim",
+        "$mainUrl/kategori/gizem/" to "Gizem",
+        "$mainUrl/kategori/komedi/" to "Komedi",
+        "$mainUrl/kategori/korku/" to "Korku",
+        "$mainUrl/kategori/macera/" to "Macera",
+        "$mainUrl/kategori/romantik/" to "Romantik",
     ).filter { Settings.rowEnabled(it.name) }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {

@@ -180,7 +180,7 @@ class HDFilmizleProvider : MainAPI() {
         val nonce = doc.selectFirst("#playex")?.attr("data-nonce")?.trim()?.takeIf { it.isNotEmpty() }
             ?: NONCE.find(html)?.groupValues?.get(1)
             ?: throw ErrorLoadingException("$name: oynatıcı anahtarı bulunamadı. $REPORT_HINT")
-        val players = doc.select("#playex a.options[data-post-id]").mapNotNull { el ->
+        val players = doc.select("#playex a.options[data-post-id], div.playex a.options[data-post-id]").mapNotNull { el ->
             val postId = el.attr("data-post-id").trim().takeIf { it.isNotEmpty() }
                 ?: return@mapNotNull null
             Triple(postId, el.attr("data-player-name").trim(), el.attr("data-part-key").trim())

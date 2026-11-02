@@ -64,6 +64,17 @@ class CizgimaxProvider : MainAPI() {
             "Son Eklenenler" -> MainPageData(name, "$mainUrl/")
             "Anime" -> MainPageData(name, "$mainUrl/diziler/anime/")
             "Popüler" -> MainPageData(name, "$mainUrl/arsiv/?sort=populer&donem=daily")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/tur/aksiyon/")
+            "Aile" -> MainPageData(name, "$mainUrl/tur/aile/")
+            "Belgesel" -> MainPageData(name, "$mainUrl/tur/belgesel/")
+            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/tur/bilim-kurgu/")
+            "Dram" -> MainPageData(name, "$mainUrl/tur/dram/")
+            "Fantastik" -> MainPageData(name, "$mainUrl/tur/fantastik/")
+            "Gerilim" -> MainPageData(name, "$mainUrl/tur/gerilim/")
+            "Komedi" -> MainPageData(name, "$mainUrl/tur/komedi/")
+            "Korku" -> MainPageData(name, "$mainUrl/tur/korku/")
+            "Macera" -> MainPageData(name, "$mainUrl/tur/macera/")
+            "Romantik" -> MainPageData(name, "$mainUrl/tur/romantik/")
             else -> null
         }
     }
@@ -316,7 +327,8 @@ class CizgimaxProvider : MainAPI() {
 
     companion object {
         /** Homepage row labels, in display order; each maps to a live listing page above. */
-        val ROWS = listOf("Son Eklenenler", "Anime", "Popüler")
+        val ROWS = listOf("Son Eklenenler", "Anime", "Popüler", "Aksiyon", "Aile", "Belgesel",
+            "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Komedi", "Korku", "Macera", "Romantik")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
         private val ServersRegex = Regex("""var servers\s*=\s*JSON\.parse\(atob\("([^"]+)"\)\)""")

@@ -67,14 +67,24 @@ class FilmizyonProvider : MainAPI() {
             "Aile" -> "https://www.filmizyon.net/tur/aile-filmleri-izle/"
             "Aksiyon" -> "https://www.filmizyon.net/tur/aksiyon-filmleri-izle/"
             "Animasyon" -> "https://www.filmizyon.net/tur/animasyon-filmleri-izle/"
-            "Belgesel" -> "https://www.filmizyon.net/tur/belgesel-izle/"
+            "Belgesel" -> "$mainUrl/tur/belgesel-izle/"
+            "Bilim Kurgu" -> "$mainUrl/tur/bilim-kurgu-filmleri-izle/"
+            "Dram" -> "$mainUrl/tur/dram-filmleri-izle/"
+            "Fantastik" -> "$mainUrl/tur/fantastik-filmler-izle/"
+            "Gerilim" -> "$mainUrl/tur/gerilim-filmleri-izle/"
+            "Gizem" -> "$mainUrl/tur/gizem-filmleri-izle/"
+            "Komedi" -> "$mainUrl/tur/komedi-filmleri-izle/"
+            "Korku" -> "$mainUrl/tur/korku-filmleri-izle/"
+            "Macera" -> "$mainUrl/tur/macera-filmleri-izle/"
+            "Romantik" -> "$mainUrl/tur/romantik-filmler-izle/"
+            "Suç" -> "$mainUrl/tur/suc-filmleri-izle/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Aile", "Aksiyon", "Animasyon", "Belgesel")) {
+            if (request.name in ROWS) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -83,7 +93,8 @@ class FilmizyonProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Aile", "Aksiyon", "Animasyon", "Belgesel")
+        val ROWS = listOf("Aile", "Aksiyon", "Animasyon", "Belgesel", "Bilim Kurgu", "Dram",
+            "Fantastik", "Gerilim", "Gizem", "Komedi", "Korku", "Macera", "Romantik", "Suç")
     }
 
     private val pathPrefixes = listOf("/film/")

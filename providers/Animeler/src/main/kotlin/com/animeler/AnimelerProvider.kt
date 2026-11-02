@@ -43,6 +43,13 @@ class AnimelerProvider : MainAPI() {
     override val mainPage = mainPageOf(
         "$mainUrl/filtre?sort=popular" to "Popüler",
         "$mainUrl/filtre?sort=latest" to "Son Eklenenler",
+        "$mainUrl/genre/action" to "Aksiyon",
+        "$mainUrl/genre/comedy" to "Komedi",
+        "$mainUrl/genre/romance" to "Romantik",
+        "$mainUrl/genre/fantasy" to "Fantastik",
+        "$mainUrl/genre/drama" to "Dram",
+        "$mainUrl/genre/adventure" to "Macera",
+        "$mainUrl/genre/supernatural" to "Doğaüstü",
     )
     override val supportedTypes = setOf(TvType.Anime)
 
@@ -184,6 +191,7 @@ class AnimelerProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Popüler", "Son Eklenenler")
+        val ROWS = listOf("Popüler", "Son Eklenenler", "Aksiyon", "Komedi", "Romantik",
+            "Fantastik", "Dram", "Macera", "Doğaüstü")
     }
 }

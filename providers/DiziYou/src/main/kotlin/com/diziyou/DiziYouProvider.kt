@@ -47,6 +47,12 @@ class DiziYouProvider : MainAPI() {
             "Dizi Arşivi" -> MainPageData(name, "$mainUrl/dizi-arsivi/?filtrele=alfabetik&sirala=ASC")
             "Aksiyon" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=Aksiyon")
             "Dram" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=Dram")
+            "Komedi" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=Komedi")
+            "Korku" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=Korku")
+            "Gerilim" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=Gerilim")
+            "Gizem" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=Gizem")
+            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=Bilim Kurgu")
+            "Romantik" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=Romantik")
             else -> null
         }
     }
@@ -177,7 +183,8 @@ class DiziYouProvider : MainAPI() {
 
     companion object {
         /** Homepage row labels, in display order; each maps to a live archive filter above. */
-        val ROWS = listOf("Son Eklenen Diziler", "IMDb 7+", "Dizi Arşivi", "Aksiyon", "Dram")
+        val ROWS = listOf("Son Eklenen Diziler", "IMDb 7+", "Dizi Arşivi", "Aksiyon", "Dram",
+            "Komedi", "Korku", "Gerilim", "Gizem", "Bilim Kurgu", "Romantik")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

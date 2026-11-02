@@ -55,17 +55,26 @@ class YesilCamTvProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Aile" -> "https://yesilcamtv.com.tr/category/aile/"
-            "Aksiyon" -> "https://yesilcamtv.com.tr/category/aksiyon/"
-            "Belgesel" -> "https://yesilcamtv.com.tr/category/belgesel/"
-            "Bilim Kurgu" -> "https://yesilcamtv.com.tr/category/bilim-kurgu/"
+            "Aile" -> "$mainUrl/category/aile/"
+            "Aksiyon" -> "$mainUrl/category/aksiyon/"
+            "Belgesel" -> "$mainUrl/category/belgesel/"
+            "Bilim Kurgu" -> "$mainUrl/category/bilim-kurgu/"
+            "Dram" -> "$mainUrl/category/dram/"
+            "Fantastik" -> "$mainUrl/category/fantastik/"
+            "Gerilim" -> "$mainUrl/category/gerilim/"
+            "Gizem" -> "$mainUrl/category/gizem/"
+            "Komedi" -> "$mainUrl/category/komedi/"
+            "Korku" -> "$mainUrl/category/korku/"
+            "Macera" -> "$mainUrl/category/macera/"
+            "Müzik" -> "$mainUrl/category/muzik/"
+            "Romantik" -> "$mainUrl/category/romantik/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Aile", "Aksiyon", "Belgesel", "Bilim Kurgu")) {
+            if (request.name in ROWS) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -74,7 +83,8 @@ class YesilCamTvProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Aile", "Aksiyon", "Belgesel", "Bilim Kurgu")
+        val ROWS = listOf("Aile", "Aksiyon", "Belgesel", "Bilim Kurgu", "Dram", "Fantastik",
+            "Gerilim", "Gizem", "Komedi", "Korku", "Macera", "Müzik", "Romantik")
     }
 
     private val pathPrefixes = listOf("/")

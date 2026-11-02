@@ -64,17 +64,26 @@ class BirAsyaDiziProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "&nbsp; Aile" -> "https://www.birasyadizi.cx/category/aile/"
-            "&nbsp; Aksiyon" -> "https://www.birasyadizi.cx/category/aksiyon/"
-            "&nbsp; Animasyon" -> "https://www.birasyadizi.cx/category/animasyon/"
-            "&nbsp; Arkadaşlık" -> "https://www.birasyadizi.cx/category/arkadaslik/"
+            "&nbsp; Aile" -> "$mainUrl/category/aile/"
+            "&nbsp; Aksiyon" -> "$mainUrl/category/aksiyon/"
+            "&nbsp; Animasyon" -> "$mainUrl/category/animasyon/"
+            "&nbsp; Arkadaşlık" -> "$mainUrl/category/arkadaslik/"
+            "&nbsp; Belgesel" -> "$mainUrl/category/belgesel/"
+            "&nbsp; Bilim Kurgu" -> "$mainUrl/category/bilim-kurgu/"
+            "&nbsp; Dram" -> "$mainUrl/category/dram/"
+            "&nbsp; Fantastik" -> "$mainUrl/category/fantastik/"
+            "&nbsp; Gizem" -> "$mainUrl/category/gizem/"
+            "&nbsp; Komedi" -> "$mainUrl/category/komedi/"
+            "&nbsp; Korku" -> "$mainUrl/category/korku/"
+            "&nbsp; Macera" -> "$mainUrl/category/macera/"
+            "&nbsp; Romantik" -> "$mainUrl/category/romantik/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("&nbsp; Aile", "&nbsp; Aksiyon", "&nbsp; Animasyon", "&nbsp; Arkadaşlık")) {
+            if (request.name in ROWS) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -83,7 +92,9 @@ class BirAsyaDiziProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("&nbsp; Aile", "&nbsp; Aksiyon", "&nbsp; Animasyon", "&nbsp; Arkadaşlık")
+        val ROWS = listOf("&nbsp; Aile", "&nbsp; Aksiyon", "&nbsp; Animasyon", "&nbsp; Arkadaşlık",
+            "&nbsp; Belgesel", "&nbsp; Bilim Kurgu", "&nbsp; Dram", "&nbsp; Fantastik",
+            "&nbsp; Gizem", "&nbsp; Komedi", "&nbsp; Korku", "&nbsp; Macera", "&nbsp; Romantik")
     }
 
     private val pathPrefixes = listOf("/", "/dizi/")

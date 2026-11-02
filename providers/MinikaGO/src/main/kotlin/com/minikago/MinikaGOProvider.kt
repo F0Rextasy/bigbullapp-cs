@@ -33,6 +33,11 @@ class MinikaGOProvider : MainAPI() {
     override val hasMainPage = true
     override val hasQuickSearch = false
     override val supportedTypes = setOf(TvType.Movie)
+    private val uaHeaders = mapOf(
+        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+            "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+        "Accept-Language" to "tr-TR,tr;q=0.9",
+    )
 
     override val mainPage get() = ROWS.mapNotNull { row ->
         if (row == "Videolar" && Settings.rowEnabled(row)) {
@@ -42,14 +47,14 @@ class MinikaGOProvider : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
-        val doc = app.get(request.data).document
+        val doc = app.get(request.data, headers = uaHeaders).document
         val items = doc.select("a[href*='/bolum/']").mapNotNull { it.toSearchResult() }
             .distinctBy { it.url }
         return newHomePageResponse(request.name, items, hasNext = false)
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val doc = app.get("$mainUrl/arama", params = mapOf("q" to query.trim())).document
+        val doc = app.get("$mainUrl/arama", params = mapOf("q" to query.trim()), headers = uaHeaders).document
         val needle = normalize(query)
         return doc.select("div.search-item").mapNotNull { item ->
             val title = item.selectFirst("h2.item-content-title")?.text()?.trim() ?: return@mapNotNull null
@@ -62,13 +67,14 @@ class MinikaGOProvider : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val doc = app.get(url).document
+        val pageUrl = if (url.endsWith("/")) url else "$url/"
+        val doc = app.get(pageUrl, headers = uaHeaders).document
         val title = doc.selectFirst("h1")?.text()?.trim()?.takeIf { it.isNotBlank() }
             ?: doc.selectFirst("meta[property=og:title]")?.attr("content")?.trim()?.takeIf { it.isNotBlank() }
             ?: throw ErrorLoadingException("$name: bölüm adı okunamadı. $REPORT_HINT")
         val poster = doc.selectFirst("meta[property=og:image]")?.attr("content")?.let { fixUrlNull(it) }
         val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()?.takeIf { it.isNotBlank() }
-        return newMovieLoadResponse(title, url, TvType.Movie, url) {
+        return newMovieLoadResponse(title, pageUrl, TvType.Movie, pageUrl) {
             this.posterUrl = poster
             this.plot = plot
         }
@@ -80,7 +86,8 @@ class MinikaGOProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val html = app.get(data, referer = "$mainUrl/").text.replace("\\/", "/")
+        val pageUrl = if (data.endsWith("/")) data else "$data/"
+        val html = app.get(pageUrl, headers = uaHeaders, referer = "$mainUrl/").text.replace("\\/", "/")
         val links = MP4.findAll(html).map { it.value }.distinct().toList()
         if (links.isEmpty()) throw ErrorLoadingException("$name: bölüm videosu bulunamadı. $REPORT_HINT")
         var emitted = 0

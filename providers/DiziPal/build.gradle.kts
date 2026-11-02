@@ -1,4 +1,4 @@
-version = 3
+version = 4
 
 cloudstream {
     description = "DiziPal — Türkçe dizi & film arşivi, platform bölümleri (dizipal1592.com)"

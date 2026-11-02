@@ -51,6 +51,10 @@ class CizgiSiteProvider : MainAPI() {
         val request = Request.Builder().url(url)
             .header("User-Agent", uaHeaders.getValue("User-Agent"))
             .header("Accept-Language", uaHeaders.getValue("Accept-Language"))
+            .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+            .header("Sec-Fetch-Dest", "iframe")
+            .header("Sec-Fetch-Mode", "navigate")
+            .header("Sec-Fetch-Site", "cross-site")
             .apply { if (referer != null) header("Referer", referer) }
             .build()
         client.newCall(request).execute().use { response ->
@@ -174,12 +178,12 @@ class CizgiSiteProvider : MainAPI() {
         }
         var found = false
         for (frame in frames) {
-            val embed = runCatching {
-                fetchHtml(frame, data)
-                    .replace("\\\\/", "/").replace("\\/", "/")
-            }.getOrNull() ?: continue
-            val media = Regex(""""(mp4_\d+|hls|hls_fmp4)":"(https?://[^"]+)"""")
-                .findAll(embed).map { it.groupValues[1] to it.groupValues[2].replace("\\/", "/") }
+            val embed = runCatching { fetchHtml(frame, data) }.getOrNull() ?: continue
+            val media = Regex(""""(mp4_\d+|hls|hls_fmp4)"\s*:\s*"(https?:[^"]+)"""")
+                .findAll(embed).map {
+                    it.groupValues[1] to it.groupValues[2]
+                        .replace("\\\\/", "/").replace("\\/", "/").replace("\\u0026", "&")
+                }
             for ((kind, url) in media) {
                 val quality = getQualityFromName(kind)
                 if (!Settings.qualityAllowed(quality)) continue

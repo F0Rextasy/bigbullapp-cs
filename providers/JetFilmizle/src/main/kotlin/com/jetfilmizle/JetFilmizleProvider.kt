@@ -49,6 +49,17 @@ class JetFilmizleProvider : MainAPI() {
             "Son Eklenenler" -> MainPageData(name, "$mainUrl/filmler/sayfa-SAYFA")
             "Türkçe Dublaj" -> MainPageData(name, "$mainUrl/turkce-dublaj/sayfa-SAYFA")
             "Türkçe Altyazılı" -> MainPageData(name, "$mainUrl/turkce-altyazili/sayfa-SAYFA")
+            "Aksiyon" -> MainPageData(name, "$mainUrl/tur/aksiyon/sayfa-SAYFA")
+            "Aile" -> MainPageData(name, "$mainUrl/tur/aile/sayfa-SAYFA")
+            "Animasyon" -> MainPageData(name, "$mainUrl/tur/animasyon/sayfa-SAYFA")
+            "Belgesel" -> MainPageData(name, "$mainUrl/tur/belgesel/sayfa-SAYFA")
+            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/tur/bilim-kurgu/sayfa-SAYFA")
+            "Dram" -> MainPageData(name, "$mainUrl/tur/dram/sayfa-SAYFA")
+            "Fantastik" -> MainPageData(name, "$mainUrl/tur/fantastik/sayfa-SAYFA")
+            "Gerilim" -> MainPageData(name, "$mainUrl/tur/gerilim/sayfa-SAYFA")
+            "Komedi" -> MainPageData(name, "$mainUrl/tur/komedi/sayfa-SAYFA")
+            "Korku" -> MainPageData(name, "$mainUrl/tur/korku/sayfa-SAYFA")
+            "Romantik" -> MainPageData(name, "$mainUrl/tur/romantik/sayfa-SAYFA")
             else -> null
         }
     }
@@ -377,7 +388,9 @@ class JetFilmizleProvider : MainAPI() {
 
     companion object {
         /** Homepage rows in display order; all map to live listing pages. */
-        val ROWS = listOf("Son Eklenenler", "Türkçe Dublaj", "Türkçe Altyazılı")
+        val ROWS = listOf("Son Eklenenler", "Türkçe Dublaj", "Türkçe Altyazılı", "Aksiyon", "Aile",
+            "Animasyon", "Belgesel", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Komedi",
+            "Korku", "Romantik")
 
         // shortcut: moviesapi.to oynatıcı paketindeki sabit anahtar; 401 alınırsa paketten yenilenmeli.
         private const val MOVIESAPI_KEY =
