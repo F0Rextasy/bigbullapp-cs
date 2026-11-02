@@ -30,8 +30,8 @@ canlı TV kaynakları. Her site Cloudstream'de ayrı bir Gradle modülü/`.cs3` 
 > ```
 >
 > Yalnız **sideload** edilen Nuvio sürümleri eklenti destekler (mağaza sürümlerinde bu bölüm
-> yoktur). Eklentiler yalnız **akış** verir; Nuvio'nun katalogları için Cinemeta gibi bir addon
-> gerekir.
+> yoktur). Eklentiler yalnız **akış** verir; katalog/meta için **Cinemeta** addon’unu da ekle:
+> `https://v3-cinemeta.strem.io/manifest.json`.
 
 ## Kısa kod
 

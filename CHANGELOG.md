@@ -13,6 +13,7 @@ sayı arttığında güncelleme sunar.
 - **AniArsiv v3**: bölüm başına 52 kaynak yerine ilk 12 kaynak deneniyor; runner zaman aşımı giderildi.
 - **CizgiSite v3/v4**: Brotli sıkıştırılmış sayfalar çözülüyor; çözüm başarısız olursa sessiz boş sonuç yerine gerçek hata gösteriliyor.
 - **Inat**: runner’da pass olmayan 24 platform `settings.gradle.kts` pasif listesine alındı; kaynaklar korunuyor.
+- **Nuvio**: plugin deposu ve katalog addon'u aktif; 91/102 sağlayıcı açık, “Tümü - Filmler” ve “Tümü - Diziler” satırları yayında. Meta için Cinemeta şartı README’ye eklendi.
 - Telegram: yalnız sağlayıcı değişikliklerinde tek bildirim gönderilir; katalog/docs commit'leri sessiz kalır.
 
 ## [1.6.0] - 2026-11-01
