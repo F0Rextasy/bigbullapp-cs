@@ -14,6 +14,7 @@ sayı arttığında güncelleme sunar.
 - **CizgiSite v6**: VK embed yanıtındaki kaçışlı URL'ler çözülüyor; MP4 kaliteleri (144p–1080p) dönüyor; VK reddinde başlıksız yedek istek deniyor.
 - **KoreanTurk v5**: yeni `a.dz-card` kartları ve tür sayfaları.
 - **MinikaGO v3**: bölüm URL'sindeki eksik `/` düzeltildi; tarayıcı ve XHR başlıkları eklendi.
+- **MinikaCocuk v4**: Programlar kategorisi ve tarayıcı/XHR başlıkları eklendi.
 - **Runner**: `/run-all` eşzamanlılık çökmesi giderildi; `/main?row=` ile kategori doğrulaması eklendi.
 
 ## [1.6.1] - 2026-11-02
