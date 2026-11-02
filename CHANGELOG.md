@@ -9,6 +9,7 @@ sayı arttığında güncelleme sunar.
 
 ### Düzeltildi
 - **DMAX v2**: arama sayfası ve bölüm listesi güncellendi.
+- Telegram bildirimi: Nuvio değişikliklerinde güncelleme notu gönderilir.
 
 ## [1.6.0] - 2026-11-01
 
