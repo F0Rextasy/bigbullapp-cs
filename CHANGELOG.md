@@ -17,6 +17,7 @@ sayı arttığında güncelleme sunar.
 - **MinikaCocuk v4**: Programlar kategorisi ve tarayıcı/XHR başlıkları eklendi.
 - **MinikaCocuk pasife alındı**: VOD bölüm endpoint'i timeout verdiği için modül `disabled` listesine alındı; kaynak korunuyor.
 - **ATV pasife alındı**: `/izle` VOD endpoint'i timeout verdiği için modül `disabled` listesine alındı; kaynak korunuyor.
+- **AsyaWatch v4**: Next.js API'si yerine `/ara` ve `/dizi-izle` HTML akışı; JSON-LD bölümleri ve pichive HLS master'ı kullanılıyor.
 - **Runner**: `/run-all` eşzamanlılık çökmesi giderildi; `/main?row=` ile kategori doğrulaması eklendi.
 
 ## [1.6.1] - 2026-11-02
