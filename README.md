@@ -82,6 +82,8 @@ Tek modül derleme ve cihaza kurulum:
 
 `✓` var · `—` sitede yok · `film` yalnız filmlerde · `beta` doğrulanmamış sürüm
 
+`Inat*` platformlarından runner’da pass olmayan 24 tanesi pasif; kaynakları korunuyor.
+
 | Eklenti | Kaynak | Tür | Sayfalama | Öneri | Fragman | Kadro | Süre | Puan |
 |---|---|---|---|---|---|---|---|---|
 | `AniArsiv` | aniarsiv.com | Dizi | — | — | — | — | — | — |

@@ -56,14 +56,18 @@ class CizgiSiteProvider : MainAPI() {
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw ErrorLoadingException("$name: HTTP ${response.code}")
             val raw = response.body?.bytes() ?: return ""
-            val stream = when (response.header("Content-Encoding")?.lowercase()) {
-                "br" -> BrotliInputStream(ByteArrayInputStream(raw))
-                "gzip" -> GZIPInputStream(ByteArrayInputStream(raw))
-                else -> ByteArrayInputStream(raw)
-            }
+            val encoding = response.header("Content-Encoding")?.lowercase()
             val decoded = runCatching {
+                val stream = when (encoding) {
+                    "br" -> BrotliInputStream(ByteArrayInputStream(raw))
+                    "gzip" -> GZIPInputStream(ByteArrayInputStream(raw))
+                    else -> ByteArrayInputStream(raw)
+                }
                 stream.bufferedReader(Charsets.UTF_8).use { it.readText() }
             }.getOrNull()
+            if (decoded.isNullOrBlank() && encoding == "br") {
+                throw ErrorLoadingException("$name: Brotli yanıtı çözülemedi")
+            }
             return decoded?.takeIf { it.isNotBlank() } ?: raw.toString(Charsets.UTF_8)
         }
     }
