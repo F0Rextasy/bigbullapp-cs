@@ -8,12 +8,12 @@ sayı arttığında güncelleme sunar.
 ## [1.6.2] - 2026-11-02
 
 ### Düzeltildi
-- **Kategoriler**: 25 sağlayıcıya gerçek tür sayfaları eklendi (DiziAbi, DDizimag, Dizigom, DiziMom, Dizigecesi, Dizibaba, CanliDizi, BirAsyaDizi, HDFilmCehennemi, FilmModu, Cizgimax, JetFilmizle, UltraFilmizle, YesilCamTv, WebdramaTurkey2, DiziboxIzle, DiziYou, KoreanTurk, Sezonlukdizi, Filmizyon, Dizirella, Animeler, Anizm, Dizilab, DiziCaN).
+- **Kategoriler**: 29 sağlayıcıya gerçek tür sayfaları eklendi (DiziAbi, DDizimag, Dizigom, DiziMom, Dizigecesi, Dizibaba, CanliDizi, BirAsyaDizi, HDFilmCehennemi, FilmModu, Cizgimax, JetFilmizle, UltraFilmizle, YesilCamTv, WebdramaTurkey2, DiziboxIzle, DiziYou, KoreanTurk, Sezonlukdizi, Filmizyon, Dizirella, Animeler, Anizm, Dizilab, DiziCaN, AsyaDizi, Asyadizileriizle, Sinezy, MinikaCocuk).
 - **DiziPal v4**: arama Next.js `/arama-yap?q=` akışına geçirildi; bölüm oynatıcısı doğrulandı.
 - **HDFilmizle v4**: yeni `div.playex` oynatıcı seçicisi; 1080p HLS + Türkçe/İngilizce altyazı.
 - **CizgiSite v6**: VK embed yanıtındaki kaçışlı URL'ler çözülüyor; MP4 kaliteleri (144p–1080p) dönüyor; VK reddinde başlıksız yedek istek deniyor.
 - **KoreanTurk v5**: yeni `a.dz-card` kartları ve tür sayfaları.
-- **MinikaGO v2**: bölüm URL'sindeki eksik `/` ve tarayıcı başlıkları düzeltildi.
+- **MinikaGO v3**: bölüm URL'sindeki eksik `/` düzeltildi; tarayıcı ve XHR başlıkları eklendi.
 - **Runner**: `/run-all` eşzamanlılık çökmesi giderildi; `/main?row=` ile kategori doğrulaması eklendi.
 
 ## [1.6.1] - 2026-11-02

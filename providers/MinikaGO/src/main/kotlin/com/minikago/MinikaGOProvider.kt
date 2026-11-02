@@ -37,6 +37,8 @@ class MinikaGOProvider : MainAPI() {
         "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
             "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
         "Accept-Language" to "tr-TR,tr;q=0.9",
+        "Accept" to "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "X-Requested-With" to "XMLHttpRequest",
     )
 
     override val mainPage get() = ROWS.mapNotNull { row ->

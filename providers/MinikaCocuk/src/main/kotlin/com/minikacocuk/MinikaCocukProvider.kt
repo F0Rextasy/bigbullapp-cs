@@ -41,6 +41,7 @@ class MinikaCocukProvider : MainAPI() {
         if (!Settings.rowEnabled(name)) return@mapNotNull null
         when (name) {
             "Web TV" -> MainPageData(name, "$mainUrl/webtv")
+            "Programlar" -> MainPageData(name, "$mainUrl/programlar")
             else -> null
         }
     }
@@ -50,7 +51,7 @@ class MinikaCocukProvider : MainAPI() {
         val items = doc.select("div.showcase").mapNotNull { card ->
             val link = card.selectFirst("a.showcase-content[href]") ?: return@mapNotNull null
             val href = fixUrlNull(link.attr("href")) ?: return@mapNotNull null
-            val title = card.selectFirst(".showcase-lightbox-title")?.text()?.trim()
+            val title = card.selectFirst(".showcase-txt-title, .showcase-lightbox-title")?.text()?.trim()
                 ?: link.attr("title").trim().takeIf { it.isNotBlank() }
                 ?: return@mapNotNull null
             newMovieSearchResponse(title, href, TvType.Movie) {
@@ -119,6 +120,6 @@ class MinikaCocukProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Web TV")
+        val ROWS = listOf("Web TV", "Programlar")
     }
 }

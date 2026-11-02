@@ -46,6 +46,11 @@ class SinezyProvider : MainAPI() {
 
     override val mainPage get() = listOf(
         MainPageData("Yeni Filmler", "$mainUrl/izle/en-yeni-filmler/"),
+        MainPageData("Bilim Kurgu", "$mainUrl/izle/bilim-kurgu-filmleri/"),
+        MainPageData("Animasyon", "$mainUrl/izle/animasyon-filmleri/"),
+        MainPageData("Macera", "$mainUrl/izle/macera-filmleri/"),
+        MainPageData("Suç", "$mainUrl/izle/suc-filmleri/"),
+        MainPageData("Film Arşivi", "$mainUrl/film-arsivi/"),
     )
 
     private fun Element.toCard(): SearchResponse? {

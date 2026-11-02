@@ -64,14 +64,22 @@ class AsyaDiziProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Son Eklenenler" -> "https://asyadizi.com/"
+            "Son Eklenenler" -> "$mainUrl/"
+            "Kore Dizileri" -> "$mainUrl/kore-dizileri-izle/"
+            "Çin Dizileri" -> "$mainUrl/cin-dizisi-izle/"
+            "Tayland Dizileri" -> "$mainUrl/tayland-dizileri-izle/"
+            "BL Dizileri" -> "$mainUrl/bl-dizileri-izle/"
+            "Japon Dizileri" -> "$mainUrl/japon-dizileri-izle/"
+            "Hint Dizileri" -> "$mainUrl/hint-dizileri-izle/"
+            "Anime" -> "$mainUrl/anime-izle/"
+            "Filmler" -> "$mainUrl/filmler-arsivi/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Son Eklenenler")) {
+            if (request.name in ROWS) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -80,7 +88,8 @@ class AsyaDiziProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Son Eklenenler")
+        val ROWS = listOf("Son Eklenenler", "Kore Dizileri", "Çin Dizileri", "Tayland Dizileri",
+            "BL Dizileri", "Japon Dizileri", "Hint Dizileri", "Anime", "Filmler")
     }
 
     private val pathPrefixes = listOf("/", "/dizi/")
