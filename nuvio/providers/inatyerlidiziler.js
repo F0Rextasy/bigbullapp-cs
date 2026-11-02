@@ -1,4 +1,4 @@
-// @provider {"id":"inatyerlidiziler","name":"Inat Yerli Diziler","types":["tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt23986392:tv:1:1","description":"Inat Box yerli diziler katalogu - imzali liste + AES cozumleyici, HLS.","verified":false}
+// @provider {"id":"inatyerlidiziler","name":"Inat Yerli Diziler","types":["tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt23986392:tv:1:1","description":"Inat Box yerli diziler katalogu - imzali liste + AES cozumleyici, HLS.","verified":true}
 var CFG = {
   id: "inatyerlidiziler",
   name: "Inat Yerli Diziler",

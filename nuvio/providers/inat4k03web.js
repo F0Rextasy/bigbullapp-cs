@@ -1,4 +1,4 @@
-// @provider {"id":"inat4k03web","name":"Inat 4K 03 Web","types":["movie"],"domain":"inatbox","formats":["m3u8","mp4"],"sample":"tt1790885:movie:1:1","description":"Inat 4K Film 03 Web katalogu (lovefilmizle, exo uzerinden cozulur).","verified":false}
+// @provider {"id":"inat4k03web","name":"Inat 4K 03 Web","types":["movie"],"domain":"inatbox","formats":["m3u8","mp4"],"sample":"tt1790885:movie:1:1","description":"Inat 4K Film 03 Web katalogu (lovefilmizle, exo uzerinden cozulur).","verified":true}
 /**
  * inat4k03web — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.

@@ -1,4 +1,4 @@
-// @provider {"id":"inatgain","name":"Inat Gain","types":["tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt31027788:tv:1:1","description":"Inat Box Gain katalogu (dizi/film) - imzali liste + AES cozumleyici, HLS.","verified":false}
+// @provider {"id":"inatgain","name":"Inat Gain","types":["tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt31027788:tv:1:1","description":"Inat Box Gain katalogu (dizi/film) - imzali liste + AES cozumleyici, HLS.","verified":true}
 var CFG = {
   id: "inatgain",
   name: "Inat Gain",

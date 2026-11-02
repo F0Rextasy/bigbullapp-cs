@@ -1,4 +1,4 @@
-// @provider {"id":"inat4k06web","name":"Inat 4K 06 Web","types":["movie"],"domain":"inatbox","formats":["m3u8","mp4"],"sample":"tt6054846:movie:1:1","description":"Inat 4K Film 06 Web katalogu (filmizlego, exo uzerinden cozulur).","verified":false}
+// @provider {"id":"inat4k06web","name":"Inat 4K 06 Web","types":["movie"],"domain":"inatbox","formats":["m3u8","mp4"],"sample":"tt6054846:movie:1:1","description":"Inat 4K Film 06 Web katalogu (filmizlego, exo uzerinden cozulur).","verified":true}
 /**
  * inat4k06web — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.

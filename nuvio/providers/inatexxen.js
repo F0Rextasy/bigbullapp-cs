@@ -1,4 +1,4 @@
-// @provider {"id":"inatexxen","name":"Inat Exxen","types":["movie","tv"],"domain":"inatbox","formats":["m3u8","mp4"],"sample":"tt1831164:tv:1:1","description":"Inat Exxen dizi/film arsivi (TR yapimlari).","verified":false}
+// @provider {"id":"inatexxen","name":"Inat Exxen","types":["movie","tv"],"domain":"inatbox","formats":["m3u8","mp4"],"sample":"tt1831164:tv:1:1","description":"Inat Exxen dizi/film arsivi (TR yapimlari).","verified":true}
 /**
  * inatexxen — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.

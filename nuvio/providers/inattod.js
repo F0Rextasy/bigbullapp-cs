@@ -1,4 +1,4 @@
-// @provider {"id":"inattod","name":"Inat TOD","types":["tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt20603316:tv:1:1","description":"Inat Box TOD katalogu - imzali liste + dzen/okcdn cozumleyici, HLS.","verified":false}
+// @provider {"id":"inattod","name":"Inat TOD","types":["tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt20603316:tv:1:1","description":"Inat Box TOD katalogu - imzali liste + dzen/okcdn cozumleyici, HLS.","verified":true}
 var CFG = {
   id: "inattod",
   name: "Inat TOD",

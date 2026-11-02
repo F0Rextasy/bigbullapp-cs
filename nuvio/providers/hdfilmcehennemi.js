@@ -1,4 +1,4 @@
-// @provider {"id":"hdfilmcehennemi","name":"HDFilmCehennemi","types":["movie"],"domain":"hdfilmcehennemi.nl","formats":["m3u8"],"sample":"tt0133093:movie:1:1","description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.","verified":false}
+// @provider {"id":"hdfilmcehennemi","name":"HDFilmCehennemi","types":["movie"],"domain":"hdfilmcehennemi.nl","formats":["m3u8"],"sample":"tt0133093:movie:1:1","description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.","verified":true}
 /**
  * hdfilmcehennemi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /search/?q= JSON -> film page -> hdfilmcehennemi.mobi embed

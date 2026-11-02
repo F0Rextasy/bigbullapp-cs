@@ -9,7 +9,7 @@ sayı arttığında güncelleme sunar.
 
 ### Eklendi
 - **Nuvio desteği**: `nuvio/` altında eklenti deposu — 102 sağlayıcı, sağlayıcı başına tek dosya,
-  cihazda çalışır. 74'ü varsayılan açık; 28'i Cloudflare/İnat CDN engeli nedeniyle kapalı gelir.
+  cihazda çalışır. 91'i varsayılan açık; 11'i Cloudflare/İnat CDN engeli nedeniyle kapalı gelir.
 - Yalnız canlı kanal yayınlayan modüller ve iki ölü site (CanliDizi, Dizigecesi) Nuvio kapsamı
   dışında: eklenti başlık (IMDb) → akış modelinde çalışır, canlı kanal araması yoktur.
 

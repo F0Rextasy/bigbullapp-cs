@@ -946,7 +946,7 @@
         "movie"
       ],
       "filename": "providers/hdfilmcehennemi.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8"
       ],
@@ -1120,7 +1120,7 @@
         "movie"
       ],
       "filename": "providers/inat4k03exo.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8",
         "mp4"
@@ -1140,7 +1140,7 @@
         "movie"
       ],
       "filename": "providers/inat4k03web.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8",
         "mp4"
@@ -1200,7 +1200,7 @@
         "movie"
       ],
       "filename": "providers/inat4k06exo.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8",
         "mp4"
@@ -1220,7 +1220,7 @@
         "movie"
       ],
       "filename": "providers/inat4k06web.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8",
         "mp4"
@@ -1261,7 +1261,7 @@
         "tv"
       ],
       "filename": "providers/inatamazonprime.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8",
         "mp4"
@@ -1282,7 +1282,7 @@
         "tv"
       ],
       "filename": "providers/inatdisney.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8",
         "mp4"
@@ -1303,7 +1303,7 @@
         "tv"
       ],
       "filename": "providers/inatexxen.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8",
         "mp4"
@@ -1323,7 +1323,7 @@
         "tv"
       ],
       "filename": "providers/inatgain.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8"
       ],
@@ -1342,7 +1342,7 @@
         "tv"
       ],
       "filename": "providers/inathbomax.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8"
       ],
@@ -1381,7 +1381,7 @@
         "tv"
       ],
       "filename": "providers/inatnetflix.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8"
       ],
@@ -1400,7 +1400,7 @@
         "tv"
       ],
       "filename": "providers/inattabii.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8"
       ],
@@ -1419,7 +1419,7 @@
         "tv"
       ],
       "filename": "providers/inattod.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8"
       ],
@@ -1438,7 +1438,7 @@
         "tv"
       ],
       "filename": "providers/inatyabancidiziler.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8"
       ],
@@ -1457,7 +1457,7 @@
         "tv"
       ],
       "filename": "providers/inatyerlidiziler.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8"
       ],
@@ -1476,7 +1476,7 @@
         "movie"
       ],
       "filename": "providers/inatyerlifilmler.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8"
       ],
@@ -1901,7 +1901,7 @@
         "movie"
       ],
       "filename": "providers/ultrafilmizle.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "m3u8"
       ],

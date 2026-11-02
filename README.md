@@ -224,10 +224,9 @@ Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Reposito
 **Refresh** → sağlayıcıları tek tek aç. Tam liste: [`nuvio/manifest.json`](nuvio/manifest.json).
 
 **Kapsam**: Cloudstream'deki VOD sağlayıcılarının tamamı Nuvio'da da var — **102 sağlayıcı**.
-74'ü varsayılan açık. Kalan 28'i (İnat ailesi, `AsyaWatch`, `SelcukFlix`, `DiziPal`, `UltraFilmizle`,
-`FullHDFilmizlesene`, `HDFilmCehennemi`) bu ağdan Cloudflare/İnat CDN engeli (`403 error code:
-1006`; `pichive` yalnız tarayıcıya 200) yüzünden canlı doğrulanamadığı için `"enabled": false`
-ile yayınlanır — cihazda açıp deneyebilirsin.
+91'i varsayılan açık; bu ağdan **91/102** canlı doğrulandı. Kalan 11'i (`AsyaWatch`, `SelcukFlix`,
+`DiziPal`, `FullHDFilmizlesene`, `Inat 4K 01/02/04/07`, `Inat Mubi`) Cloudflare/İnat CDN engeli
+veya upstream 502/404 nedeniyle canlı doğrulanamadığı için `"enabled": false` ile yayınlanır.
 
 Kapsam dışı 17 modül: yalnız **canlı kanal** yayınlayanlar (`Canlı TV`, `Canlı Yayın Kanalları`,
 `Inat Spor/Haber/Ulusal/EBA TV/Derbiler/Liste 1-2-3/Belgesel/Çocuk/Dini/Sinema/Premium`) —

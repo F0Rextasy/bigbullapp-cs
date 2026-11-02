@@ -1,4 +1,4 @@
-// @provider {"id":"ultrafilmizle","name":"UltraFilmizle","types":["movie"],"domain":"ufilmizle.com","formats":["m3u8"],"sample":"tt0117359:movie:1:1","description":"UltraFilmizle film arsivi (bePlayer AES + HLS).","verified":false}
+// @provider {"id":"ultrafilmizle","name":"UltraFilmizle","types":["movie"],"domain":"ufilmizle.com","formats":["m3u8"],"sample":"tt0117359:movie:1:1","description":"UltraFilmizle film arsivi (bePlayer AES + HLS).","verified":true}
 /**
  * ultrafilmizle — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> WP REST search -> film page -> bePlayer embed (AES) -> HLS.

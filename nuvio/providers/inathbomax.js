@@ -1,4 +1,4 @@
-// @provider {"id":"inathbomax","name":"Inat HBO Max","types":["tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt23148340:tv:1:1","description":"Inat Box HBO Max / BluTV katalogu - imzali liste + AES cozumleyici, HLS.","verified":false}
+// @provider {"id":"inathbomax","name":"Inat HBO Max","types":["tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt23148340:tv:1:1","description":"Inat Box HBO Max / BluTV katalogu - imzali liste + AES cozumleyici, HLS.","verified":true}
 var CFG = {
   id: "inathbomax",
   name: "Inat HBO Max",

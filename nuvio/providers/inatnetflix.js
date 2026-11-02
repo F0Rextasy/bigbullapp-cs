@@ -1,4 +1,4 @@
-// @provider {"id":"inatnetflix","name":"Inat Netflix","types":["movie","tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt4574334:tv:1:1","description":"Inat Box Netflix katalogu (dizi + film) - imzali liste + AES cozumleyici, HLS.","verified":false}
+// @provider {"id":"inatnetflix","name":"Inat Netflix","types":["movie","tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt4574334:tv:1:1","description":"Inat Box Netflix katalogu (dizi + film) - imzali liste + AES cozumleyici, HLS.","verified":true}
 var CFG = {
   id: "inatnetflix",
   name: "Inat Netflix",

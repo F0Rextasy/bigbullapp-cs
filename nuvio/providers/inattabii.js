@@ -1,4 +1,4 @@
-// @provider {"id":"inattabii","name":"Inat Tabii","types":["tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt35819970:tv:1:1","description":"Inat Box Tabii katalogu - imzali liste + AES cozumleyici, HLS.","verified":false}
+// @provider {"id":"inattabii","name":"Inat Tabii","types":["tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt35819970:tv:1:1","description":"Inat Box Tabii katalogu - imzali liste + AES cozumleyici, HLS.","verified":true}
 var CFG = {
   id: "inattabii",
   name: "Inat Tabii",

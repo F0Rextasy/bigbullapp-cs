@@ -1,4 +1,4 @@
-// @provider {"id":"inatamazonprime","name":"Inat Amazon Prime","types":["movie","tv"],"domain":"inatbox","formats":["m3u8","mp4"],"sample":"tt3502248:tv:1:1","description":"Inat Amazon Prime dizi/film arsivi (TR dublaj + altyazili).","verified":false}
+// @provider {"id":"inatamazonprime","name":"Inat Amazon Prime","types":["movie","tv"],"domain":"inatbox","formats":["m3u8","mp4"],"sample":"tt3502248:tv:1:1","description":"Inat Amazon Prime dizi/film arsivi (TR dublaj + altyazili).","verified":true}
 /**
  * inatamazonprime — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.

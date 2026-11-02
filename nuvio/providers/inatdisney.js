@@ -1,4 +1,4 @@
-// @provider {"id":"inatdisney","name":"Inat Disney+","types":["movie","tv"],"domain":"inatbox","formats":["m3u8","mp4"],"sample":"tt0411008:tv:1:1","description":"Inat Disney+ dizi/film arsivi (TR dublaj + altyazili).","verified":false}
+// @provider {"id":"inatdisney","name":"Inat Disney+","types":["movie","tv"],"domain":"inatbox","formats":["m3u8","mp4"],"sample":"tt0411008:tv:1:1","description":"Inat Disney+ dizi/film arsivi (TR dublaj + altyazili).","verified":true}
 /**
  * inatdisney — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.

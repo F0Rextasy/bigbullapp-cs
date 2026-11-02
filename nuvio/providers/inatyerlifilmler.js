@@ -1,4 +1,4 @@
-// @provider {"id":"inatyerlifilmler","name":"Inat Yerli Filmler","types":["movie"],"domain":"inatbox","formats":["m3u8"],"sample":"tt42006709:movie:1:1","description":"Inat Box yerli filmler katalogu - imzali liste + AES cozumleyici, HLS.","verified":false}
+// @provider {"id":"inatyerlifilmler","name":"Inat Yerli Filmler","types":["movie"],"domain":"inatbox","formats":["m3u8"],"sample":"tt42006709:movie:1:1","description":"Inat Box yerli filmler katalogu - imzali liste + AES cozumleyici, HLS.","verified":true}
 var CFG = {
   id: "inatyerlifilmler",
   name: "Inat Yerli Filmler",
