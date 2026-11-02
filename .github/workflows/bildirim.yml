@@ -32,7 +32,7 @@ jobs:
             echo "tools/telegram-topics.json eksik; bildirim atlandı."
             exit 0
           fi
-          CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD -- providers \
+          CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD -- providers nuvio \
             | cut -d/ -f2 | sort -u)
           NL=$'\n'
           DETAILS=""
