@@ -1,4 +1,4 @@
-// @provider {"id":"minikacocuk","name":"MinikaCocuk","types":["tv"],"domain":"minikacocuk.com.tr","formats":["mp4"],"sample":"tt0487849:tv:1:1","description":"MinikaÇOCUK Web TV çocuk bölümleri (doğrudan MP4 akışı)."}
+// @provider {"id":"minikacocuk","name":"MinikaCocuk","types":["tv"],"domain":"minikacocuk.com.tr","formats":["mp4"],"sample":"tt0487849:tv:1:1","description":"MinikaÇOCUK Web TV çocuk bölümleri (doğrudan MP4 akışı).","verified":false}
 /**
  * minikacocuk — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /webtv card -> bolum page -> contentUrl MP4.
@@ -37,7 +37,7 @@ function titleOf(id, mediaType) {
 
 function episodeUrl(term) {
   return text(BASE + "/webtv").then(function (page) {
-    var re = /<a href="([^"]+)" class="showcase-content"[\s\S]{0,4000}?class="showcase-lightbox-title"[^>]*>([\s\S]*?)<\/h2>/g;
+    var re = /<a href="([^"]+)" class="showcase-content"[\s\S]{0,4000}?class="showcase-(?:txt|lightbox)-title"[^>]*>([\s\S]*?)<\/h2>/g;
     var m;
     while ((m = re.exec(page)) !== null) {
       if (fold(m[2]).indexOf(term) !== -1 || fold(m[1]).indexOf(term) !== -1) return abs(m[1]);

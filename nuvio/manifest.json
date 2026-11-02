@@ -1592,7 +1592,7 @@
         "tv"
       ],
       "filename": "providers/minikacocuk.js",
-      "enabled": true,
+      "enabled": false,
       "formats": [
         "mp4"
       ],

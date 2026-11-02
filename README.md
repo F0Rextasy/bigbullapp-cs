@@ -11,7 +11,7 @@ canlı TV kaynakları. Her site Cloudstream'de ayrı bir Gradle modülü/`.cs3` 
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-95-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-94-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -189,7 +189,7 @@ Tek modül derleme ve cihaza kurulum:
 | `KoreanTurk` **beta** | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
 | `Kultfilmler` | kultfilmler.net | Film | ✓ | — | — | ✓ | ✓ | ✓ |
 | `LoveFilm` **beta** | lovefilmizle.net | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `MinikaCocuk` **beta** | minikacocuk.com.tr | Dizi | — | — | — | — | — | — |
+| `MinikaCocuk` **(pasif)** | minikacocuk.com.tr | Dizi | — | — | — | — | — | — |
 | `MinikaGO` | minikago.com.tr | Çocuk | — | — | — | — | — | — |
 | `NetFilmizle` | netfilmizle.com | Film | — | — | — | — | — | — |
 | `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
@@ -211,7 +211,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
 | `YesilCamTv` **beta** | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**Inat notu:** Inat'ın **35 platformu ayrı modül** olarak tutulur; runner’da pass olan **11 platform aktif**, pass olmayan **24 platform pasif**. Aktif platformlar: Liste 4K 03 Exo/Web, 4K 06 Exo, Exxen, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii ve Yerli Filmler. Depoda toplam **95 modül ve 95 Cloudstream sağlayıcısı** var. Pasif platformlar `settings.gradle.kts` `disabled` listesinde; kaynak dosyaları korunuyor.
+**Inat notu:** Inat'ın **35 platformu ayrı modül** olarak tutulur; runner’da pass olan **11 platform aktif**, pass olmayan **24 platform pasif**. Aktif platformlar: Liste 4K 03 Exo/Web, 4K 06 Exo, Exxen, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii ve Yerli Filmler. Depoda toplam **94 aktif modül** var; `MinikaCocuk` VOD endpoint'i timeout verdiği için pasif, kaynağı korunuyor. Pasif platformlar `settings.gradle.kts` `disabled` listesinde; kaynak dosyaları korunuyor.
 
 Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
 `README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.
@@ -229,9 +229,9 @@ Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Reposito
 **Refresh** → sağlayıcıları tek tek aç. Tam liste: [`nuvio/manifest.json`](nuvio/manifest.json).
 
 **Kapsam**: Cloudstream'deki VOD sağlayıcılarının tamamı Nuvio'da da var — **102 sağlayıcı**.
-91'i canlı doğrulanmış; manifest'te `"enabled": true` ile gelir. Kalan 11'i (`AsyaWatch`,
-`SelcukFlix`, `DiziPal`, `FullHDFilmizlesene`, `Inat 4K 01/02/04/07`, `Inat Mubi`) Cloudflare/
-İnat CDN engeli veya upstream 502/404 nedeniyle doğrulanamadı; `"enabled": false` ile yayınlanır.
+90'ı canlı doğrulanmış; manifest'te `"enabled": true` ile gelir. Kalan 12'si (`AsyaWatch`,
+`SelcukFlix`, `DiziPal`, `FullHDFilmizlesene`, `Inat 4K 01/02/04/07`, `Inat Mubi`, `MinikaCocuk`) Cloudflare/
+İnat CDN engeli, upstream 502/404 veya MinikaCocuk VOD timeout'u nedeniyle doğrulanamadı; `"enabled": false` ile yayınlanır.
 Repo eklemek sağlayıcıları çalıştırmaz: Plugins ekranında **Enable plugin providers globally** ve
 istediğin sağlayıcıların anahtarı ayrıca açılır.
 

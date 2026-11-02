@@ -10,6 +10,8 @@ val disabled = listOf(
     "InatDerbiler", "InatEbaTv", "InatHaber", "InatListe1Tr", "InatListe2Glb",
     "InatListe3Tr", "InatMubi", "InatSinema", "InatPremium", "InatSpor",
     "InatTod", "InatUlusal", "InatYabanciDiziler", "InatYerliDiziler",
+    // VOD bölüm endpoint'i 2026-11-02'den beri timeout; oynatılabilir kaynak yok.
+    "MinikaCocuk",
 )
 
 File(rootDir, "providers").eachDir { dir ->
