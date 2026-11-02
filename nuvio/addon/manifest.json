@@ -378,6 +378,16 @@
     },
     {
       "type": "series",
+      "id": "all",
+      "name": "Tümü - Diziler"
+    },
+    {
+      "type": "movie",
+      "id": "all",
+      "name": "Tümü - Filmler"
+    },
+    {
+      "type": "series",
       "id": "turkcedizi",
       "name": "Türkçe Dizi"
     },

@@ -227,6 +227,10 @@ Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Reposito
 Repo eklemek sağlayıcıları çalıştırmaz: Plugins ekranında **Enable plugin providers globally** ve
 istediğin sağlayıcıların anahtarı ayrıca açılır.
 
+**Meta sağlayıcı şart:** Plugin sağlayıcıları yalnız akış verir; film/dizi detayı için Nuvio’da
+**Cinemeta** addon’u da kurulu olmalı. Yoksa “Bu içerik için meta sağlayan eklenti yok” hatası
+çıkar. Cinemeta: `https://v3-cinemeta.strem.io/manifest.json`.
+
 Kapsam dışı 17 modül: yalnız **canlı kanal** yayınlayanlar (`Canlı TV`, `Canlı Yayın Kanalları`,
 `Inat Spor/Haber/Ulusal/EBA TV/Derbiler/Liste 1-2-3/Belgesel/Çocuk/Dini/Sinema/Premium`) —
 Nuvio eklentisi başlık (IMDb) → akış modelinde çalışır, bunlarda başlık araması yoktur — ve iki
@@ -238,16 +242,19 @@ taraflı arama yok).
 Plugin'ler yalnız **akış** verir; Nuvio ana sayfasına satır koyamazlar. Satırlar için ayrı,
 sunucusuz bir **katalog addon'u** var:
 
+0. Önce **Addons → Add Addon** ile Cinemeta’yı ekle:
+   `https://v3-cinemeta.strem.io/manifest.json`
 1. Nuvio → **Settings → Content & Discovery → Addons → Add Addon**
 2. `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json`
-3. **Install Addon** → ana sayfada "Dizibox - Series", "Kultfilmler - Movie" gibi satırlar.
+3. **Install Addon** → ana sayfada "Dizibox - Series", "Kultfilmler - Movie",
+   **"Tümü - Filmler"** ve **"Tümü - Diziler"** satırları görünür.
 
-Addon yalnız `catalog` kaynağı sunar: item'lar IMDb id'siyle yazılır, meta'yı Cinemeta, akışları
-yukarıdaki plugin sağlayıcıları verir — yani satır → detay → kaynak listesi → oynatma akışı
-uçtan uca çalışır. İçerik günde bir `.github/workflows/nuvio-catalog.yml` ile yenilenir; tarifler
-`nuvio/addon/sources/<id>.json`, üretici `node nuvio/addon/build.mjs`. Statik olduğu için katalog
-sonsuz kaydırma (`skip`) desteklemez: her satır ilk sayfayı gösterir. JS ile render edilen siteler
-(ör. Anizium) ve İnat CDN sağlayıcıları satır üretemez.
+Addon yalnız `catalog` kaynağı sunar: item'lar IMDb id'siyle yazılır, detay meta'sını Cinemeta,
+akışları yukarıdaki plugin sağlayıcıları verir. İçerik günde bir
+`.github/workflows/nuvio-catalog.yml` ile yenilenir; tarifler `nuvio/addon/sources/<id>.json`,
+üretici `node nuvio/addon/build.mjs`. Statik katalog **arama** ve sonsuz kaydırma (`skip`)
+desteklemez; her satır ilk sayfayı gösterir. JS ile render edilen siteler (ör. Anizium) ve
+İnat CDN sağlayıcıları satır üretemez.
 
 Başlık çözümü anahtarsız Cinemeta üzerinden yapılır, TMDB anahtarı gerekmez. Yalnız **sideload**
 edilen Nuvio sürümleri plugin destekler; mağaza sürümlerinde Plugins bölümü yoktur.

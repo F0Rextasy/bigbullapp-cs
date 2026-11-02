@@ -170,6 +170,24 @@ if (!check) {
       all.push({ type: t, id, name: (rc && rc.name) || id });
     }
   }
+  for (const t of ["movie", "series"]) {
+    const metas = [];
+    const seen = new Set();
+    for (const entry of all.filter((c) => c.type === t)) {
+      const file = join(OUT, t, entry.id + ".json");
+      if (!existsSync(file)) continue;
+      const rows = JSON.parse(readFileSync(file, "utf8")).metas || [];
+      for (const row of rows) {
+        if (!row || !row.id || !row.name || seen.has(row.id)) continue;
+        seen.add(row.id);
+        metas.push(row);
+      }
+    }
+    if (metas.length) {
+      writeFileSync(join(OUT, t, "all.json"), JSON.stringify({ metas }) + "\n");
+      all.push({ type: t, id: "all", name: t === "movie" ? "Tümü - Filmler" : "Tümü - Diziler" });
+    }
+  }
   all.sort((a, b) => a.name.localeCompare(b.name, "tr"));
   const manifest = {
     id: ADDON_ID,
