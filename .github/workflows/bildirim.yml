@@ -41,10 +41,14 @@ jobs:
           fi
 
           CUR_VERSION=$(grep -m1 '^## \[' CHANGELOG.md | sed -nE 's/^## \[([^]]+)\].*/\1/p')
-          PARENT_VERSION=$(git show HEAD^:CHANGELOG.md 2>/dev/null \
-            | grep -m1 '^## \[' | sed -nE 's/^## \[([^]]+)\].*/\1/p' || true)
-          if [ -n "$CUR_VERSION" ] && [ "$PARENT_VERSION" = "$CUR_VERSION" ]; then
-            echo "Aynı sürüm zaten bildirildi; sürüm yükseltilmeden tekrar gönderilmez."
+          PREV=$(git log -1 --format=%H HEAD^ -- providers nuvio/providers nuvio/manifest.json || true)
+          PREV_VERSION=""
+          if [ -n "$PREV" ]; then
+            PREV_VERSION=$(git show "${PREV}:CHANGELOG.md" 2>/dev/null \
+              | grep -m1 '^## \[' | sed -nE 's/^## \[([^]]+)\].*/\1/p' || true)
+          fi
+          if [ -n "$CUR_VERSION" ] && [ "$PREV_VERSION" = "$CUR_VERSION" ]; then
+            echo "Aynı sürüm için son sağlayıcı commit'i zaten bildirildi; atlandı."
             exit 0
           fi
           NL=$'\n'
