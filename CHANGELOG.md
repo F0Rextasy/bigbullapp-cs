@@ -9,6 +9,9 @@ sayı arttığında güncelleme sunar.
 
 ### Düzeltildi
 - **DMAX v2**: arama sayfası ve bölüm listesi güncellendi.
+- **HDFilmCehennemi2 v2**: arama `/api/search` üzerinden yapılıyor; film ve dizi sonuçları ayrılıyor.
+- **AniArsiv v3**: bölüm başına 52 kaynak yerine ilk 12 kaynak deneniyor; runner zaman aşımı giderildi.
+- **CizgiSite v3**: Brotli sıkıştırılmış sayfalar çözülüyor; arama ve bölümler yeniden okunuyor.
 - Telegram bildirimi: Nuvio değişikliklerinde güncelleme notu gönderilir.
 
 ## [1.6.0] - 2026-11-01

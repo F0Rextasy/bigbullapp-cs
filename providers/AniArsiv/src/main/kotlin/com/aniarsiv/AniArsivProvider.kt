@@ -152,7 +152,7 @@ class AniArsivProvider : MainAPI() {
         }
         val links = root.optJSONArray("links")
         if (links != null) {
-            for (i in 0 until links.length()) {
+            for (i in 0 until minOf(links.length(), MAX_LINKS)) {
                 val link = links.optJSONObject(i) ?: continue
                 val embed = link.optString("url").trim()
                 if (!embed.startsWith("http") || !seen.add(embed)) continue
@@ -164,6 +164,7 @@ class AniArsivProvider : MainAPI() {
                         .getOrDefault(false)
                 }
                 if (handled) found = true else if (embed.contains(".mp4")) emit(embed, player)
+                if (found && seen.size >= 4) break
             }
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir kaynak yok. $REPORT_HINT")
@@ -195,6 +196,7 @@ class AniArsivProvider : MainAPI() {
 
     companion object {
         val ROWS = listOf("Trend")
+        private const val MAX_LINKS = 12
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =

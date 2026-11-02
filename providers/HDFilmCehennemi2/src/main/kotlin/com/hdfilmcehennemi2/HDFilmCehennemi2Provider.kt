@@ -33,13 +33,6 @@ import org.jsoup.nodes.Document
 private fun org.jsoup.nodes.Element.posterSrcLazy(): String? =
     attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
 
-private fun asciiFold(value: String): String = value
-    .replace('ı', 'i').replace('İ', 'I')
-    .replace('ş', 's').replace('Ş', 'S')
-    .replace('ğ', 'g').replace('Ğ', 'G')
-    .replace('ü', 'u').replace('Ü', 'U')
-    .replace('ö', 'o').replace('Ö', 'O')
-    .replace('ç', 'c').replace('Ç', 'C')
 
 private fun cleanTitle(raw: String?): String = (raw ?: "")
     .replace(Regex("""\s*\|.*$"""), "")
@@ -113,12 +106,34 @@ class HDFilmCehennemi2Provider : MainAPI() {
         val ROWS = listOf("Filmler", "Diziler", "Aile Filmleri", "Aksiyon Filmleri", "Animasyon Filmleri", "Belgesel", "Bilim Kurgu Filmleri", "Biyografi Filmleri", "Dram Filmleri", "Fantastik Filmleri", "Gerilim Filmleri", "Gizem Filmleri", "Komedi Filmleri", "Korku Filmleri", "Macera Filmleri", "Müzik Filmleri", "Romantik Filmleri", "Savaş Filmleri", "Spor Filmleri", "Suç Filmleri", "Tarih Filmleri", "Western Filmleri", "2026 Filmleri", "2025 Filmleri", "2024 Filmleri", "2023 Filmleri", "2022 Filmleri", "2021 Filmleri", "2020 Filmleri", "Tavsiye Filmler")
     }
 
-    private val pathPrefixes = listOf("/", "/dizi/", "/tur/")
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val q = if (false) asciiFold(query) else query
-        val url = "https://www.hdfilmcehennemi2.biz".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
-        return cards(app.get(url, headers = uaHeaders).document, q)
+        val q = java.net.URLEncoder.encode(query, "UTF-8")
+        val resp = app.get("$mainUrl/api/search?q=$q", headers = uaHeaders + ("Accept" to "application/json"))
+        val data = runCatching { JSONObject(resp.text).optJSONArray("data") }.getOrNull() ?: JSONArray()
+        return (0 until data.length()).mapNotNull { index ->
+            val item = data.optJSONObject(index) ?: return@mapNotNull null
+            val slug = item.optString("slug").trim().trim('/')
+            val title = item.optString("title").trim()
+            if (slug.isBlank() || title.isBlank()) return@mapNotNull null
+            val url = "$mainUrl/$slug"
+            val poster = fixUrlNull(item.optString("posterUrl"))
+            val year = item.optString("releaseYear").toIntOrNull()
+            val score = Score.from10(item.optString("imdbRating"))
+            if (item.optString("contentableType").contains("Series", ignoreCase = true)) {
+                newTvSeriesSearchResponse(title, url, TvType.TvSeries) {
+                    posterUrl = poster
+                    this.year = year
+                    this.score = score
+                }
+            } else {
+                newMovieSearchResponse(title, url, TvType.Movie) {
+                    posterUrl = poster
+                    this.year = year
+                    this.score = score
+                }
+            }
+        }.distinctBy { it.url }
     }
 
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
@@ -314,10 +329,10 @@ class HDFilmCehennemi2Provider : MainAPI() {
                     app.get(absolute, headers = uaHeaders, referer = data).text
                         .replace("\\\\/", "/").replace("\\/", "/").replace("\\u0022", "\"")
                 }.getOrNull() ?: continue
-                val file = Regex("""["']file["']\s*:\s*["'](https?://[^"']+?\.m3u8[^"']*)""")
+                val file = Regex("""\bfile\s*:\s*["'](https?://[^"']+?\.m3u8[^"']*)["']""")
                     .find(inner)?.groupValues?.get(1) ?: continue
                 emit(file, item.optString("quality").ifBlank { "HDF" }, data)
-                Regex("""["']file["']\s*:\s*["'](https?://[^"']+?\.(?:vtt|srt)[^"']*)["'][^}]*?["']label["']\s*:\s*["']([^"']+)""")
+                Regex("""\bfile\s*:\s*["'](https?://[^"']+?\.(?:vtt|srt)[^"']*)["'][^}]*?["']label["']\s*:\s*["']([^"']+)""")
                     .findAll(inner).forEach { track ->
                         if (Settings.subtitleAllowed(track.groupValues[2])) {
                             subtitleCallback.invoke(newSubtitleFile(track.groupValues[2], track.groupValues[1]))

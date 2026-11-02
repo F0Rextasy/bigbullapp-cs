@@ -5,8 +5,8 @@
     {
       "module": "AniArsiv",
       "result": "pass",
-      "evidence": "runner 2026-11-01: /api/animes 24 sonuç; bot statik HTML/JSON kart ayrımı nedeniyle 0 (SPA)",
-      "runner": "qa 2026-11-01"
+      "evidence": "runner 2026-11-02: pass, links=8, ep=19; 52 kaynağın ilk 12'si denendi",
+      "runner": "qa 2026-11-02"
     },
     {
       "module": "AnimeciX",
@@ -29,8 +29,8 @@
     {
       "module": "Anizm",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=4, ep=293",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "runner 2026-11-02: pass, links=4, ep=293",
+      "runner": "qa 2026-11-02"
     },
     {
       "module": "AsyaAnimeleri",
@@ -119,8 +119,8 @@
     {
       "module": "CizgiSite",
       "result": "pass",
-      "evidence": "runner 2026-11-01: bölüm retry + ilk bölüm fallback, CizgiSite q=ari 5 link",
-      "runner": "qa 2026-11-01"
+      "evidence": "runner 2026-11-02: Brotli çözümü sonrası pass, links=5, ep=10",
+      "runner": "qa 2026-11-02"
     },
     {
       "module": "Ddizi",
@@ -305,8 +305,8 @@
     {
       "module": "HDFilmCehennemi2",
       "result": "pass",
-      "evidence": "runner 2026-10-31: pass, links=1, ep=0",
-      "runner": "autopilot.py 2026-10-31"
+      "evidence": "runner 2026-11-02: /api/search 24 sonuç; pass, links=1",
+      "runner": "qa 2026-11-02"
     },
     {
       "module": "HDFilmDelisi",

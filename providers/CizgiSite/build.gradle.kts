@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "CizgiSite — Türkçe çizgi film arşivi"
@@ -7,4 +7,8 @@ cloudstream {
     tvTypes = listOf("TvSeries", "Movie")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=cizgi.site&sz=%size%"
+}
+
+dependencies {
+    implementation("org.brotli:dec:0.1.2")
 }

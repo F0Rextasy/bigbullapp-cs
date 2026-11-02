@@ -87,7 +87,7 @@ Tek modül derleme ve cihaza kurulum:
 | `AniArsiv` | aniarsiv.com | Dizi | — | — | — | — | — | — |
 | `AnimeciX` | animecix.tv | Anime | — | — | — | — | — | ✓ |
 | `Animeler` | animeler.live | Anime | — | — | — | — | — | — |
-| `Anizm` **beta** | turkanime.info | Anime | — | — | ✓ | — | — | ✓ |
+| `Anizm` | turkanime.info | Anime | — | — | ✓ | — | — | ✓ |
 | `Anizium` | anizium.co | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `AsyaAnimeleri` | asyaanimeleri.top | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `AsyaBox` **beta** | asyabox.co | Dizi | — | — | — | — | — | — |
@@ -102,7 +102,7 @@ Tek modül derleme ve cihaza kurulum:
 | `CanliDizi` **beta** | canlidizi.sbs | Dizi | — | — | — | — | — | — |
 | `CanliYayinKanallari` **beta** | tabii.com | Canlı TV | — | — | — | — | — | — |
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
-| `CizgiSite` **beta** | www.cizgi.site | Dizi | — | — | — | — | — | — |
+| `CizgiSite` | www.cizgi.site | Dizi | — | — | — | — | — | — |
 | `Ddizi` **beta** | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
 | `DDizimag` **beta** | ddizimag.com | Dizi | — | — | — | — | — | — |
 | `Deokwave` **beta** | deokwave.com | Dizi | — | — | — | — | — | — |
@@ -136,7 +136,7 @@ Tek modül derleme ve cihaza kurulum:
 | `FullHDFilm` **beta** | fullhdfilmizlebox.vip | Film | — | — | — | — | — | ✓ |
 | `FullHDFilmizlesene` **beta** | fullhdfilmizlesene.now | Film | — | — | ✓ | — | — | ✓ |
 | `HDFilmCehennemi` **beta** | hdfilmcehennemi.nl | Film | — | — | — | — | — | — |
-| `HDFilmCehennemi2` **beta** | hdfilmcehennemi2.biz | Film | — | — | — | — | — | — |
+| `HDFilmCehennemi2` | hdfilmcehennemi2.biz | Film | — | — | — | — | — | — |
 | `HDFilmDelisi` **beta** | hdfilmdelisi.one | Film | ✓ | — | — | — | ✓ | ✓ |
 | `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` **beta** | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |

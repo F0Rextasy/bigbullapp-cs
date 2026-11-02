@@ -9,7 +9,6 @@ import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
-import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
 import com.lagradost.cloudstream3.newEpisode
@@ -21,6 +20,11 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.newExtractorLink
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.brotli.dec.BrotliInputStream
+import java.io.ByteArrayInputStream
+import java.util.zip.GZIPInputStream
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -41,6 +45,29 @@ class CizgiSiteProvider : MainAPI() {
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 
+    private val client = OkHttpClient()
+
+    private fun fetchHtml(url: String, referer: String? = null): String {
+        val request = Request.Builder().url(url)
+            .header("User-Agent", uaHeaders.getValue("User-Agent"))
+            .header("Accept-Language", uaHeaders.getValue("Accept-Language"))
+            .apply { if (referer != null) header("Referer", referer) }
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw ErrorLoadingException("$name: HTTP ${response.code}")
+            val raw = response.body?.bytes() ?: return ""
+            val stream = when (response.header("Content-Encoding")?.lowercase()) {
+                "br" -> BrotliInputStream(ByteArrayInputStream(raw))
+                "gzip" -> GZIPInputStream(ByteArrayInputStream(raw))
+                else -> ByteArrayInputStream(raw)
+            }
+            val decoded = runCatching {
+                stream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            }.getOrNull()
+            return decoded?.takeIf { it.isNotBlank() } ?: raw.toString(Charsets.UTF_8)
+        }
+    }
+
     override val mainPage get() = ROWS.mapNotNull { name ->
         if (!Settings.rowEnabled(name)) return@mapNotNull null
         when (name) {
@@ -60,7 +87,7 @@ class CizgiSiteProvider : MainAPI() {
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val doc = app.get(request.data, headers = uaHeaders).document
+        val doc = Jsoup.parse(fetchHtml(request.data))
         val items = doc.select("div.ikon-dis a[href]").mapNotNull { it.toCard() }.distinctBy { it.url }
         return newHomePageResponse(request.name, items, hasNext = false)
     }
@@ -68,15 +95,15 @@ class CizgiSiteProvider : MainAPI() {
     override suspend fun search(query: String): List<SearchResponse> {
         val term = query.trim().lowercase()
         if (term.isBlank()) return emptyList()
-        val doc = app.get("$mainUrl/tr", headers = uaHeaders).document
+        val doc = Jsoup.parse(fetchHtml("$mainUrl/tr"))
         return doc.select("div.ikon-dis a[href]").mapNotNull { it.toCard() }
             .filter { it.name.lowercase().contains(term) || it.url.lowercase().contains(term) }
             .distinctBy { it.url }
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val page = app.get(url, headers = uaHeaders)
-        val doc = page.document
+        val page = fetchHtml(url)
+        val doc = Jsoup.parse(page)
         val title = doc.selectFirst("h1")?.text()?.trim()
             ?: doc.selectFirst("meta[property=og:title]")?.attr("content")?.trim()
             ?: throw ErrorLoadingException("$name: başlık okunamadı")
@@ -113,7 +140,7 @@ class CizgiSiteProvider : MainAPI() {
     private suspend fun pageHtml(url: String, referer: String? = null): String {
         var last = ""
         repeat(2) {
-            last = app.get(url, headers = uaHeaders, referer = referer).text
+            last = fetchHtml(url, referer)
             if (last.length > 20_000 || last.contains("article.icerik") || last.contains("video_ext")) return last
         }
         return last
@@ -144,7 +171,7 @@ class CizgiSiteProvider : MainAPI() {
         var found = false
         for (frame in frames) {
             val embed = runCatching {
-                app.get(frame, headers = uaHeaders, referer = data).text
+                fetchHtml(frame, data)
                     .replace("\\\\/", "/").replace("\\/", "/")
             }.getOrNull() ?: continue
             val media = Regex(""""(mp4_\d+|hls|hls_fmp4)":"(https?://[^"]+)"""")
