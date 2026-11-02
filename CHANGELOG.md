@@ -11,7 +11,7 @@ sayı arttığında güncelleme sunar.
 - **Kategoriler**: 25 sağlayıcıya gerçek tür sayfaları eklendi (DiziAbi, DDizimag, Dizigom, DiziMom, Dizigecesi, Dizibaba, CanliDizi, BirAsyaDizi, HDFilmCehennemi, FilmModu, Cizgimax, JetFilmizle, UltraFilmizle, YesilCamTv, WebdramaTurkey2, DiziboxIzle, DiziYou, KoreanTurk, Sezonlukdizi, Filmizyon, Dizirella, Animeler, Anizm, Dizilab, DiziCaN).
 - **DiziPal v4**: arama Next.js `/arama-yap?q=` akışına geçirildi; bölüm oynatıcısı doğrulandı.
 - **HDFilmizle v4**: yeni `div.playex` oynatıcı seçicisi; 1080p HLS + Türkçe/İngilizce altyazı.
-- **CizgiSite v5**: VK embed yanıtındaki kaçışlı URL'ler çözülüyor; MP4 kaliteleri (144p–1080p) dönüyor.
+- **CizgiSite v6**: VK embed yanıtındaki kaçışlı URL'ler çözülüyor; MP4 kaliteleri (144p–1080p) dönüyor; VK reddinde başlıksız yedek istek deniyor.
 - **KoreanTurk v5**: yeni `a.dz-card` kartları ve tür sayfaları.
 - **MinikaGO v2**: bölüm URL'sindeki eksik `/` ve tarayıcı başlıkları düzeltildi.
 - **Runner**: `/run-all` eşzamanlılık çökmesi giderildi; `/main?row=` ile kategori doğrulaması eklendi.
