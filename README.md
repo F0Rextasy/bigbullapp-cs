@@ -276,6 +276,7 @@ Canlı yayın modülleri `TvType.Live` kullanır; `loadLinks` yoktur, kanal URL'
 | Eklenti | Kaynak | Kanal | Not |
 |---|---|---|---|
 | `CanliTV` **beta** | iptv-org TR M3U | 172 | 5 ana grup + arama; M3U listesi her gün güncellenir |
+| `SelcukSports` **beta** | portal | 85 kayıt | Kanal listesi/arama çalışıyor; WebRTC/P2P oynatıcı doğrudan HLS vermiyor |
 
 ## Eklenti ayarları
 
