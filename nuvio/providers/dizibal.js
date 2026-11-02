@@ -1,0 +1,156 @@
+// @provider {"id":"dizibal","name":"DiziBal","types":["tv","movie"],"domain":"dizibal.org","formats":["m3u8"],"sample":"tt0903747:tv:1:1","description":"DiziBal altyazili yabanci dizi/film arsivi; pilavyer HLS akisi ve altyazilar."}
+/**
+ * dizibal — Nuvio provider (bb-nuvio).
+ * Flow: Cinemeta title -> /ara?q= -> /series/<slug> -> /series/<slug>/season/S/episode/E
+ *       (film: /movie/<slug> -> /movie/<slug>/izle)
+ *       -> [data-pv] + core.js tabani -> s.php -> window.__PLAYER__ -> HLS + altyazi.
+ */
+var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
+var BASE = "https://dizibal.org";
+var ID = "dizibal";
+
+function text(url, opts) {
+  var o = opts || {};
+  var headers = { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" };
+  if (o.referer) headers.Referer = o.referer;
+  return fetch(url, { method: o.method || "GET", headers: headers, body: o.body })
+    .then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status + " " + url);
+      return r.text();
+    });
+}
+
+function first(pattern, body) {
+  var m = pattern.exec(String(body || ""));
+  return m ? m[1] : null;
+}
+
+function abs(base, href) {
+  if (!href) return null;
+  if (/^https?:/i.test(href)) return href;
+  var origin = /^(https?:\/\/[^/]+)/.exec(base);
+  if (!origin) return href;
+  if (href.indexOf("//") === 0) return "https:" + href;
+  if (href.charAt(0) === "/") return origin[1] + href;
+  return base.replace(/[^/]*$/, "") + href;
+}
+
+function titleOf(id, mediaType) {
+  var kind = mediaType === "tv" ? "series" : "movie";
+  return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
+    .then(function (body) {
+      var meta = JSON.parse(body).meta || {};
+      return String(meta.name || "").trim();
+    })
+    .catch(function () {
+      return "";
+    });
+}
+
+function playerConfig(frame) {
+  var m = /window\.__PLAYER__\s*=\s*(\{[\s\S]*?\});/.exec(String(frame || ""));
+  if (!m) return null;
+  try {
+    return JSON.parse(m[1]);
+  } catch (e) {
+    return null;
+  }
+}
+
+function qualityOf(master, fallback) {
+  var re = /RESOLUTION=\d+x(\d+)/g;
+  var best = 0;
+  var m;
+  while ((m = re.exec(String(master || ""))) !== null) {
+    var h = parseInt(m[1], 10);
+    if (h > best) best = h;
+  }
+  return best ? best + "p" : fallback;
+}
+
+// Oynatıcı sayfası -> data-pv + oynatıcı tabanı -> s.php -> __PLAYER__
+function resolvePlayer(pageUrl) {
+  return text(pageUrl).then(function (page) {
+    var pv = first(/data-pv="([^"]+)"/, page);
+    if (!pv) return null;
+    var core = first(/<script[^>]+src="([^"]*core\.js[^"]*)"/, page);
+    var playerBase = core ? abs(pageUrl, core).replace(/\/assets\/js\/core\.js.*$/, "") : "https://pilavyerplay.top";
+    return text(playerBase + "/assets/js/s.php?s=" + encodeURIComponent(pv), { referer: pageUrl }).then(function (frame) {
+      var cfg = playerConfig(frame);
+      return cfg && cfg.stream ? { cfg: cfg, playerBase: playerBase } : null;
+    });
+  });
+}
+
+function rowsOf(found, name) {
+  return text(found.cfg.stream, { referer: found.playerBase + "/" })
+    .catch(function () {
+      return "";
+    })
+    .then(function (master) {
+      var quality = qualityOf(master, "1080p");
+      var subs = [];
+      var list = found.cfg.subs || [];
+      for (var i = 0; i < list.length && subs.length < 4; i++) {
+        var sub = list[i] || {};
+        if (!sub.src) continue;
+        var lang = String(sub.lang || "tr").toLowerCase();
+        subs.push({ url: sub.src, language: lang, name: String(sub.label || lang.toUpperCase()) + " [" + name + "]" });
+      }
+      return [
+        {
+          name: name,
+          title: name + " - " + quality + " [HLS]",
+          url: found.cfg.stream,
+          quality: quality,
+          headers: { Referer: found.playerBase + "/" },
+          subtitles: subs
+        }
+      ];
+    });
+}
+
+function getStreams(tmdbId, mediaType, season, episode) {
+  var want = parseInt(season, 10) || 1;
+  var wantEp = parseInt(episode, 10) || 1;
+  var isMovie = mediaType !== "tv";
+  var contentUrl = null;
+
+  return titleOf(tmdbId, mediaType)
+    .then(function (title) {
+      if (!title) return null;
+      return text(BASE + "/ara?q=" + encodeURIComponent(title));
+    })
+    .then(function (search) {
+      if (!search) return null;
+      var pattern = isMovie ? /href="([^"]*\/movie\/[^"?#]+)"/ : /href="([^"]*\/series\/[^"?#]+)"/;
+      var link = first(pattern, search) || first(/href="([^"]*\/(?:series|movie)\/[^"?#]+)"/, search);
+      if (!link) return null;
+      contentUrl = abs(BASE, link).replace(/\/+$/, "");
+      return text(contentUrl);
+    })
+    .then(function (page) {
+      if (!page) return null;
+      var slug = contentUrl.split("/").pop();
+      // Filmler bölüm sayfası yerine /izle ekini kullanır; diziler sezon/bölüm yolundadır.
+      var playerUrl = isMovie
+        ? contentUrl + "/izle"
+        : BASE + "/series/" + slug + "/season/" + want + "/episode/" + wantEp;
+      var re = /href="([^"]*\/season\/(\d+)\/episode\/(\d+))"/g;
+      var m;
+      while ((m = re.exec(page)) !== null) {
+        if (parseInt(m[2], 10) === want && parseInt(m[3], 10) === wantEp) return abs(contentUrl, m[1]);
+      }
+      return playerUrl;
+    })
+    .then(resolvePlayer)
+    .then(function (found) {
+      return found ? rowsOf(found, ID) : [];
+    })
+    .catch(function (e) {
+      console.log("[bb-nuvio][" + ID + "] " + (e && e.message));
+      return [];
+    });
+}
+
+module.exports = { getStreams };

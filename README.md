@@ -1,7 +1,8 @@
 # BigBullApp
 
 [Cloudstream](https://github.com/recloudstream/cloudstream) için Türkçe film, dizi, anime, çizgi film ve
-canlı TV kaynakları. Her site ayrı bir Gradle modülü ve ayrı bir `.cs3` eklentisidir.
+canlı TV kaynakları. Her site ayrı bir Gradle modülü ve ayrı bir `.cs3` eklentisidir. Aynı
+kaynakların bir kısmı **Nuvio** için `nuvio/` altında eklenti (plugin) olarak da yayınlanır.
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.3-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org)
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
@@ -18,6 +19,16 @@ canlı TV kaynakları. Her site ayrı bir Gradle modülü ve ayrı bir `.cs3` ek
 > ```
 >
 > Kısa kod: **`bigbullapp`** — Depo Ekle alanına yazabilirsin.
+>
+> **Nuvio:** Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Repository**:
+>
+> ```
+> https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json
+> ```
+>
+> Yalnız **sideload** edilen Nuvio sürümleri eklenti destekler (mağaza sürümlerinde bu bölüm
+> yoktur). Eklentiler yalnız **akış** verir; Nuvio'nun katalogları için Cinemeta gibi bir addon
+> gerekir.
 
 ## Kısa kod
 
@@ -201,6 +212,33 @@ EXXEN, Mubi, TOD, Yabancı/Yerli Diziler (bazıları upstream 520, bazıları ha
 
 Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
 `README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.
+
+## Nuvio
+
+Nuvio eklentileri cihazda (QuickJS) çalışır; depo `nuvio/manifest.json` dosyasıdır ve GitHub raw
+üzerinden yayınlanır. Her sağlayıcı `nuvio/providers/<id>.js` **tek dosyasıdır** — derleme adımı
+yoktur, Nuvio'nun indirdiği dosya depodaki dosyanın aynısıdır.
+
+Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Repository** →
+`https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json` →
+**Refresh** → sağlayıcıları tek tek aç. Tam liste: [`nuvio/manifest.json`](nuvio/manifest.json).
+
+**Kapsam**: Cloudstream'deki VOD sağlayıcılarının tamamı Nuvio'da da var — **102 sağlayıcı**.
+74'ü varsayılan açık. Kalan 28'i (İnat ailesi, `AsyaWatch`, `SelcukFlix`, `DiziPal`, `UltraFilmizle`,
+`FullHDFilmizlesene`, `HDFilmCehennemi`) bu ağdan Cloudflare/İnat CDN engeli (`403 error code:
+1006`; `pichive` yalnız tarayıcıya 200) yüzünden canlı doğrulanamadığı için `"enabled": false`
+ile yayınlanır — cihazda açıp deneyebilirsin.
+
+Kapsam dışı 17 modül: yalnız **canlı kanal** yayınlayanlar (`Canlı TV`, `Canlı Yayın Kanalları`,
+`Inat Spor/Haber/Ulusal/EBA TV/Derbiler/Liste 1-2-3/Belgesel/Çocuk/Dini/Sinema/Premium`) —
+Nuvio eklentisi başlık (IMDb) → akış modelinde çalışır, bunlarda başlık araması yoktur — ve iki
+ölü site: `CanliDizi` (oynatıcı sunucusu kaldırılmış), `Dizigecesi` (attest duvarı + sunucu
+taraflı arama yok).
+
+Nuvio eklentisi yalnız **akış** üretir: ana sayfa, kategoriler, öneriler ve canlı TV yoktur;
+gezinme Nuvio'nun kendi kataloglarındadır (Cinemeta gibi bir addon ile). Başlık çözümü anahtarsız
+Cinemeta üzerinden yapılır, TMDB anahtarı gerekmez. Yalnız **sideload** edilen Nuvio sürümleri
+eklenti destekler; mağaza sürümlerinde Plugins bölümü yoktur.
 
 ## Canlı TV (beta)
 

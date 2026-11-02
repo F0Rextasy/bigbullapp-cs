@@ -1,0 +1,242 @@
+// @provider {"id":"jetfilmizle","name":"JetFilmizle","types":["movie"],"domain":"jetfilmizle.app","formats":["m3u8","mp4"],"sample":"tt0133093:movie:1:1","description":"JetFilmizle.app Turkce dublaj/altyazili film arsivi; videopark apollo ve godrive oynaticilari."}
+/**
+ * jetfilmizle — Nuvio provider (bb-nuvio).
+ * Flow: Cinemeta title -> /arama -> film sayfasi (film_id) -> POST /jetplayer -> iframe
+ * -> videopark apollo / godrive cozumleyicileri.
+ */
+
+var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+var BASE = "https://jetfilmizle.app";
+
+function text(url, opts) {
+  var o = opts || {};
+  var headers = { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" };
+  if (o.referer) headers.Referer = o.referer;
+  if (o.headers) for (var k in o.headers) headers[k] = o.headers[k];
+  return fetch(url, { method: o.method || "GET", headers: headers, body: o.body })
+    .then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status + " " + url);
+      return r.text();
+    });
+}
+
+function first(pattern, body) {
+  var m = pattern.exec(String(body || ""));
+  if (!m) return null;
+  return m[1] === undefined ? m[0] : m[1];
+}
+
+function decode(s) {
+  return String(s || "")
+    .replace(/&#x([0-9a-f]+);/gi, function (_, h) { return String.fromCharCode(parseInt(h, 16)); })
+    .replace(/&amp;/g, "&").replace(/&quot;/g, '"');
+}
+
+function abs(base, href) {
+  if (!href) return null;
+  if (/^https?:/i.test(href)) return href;
+  if (href.indexOf("//") === 0) return "https:" + href;
+  var origin = /^(https?:\/\/[^/]+)/.exec(base);
+  if (href.charAt(0) === "/") return origin ? origin[1] + href : href;
+  return base.replace(/[^/]*$/, "") + href;
+}
+
+function norm(s) {
+  return decode(s)
+    .toLowerCase()
+    .replace(/ı/g, "i").replace(/ş/g, "s").replace(/ğ/g, "g").replace(/ü/g, "u")
+    .replace(/ö/g, "o").replace(/ç/g, "c").replace(/â/g, "a")
+    .replace(/\([^)]*\)/g, " ")
+    .replace(/\b(?:izle|full|hd|turkce|dublaj|altyazili|altyazılı)\b/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/^(?:the|a|an)\s+/, "");
+}
+
+function pick(items, title) {
+  var want = norm(title);
+  var best = null;
+  var score = 0;
+  for (var i = 0; i < items.length; i++) {
+    var have = norm(items[i].title);
+    var s = have === want ? 3 : have.indexOf(want) === 0 ? 2 : have.indexOf(want) !== -1 ? 1 : 0;
+    if (s > score) { score = s; best = items[i]; }
+  }
+  return best || items[0] || null;
+}
+
+function titleOf(id, mediaType) {
+  var kind = mediaType === "tv" ? "series" : "movie";
+  return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
+    .then(function (body) {
+      var meta = JSON.parse(body).meta || {};
+      return String(meta.name || "").trim();
+    })
+    .catch(function () {
+      return "";
+    });
+}
+
+function search(title) {
+  var q = String(title).replace(/^(?:the|a|an)\s+/i, "");
+  return text(BASE + "/arama?q=" + encodeURIComponent(q)).then(function (html) {
+    var items = [];
+    var re = /<a href="([^"]*\/film\/[^"]+)"[^>]*title="([^"]*)"/g;
+    var m;
+    while ((m = re.exec(html)) !== null) {
+      if (m[1].indexOf(BASE) === 0) items.push({ url: m[1], title: decode(m[2]) });
+    }
+    return items;
+  });
+}
+
+/** videopark.top/apollo/?id=N — get_video.php -> hlsUrl (embed klasorune gore goreli). */
+function apollo(playerUrl, referer) {
+  var id = first(/[?&]id=([^&]+)/, playerUrl);
+  if (!id) return Promise.resolve([]);
+  var base = playerUrl.replace(/[?#].*$/, "");
+  return text(base + "get_video.php", {
+    method: "POST",
+    headers: { "X-Requested-With": "XMLHttp" + "Request", "Content-Type": "application/x-www-form-urlencoded" },
+    body: "id=" + id,
+    referer: playerUrl
+  }).then(function (body) {
+    var hls = first(/"hlsUrl"\s*:\s*"([^"]+)"/, body);
+    if (!hls) return [];
+    return [{ url: abs(base, hls.replace(/\\\//g, "/")), referer: playerUrl, quality: "auto" }];
+  });
+}
+
+
+/** videopark.top/go/?id=N — godrive worker /v/ID/info kaliteleri; kalite yoksa tek mp4. */
+function godrive(playerUrl, referer) {
+  return text(playerUrl, { referer: referer }).then(function (html) {
+    var base = first(/WORKER_BASE\s*=\s*"([^"]+)"/, html);
+    var videoId = first(/VIDEO_ID\s*=\s*(\d+)/, html);
+    if (!base || !videoId) return [];
+    base = base.replace(/\\\//g, "/").replace(/\/+$/, "");
+    return text(base + "/v/" + videoId + "/info", { referer: playerUrl }).then(function (info) {
+      var qualities = [];
+      var qs = first(/"qualities"\s*:\s*\[([^\]]*)\]/, info) || "";
+      var parts = qs.split(",");
+      for (var i = 0; i < parts.length; i++) {
+        var n = parseInt(parts[i], 10);
+        if (n) qualities.push(n);
+      }
+      if (!qualities.length) return [{ url: base + "/v/" + videoId, referer: base + "/", quality: "auto" }];
+      var out = [];
+      for (i = 0; i < qualities.length; i++) {
+        out.push({ url: base + "/v/" + videoId + "?q=" + qualities[i], referer: base + "/", quality: qualities[i] + "p" });
+      }
+      return out;
+    });
+  });
+}
+
+/** Diger oynaticilar (jetembed, vk): jwplayer file/sources alanlarindan duz medya adresi. */
+function generic(playerUrl, referer) {
+  return text(playerUrl, { referer: referer }).then(function (html) {
+    var out = [];
+    var m = first(/"file"\s*:\s*"([^"]+\.(?:m3u8|mp4)[^"]*)"/, html) ||
+      first(/https?:\/\/[^"'\s<>]+?\.(?:m3u8|mp4)[^"'\s<>]*/, html);
+    var url = m ? m.replace(/\\\//g, "/") : null;
+    if (url) out.push({ url: abs(playerUrl, url), referer: referer, quality: "auto" });
+    return out;
+  });
+}
+
+function resolvePlayer(playerUrl, referer) {
+  var run = playerUrl.indexOf("videopark.top/apollo/") !== -1 ? apollo
+    : playerUrl.indexOf("videopark.top/go/") !== -1 ? godrive
+    : generic;
+  return run(playerUrl, referer).catch(function () { return []; });
+}
+
+function getStreams(tmdbId, mediaType, season, episode) {
+  var film = null;
+  var referer = null;
+  var rows = [];
+
+  return titleOf(tmdbId, mediaType)
+    .then(function (title) {
+      if (!title) return [];
+      return search(title).then(function (items) {
+        var hit = pick(items, title);
+        return hit ? hit.url : null;
+      });
+    })
+    .then(function (url) {
+      if (!url) return [];
+      referer = url;
+      return text(url);
+    })
+    .then(function (page) {
+      if (!page) return [];
+      var filmId = first(/input[^>]*name=["']?film_id["']?[^>]*value=["']([^"']+)/i, page) ||
+        first(/input[^>]*value=["']([^"']+)["'][^>]*name=["']?film_id/i, page);
+      if (!filmId) return [];
+      var slots = [];
+      var groups = [];
+      var re = /data-player-group="([^"]*)"/g;
+      var m;
+      while ((m = re.exec(page)) !== null) groups.push({ type: m[1], at: m.index });
+      for (var g = 0; g < groups.length; g++) {
+        var chunk = page.slice(groups[g].at, g < groups.length - 1 ? groups[g + 1].at : page.length);
+        var br = /data-source-index="(\d+)"[^>]*>\s*([^<]*)/g;
+        var b;
+        while ((b = br.exec(chunk)) !== null) {
+          slots.push({ type: groups[g].type, index: b[1], label: b[2].trim() });
+        }
+      }
+      film = { id: filmId, slots: slots.slice(0, 6) };
+      return film.slots.length ? text(BASE + "/jetplayer", {
+        method: "POST",
+        headers: { "X-Requested-With": "XMLHttp" + "Request", "Content-Type": "application/x-www-form-urlencoded" },
+        body: "film_id=" + film.id + "&source_index=" + film.slots[0].index + "&player_type=" + encodeURIComponent(film.slots[0].type),
+        referer: referer
+      }) : [];
+    })
+    .then(function (html) {
+      if (!film || !film.slots.length) return [];
+      var chain = function (slotAt, iframe) {
+        if (slotAt >= film.slots.length) return Promise.resolve();
+        var slot = film.slots[slotAt];
+        var step = iframe
+          ? Promise.resolve(iframe)
+          : text(BASE + "/jetplayer", {
+              method: "POST",
+              headers: { "X-Requested-With": "XMLHttp" + "Request", "Content-Type": "application/x-www-form-urlencoded" },
+              body: "film_id=" + film.id + "&source_index=" + slot.index + "&player_type=" + encodeURIComponent(slot.type),
+              referer: referer
+            }).then(function (body) {
+              return first(/<iframe[^>]+src=['"]([^'"]+)/, body);
+            });
+        return step.then(function (playerUrl) {
+          if (!playerUrl) return chain(slotAt + 1, null);
+          return resolvePlayer(abs(BASE, playerUrl), referer).then(function (found) {
+            for (var i = 0; i < found.length; i++) {
+              rows.push({
+                name: "jetfilmizle",
+                title: "JetFilmizle - " + (slot.label || slot.type),
+                url: found[i].url,
+                quality: found[i].quality,
+                headers: { Referer: found[i].referer, "User-Agent": UA },
+                subtitles: []
+              });
+            }
+            return chain(slotAt + 1, null);
+          });
+        });
+      };
+      return chain(0, html ? first(/<iframe[^>]+src=['"]([^'"]+)/, html) : null);
+    })
+    .then(function () {
+      return rows;
+    })
+    .catch(function (e) {
+      console.log("[bb-nuvio][jetfilmizle] " + (e && e.message));
+      return [];
+    });
+}
+
+module.exports = { getStreams };

@@ -1,0 +1,161 @@
+// @provider {"id":"anizium","name":"Anizium","types":["tv"],"domain":"anizium.co","formats":["mp4"],"sample":"tt0988824:tv:1:1","description":"Anizium anime arsivi (Turkce altyazili MP4 akislari)."}
+/**
+ * anizium — Nuvio provider (bb-nuvio).
+ * Flow: Cinemeta title -> api.anizium.co/page/search -> /anime/source -> group item mp4 links.
+ * Every api call needs `Cf-Control`: hex(xor(JSON {nonce: ts}, TOKEN_KEY + "_" + istanbul-weekday)).
+ */
+
+var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
+var BASE = "https://anizium.co";
+var API = "https://api.anizium.co";
+var TOKEN_KEY = "hlxjl1c2w281ax473rt1ofgrvhyjvi";
+var ALPHANUM = "abcdefghijklmnopqrstuvwxyz0123456789";
+var DAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+
+function text(url, opts) {
+  var o = opts || {};
+  var headers = { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" };
+  if (o.referer) headers.Referer = o.referer;
+  if (o.headers) for (var k in o.headers) headers[k] = o.headers[k];
+  return fetch(url, { method: o.method || "GET", headers: headers, body: o.body })
+    .then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status + " " + url);
+      return r.text();
+    });
+}
+
+function fold(value) {
+  return String(value || "")
+    .replace(/ı/g, "i").replace(/İ/g, "i")
+    .replace(/ş/g, "s").replace(/Ş/g, "s")
+    .replace(/ğ/g, "g").replace(/Ğ/g, "g")
+    .replace(/ü/g, "u").replace(/Ü/g, "u")
+    .replace(/ö/g, "o").replace(/Ö/g, "o")
+    .replace(/ç/g, "c").replace(/Ç/g, "c")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function titleOf(id, mediaType) {
+  var kind = mediaType === "tv" ? "series" : "movie";
+  return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
+    .then(function (body) {
+      var meta = JSON.parse(body).meta || {};
+      return String(meta.name || "").trim();
+    })
+    .catch(function () {
+      return "";
+    });
+}
+
+function cfControl() {
+  var weekday = DAYS[new Date(Date.now() + 3 * 3600000).getUTCDay()];
+  var key = TOKEN_KEY + "_" + weekday;
+  var nonce = "";
+  for (var i = 0; i < 6; i++) nonce += ALPHANUM.charAt(Math.floor(Math.random() * ALPHANUM.length));
+  // Pure-ASCII JSON keeps the xor byte-for-byte with the site's own client.
+  var payload = '{"' + nonce + '":' + String(Date.now()) + "}";
+  var out = "";
+  for (var j = 0; j < payload.length; j++) {
+    var value = payload.charCodeAt(j) ^ key.charCodeAt(j % key.length);
+    out += ("0" + value.toString(16)).slice(-2);
+  }
+  return out;
+}
+
+function api(url) {
+  return text(url, {
+    referer: BASE + "/",
+    headers: { "Cf-Control": cfControl(), "language": "tr", "site": "main", "Accept": "application/json" }
+  }).then(function (body) {
+    return JSON.parse(body);
+  });
+}
+
+function pick(items, title) {
+  var want = fold(title);
+  var best = null;
+  var bestScore = -1;
+  for (var i = 0; i < (items || []).length; i++) {
+    var item = items[i] || {};
+    if (!item.ID) continue;
+    var have = fold(item.name);
+    var score = have === want ? 100 : 0;
+    if (!score && have.indexOf(want) === 0) score = 60;
+    if (!score) {
+      var a = want.split(" ");
+      var b = have.split(" ");
+      for (var j = 0; j < a.length; j++) if (b.indexOf(a[j]) !== -1) score += 10;
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      best = item;
+    }
+  }
+  return bestScore > 0 ? best : null;
+}
+
+function getStreams(tmdbId, mediaType, season, episode) {
+  var want = parseInt(season, 10) || 1;
+  var wantEp = parseInt(episode, 10) || 1;
+  var title = "";
+
+  return titleOf(tmdbId, mediaType)
+    .then(function (name) {
+      title = name;
+      if (!title) return null;
+      return api(API + "/page/search?value=" + encodeURIComponent(title) + "&page=1");
+    })
+    .then(function (body) {
+      if (!body) return null;
+      var hit = pick(((body.page || {}).data) || [], title);
+      if (!hit) return null;
+      return api(
+        API + "/anime/source?id=" + encodeURIComponent(hit.ID) + "&site=main" +
+          "&season=" + want + "&episode=" + wantEp
+      );
+    })
+    .then(function (source) {
+      if (!source || !source.success) return [];
+      var out = [];
+      var subtitles = [];
+      var subs = source.subtitles || [];
+      for (var s = 0; s < subs.length; s++) {
+        var link = String((subs[s] || {}).link || "");
+        if (!link) continue;
+        subtitles.push({
+          url: link,
+          language: String(subs[s].group || "tr"),
+          name: (subs[s].name || "Altyazı") + " [anizium]"
+        });
+      }
+      var groups = source.groups || [];
+      for (var g = 0; g < groups.length; g++) {
+        var group = groups[g] || {};
+        var label = group.name ? "Anizium (" + group.name + ")" : "Anizium";
+        var items = group.items || [];
+        for (var i = 0; i < items.length; i++) {
+          var item = items[i] || {};
+          var url = String(item.link || "");
+          if (!/^https?:/.test(url)) continue;
+          var quality = parseInt(item.quality, 10) || 0;
+          out.push({
+            name: "Anizium",
+            title: label + " - " + (quality ? quality + "p" : "Kaynak") + (url.indexOf(".m3u8") !== -1 ? " [HLS]" : " [MP4]"),
+            url: url,
+            quality: quality ? quality + "p" : "auto",
+            headers: { "User-Agent": UA, "Referer": "https://x.anizium.co/" },
+            subtitles: subtitles.slice(0, 4)
+          });
+        }
+      }
+      return out;
+    })
+    .catch(function (e) {
+      console.log("[bb-nuvio][anizium] " + (e && e.message));
+      return [];
+    });
+}
+
+module.exports = { getStreams };

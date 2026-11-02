@@ -5,6 +5,14 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.0] - 2026-11-01
+
+### Eklendi
+- **Nuvio desteği**: `nuvio/` altında eklenti deposu — 102 sağlayıcı, sağlayıcı başına tek dosya,
+  cihazda çalışır. 74'ü varsayılan açık; 28'i Cloudflare/İnat CDN engeli nedeniyle kapalı gelir.
+- Yalnız canlı kanal yayınlayan modüller ve iki ölü site (CanliDizi, Dizigecesi) Nuvio kapsamı
+  dışında: eklenti başlık (IMDb) → akış modelinde çalışır, canlı kanal araması yoktur.
+
 ## [1.5.29] - 2026-11-01
 
 ### Düzeltildi
