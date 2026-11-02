@@ -234,7 +234,10 @@
  },
  "series|oji san wa kawaii mono ga osuki": null,
  "series|yowaki max reijou nano ni ratsuwan konyakusha sama no kake ni notte shimatta": null,
- "series|dark summoner to dekiteiru": null,
+ "series|dark summoner to dekiteiru": {
+  "id": "tt5753856",
+  "poster": "https://images.metahub.space/poster/medium/tt5753856/img"
+ },
  "series|dragon ball super beerus": {
   "id": "tt39395275",
   "poster": "https://images.metahub.space/poster/medium/tt39395275/img"
@@ -249,7 +252,10 @@
   "poster": "https://images.metahub.space/poster/medium/tt43665709/img"
  },
  "series|diamond no ace act ii second season part 2": null,
- "series|aoashi 2nd season": null,
+ "series|aoashi 2nd season": {
+  "id": "tt15792808",
+  "poster": "https://images.metahub.space/poster/medium/tt15792808/img"
+ },
  "series|yozakura san chi no daisakusen 2nd season part 2": null,
  "series|kashita maryoku wa revo barai de kyousei choushuu": null,
  "series|kyoufu collector": null,
@@ -267,7 +273,10 @@
  },
  "series|zombie sagashitemasu": null,
  "series|marronnier oukoku no shichinin no kishi": null,
- "series|black clover 2nd season": null,
+ "series|black clover 2nd season": {
+  "id": "tt7441658",
+  "poster": "https://images.metahub.space/poster/medium/tt7441658/img"
+ },
  "series|romeria senki maou wo taoshita nochi mo jinrui yabasou dakara guntai soshiki shita": null,
  "series|yasei no last boss ga arawareta 2nd season": null,
  "series|tensei shita dai seijo wa seijo de aru koto wo hita kakusu": null,
@@ -314,7 +323,10 @@
   "id": "tt13718450",
   "poster": "https://images.metahub.space/poster/medium/tt13718450/img"
  },
- "series|86 2 sezon": null,
+ "series|86 2 sezon": {
+  "id": "tt13718450",
+  "poster": "https://images.metahub.space/poster/medium/tt13718450/img"
+ },
  "series|a good day to ascend": null,
  "series|a record of a mortal s journey to immortality": null,
  "series|a returner s magic should be special 2 sezon": {
@@ -589,7 +601,10 @@
   "id": "tt44840674",
   "poster": "https://images.metahub.space/poster/medium/tt44840674/img"
  },
- "series|stand up for love": null,
+ "series|stand up for love": {
+  "id": "tt0425717",
+  "poster": "https://images.metahub.space/poster/medium/tt0425717/img"
+ },
  "movie|never after dark": {
   "id": "tt38589433",
   "poster": "https://images.metahub.space/poster/medium/tt38589433/img"
@@ -1041,7 +1056,10 @@
  "series|ari maya": null,
  "series|ayicik bombo": null,
  "series|benim irin otob s m": null,
- "series|bob usta": null,
+ "series|bob usta": {
+  "id": "tt0103372",
+  "poster": "https://images.metahub.space/poster/medium/tt0103372/img"
+ },
  "series|caillou": {
   "id": "tt0262153",
   "poster": "https://images.metahub.space/poster/medium/tt0262153/img"
@@ -1157,7 +1175,10 @@
  },
  "series|organize i ler karun hazinesi": null,
  "series|sana her bakti imda": null,
- "series|seni taniyorum": null,
+ "series|seni taniyorum": {
+  "id": "tt39397536",
+  "poster": "https://images.metahub.space/poster/medium/tt39397536/img"
+ },
  "series|sevdam karadeniz": null,
  "series|sevdan bir ate": {
   "id": "tt43723646",
@@ -1379,7 +1400,10 @@
   "id": "tt29605390",
   "poster": "https://m.media-amazon.com/images/M/MV5BNWU3ZWI4Y2YtNzUwZi00OGY3LWFkYjEtYTZkYmQ5Nzg5OTE5XkEyXkFqcGc@._V1_SX250.jpg"
  },
- "movie|oak caddesi nin sonu": null,
+ "movie|oak caddesi nin sonu": {
+  "id": "tt5375346",
+  "poster": "https://images.metahub.space/poster/medium/tt5375346/img"
+ },
  "movie|a k hipotezi": null,
  "movie|mongoose": {
   "id": "tt39139549",
@@ -1412,7 +1436,10 @@
  "movie|kurtulu projesi": null,
  "movie|avengers sonsuzluk sava i": null,
  "movie|zootropolis 2": null,
- "movie|avatar ate ve k l": null,
+ "movie|avatar ate ve k l": {
+  "id": "tt0499549",
+  "poster": "https://images.metahub.space/poster/medium/tt0499549/img"
+ },
  "movie|moana": {
   "id": "tt3521164",
   "poster": "https://images.metahub.space/poster/medium/tt3521164/img"
@@ -1422,8 +1449,14 @@
  "movie|hayata mahk m": null,
  "movie|miyazma kampinda ergenlik arzulari ve l m": null,
  "movie|dayanilmaz ekim": null,
- "movie|avatar aang son havab k c": null,
- "movie|deadpool ve wolverine": null,
+ "movie|avatar aang son havab k c": {
+  "id": "tt0499549",
+  "poster": "https://images.metahub.space/poster/medium/tt0499549/img"
+ },
+ "movie|deadpool ve wolverine": {
+  "id": "tt1431045",
+  "poster": "https://images.metahub.space/poster/medium/tt1431045/img"
+ },
  "series|reacher": {
   "id": "tt9288030",
   "poster": "https://images.metahub.space/poster/medium/tt9288030/img"
@@ -1525,7 +1558,10 @@
   "poster": "https://images.metahub.space/poster/medium/tt29512655/img"
  },
  "movie|arzular": null,
- "movie|grand theft auto vi an extended look": null,
+ "movie|grand theft auto vi an extended look": {
+  "id": "tt43749709",
+  "poster": "https://images.metahub.space/poster/medium/tt43749709/img"
+ },
  "movie|star wars mandalorian ve grogu": null,
  "movie|k t ruh cehennem ate i": null,
  "movie|alacakli": null,
@@ -1727,7 +1763,10 @@
  "series|errementari": null,
  "series|hayalet hikayeleri": null,
  "series|posta kutusu": null,
- "series|hotel desire": null,
+ "series|hotel desire": {
+  "id": "tt0085032",
+  "poster": "https://images.metahub.space/poster/medium/tt0085032/img"
+ },
  "series|alanis": null,
  "series|iplak ten": null,
  "series|pudor": null,
@@ -1791,7 +1830,10 @@
   "id": "tt1201607",
   "poster": "https://images.metahub.space/poster/medium/tt1201607/img"
  },
- "movie|iki d nya bir dilek": null,
+ "movie|iki d nya bir dilek": {
+  "id": "tt36499994",
+  "poster": "https://images.metahub.space/poster/medium/tt36499994/img"
+ },
  "movie|aquaman and the lost kingdom": {
   "id": "tt9663764",
   "poster": "https://images.metahub.space/poster/medium/tt9663764/img"
@@ -1878,7 +1920,10 @@
   "id": "tt16358384",
   "poster": "https://m.media-amazon.com/images/M/MV5BZWQ2ZmFjM2UtZDI3My00ZWJiLWFlZTQtOWI4OGFiMmMzNWZiXkEyXkFqcGc@._V1_SX250.jpg"
  },
- "series|eki ve g l bir behzat hikayesi": null,
+ "series|eki ve g l bir behzat hikayesi": {
+  "id": "tt21095396",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODQwZTEyN2UtOTM5ZS00ZTZjLWIwNzYtM2ZhNDA2YjIyNGUwXkEyXkFqcGc@._V1_SX250.jpg"
+ },
  "series|the big bang theory": {
   "id": "tt0898266",
   "poster": "https://images.metahub.space/poster/medium/tt0898266/img"
@@ -1981,7 +2026,10 @@
  "movie|ampiyonlar 2": null,
  "movie|lego disney prenses sihirli karga a": null,
  "movie|sen ben biz": null,
- "movie|ali g ben kimim": null,
+ "movie|ali g ben kimim": {
+  "id": "tt0248667",
+  "poster": "https://images.metahub.space/poster/medium/tt0248667/img"
+ },
  "movie|s r yalancilar": null,
  "movie|renoir": {
   "id": "tt30220107",
@@ -1996,7 +2044,10 @@
   "id": "tt2023587",
   "poster": "https://images.metahub.space/poster/medium/tt2023587/img"
  },
- "movie|otis kasirgasinin tam ortasinda": null,
+ "movie|otis kasirgasinin tam ortasinda": {
+  "id": "tt0996967",
+  "poster": "https://images.metahub.space/poster/medium/tt0996967/img"
+ },
  "movie|arkici balina": null,
  "movie|alfa": {
   "id": "tt1690430",
@@ -2090,7 +2141,10 @@
   "poster": "https://images.metahub.space/poster/medium/tt15398776/img"
  },
  "movie|kara valye": null,
- "movie|r mcek adam r mcek evrenine ge i": null,
+ "movie|r mcek adam r mcek evrenine ge i": {
+  "id": "tt0392945",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzdhYzllMDktNTlkOS00ZWI0LWIwMjktM2I4M2ZlYmQ3NzVhXkEyXkFqcGc@._V1_SX250.jpg"
+ },
  "movie|matrix": {
   "id": "tt31998838",
   "poster": "https://images.metahub.space/poster/medium/tt31998838/img"
@@ -2125,7 +2179,10 @@
   "poster": "https://images.metahub.space/poster/medium/tt38336631/img"
  },
  "series|what a boss wants": null,
- "series|happy anding": null,
+ "series|happy anding": {
+  "id": "tt2452242",
+  "poster": "https://images.metahub.space/poster/medium/tt2452242/img"
+ },
  "series|one of a kind romance": {
   "id": "tt10981322",
   "poster": "https://images.metahub.space/poster/medium/tt10981322/img"
@@ -2442,7 +2499,10 @@
   "id": "tt0386676",
   "poster": "https://images.metahub.space/poster/medium/tt0386676/img"
  },
- "movie|barbie findikkiran": null,
+ "movie|barbie findikkiran": {
+  "id": "tt1517268",
+  "poster": "https://images.metahub.space/poster/medium/tt1517268/img"
+ },
  "movie|unutulmu ada": null,
  "movie|y k": null,
  "movie|a k ve ya am": null,
@@ -2508,9 +2568,15 @@
   "id": "tt34927354",
   "poster": "https://images.metahub.space/poster/medium/tt34927354/img"
  },
- "movie|beethoven in hazine macerasi": null,
+ "movie|beethoven in hazine macerasi": {
+  "id": "tt0103786",
+  "poster": "https://images.metahub.space/poster/medium/tt0103786/img"
+ },
  "movie|virt oz": null,
- "movie|beethoven i anlamak": null,
+ "movie|beethoven i anlamak": {
+  "id": "tt0103786",
+  "poster": "https://images.metahub.space/poster/medium/tt0103786/img"
+ },
  "movie|ke ke 30 olsam": null,
  "movie|people you may know": {
   "id": "tt5318534",
@@ -2686,7 +2752,10 @@
   "id": "tt36429458",
   "poster": "https://images.metahub.space/poster/medium/tt36429458/img"
  },
- "movie|schumacher 94 die geburt einer legende": null,
+ "movie|schumacher 94 die geburt einer legende": {
+  "id": "tt10322274",
+  "poster": "https://images.metahub.space/poster/medium/tt10322274/img"
+ },
  "movie|nujum al amal w al alam": null,
  "movie|barselo": {
   "id": "tt38934749",
@@ -2812,7 +2881,10 @@
  "movie|sikiysa yakala": null,
  "movie|sevimli canavarlar 2 niversitesi": null,
  "movie|sevimli canavarlar": null,
- "movie|kumsal": null,
+ "movie|kumsal": {
+  "id": "tt0307074",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWE2YWU5YTUtMzA5Yi00YWUzLTkyNDItZDJlNGY2YWUwZDJhXkEyXkFqcGc@._V1_SX250.jpg"
+ },
  "movie|yan yana": {
   "id": "tt37529347",
   "poster": "https://images.metahub.space/poster/medium/tt37529347/img"
@@ -2854,7 +2926,10 @@
   "poster": "https://images.metahub.space/poster/medium/tt16030438/img"
  },
  "movie|d ler": null,
- "movie|saklamba 2": null,
+ "movie|saklamba 2": {
+  "id": "tt15741946",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDkxYzg3YmEtMDcxNC00MTk2LWIxNzktMmY3ODI4MDA0ZWI2XkEyXkFqcGc@._V1_SX250.jpg"
+ },
  "movie|g ze g z": null,
  "movie|empire of the rabbits": {
   "id": "tt34383081",
@@ -3044,7 +3119,10 @@
   "poster": "https://images.metahub.space/poster/medium/tt1206543/img"
  },
  "movie|g venli yer yok": null,
- "movie|kuyruklu yildiz": null,
+ "movie|kuyruklu yildiz": {
+  "id": "tt8824848",
+  "poster": "https://images.metahub.space/poster/medium/tt8824848/img"
+ },
  "movie|late phases": null,
  "movie|coin locker girl": {
   "id": "tt4647788",
@@ -3064,13 +3142,19 @@
   "id": "tt3220528",
   "poster": "https://images.metahub.space/poster/medium/tt3220528/img"
  },
- "movie|zoraki kahraman": null,
+ "movie|zoraki kahraman": {
+  "id": "tt0324667",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWFkNTU3OTgtYTc1NC00OTEyLTg1YTktMWU1MDQ4YzFmNzAyXkEyXkFqcGc@._V1_SX250.jpg"
+ },
  "movie|mistress america": {
   "id": "tt2872462",
   "poster": "https://m.media-amazon.com/images/M/MV5BMjEzNzgzNDgzNV5BMl5BanBnXkFtZTgwODcyMjk4NTE@._V1_SX250.jpg"
  },
  "movie|tetik nokta": null,
- "series|sam ve julia": null,
+ "series|sam ve julia": {
+  "id": "tt5085178",
+  "poster": "https://images.metahub.space/poster/medium/tt5085178/img"
+ },
  "series|p tik ile pofik": null,
  "series|oggy oggy": {
   "id": "tt43613342",
@@ -3080,7 +3164,10 @@
   "id": "tt3590338",
   "poster": "https://m.media-amazon.com/images/M/MV5BMjVlNWM4ZjQtMTAyZS00NzM1LThlZjYtN2JmZDJhMDU2ZWUwXkEyXkFqcGc@._V1_SX250.jpg"
  },
- "series|dylan ile oyun zamani": null,
+ "series|dylan ile oyun zamani": {
+  "id": "tt6354940",
+  "poster": "https://images.metahub.space/poster/medium/tt6354940/img"
+ },
  "series|weasy ailesi": null,
  "series|maddie triggs": {
   "id": "tt38235853",
@@ -3129,7 +3216,10 @@
   "id": "tt17374846",
   "poster": "https://images.metahub.space/poster/medium/tt17374846/img"
  },
- "series|paris ve patili dostlari": null,
+ "series|paris ve patili dostlari": {
+  "id": "tt0078668",
+  "poster": "https://images.metahub.space/poster/medium/tt0078668/img"
+ },
  "series|turbozaurs": {
   "id": "tt11237990",
   "poster": "https://images.metahub.space/poster/medium/tt11237990/img"
@@ -3194,8 +3284,14 @@
  "series|kratt karde ler": null,
  "series|peter pan in yeni maceralari": null,
  "series|maceraci y zge ler b y k g steri": null,
- "series|alice miranda sonsuza kadar arkada": null,
- "movie|john wick d nyasindan ballerina": null,
+ "series|alice miranda sonsuza kadar arkada": {
+  "id": "tt0073955",
+  "poster": "https://images.metahub.space/poster/medium/tt0073955/img"
+ },
+ "movie|john wick d nyasindan ballerina": {
+  "id": "tt2911666",
+  "poster": "https://images.metahub.space/poster/medium/tt2911666/img"
+ },
  "movie|in the lost lands": {
   "id": "tt4419684",
   "poster": "https://images.metahub.space/poster/medium/tt4419684/img"
@@ -3203,8 +3299,14 @@
  "movie|avatar 3 ate ve k l": null,
  "movie|katil makine": null,
  "movie|toz yuma i": null,
- "movie|merhamet yok": null,
- "movie|predator vah i topraklar": null,
+ "movie|merhamet yok": {
+  "id": "tt0263736",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGFlZDM2NDUtZGI1ZS00N2Y2LWFjYjgtMzY3MzU2MzdkMjk5XkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "movie|predator vah i topraklar": {
+  "id": "tt0093773",
+  "poster": "https://images.metahub.space/poster/medium/tt0093773/img"
+ },
  "movie|sihirbazlar etesi daha bir ey g rmediniz": null,
  "movie|dedektif knight 3 son g rev": null,
  "movie|polis katili": null,
@@ -3230,7 +3332,10 @@
  "movie|en yakin arkada im sevgilisi ve ben": null,
  "movie|bana ans dileme": null,
  "movie|rock kampi 3": null,
- "movie|daha da seksi": null,
+ "movie|daha da seksi": {
+  "id": "tt0094934",
+  "poster": "https://images.metahub.space/poster/medium/tt0094934/img"
+ },
  "movie|saccharine": {
   "id": "tt35050712",
   "poster": "https://images.metahub.space/poster/medium/tt35050712/img"
@@ -3528,8 +3633,14 @@
   "id": "tt10682186",
   "poster": "https://images.metahub.space/poster/medium/tt10682186/img"
  },
- "movie|charlie nin melekleri tam gaz": null,
- "movie|charlie nin melekleri": null,
+ "movie|charlie nin melekleri tam gaz": {
+  "id": "tt0337540",
+  "poster": "https://images.metahub.space/poster/medium/tt0337540/img"
+ },
+ "movie|charlie nin melekleri": {
+  "id": "tt0337540",
+  "poster": "https://images.metahub.space/poster/medium/tt0337540/img"
+ },
  "movie|mahavatar narsimha": {
   "id": "tt34365591",
   "poster": "https://images.metahub.space/poster/medium/tt34365591/img"
@@ -3554,7 +3665,10 @@
   "id": "tt27419420",
   "poster": "https://m.media-amazon.com/images/M/MV5BYjhlN2EyNGUtY2U4YS00ZTQ3LTg0NTgtNGIxZmVhMDlmMjIyXkEyXkFqcGc@._V1_SX250.jpg"
  },
- "movie|sicc n 9": null,
+ "movie|sicc n 9": {
+  "id": "tt4240654",
+  "poster": "https://images.metahub.space/poster/medium/tt4240654/img"
+ },
  "movie|ampiyon ke i t m zamanlarin en iyisi": null,
  "movie|l mc l u u": null,
  "movie|gelin": {
@@ -3569,7 +3683,10 @@
  "movie|it welcome to derry": null,
  "movie|ampiyonlar": null,
  "movie|r mcek adam yep yeni bir g n": null,
- "movie|mortal kombat 2": null,
+ "movie|mortal kombat 2": {
+  "id": "tt0293429",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmRmN2I5M2EtNDA1Ny00N2ZmLWE3YWYtMjQ1NTFjY2Q4NWM5XkEyXkFqcGc@._V1_SX250.jpg"
+ },
  "movie|the punisher one last kill": {
   "id": "tt36042156",
   "poster": "https://images.metahub.space/poster/medium/tt36042156/img"
@@ -3844,7 +3961,10 @@
  "series|hayalimdeki de i im": null,
  "series|ilkay buharali yla ger ekler": null,
  "series|i te gelin i te kaynana": null,
- "series|komedi t rkiye": null,
+ "series|komedi t rkiye": {
+  "id": "tt6079310",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODA4NDE4OTMtZmRkZi00NjgwLWE0NWMtODA4ZTkxMjc5NGExXkEyXkFqcGc@._V1_SX250.jpg"
+ },
  "series|lezzet d k nleri": null,
  "series|magazin 8": null,
  "series|mutfakta t rev var": null,
@@ -3909,7 +4029,10 @@
   "id": "tt2002690",
   "poster": "https://images.metahub.space/poster/medium/tt2002690/img"
  },
- "movie|shelter si inak 2026": null,
+ "movie|shelter si inak 2026": {
+  "id": "tt32357218",
+  "poster": "https://images.metahub.space/poster/medium/tt32357218/img"
+ },
  "movie|bizim hatamiz culpa nuestra 2025": null,
  "movie|arpi ma ani colisi n 2026": null,
  "movie|do um g n hediyesi das geschenk 2026": null,
@@ -3971,7 +4094,10 @@
   "poster": "https://images.metahub.space/poster/medium/tt43648067/img"
  },
  "series|blazing summer": null,
- "series|wanna one go back to base": null,
+ "series|wanna one go back to base": {
+  "id": "tt7836846",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTdjYTNkMGUtNTY5Ny00ZDU4LTg1M2QtYmNiMDY2NjVhYjg0XkEyXkFqcGc@._V1_SX250.jpg"
+ },
  "series|bts the return": null,
  "series|bts the comeback live arirang": null,
  "series|battle of fates": {
@@ -4023,17 +4149,26 @@
   "id": "tt32581509",
   "poster": "https://images.metahub.space/poster/medium/tt32581509/img"
  },
- "series|son masa": null,
+ "series|son masa": {
+  "id": "tt2189801",
+  "poster": "https://images.metahub.space/poster/medium/tt2189801/img"
+ },
  "series|51 b lge baskini": null,
  "series|z lemeyen vaka jonben t ramsey yi kim ld rd": null,
  "series|morderca szyty na miar": null,
  "series|ocuk influencer lar dijital a in yeni s m r d zeni": null,
  "series|tupelo krallari ger ek bir su yk s": null,
- "series|manhattan da ufo gizemi": null,
+ "series|manhattan da ufo gizemi": {
+  "id": "tt3231564",
+  "poster": "https://images.metahub.space/poster/medium/tt3231564/img"
+ },
  "series|iki mezar": null,
  "series|z lemeyen vaka tylenol cinayetleri": null,
  "series|fred ve rose west bir ingiliz korku hik yesi": null,
- "series|univerxo dabiz ispanyol efin evreni": null,
+ "series|univerxo dabiz ispanyol efin evreni": {
+  "id": "tt34682889",
+  "poster": "https://images.metahub.space/poster/medium/tt34682889/img"
+ },
  "series|hanedan murdoch ailesi": null,
  "series|krali e kleopatra": null,
  "series|bilinmeyene yolculuk gelece e d n": null,
@@ -4119,7 +4254,10 @@
   "poster": "https://images.metahub.space/poster/medium/tt16303262/img"
  },
  "movie|sabuha": null,
- "movie|inat i gelin": null,
+ "movie|inat i gelin": {
+  "id": "tt0408908",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGEwMGMyYjAtNmNlYy00NzVmLWIyMDgtZmZlNTgzMDRkMzZjXkEyXkFqcGc@._V1_SX250.jpg"
+ },
  "movie|kafkas kartali": {
   "id": "tt0345475",
   "poster": "https://images.metahub.space/poster/medium/tt0345475/img"
@@ -4193,13 +4331,19 @@
  "series|the shadow s edge": null,
  "series|forbidden fairytale": null,
  "series|ziam": null,
- "series|the first ride": null,
+ "series|the first ride": {
+  "id": "tt7412482",
+  "poster": "https://images.metahub.space/poster/medium/tt7412482/img"
+ },
  "series|frozen hot boys": null,
  "series|lost in starlight": {
   "id": "tt28972232",
   "poster": "https://images.metahub.space/poster/medium/tt28972232/img"
  },
- "series|renegade immortal battle of gods": null,
+ "series|renegade immortal battle of gods": {
+  "id": "tt27432264",
+  "poster": "https://images.metahub.space/poster/medium/tt27432264/img"
+ },
  "series|bokura wa jinsei de ikkai dake maho ga tsukaeru": null,
  "series|vah i bati hikayeleri": null,
  "series|political lupin 2026 japon": {
@@ -4213,5 +4357,21 @@
  "series|the fragrant flower blooms with dignity": {
   "id": "tt36592690",
   "poster": "https://images.metahub.space/poster/medium/tt36592690/img"
+ },
+ "series|juubee ninpuuchou": null,
+ "series|sound of silence": null,
+ "series|ilgin zengin asyalilar": null,
+ "movie|ringlerin krali esi": null,
+ "movie|en yakin arkada im": null,
+ "movie|nasreddin hoca zaman yolcusu 2 dinozorlar a i": null,
+ "series|lilyhammer": {
+  "id": "tt1958961",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTU5NjAyOTkyM15BMl5BanBnXkFtZTgwNzIzODAwMzE@._V1_SX250.jpg"
+ },
+ "movie|a k hipotezi the love hypothesis 2026": null,
+ "movie|fall 2 l mc l tirmani fall 2 deadpoint 2026": null,
+ "movie|sultana 2026": {
+  "id": "tt41228546",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWYxNzhkY2UtYzA0Mi00YjlmLTlkZDEtZGU4OGQ1MTEwNjg4XkEyXkFqcGc@._V1_SX250.jpg"
  }
 }
