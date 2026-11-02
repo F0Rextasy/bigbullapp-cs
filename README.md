@@ -1,4 +1,4 @@
-# BigBullApp — Cloudstream + Nuvio
+# BigBullApp — Cloudstream + Nuvio (bigbullapp-cs-nuvio)
 
 [Cloudstream](https://github.com/recloudstream/cloudstream) ve
 [Nuvio](https://github.com/NuvioMedia/NuvioMobile) için Türkçe film, dizi, anime, çizgi film ve
@@ -218,6 +218,8 @@ Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı de�
 Nuvio eklentileri cihazda (QuickJS) çalışır; depo `nuvio/manifest.json` dosyasıdır ve GitHub raw
 üzerinden yayınlanır. Her sağlayıcı `nuvio/providers/<id>.js` **tek dosyasıdır** — derleme adımı
 yoktur, Nuvio'nun indirdiği dosya depodaki dosyanın aynısıdır.
+
+Nuvio ana repo: <https://github.com/NuvioMedia/NuvioMobile>
 
 Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Repository** →
 `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json` →
