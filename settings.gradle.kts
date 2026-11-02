@@ -12,6 +12,8 @@ val disabled = listOf(
     "InatTod", "InatUlusal", "InatYabanciDiziler", "InatYerliDiziler",
     // VOD bölüm endpoint'i 2026-11-02'den beri timeout; oynatılabilir kaynak yok.
     "MinikaCocuk",
+    // atv.com.tr /izle endpoint'i 2026-11-02'den beri timeout; oynatılabilir VOD yok.
+    "ATV",
 )
 
 File(rootDir, "providers").eachDir { dir ->

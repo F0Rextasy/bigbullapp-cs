@@ -246,7 +246,7 @@
         "tv"
       ],
       "filename": "providers/atv.js",
-      "enabled": true,
+      "enabled": false,
       "formats": [
         "mp4"
       ],

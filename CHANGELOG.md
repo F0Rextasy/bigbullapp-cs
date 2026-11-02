@@ -16,6 +16,7 @@ sayı arttığında güncelleme sunar.
 - **MinikaGO v3**: bölüm URL'sindeki eksik `/` düzeltildi; tarayıcı ve XHR başlıkları eklendi.
 - **MinikaCocuk v4**: Programlar kategorisi ve tarayıcı/XHR başlıkları eklendi.
 - **MinikaCocuk pasife alındı**: VOD bölüm endpoint'i timeout verdiği için modül `disabled` listesine alındı; kaynak korunuyor.
+- **ATV pasife alındı**: `/izle` VOD endpoint'i timeout verdiği için modül `disabled` listesine alındı; kaynak korunuyor.
 - **Runner**: `/run-all` eşzamanlılık çökmesi giderildi; `/main?row=` ile kategori doğrulaması eklendi.
 
 ## [1.6.1] - 2026-11-02
