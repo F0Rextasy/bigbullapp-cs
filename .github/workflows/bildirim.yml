@@ -32,19 +32,21 @@ jobs:
             echo "tools/telegram-topics.json eksik; bildirim atlandı."
             exit 0
           fi
-          CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD -- providers nuvio \
+          CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD -- \
+            providers nuvio/providers nuvio/manifest.json \
             | cut -d/ -f2 | sort -u)
-          NL=$'\n'
-          DETAILS=""
-          if [ -n "$CHANGED" ]; then
-            SECTION=$(awk 'BEGIN { s = 0 } /^## \[/ { s++; next } s == 1 { print }' CHANGELOG.md)
-            DETAILS=$(printf '%s\n' "$SECTION" | awk '
-              /^### / { sub(/^### /, ""); print "— " $0; next }
-              /^- / { sub(/^- /, "• "); print }
-            ' || true)
-            [ -n "$DETAILS" ] && DETAILS="${DETAILS}${NL}"
-          DETAILS=$(printf '%s' "$DETAILS" | sed 's/\*\*//g; s/`//g')
+          if [ -z "$CHANGED" ]; then
+            echo "Sağlayıcı değişikliği yok; bildirim atlandı."
+            exit 0
           fi
+          NL=$'\n'
+          SECTION=$(awk 'BEGIN { s = 0 } /^## \[/ { s++; next } s == 1 { print }' CHANGELOG.md)
+          DETAILS=$(printf '%s\n' "$SECTION" | awk '
+            /^### / { sub(/^### /, ""); print "— " $0; next }
+            /^- / { sub(/^- /, "• "); print }
+          ' || true)
+          [ -n "$DETAILS" ] && DETAILS="${DETAILS}${NL}"
+          DETAILS=$(printf '%s' "$DETAILS" | sed 's/\*\*//g; s/`//g')
           [ -z "$DETAILS" ] && DETAILS="• Depo güncellemesi yapıldı.${NL}"
           DETAILS=$(printf '%s' "$DETAILS" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
           HEADING=$(grep -m1 '^## \[' CHANGELOG.md || true)

@@ -1,14 +1,17 @@
-# BigBullApp
+# BigBullApp — Cloudstream + Nuvio
 
-[Cloudstream](https://github.com/recloudstream/cloudstream) için Türkçe film, dizi, anime, çizgi film ve
-canlı TV kaynakları. Her site ayrı bir Gradle modülü ve ayrı bir `.cs3` eklentisidir. Aynı
-kaynakların bir kısmı **Nuvio** için `nuvio/` altında eklenti (plugin) olarak da yayınlanır.
+[Cloudstream](https://github.com/recloudstream/cloudstream) ve
+[Nuvio](https://github.com/NuvioMedia/NuvioMobile) için Türkçe film, dizi, anime, çizgi film ve
+canlı TV kaynakları. Her site Cloudstream'de ayrı bir Gradle modülü/`.cs3` eklentisi, Nuvio'da
+`nuvio/providers/` altında ayrı bir plugin dosyasıdır. Nuvio resmi istemcileri:
+[NuvioMobile](https://github.com/NuvioMedia/NuvioMobile) ve
+[NuvioTV](https://github.com/NuvioMedia/NuvioTV).
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.3-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org)
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-85-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-95-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
