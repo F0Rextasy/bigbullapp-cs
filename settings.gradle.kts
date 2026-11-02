@@ -10,6 +10,8 @@ val disabled = listOf(
     "InatDerbiler", "InatEbaTv", "InatHaber", "InatListe1Tr", "InatListe2Glb",
     "InatListe3Tr", "InatMubi", "InatSinema", "InatPremium", "InatSpor",
     "InatTod", "InatUlusal", "InatYabanciDiziler", "InatYerliDiziler",
+    // P2P/WebRTC oynatıcı doğrudan medya vermiyor; yayınlanmıyor.
+    "SelcukSports",
 )
 
 File(rootDir, "providers").eachDir { dir ->

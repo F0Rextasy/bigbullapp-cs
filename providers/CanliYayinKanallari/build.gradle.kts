@@ -1,7 +1,7 @@
-version = 3
+version = 4
 
 cloudstream {
-    description = "CanliYayinKanallari — Türkçe canlı TV (doğrulanmış HLS)"
+    description = "CanliYayinKanallari — Türkçe canlı TV (seçilmiş HLS)"
     authors = listOf("F0Rextasy")
     status = 3
     tvTypes = listOf("Live")

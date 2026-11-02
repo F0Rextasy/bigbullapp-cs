@@ -11,7 +11,7 @@ canlı TV kaynakları. Her site Cloudstream'de ayrı bir Gradle modülü/`.cs3` 
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-96-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-95-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -193,7 +193,6 @@ Tek modül derleme ve cihaza kurulum:
 | `MinikaGO` | minikago.com.tr | Çocuk | — | — | — | — | — | — |
 | `NetFilmizle` | netfilmizle.com | Film | — | — | — | — | — | — |
 | `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
-| `SelcukSports` **beta** | selcuksportshd14e17ba2ad.xyz | Canlı TV | — | — | — | — | — | — |
 | `SelcukFlix` **beta** | selcukflix.app | Dizi/Film | — | — | — | — | ✓ | ✓ |
 | `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `Sezonlukdizi` **beta** | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
@@ -212,7 +211,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
 | `YesilCamTv` **beta** | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**Inat notu:** Inat'ın **35 platformu ayrı modül** olarak tutulur; runner’da pass olan **11 platform aktif**, pass olmayan **24 platform pasif**. Aktif platformlar: Liste 4K 03 Exo/Web, 4K 06 Exo, Exxen, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii ve Yerli Filmler. Depoda toplam **96 modül ve 96 Cloudstream sağlayıcısı** var. Pasif platformlar `settings.gradle.kts` `disabled` listesinde; kaynak dosyaları korunuyor.
+**Inat notu:** Inat'ın **35 platformu ayrı modül** olarak tutulur; runner’da pass olan **11 platform aktif**, pass olmayan **24 platform pasif**. Aktif platformlar: Liste 4K 03 Exo/Web, 4K 06 Exo, Exxen, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii ve Yerli Filmler. Depoda toplam **95 modül ve 95 Cloudstream sağlayıcısı** var. Pasif platformlar `settings.gradle.kts` `disabled` listesinde; kaynak dosyaları korunuyor.
 
 Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
 `README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.
@@ -276,7 +275,9 @@ Canlı yayın modülleri `TvType.Live` kullanır; `loadLinks` yoktur, kanal URL'
 | Eklenti | Kaynak | Kanal | Not |
 |---|---|---|---|
 | `CanliTV` **beta** | iptv-org TR M3U | 172 | 5 ana grup + arama; M3U listesi her gün güncellenir |
-| `SelcukSports` **beta** | portal | 85 kayıt | Kanal listesi/arama çalışıyor; WebRTC/P2P oynatıcı doğrudan HLS vermiyor |
+
+`SelcukSports` kaynak olarak `providers/SelcukSports` altında korunuyor; WebRTC/P2P oynatıcı
+doğrudan medya vermediği için **pasif** ve yayınlanmıyor.
 
 ## Eklenti ayarları
 
@@ -296,7 +297,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          96 modül
+  Yabancidizi/          95 modül
 nuvio/                  Nuvio eklenti deposu (102 sağlayıcı, sağlayıcı başına tek dosya)
 ```
 

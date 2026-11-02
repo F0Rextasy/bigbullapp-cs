@@ -14,7 +14,8 @@ sayı arttığında güncelleme sunar.
 - **CizgiSite v3/v4**: Brotli sıkıştırılmış sayfalar çözülüyor; çözüm başarısız olursa sessiz boş sonuç yerine gerçek hata gösteriliyor.
 - **Inat**: runner’da pass olmayan 24 platform `settings.gradle.kts` pasif listesine alındı; kaynaklar korunuyor.
 - **Nuvio**: plugin deposu ve katalog addon'u aktif; 91/102 sağlayıcı açık, “Tümü - Filmler” ve “Tümü - Diziler” satırları yayında. Meta için Cinemeta şartı README’ye eklendi.
-- **SelcukSports v1**: portal kanal listesi eklendi; WebRTC/P2P oynatıcı doğrudan HLS vermediği için beta, çalışmayan yayınlar backlog'da.
+- **SelcukSports v1**: portal kanal listesi eklendi; P2P/WebRTC oynatıcı doğrudan HLS vermediği için yayınlanmıyor, kaynak pasif ve backlog'da.
+- **CanliYayinKanallari v4**: HTTP 403/404 veren 7 ölü URL listeden çıkarıldı; 46 doğrulanmış HLS kaydı kaldı.
 - Telegram: yalnız sağlayıcı değişikliklerinde tek bildirim gönderilir; katalog/docs commit'leri sessiz kalır.
 
 ## [1.6.0] - 2026-11-01
