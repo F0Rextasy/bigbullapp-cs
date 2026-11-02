@@ -1,6 +1,6 @@
 {
   "generated": "2026-11-02",
-  "note": "119 TR modül; Inat 35 platformu ayrı modüle bölündü (kategori + 4K kalite). Dizigecesi v5 canlı runner/HLS pass; Inat upstream durumu modül bazında doğrulanıyor.",
+  "note": "95 TR modül; Inat 35 platformundan 11'i aktif, 24'ü settings.gradle.kts disabled listesinde pasif. Dizigecesi v5 canlı runner/HLS pass.",
   "modules": [
     {
       "module": "AniArsiv",

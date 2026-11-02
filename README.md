@@ -143,19 +143,19 @@ Tek modül derleme ve cihaza kurulum:
 | `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` **beta** | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `HDFilmizleBest` **beta** | hdfilmizle.best | Dizi | — | — | — | — | — | — |
-| `InatListe1Tr` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
-| `InatListe2Glb` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
-| `InatListe3Tr` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
-| `InatSpor` **beta** | sprboxs.bar | Canlı TV | — | — | — | — | — | — |
-| `InatDerbiler` **beta** | sprboxs.bar | Canlı TV | — | — | — | — | — | — |
-| `InatPremium` **beta** | inattv257.cfd | Canlı TV | — | — | — | — | — | — |
-| `InatSinema` **beta** | diziboxen.help | Film | — | — | — | — | — | — |
-| `InatBelgesel` **beta** | diziboxen.help | Belgesel | — | — | — | — | — | — |
-| `InatUlusal` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
-| `InatHaber` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
-| `InatEbaTv` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
-| `InatCocuk` **beta** | diziboxen.help | Çocuk | — | — | — | — | — | — |
-| `InatDini` **beta** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatListe1Tr` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatListe2Glb` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatListe3Tr` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatSpor` **pasif** | sprboxs.bar | Canlı TV | — | — | — | — | — | — |
+| `InatDerbiler` **pasif** | sprboxs.bar | Canlı TV | — | — | — | — | — | — |
+| `InatPremium` **pasif** | inattv257.cfd | Canlı TV | — | — | — | — | — | — |
+| `InatSinema` **pasif** | diziboxen.help | Film | — | — | — | — | — | — |
+| `InatBelgesel` **pasif** | diziboxen.help | Belgesel | — | — | — | — | — | — |
+| `InatUlusal` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatHaber` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatEbaTv` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatCocuk` **pasif** | diziboxen.help | Çocuk | — | — | — | — | — | — |
+| `InatDini` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
 | `InatExxen` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
 | `InatGain` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
 | `InatNetflix` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
@@ -163,21 +163,21 @@ Tek modül derleme ve cihaza kurulum:
 | `InatDisney` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
 | `InatAmazonPrime` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
 | `InatTabii` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
-| `InatMubi` **beta** | diziboxen.help | Film | — | — | — | — | — | — |
-| `InatTod` **beta** | sprboxs.bar | Dizi | — | — | — | — | — | — |
-| `InatYabanciDiziler` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
-| `InatYerliDiziler` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatMubi` **pasif** | diziboxen.help | Film | — | — | — | — | — | — |
+| `InatTod` **pasif** | sprboxs.bar | Dizi | — | — | — | — | — | — |
+| `InatYabanciDiziler` **pasif** | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatYerliDiziler` **pasif** | diziboxen.help | Dizi | — | — | — | — | — | — |
 | `InatYerliFilmler` **beta** | diziboxen.help | Film | — | — | — | — | — | — |
-| `Inat4k01Exo` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
-| `Inat4k01Web` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
-| `Inat4k02Web` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k01Exo` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k01Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k02Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k03Exo` | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k03Web` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
-| `Inat4k04Exo` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
-| `Inat4k04Web` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k04Exo` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k04Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k06Exo` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
-| `Inat4k06Web` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
-| `Inat4k07Web` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k06Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k07Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `JetFilmizle` **beta** | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
 | `KanalD` | kanald.com.tr | Dizi | — | — | — | — | — | — |
 | `KoreanTurk` **beta** | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
@@ -205,12 +205,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
 | `YesilCamTv` **beta** | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**Inat notu:** Inat'ın **35 platformu ayrı modül** olarak yayınlanır; her modül `Inat — <platform>` adıyla tek sağlayıcı kaydeder. Depoda toplam **119 modül ve 119 Cloudstream sağlayıcısı** var. Platformların upstream durumu ayrı ayrı doğrulanır; erişilemeyen platformlar **beta** ve `status = 3` kalır.
-
-Bot kanıtı olan platformlar: Liste 1/3, Spor, Derbiler, Sinema, Belgesel, Ulusal, Haber, EBA TV,
-Çocuk, Dini, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii, 4K Film 03 Exo, 4K Film 04 Web,
-4K Film 06 Exo/Web. Kanıtsız kalanlar: Liste 2, Premium, Yerli Filmler, 4K Film 01/02/03-Web/07,
-EXXEN, Mubi, TOD, Yabancı/Yerli Diziler (bazıları upstream 520, bazıları handler kanıtı yok).
+**Inat notu:** Inat'ın **35 platformu ayrı modül** olarak tutulur; runner’da pass olan **11 platform aktif**, pass olmayan **24 platform pasif**. Aktif platformlar: Liste 4K 03 Exo/Web, 4K 06 Exo, Exxen, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii ve Yerli Filmler. Depoda toplam **95 modül ve 95 Cloudstream sağlayıcısı** var. Pasif platformlar `settings.gradle.kts` `disabled` listesinde; kaynak dosyaları korunuyor.
 
 Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
 `README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.
@@ -284,7 +279,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          119 modül
+  Yabancidizi/          95 modül
 nuvio/                  Nuvio eklenti deposu (102 sağlayıcı, sağlayıcı başına tek dosya)
 ```
 
