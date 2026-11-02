@@ -16,7 +16,7 @@ jobs:
       - name: Kaynak kodu çek
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Telegram'a gönder
         env:
@@ -37,6 +37,14 @@ jobs:
             | cut -d/ -f2 | sort -u)
           if [ -z "$CHANGED" ]; then
             echo "Sağlayıcı değişikliği yok; bildirim atlandı."
+            exit 0
+          fi
+
+          CUR_VERSION=$(grep -m1 '^## \[' CHANGELOG.md | sed -nE 's/^## \[([^]]+)\].*/\1/p')
+          PARENT_VERSION=$(git show HEAD^:CHANGELOG.md 2>/dev/null \
+            | grep -m1 '^## \[' | sed -nE 's/^## \[([^]]+)\].*/\1/p' || true)
+          if [ -n "$CUR_VERSION" ] && [ "$PARENT_VERSION" = "$CUR_VERSION" ]; then
+            echo "Aynı sürüm zaten bildirildi; sürüm yükseltilmeden tekrar gönderilmez."
             exit 0
           fi
           NL=$'\n'
