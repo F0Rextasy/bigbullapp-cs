@@ -14,6 +14,7 @@ sayı arttığında güncelleme sunar.
 - **Nuvio ÇizgiMax**: çizgi film bölümleri ve Dzen/kaynak akışları düzeltildi.
 - **Nuvio DiziLife**: yeni alan adı `dizi83.life` ile diziler yeniden açılıyor.
 - **Nuvio Inat 4K 03 Web**: film çözümlemesi belirgin şekilde hızlandı.
+- **Dizilla v10**: yeni alan adı dizilla.la; oynatıcı referer'ı sabitlendi.
 
 ## [1.6.5] - 2026-11-03
 

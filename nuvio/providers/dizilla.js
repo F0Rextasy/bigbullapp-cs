@@ -1,14 +1,17 @@
-// @provider {"id":"dizilla","name":"Dizilla","types":["tv"],"domain":"dizilla.now","formats":["m3u8"],"sample":"tt27497448:tv:1:1","description":"Dizilla yabanci dizi arsivi (HLS + Turkce altyazi)."}
+// @provider {"id":"dizilla","name":"Dizilla","types":["tv"],"domain":"dizilla.la","formats":["m3u8"],"sample":"tt27497448:tv:1:1","description":"Dizilla yabanci dizi arsivi (HLS + Turkce altyazi)."}
 /**
  * dizilla — Nuvio provider (bb-nuvio).
  * Next.js site: series metadata + episode list live in the JSON-LD blocks, the
  * episode page carries its player iframes in the RSC payload ("sources").
  * Flow: Cinemeta title -> /ara?q= -> JSON-LD episodes -> "sources" iframes ->
- *       player NP_CONFIG -> master m3u8 + VTT subtitles.
+ *       player NP_CONFIG -> master m3u8 + VTT subtitles. The player only accepts a
+ *       dizilla.now Referer (PLAYER_REFERER); the .la host is answered with 404 "7".
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
-var BASE = "https://dizilla.now";
+var BASE = "https://dizilla.la";
+/** pichive's referer allowlist accepts only this origin; the site itself moved to .la. */
+var PLAYER_REFERER = "https://dizilla.now/";
 
 function text(url, opts) {
   var o = opts || {};
@@ -229,10 +232,10 @@ function getStreams(tmdbId, mediaType, season, episode) {
         return url;
       });
     })
-    .then(function (referer) {
+    .then(function () {
       return players.reduce(function (chain, player) {
         return chain.then(function (rows) {
-          return text(player.url, { referer: referer })
+          return text(player.url, { referer: PLAYER_REFERER })
             .then(function (html) {
               var config = jsonAfter(html, "NP_CONFIG");
               if (!config) return rows;

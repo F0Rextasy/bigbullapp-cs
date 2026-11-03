@@ -34,7 +34,8 @@ import org.json.JSONObject
 import java.net.URLEncoder
 
 /**
- * Dizilla — dizilla.nl (301 → dizilla.club → dizilla.now).
+ * Dizilla — dizilla.nl (301 → dizilla.club → dizilla.la). The pichive player on the
+ * episode page still only accepts a dizilla.now Referer (see PLAYER_REFERER).
  * Next.js site: series metadata + episode list live in the JSON-LD blocks,
  * the episode page carries its player iframes in the RSC payload ("sources").
  */
@@ -46,7 +47,7 @@ class DizillaProvider : MainAPI() {
         "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
-    override var mainUrl = "https://dizilla.now"
+    override var mainUrl = "https://dizilla.la"
     override var name = "Dizilla"
     override var lang = "tr"
     override val hasMainPage = true
@@ -218,7 +219,7 @@ class DizillaProvider : MainAPI() {
         val seenSubtitles = HashSet<String>()
         players.forEach { player ->
             runCatching {
-                if (loadPlayer(data, player, linkCallback, subtitleFilter, seenSubtitles)) found = true
+                if (loadPlayer(player, linkCallback, subtitleFilter, seenSubtitles)) found = true
             }
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
@@ -227,14 +228,13 @@ class DizillaProvider : MainAPI() {
 
     /** pichive iframe -> NP_CONFIG -> nm.php master playlist (+ nsub.php subtitles). */
     private suspend fun loadPlayer(
-        episodeUrl: String,
         player: Player,
         callback: (ExtractorLink) -> Unit,
         subtitleCallback: (SubtitleFile) -> Unit,
         seenSubtitles: MutableSet<String>,
     ): Boolean {
-        // The player host only answers to a referer on the dizilla host, i.e. the episode page itself.
-        val html = app.get(player.url, referer = episodeUrl, headers = uaHeaders).text
+        // pichive's allowlist still carries the old origin; the .la host is answered with 404 "7".
+        val html = app.get(player.url, referer = PLAYER_REFERER, headers = uaHeaders).text
         val config = jsonObjectAfter(html, "window.NP_CONFIG") ?: return false
         val linkName = listOf(this.name, player.lang, player.label)
             .filter { it.isNotBlank() }.joinToString(" ")
@@ -329,6 +329,9 @@ class DizillaProvider : MainAPI() {
             "Anime",
             "Türkçe Dublaj",
         )
+
+        /** The player's Referer allowlist accepts only this origin; the site itself moved to .la. */
+        private const val PLAYER_REFERER = "https://dizilla.now/"
 
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"

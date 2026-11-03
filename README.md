@@ -132,7 +132,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Dizibox` | dizibox.live | Dizi | — | — | ✓ | ✓ | — | ✓ |
 | `DiziboxIzle` | diziboxizle.com | Dizi | ✓ | — | ✓ | ✓ | — | ✓ |
 | `Dizikorea3` | dizikorea3.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | film | ✓ |
-| `Dizilla` | dizilla.now | Dizi | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `Dizilla` | dizilla.la | Dizi | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `DiziMom` | ddizimom.net | Dizi | — | — | — | — | — | — |
 | `DiziPal` | dizipal1592.com | Dizi/Film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
 | `DiziPod` | dizipod.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |

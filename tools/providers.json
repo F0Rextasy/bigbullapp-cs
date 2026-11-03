@@ -685,7 +685,7 @@
     "dizilla.now": {
       "id": "dizilla-now",
       "name": "Dizilla",
-      "mainUrl": "https://dizilla.now",
+      "mainUrl": "https://dizilla.la",
       "status": "implemented",
       "http": 200,
       "title": "",
