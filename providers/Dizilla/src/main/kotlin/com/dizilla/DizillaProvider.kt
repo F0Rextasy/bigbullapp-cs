@@ -75,7 +75,8 @@ class DizillaProvider : MainAPI() {
         search(query, 1)?.items ?: emptyList()
 
     override suspend fun search(query: String, page: Int): SearchResponseList? {
-        val url = "$mainUrl/ara?q=${URLEncoder.encode(query, "UTF-8")}&page=$page"
+        // Cloudstream's HTTP layer preserves `+` as a literal plus in the query, so use %20.
+        val url = "$mainUrl/ara?q=${URLEncoder.encode(query, "UTF-8").replace("+", "%20")}&page=$page"
         val doc = app.get(url, headers = uaHeaders).document
         return newSearchResponseList(doc.cards(), doc.hasNextPage())
     }

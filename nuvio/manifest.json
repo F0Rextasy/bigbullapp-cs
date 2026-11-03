@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
