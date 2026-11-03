@@ -5,6 +5,11 @@ on:
     branches:
       - master
   workflow_dispatch:
+    inputs:
+      force:
+        description: "Aynı sürüm olsa da gönder"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -21,6 +26,7 @@ jobs:
       - name: Telegram'a gönder
         env:
           TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          FORCE: ${{ github.event.inputs.force || 'false' }}
         run: |
           if [ -z "$TOKEN" ]; then
             echo "TELEGRAM_BOT_TOKEN yok; bildirim atlandı."
@@ -47,7 +53,7 @@ jobs:
             PREV_VERSION=$(git show "${PREV}:CHANGELOG.md" 2>/dev/null \
               | grep -m1 '^## \[' | sed -nE 's/^## \[([^]]+)\].*/\1/p' || true)
           fi
-          if [ -n "$CUR_VERSION" ] && [ "$PREV_VERSION" = "$CUR_VERSION" ]; then
+          if [ "$FORCE" != "true" ] && [ -n "$CUR_VERSION" ] && [ "$PREV_VERSION" = "$CUR_VERSION" ]; then
             echo "Aynı sürüm için son sağlayıcı commit'i zaten bildirildi; atlandı."
             exit 0
           fi
