@@ -2,7 +2,7 @@
 /**
  * cizgisite — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /tr catalogue filter -> series page (article.icerik) ->
- *       episode page -> vk video_ext (hls/mp4 ladder) + ok.ru embed.
+ *       episode page -> vk video_ext (video.getEmbed ladder) + ok.ru embed.
  */
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
 var BASE = "https://www.cizgi.site";
@@ -149,8 +149,8 @@ function push(out, url, quality, label, referer) {
 }
 
 /**
- * vk's video_ext embeds a jwplayer config with the whole mp4/hls ladder, but it answers a
- * stub page now and then, so one retry covers the miss.
+ * video_ext used to inline the mp4/hls ladder. It now ships just a webToken, so the ladder
+ * comes from video.getEmbed with that anonym token; the inline regex stays for older pages.
  */
 function vk(html, out) {
   var before = out.length, re = /"(mp4_\d+|hls|hls_fmp4)"\s*:\s*"(https?:[^"]+)"/g, m;
@@ -164,11 +164,45 @@ function vk(html, out) {
   return out.length - before;
 }
 
+function vkApi(frame, embed, out) {
+  var oid = first(/[?&]oid=(-?\d+)/, frame);
+  var id = first(/[?&]id=(\d+)/, frame);
+  var token = first(/access_token"\s*:\s*"(anonym\.[^"]+)"/, embed);
+  if (!oid || !id || !token) return Promise.resolve(0);
+  var body = "owner_id=" + encodeURIComponent(oid) + "&video_id=" + encodeURIComponent(id) +
+    "&hash=" + encodeURIComponent(first(/[?&]hash=([0-9a-fA-F]+)/, frame) || "") +
+    "&access_token=" + encodeURIComponent(token);
+  var before = out.length;
+  return text("https://api.vk.com/method/video.getEmbed?v=5.289&client_id=6287487", {
+    method: "POST",
+    body: body,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Origin": "https://vk.com",
+      "Referer": "https://vk.com/"
+    }
+  }).then(function (raw) {
+    var files = ((JSON.parse(raw).response || {}).video || {}).files || {};
+    for (var kind in files) {
+      // hls_fmp4 is the same ladder in fMP4; one master keeps the list free of twin rows
+      if (kind === "hls_fmp4" && files.hls) continue;
+      if (!/^(mp4_\d+|hls)/.test(kind)) continue;
+      push(out, String(files[kind] || ""), QARR[parseInt(first(/mp4_(\d+)/, kind) || "0", 10)] || 0, "vk", "");
+    }
+    return out.length - before;
+  }).catch(function () {
+    return 0;
+  });
+}
+
 function loadVk(url, referer, out, tries) {
   return text(url, { referer: referer })
     .then(function (inner) {
-      if (vk(inner.replace(/\\\//g, "/"), out) > 0 || tries < 2) return null;
-      return loadVk(url, referer, out, tries + 1);
+      var n = vk(inner.replace(/\\\//g, "/"), out);
+      return n > 0 ? n : vkApi(url, inner, out);
+    })
+    .then(function (n) {
+      return n > 0 || tries >= 2 ? null : loadVk(url, referer, out, tries + 1);
     })
     .catch(function () {
       return tries < 2 ? loadVk(url, referer, out, tries + 1) : null;

@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -317,7 +317,7 @@
       "id": "cizgisite",
       "name": "CizgiSite",
       "description": "CizgiSite çizgi film arşivi; vk HLS/MP4 ve ok.ru oynatıcıları.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -1586,13 +1586,13 @@
       "id": "minikacocuk",
       "name": "MinikaCocuk",
       "description": "MinikaÇOCUK Web TV çocuk bölümleri (doğrudan MP4 akışı).",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
       ],
       "filename": "providers/minikacocuk.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "mp4"
       ],
@@ -1605,7 +1605,7 @@
       "id": "minikago",
       "name": "MinikaGO",
       "description": "MinikaGO Web TV bölümleri (doğrudan MP4 akışı).",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
