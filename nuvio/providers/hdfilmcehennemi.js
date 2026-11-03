@@ -3,8 +3,9 @@
  * hdfilmcehennemi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /search/?q= JSON -> film page -> hdfilmcehennemi.mobi embed
  *       -> split-string / packed token decode -> HLS master + jwplayer caption tracks.
- * The site answers Cloudflare "managed challenge" to Node's TLS fingerprint (curl gets the
- * real page from the same IP), so the header is marked verified:false.
+ * Cloudflare can intermittently challenge Node's TLS fingerprint (curl gets the real page
+ * from the same IP). Two consecutive live runs passed on 2026-11-03; full scans may still
+ * show a transient 0-stream.
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
