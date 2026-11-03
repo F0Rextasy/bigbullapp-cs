@@ -20,6 +20,7 @@ import com.lagradost.cloudstream3.newTvSeriesLoadResponse
 import com.lagradost.cloudstream3.newTvSeriesSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
+import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import java.net.URI
 import java.net.URLEncoder
@@ -183,6 +184,11 @@ class SelcukFlixProvider : MainAPI() {
             val playlist = runCatching {
                 app.get(master, referer = referer, headers = pageHeaders).text
             }.getOrNull()
+            // Ses parçaları yalnız master'daki #EXT-X-MEDIA grubunda tanımlı; tek varyant sessiz oynar.
+            if (playlist != null && playlist.contains("#EXT-X-MEDIA")) {
+                emit(master, label, Qualities.Unknown.value, referer)
+                return
+            }
             val variants = playlist?.let { parseVariants(it, master) }.orEmpty()
             if (variants.isEmpty()) {
                 emit(master, label, hint, referer)

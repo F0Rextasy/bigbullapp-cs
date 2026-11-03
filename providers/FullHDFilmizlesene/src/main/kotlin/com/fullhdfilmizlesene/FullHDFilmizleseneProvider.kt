@@ -58,12 +58,18 @@ class FullHDFilmizleseneProvider : MainAPI() {
 
     private fun Element.toSearchResult(): SearchResponse? {
         val href = fixUrlNull(selectFirst("a.tt")?.attr("href")) ?: return null
-        val title = (selectFirst(".film-title")?.text() ?: selectFirst("a.tt")?.text())
+        val local = (selectFirst(".film-title")?.text() ?: selectFirst("a.tt")?.text())
             ?.removeSuffix("izle")?.trim()?.takeIf { it.isNotBlank() } ?: return null
-        return newMovieSearchResponse(title, href, TvType.Movie) {
+        return newMovieSearchResponse(withOriginal(local, selectFirst(".kt")?.text()), href, TvType.Movie) {
             this.posterUrl = fixUrlNull(selectFirst("img.afis")?.attr("data-src"))
             this.year = selectFirst(".film-yil")?.text()?.trim()?.toIntOrNull()
         }
+    }
+
+    /** Cards and pages carry the local title plus the original one ("Başlangıç" / "Inception"). */
+    private fun withOriginal(local: String, original: String?): String {
+        val alt = original?.trim().orEmpty()
+        return if (alt.isBlank() || local.contains(alt, true)) local else "$local ($alt)"
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
@@ -74,8 +80,9 @@ class FullHDFilmizleseneProvider : MainAPI() {
     override suspend fun load(url: String): LoadResponse? {
         val doc = runCatching { app.get(url, headers = siteHeaders).document }.getOrNull()
             ?: throw ErrorLoadingException("$name: film yüklenemedi.")
-        val title = doc.selectFirst(".izle-titles h1")?.text()?.trim()?.takeIf { it.isNotBlank() }
+        val local = doc.selectFirst(".izle-titles h1")?.text()?.trim()?.takeIf { it.isNotBlank() }
             ?: throw ErrorLoadingException("$name: film bulunamadı.")
+        val title = withOriginal(local, doc.selectFirst(".izle-titles h2")?.text())
         val trailer = doc.selectFirst(".frg[data-code]")?.attr("data-code")
             ?.let { runCatching { String(Base64.decode(it, Base64.DEFAULT)) }.getOrNull() }
             ?.let { Regex("""src="([^"]+)"""").find(it)?.groupValues?.get(1) }
@@ -154,10 +161,15 @@ class FullHDFilmizleseneProvider : MainAPI() {
         val stream = telemetry?.optString("h264")?.takeIf { it.startsWith("http") }
             ?: telemetry?.optString("av1")?.takeIf { it.startsWith("http") }
             ?: return false
+        // The master must reach the player whole (it owns the #EXT-X-MEDIA audio renditions);
+        // its widest child variant only names the row and feeds the quality cap setting.
+        val quality = runCatching {
+            app.get(stream, headers = siteHeaders + mapOf("Referer" to embed)).text
+        }.getOrNull()?.let { bestQuality(it) } ?: Qualities.Unknown.value
         callback(
             newExtractorLink(name, label, stream, ExtractorLinkType.M3U8) {
                 this.referer = "$mainUrl/"
-                this.quality = Qualities.Unknown.value
+                this.quality = quality
             }
         )
         val tracks = Regex("""jwSetup\.tracks\s*=\s*(\[.*?\]);""", RegexOption.DOT_MATCHES_ALL)
@@ -168,6 +180,19 @@ class FullHDFilmizleseneProvider : MainAPI() {
             subtitleCallback(SubtitleFile(subtitleLang(track.optString("label")), file))
         }
         return true
+    }
+
+    /** Widest variant of the master; label by width, since cinema masters are 1920x800. */
+    private fun bestQuality(playlist: String): Int {
+        val width = Regex("""RESOLUTION=(\d+)x\d+""").findAll(playlist)
+            .mapNotNull { it.groupValues[1].toIntOrNull() }.maxOrNull() ?: return Qualities.Unknown.value
+        return when {
+            width >= 3400 -> Qualities.P2160.value
+            width >= 1700 -> Qualities.P1080.value
+            width >= 1100 -> Qualities.P720.value
+            width >= 850 -> Qualities.P480.value
+            else -> Qualities.P360.value
+        }
     }
 
     private fun subtitleLang(label: String): String = when {

@@ -130,7 +130,7 @@ class YabancidiziProvider : MainAPI() {
             }
         }
 
-        val episodes = doc.select("a.episode-link[href]").mapNotNull { a ->
+        val episodes = doc.select("a.v2-episode-row[href]").mapNotNull { a ->
             val href = fixUrlNull(a.attr("href")) ?: return@mapNotNull null
             val m = Regex("""/sezon-(\d+)/bolum-(\d+)""").find(href) ?: return@mapNotNull null
             val season = m.groupValues[1].toIntOrNull() ?: return@mapNotNull null

@@ -180,7 +180,9 @@ class HDFilmizleProvider : MainAPI() {
         val nonce = doc.selectFirst("#playex")?.attr("data-nonce")?.trim()?.takeIf { it.isNotEmpty() }
             ?: NONCE.find(html)?.groupValues?.get(1)
             ?: throw ErrorLoadingException("$name: oynatıcı anahtarı bulunamadı. $REPORT_HINT")
-        val players = doc.select("#playex a.options[data-post-id], div.playex a.options[data-post-id]").mapNotNull { el ->
+        // Tek oynatıcılı filmlerde `a.options`, dublaj/altyazı sekmeli filmlerde `a.options2`
+        // (data-part-key) bulunur; sınıf yerine data-post-id seçmek ikisini de kapsar.
+        val players = doc.select("#playex a[data-post-id], div.playex a[data-post-id]").mapNotNull { el ->
             val postId = el.attr("data-post-id").trim().takeIf { it.isNotEmpty() }
                 ?: return@mapNotNull null
             Triple(postId, el.attr("data-player-name").trim(), el.attr("data-part-key").trim())
@@ -206,7 +208,7 @@ class HDFilmizleProvider : MainAPI() {
             }
             candidates += Candidate(
                 url = source.masterUrl,
-                label = playerName.ifEmpty { "SetPlay" },
+                label = playerName.ifEmpty { "SetPlay" } + if (partKey.isEmpty()) "" else " $partKey",
                 referer = playerUrl,
                 quality = readQuality(source.masterUrl, playerUrl),
             )

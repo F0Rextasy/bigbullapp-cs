@@ -49,7 +49,7 @@ import org.jsoup.nodes.Element
  * Her iki CDN de isteklerde oynatıcı sayfasını `Referer` olarak şart koşar.
  */
 class DiziPalProvider : MainAPI() {
-    override var mainUrl = "https://dizipal1592.com"
+    override var mainUrl = "https://dizipal1593.com"
     override var name = "DiziPal"
     override var lang = "tr"
     override val hasMainPage = true
@@ -344,7 +344,11 @@ class DiziPalProvider : MainAPI() {
             ?: return false
 
         config.optJSONArray("subtitles").objects().forEach { track ->
-            val url = track.optString("url").takeIf { it.startsWith("http") } ?: return@forEach
+            // Yeni oynatıcı altyazıyı `tok` ile verir (`nsub.php?v=`); eski yük `url` taşır.
+            val url = track.optString("url").takeIf { it.startsWith("http") }
+                ?: track.optString("tok").takeIf { it.isNotEmpty() }
+                    ?.let { "${ORIGIN.find(playerUrl)?.value.orEmpty()}/nsub.php?v=$it" }
+                ?: return@forEach
             val label = track.optString("label").trim()
                 .ifEmpty { track.optString("lang").trim() }
                 .ifEmpty { "Altyazı" }
@@ -495,8 +499,9 @@ class DiziPalProvider : MainAPI() {
             "Yeni Diziler", "Yeni Filmler", "Trendler", "Keşfet",
             "Netflix", "Amazon Prime", "Disney+",
         )
+        /** Oynatıcı CDN'i (Cloudflare) Chrome tarzı UA'lara TLS'ten bağımsız 403 verir; Firefox UA geçer. */
         private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0"
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
         private const val IMAGE_PROXY = "/i/s/"

@@ -157,7 +157,9 @@ class AnizmProvider : MainAPI() {
             val name = button.attr("title").trim().let { if (it == "-") "" else it }
             id to name
         }.distinctBy { it.first }
-        val perTranslator = translators.amap { (translatorId, translatorName) ->
+        // Ten translators answer ~140 mirrors; the site's own player sits in the first translator's
+        // first mirror, so two translators are enough for a first round.
+        val perTranslator = translators.take(MAX_TRANSLATORS).amap { (translatorId, translatorName) ->
             val payload = runCatching {
                 app.get(
                     "$mainUrl/bolum/$episodeId/cevirmen/$translatorId",
@@ -177,36 +179,41 @@ class AnizmProvider : MainAPI() {
         }
 
         // Every mirror costs one same-host /player probe plus an extractor pass; a 6-translator
-        // episode lists 54 of them (152s under QA's 2s-per-host gate). Take each translator's
-        // first mirror first, then round two, up to MAX_MIRRORS, and stop once MAX_LINKS answer.
+        // episode lists 54 of them (152s under QA's 2s-per-host gate). Probe one mirror rank per
+        // round (each translator's first mirror, then seconds) and stop as soon as a round answers.
         val sources = (0 until MAX_MIRRORS)
             .flatMap { rank -> perTranslator.mapNotNull { it.getOrNull(rank) } }
             .take(MAX_MIRRORS)
+        val rounds = sources.chunked(MAX_TRANSLATORS)
 
-        // Emit as soon as a mirror answers so one slow embed host cannot hold back the rest.
-        sources.amap { (label, videoId) ->
-            if (seenLinks.size >= MAX_LINKS) return@amap
-            val links = mutableListOf<ExtractorLink>()
-            val subs = mutableListOf<SubtitleFile>()
-            val playerUrl = "$mainUrl/player/$videoId"
-            val probe = runCatching {
-                app.get(playerUrl, referer = data, headers = uaHeaders, allowRedirects = false)
-            }.getOrNull()
-            // The app answers the 302 itself; the JVM QA runner ignores allowRedirects and lands
-            // on the embed, so the final response URL is the redirect target there.
-            val target = listOfNotNull(probe?.headers?.get("location"), probe?.url)
-                .firstOrNull { it.startsWith("http") && it != playerUrl }
-            if (target != null) {
-                runCatching {
-                    when {
-                        target.contains("anizmplayer.com") -> loadAnizmPlayer(target, data, label) { links.add(it) }
-                        target.contains("puffytr") -> loadPuffytr(target, label) { links.add(it) }
-                        else -> loadExtractor(target, data, { subs.add(it) }, { links.add(it) })
+        for (batch in rounds) {
+            if (seenLinks.isNotEmpty()) break
+            // Emit as soon as a mirror answers so one slow embed host cannot hold back the rest.
+            batch.amap { (label, videoId) ->
+                if (seenLinks.size >= MAX_LINKS) return@amap
+                val links = mutableListOf<ExtractorLink>()
+                val subs = mutableListOf<SubtitleFile>()
+                val playerUrl = "$mainUrl/player/$videoId"
+                val probe = runCatching {
+                    app.get(playerUrl, referer = data, headers = uaHeaders, allowRedirects = false)
+                }.getOrNull()
+                // The app answers the 302 itself; the JVM QA runner ignores allowRedirects and
+                // lands on the embed, so the final response URL is the redirect target there.
+                val target = listOfNotNull(probe?.headers?.get("location"), probe?.url)
+                    .firstOrNull { it.startsWith("http") && it != playerUrl }
+                if (target != null) {
+                    runCatching {
+                        when {
+                            target.contains("anizmplayer.com") ->
+                                loadAnizmPlayer(target, data, label) { links.add(it) }
+                            target.contains("puffytr") -> loadPuffytr(target, label) { links.add(it) }
+                            else -> loadExtractor(target, data, { subs.add(it) }, { links.add(it) })
+                        }
                     }
                 }
+                links.forEach { link -> if (seenLinks.add(link.url)) emit(link) }
+                subs.forEach(emitSub)
             }
-            links.forEach { link -> if (seenLinks.add(link.url)) emit(link) }
-            subs.forEach(emitSub)
         }
 
         if (seenLinks.isEmpty()) throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
@@ -271,8 +278,9 @@ class AnizmProvider : MainAPI() {
         val ROWS = listOf("Katalog", "Aksiyon", "Macera", "Komedi", "Dram", "Romantizm",
             "Bilim Kurgu", "Doğaüstü", "Fantastik", "Gizem", "Okul", "Shounen", "Spor")
 
-        private const val MAX_LINKS = 4
-        private const val MAX_MIRRORS = 10
+        private const val MAX_LINKS = 3
+        private const val MAX_MIRRORS = 6
+        private const val MAX_TRANSLATORS = 2
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
         private const val REPORT_HINT =

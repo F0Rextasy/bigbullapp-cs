@@ -98,9 +98,10 @@ class CizgimaxProvider : MainAPI() {
     override suspend fun search(query: String, page: Int): SearchResponseList? {
         val doc = app.get("$mainUrl/ara/?q=${URLEncoder.encode(query, "UTF-8")}&page=$page", headers = uaHeaders).document
         val items = doc.select("div.film-item").mapNotNull { seriesOf(it) }.distinctBy { it.url }
-        // An active "Sonraki" is an <a>; the last page renders it as a disabled <span>.
-        val hasNext = doc.selectFirst("div.listing-pager a.lp-btn:contains(Sonraki)") != null
-        return newSearchResponseList(items, hasNext)
+        // The pager has no "next" link: it lists every page in a <select>.
+        val lastPage = doc.select("div.listing-pager select.lp-jump-select option")
+            .mapNotNull { it.text().trim().toIntOrNull() }.maxOrNull() ?: page
+        return newSearchResponseList(items, hasNext = lastPage > page)
     }
 
     /** Header autocomplete: `/api/search/suggest/` returns five hits without a full page load. */
@@ -269,12 +270,13 @@ class CizgimaxProvider : MainAPI() {
                     }
 
                     src.isNotBlank() -> {
-                        val embed = if (src.startsWith("http")) {
-                            src
+                        // Our own /oynat/ page only signs a redirect; the host is in Location,
+                        // which ok.ru answers protocol-relative and the extractor match rejects.
+                        val embed = if (src.startsWith("http") || src.startsWith("//")) {
+                            absolute(src)
                         } else {
-                            // Our own /oynat/ page only signs a redirect; the host is in Location.
                             app.get(fixUrl(src), referer = data, allowRedirects = false, headers = uaHeaders)
-                                .headers["location"]
+                                .headers["location"]?.let { absolute(it) }
                         }
                         if (!embed.isNullOrBlank()) loadExtractor(embed, data, subtitleFilter, emit)
                     }
@@ -323,6 +325,13 @@ class CizgimaxProvider : MainAPI() {
         val clean = value.replace("\\", "")
         val padded = clean + "=".repeat((4 - clean.length % 4) % 4)
         return String(Base64.decode(padded, Base64.DEFAULT), Charsets.UTF_8)
+    }
+
+    /** Embeds are signed as absolute, protocol-relative or site-relative; core matches on absolute. */
+    private fun absolute(value: String): String = when {
+        value.startsWith("//") -> "https:$value"
+        value.startsWith("/") -> "$mainUrl$value"
+        else -> value
     }
 
     companion object {

@@ -204,12 +204,14 @@ class Dizikorea3Provider : MainAPI() {
         val doc = runCatching { app.get(data).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
         // The player iframes are lazy-loaded, so the real URL sits in data-src.
+        // playerdkorea's anti-leech CDN stalls ~10s before refusing a dead token, so it goes last.
         val embeds = doc.select("iframe[data-src], iframe[src]")
             .mapNotNull { iframe ->
                 fixUrlNull(iframe.attr("data-src").ifBlank { iframe.attr("src") }.trim())
             }
             .filter { it.startsWith("http") }
             .distinct()
+            .sortedBy { if (it.contains("playerdkorea") || it.contains("playerkorea")) 1 else 0 }
 
         var found = false
         embeds.forEach { embed ->
@@ -244,23 +246,21 @@ class Dizikorea3Provider : MainAPI() {
         }.getOrNull() ?: return false
         val body = runCatching { JSONObject(json) }.getOrNull() ?: return false
 
-        var found = false
-        for (key in listOf("securedLink", "videoSource")) {
-            val stream = body.optString(key)
-            if (!stream.startsWith("http")) continue
-            val live = runCatching {
-                app.get(stream, referer = "https://playerdkorea.xyz/").text.startsWith("#EXTM3U")
-            }.getOrDefault(false)
-            if (!live) continue
-            callback.invoke(
-                newExtractorLink(name, "playerDKorea", stream, ExtractorLinkType.M3U8) {
-                    this.referer = "https://playerdkorea.xyz/"
-                    this.quality = Qualities.Unknown.value
-                }
-            )
-            found = true
-        }
-        return found
+        // Both keys name the same playlist (`master.m3u8?md5=…` / `master.txt`), and the CDN
+        // stalls ~10s before rejecting a dead token, so probe it once.
+        val stream = body.optString("securedLink").ifBlank { body.optString("videoSource") }
+        if (!stream.startsWith("http")) return false
+        val live = runCatching {
+            app.get(stream, referer = "https://playerdkorea.xyz/").text.startsWith("#EXTM3U")
+        }.getOrDefault(false)
+        if (!live) return false
+        callback.invoke(
+            newExtractorLink(name, "playerDKorea", stream, ExtractorLinkType.M3U8) {
+                this.referer = "https://playerdkorea.xyz/"
+                this.quality = Qualities.Unknown.value
+            }
+        )
+        return true
     }
 
     companion object {

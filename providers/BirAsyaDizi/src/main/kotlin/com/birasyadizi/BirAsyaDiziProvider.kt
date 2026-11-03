@@ -32,14 +32,6 @@ import org.jsoup.nodes.Document
 private fun org.jsoup.nodes.Element.posterSrcLazy(): String? =
     attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
 
-private fun asciiFold(value: String): String = value
-    .replace('ı', 'i').replace('İ', 'I')
-    .replace('ş', 's').replace('Ş', 'S')
-    .replace('ğ', 'g').replace('Ğ', 'G')
-    .replace('ü', 'u').replace('Ü', 'U')
-    .replace('ö', 'o').replace('Ö', 'O')
-    .replace('ç', 'c').replace('Ç', 'C')
-
 private fun cleanTitle(raw: String?): String = (raw ?: "")
     .replace(Regex("""\s*\|.*$"""), "")
     .replace(Regex("""\s*[-–]\s*(?:HDFilm|Film|Dizi|Full).*$""", RegexOption.IGNORE_CASE), "")
@@ -97,12 +89,42 @@ class BirAsyaDiziProvider : MainAPI() {
             "&nbsp; Gizem", "&nbsp; Komedi", "&nbsp; Korku", "&nbsp; Macera", "&nbsp; Romantik")
     }
 
-    private val pathPrefixes = listOf("/", "/dizi/")
-
     override suspend fun search(query: String): List<SearchResponse> {
-        val q = if (false) asciiFold(query) else query
-        val url = "https://www.birasyadizi.cx/arama/{q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
-        return cards(app.get(url, headers = uaHeaders).document, q)
+        val rows = feedSearch(query)
+        if (rows.isNotEmpty()) return rows
+        val url = "$mainUrl/?s=" + java.net.URLEncoder.encode(query, "UTF-8")
+        return cards(app.get(url, headers = uaHeaders).document, query)
+    }
+
+    /**
+     * The site's search page is ~370 KB and answers in 10-60 s, while its RSS search is
+     * ~10 KB and every <item> already carries the episode title and link.
+     */
+    private fun feedItems(body: String): List<Pair<String, String>> =
+        Regex("""<item>([\s\S]*?)</item>""").findAll(body).mapNotNull { item ->
+            val block = item.groupValues[1]
+            val link = Regex("""<link>\s*([\s\S]*?)\s*</link>""").find(block)
+                ?.groupValues?.get(1)?.trim() ?: return@mapNotNull null
+            val title = Regex("""<title>\s*([\s\S]*?)\s*</title>""").find(block)
+                ?.groupValues?.get(1)?.replace("<![CDATA[", "")?.replace("]]>", "")?.trim()
+                .orEmpty()
+            link to title
+        }.toList()
+
+    private suspend fun feedSearch(query: String): List<SearchResponse> {
+        val rows = LinkedHashMap<String, SearchResponse>()
+        for (page in 1..2) {
+            val suffix = if (page > 1) "&paged=$page" else ""
+            val url = "$mainUrl/?s=" + java.net.URLEncoder.encode(query, "UTF-8") + suffix
+            val body = runCatching { app.get(url, headers = uaHeaders).text }.getOrNull() ?: break
+            if (!body.contains("<rss")) break // past the last feed page the site serves HTML
+            for ((link, title) in feedItems(body)) {
+                if (!link.contains("/dizi/")) continue
+                rows.getOrPut(link) { newTvSeriesSearchResponse(cleanTitle(title), link, TvType.TvSeries) }
+            }
+            if (rows.isNotEmpty()) break
+        }
+        return rows.values.toList()
     }
 
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
@@ -149,21 +171,25 @@ class BirAsyaDiziProvider : MainAPI() {
             doc.selectFirst("[itemprop=ratingValue]")?.attr("content")
                 ?: Regex(""""(?:imdbPuani|ratingValue|imdb)"\s*:\s*"?([0-9.]+)""").find(raw)?.groupValues?.get(1)
         )
-        val basePath = url.substringAfter(mainUrl).substringBefore('?').trimEnd('/')
-        val slug = basePath.trim('/').split('/').lastOrNull().orEmpty()
-        val slugBase = slug.removeSuffix("-izle").removeSuffix("-film-izle")
-        val episodes = doc.select("a[href]").mapNotNull { anchor ->
+        val slug = url.substringAfter(mainUrl).substringBefore('?').trim('/').substringAfterLast('/')
+        val stem = slug.replace(Regex("""-\d{4}.*$"""), "")   // series slugs carry year and country
+        val episodeAnchors = doc.select("ul.scroll-liste a[href*='/bolum/']").ifEmpty {
+            doc.select("a[href*='/bolum/']").filter { anchor ->
+                stem.isNotBlank() &&
+                    anchor.attr("href").substringBefore('?').trimEnd('/')
+                        .substringAfterLast('/').startsWith(stem)
+            }
+        }
+        val episodes = episodeAnchors.mapNotNull { anchor ->
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
             val path = href.substringAfter(mainUrl).substringBefore('?')
-            if (basePath.isNotBlank() && !path.startsWith(basePath) &&
-                !path.contains(slug) && !path.contains(slugBase)) return@mapNotNull null
-            if (!Regex("""(?:bolum|episode|sezon|season)""", RegexOption.IGNORE_CASE).containsMatchIn(path)) return@mapNotNull null
+            if (!path.contains("/bolum/")) return@mapNotNull null
             val number = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
                 .find(path)?.groupValues?.getOrNull(2)?.toIntOrNull()
                 ?: Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
                 ?: Regex("""(\d+)[-_]bolum""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
             newEpisode(href) {
-                this.name = anchor.text().trim().ifBlank { "Bölüm $number" }
+                this.name = anchor.text().trim().ifBlank { number?.let { n -> "Bölüm $n" } ?: "Bölüm" }
                 this.episode = number
             }
         }.distinctBy { it.data }.sortedBy { it.episode ?: 0 }
@@ -204,8 +230,6 @@ class BirAsyaDiziProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>("https://ok6-30.vkuser.net/?expires=1793428322824&srcIp=176.33.107.59&pr=10&srcAg=CHROME&ms=95.142.206.34&type=3&sig=Ul5eEi2JwH4&ct=0&urls=185.180.203.46%3B176.112.172.39&clientType=0&zs=65&id=21292777474783")
-        for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")

@@ -32,14 +32,6 @@ import org.jsoup.nodes.Document
 private fun org.jsoup.nodes.Element.posterSrcLazy(): String? =
     attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
 
-private fun asciiFold(value: String): String = value
-    .replace('ı', 'i').replace('İ', 'I')
-    .replace('ş', 's').replace('Ş', 'S')
-    .replace('ğ', 'g').replace('Ğ', 'G')
-    .replace('ü', 'u').replace('Ü', 'U')
-    .replace('ö', 'o').replace('Ö', 'O')
-    .replace('ç', 'c').replace('Ç', 'C')
-
 private fun cleanTitle(raw: String?): String = (raw ?: "")
     .replace(Regex("""\s*\|.*$"""), "")
     .replace(Regex("""\s*[-–]\s*(?:HDFilm|Film|Dizi|Full).*$""", RegexOption.IGNORE_CASE), "")
@@ -112,12 +104,9 @@ class AsyaLunaProvider : MainAPI() {
         val ROWS = listOf("Aile", "Aksiyon", "Askeri", "Asya'nın Yıldızları", "Bilim Kurgu", "Çin Dizileri", "Devam Eden Diziler", "Doğaüstü", "Dövüş Sanatları", "Dram", "Endonezya Dizileri", "Fantastik", "Filipinler Dizileri", "Final Yapmış Diziler", "Gençlik", "Gerilim", "Gizem", "Hong Kong", "Hukuk", "İş", "Japon dizileri", "Komedi", "Kore Dizileri", "Kore Tarihi Dizileri Türkçe altyazılı", "Korku", "LBGTQ+", "Macera", "Melodram", "Müzik", "Politik")
     }
 
-    private val pathPrefixes = listOf("/dizi/", "/haber/")
-
     override suspend fun search(query: String): List<SearchResponse> {
-        val q = if (false) asciiFold(query) else query
-        val url = "https://asyaluna.com/?s={q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
-        return cards(app.get(url, headers = uaHeaders).document, q)
+        val url = mainUrl + "/?s=" + java.net.URLEncoder.encode(query, "UTF-8")
+        return cards(app.get(url, headers = uaHeaders).document, query)
     }
 
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
@@ -219,8 +208,6 @@ class AsyaLunaProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>("https://ok6-29.vkuser.net/?expires=1793448109242&srcIp=176.33.107.59&pr=10&srcAg=CHROME&ms=95.142.206.33&type=3&sig=1z3fQmeNDqI&ct=0&urls=176.112.172.39%3B185.180.203.46&clientType=0&zs=65&id=21243771685599")
-        for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")

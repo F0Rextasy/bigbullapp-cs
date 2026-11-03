@@ -1,4 +1,4 @@
-version = 3
+version = 4
 
 cloudstream {
     description = "Selcukflix — Türkçe dublaj & altyazılı film ve dizi arşivi (selcukflix.app)"
