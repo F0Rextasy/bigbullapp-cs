@@ -11,6 +11,7 @@ sayı arttığında güncelleme sunar.
 - **Nuvio CizgiSite**: VK oynatıcısı yeniden çalışıyor; çizgi film bölümleri açılıyor.
 - **Nuvio MinikaGO**: çizgi film arama ve bölüm oynatma düzeltildi.
 - **Nuvio MinikaCocuk**: etkinleştirildi; çizgi film bölümleri izlenebiliyor.
+- **Nuvio ÇizgiMax**: çizgi film bölümleri ve Dzen/kaynak akışları düzeltildi.
 - **Nuvio DiziLife**: yeni alan adı `dizi83.life` ile diziler yeniden açılıyor.
 - **Nuvio Inat 4K 03 Web**: film çözümlemesi belirgin şekilde hızlandı.
 

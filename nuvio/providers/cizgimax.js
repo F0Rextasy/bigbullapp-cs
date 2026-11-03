@@ -1,13 +1,21 @@
 // @provider {"id":"cizgimax","name":"ÇizgiMax","types":["tv"],"domain":"cizgimax.online","formats":["mp4","m3u8"],"sample":"tt12343534:tv:1:1","description":"ÇizgiMax anime arşivi; bölüm başına Dzen (MP4) ve dublaj kaynakları."}
 /**
  * cizgimax — Nuvio provider (bb-nuvio).
- * Flow: Cinemeta title -> /ara/ -> series -> episode -> base64 servers blob -> tau-video renditions.
+ * Flow: Cinemeta title -> /api/search/suggest/ -> series -> episode -> base64 servers blob.
+ * A suggestion miss retries the title Wikidata holds for that IMDb id (Cinemeta ships the
+ * English one) before giving up.
+ * Sources: tau-video renditions (resolveUrl), the site's signed /api/stream relay
+ * (streamUrl), and third-party embeds behind /oynat/ (src), whose direct media URL is
+ * read out of the embed page. ytId rows are skipped: YouTube needs a signature
+ * extractor the sandbox cannot host.
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
 var BASE = "https://cizgimax.online";
+var SIBNET = "https://video.sibnet.ru";
 
-function text(url, opts) {
+/* One fetch path; embed hops need the final URL as their own referer. */
+function pageOf(url, opts) {
   var o = opts || {};
   var headers = { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" };
   if (o.referer) headers.Referer = o.referer;
@@ -15,8 +23,16 @@ function text(url, opts) {
   return fetch(url, { method: o.method || "GET", headers: headers, body: o.body })
     .then(function (r) {
       if (!r.ok) throw new Error("HTTP " + r.status + " " + url);
-      return r.text();
+      return r.text().then(function (html) {
+        return { html: html, url: r.url || url };
+      });
     });
+}
+
+function text(url, opts) {
+  return pageOf(url, opts).then(function (page) {
+    return page.html;
+  });
 }
 
 function first(pattern, body) {
@@ -34,14 +50,98 @@ function abs(base, href) {
 
 function titleOf(id, mediaType) {
   var kind = mediaType === "tv" ? "series" : "movie";
+  var imdb = /^tt\d+$/.test(String(id)) ? String(id) : "";
   return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
     .then(function (body) {
       var meta = JSON.parse(body).meta || {};
-      return String(meta.name || "").trim();
+      return { name: String(meta.name || "").trim(), imdb: String(meta.imdb_id || imdb) };
     })
     .catch(function () {
+      return { name: "", imdb: imdb };
+    });
+}
+
+/* Cinemeta names are English: "Miraculous: Tales of Ladybug & Cat Noir" only finds
+   the site's card once the subtitle is dropped. */
+function variants(title) {
+  var name = String(title || "").trim();
+  var out = [];
+  if (name) out.push(name);
+  var head = name.split(/\s*[:\u2013\u2014]\s*|\s+-\s+/)[0].trim();
+  if (head && head !== name) out.push(head);
+  return out;
+}
+
+/* Turkish + ASCII fold so "Kral Şakir" and "kral sakir" compare equal. */
+function norm(value) {
+  return String(value || "").toLowerCase()
+    .replace(/[ıİ]/g, "i").replace(/[şŞ]/g, "s").replace(/[ğĞ]/g, "g")
+    .replace(/[üÜ]/g, "u").replace(/[öÖ]/g, "o").replace(/[çÇ]/g, "c")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/^\s+|\s+$/g, "");
+}
+
+/* The card's URL slug is the English title even when the site renames the display name
+   (Miraculous -> "Mucize Uğur Böceği ile Kara Kedi"), so both form the match key. */
+function searchSite(query) {
+  if (!query) return Promise.resolve(null);
+  return text(BASE + "/api/search/suggest/?q=" + encodeURIComponent(query))
+    .then(function (body) {
+      var animes = (JSON.parse(body) || {}).animes || [];
+      var want = norm(query);
+      var firstUrl = null, exact = null, prefix = null;
+      for (var i = 0; i < animes.length; i++) {
+        var url = animes[i] && animes[i].url;
+        if (!url) continue;
+        if (!firstUrl) firstUrl = url;
+        var keys = [norm(animes[i].name), norm(url.replace(/^.*\/diziler\//, "").replace(/-izle\/?$/, ""))];
+        if (keys.indexOf(want) >= 0) exact = exact || url;
+        else if (!prefix && keys.some(function (k) { return k && k.indexOf(want) === 0; })) prefix = url;
+      }
+      /* A lone suggestion is the site's own answer; a list is only picked by name. */
+      return exact || prefix || (animes.length === 1 ? firstUrl : null);
+    });
+}
+
+/* Wikidata links the IMDb id to the title the site indexes (tr label first). */
+function nativeTitle(imdb) {
+  if (!/^tt\d+$/.test(String(imdb || ""))) return Promise.resolve("");
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return text(api + "&action=query&list=search&srlimit=1&srsearch=" +
+      encodeURIComponent("haswbstatement:P345=" + imdb))
+    .then(function (body) {
+      var hits = (JSON.parse(body).query || {}).search || [];
+      if (!hits.length) return "";
+      return text(api + "&action=wbgetentities&props=labels&languages=tr|en&ids=" + hits[0].title);
+    })
+    .then(function (body) {
+      if (!body) return "";
+      var entities = JSON.parse(body).entities || {};
+      for (var id in entities) {
+        var labels = entities[id].labels || {};
+        var label = (labels.tr || labels.en || {}).value;
+        if (label) return String(label).replace(/\s*\([^)]*\)\s*$/, "").trim();
+      }
       return "";
     });
+}
+
+/* First non-empty answer wins; a dead candidate must not stop the next one. */
+function firstHit(list, fn) {
+  function step(i) {
+    if (i >= list.length) return Promise.resolve(null);
+    return Promise.resolve()
+      .then(function () {
+        return fn(list[i]);
+      })
+      .catch(function () {
+        return null;
+      })
+      .then(function (value) {
+        return value || step(i + 1);
+      });
+  }
+  return step(0);
 }
 
 /* atob is absent in the Nuvio sandbox: base64 -> bytes -> UTF-8 by hand. */
@@ -88,8 +188,8 @@ function quality(label) {
   return m ? m[1] + "p" : "auto";
 }
 
-function row(label, url, headers) {
-  var hls = /\.m3u8/i.test(url);
+function row(label, url, headers, hls) {
+  if (hls === undefined) hls = /\.m3u8/i.test(url);
   return {
     name: "cizgimax",
     title: "cizgimax - " + label + " [" + (hls ? "HLS" : "MP4") + "]",
@@ -140,6 +240,41 @@ function dzen(server, episodeUrl) {
     });
 }
 
+/* Embed pages carry the direct media in one of three shapes: sibnet's player.src
+   call, a jwplayer `sources:[{file:…}]` block, or ok.ru's "videos" array. */
+function media(embedUrl, episodeUrl, label) {
+  return pageOf(embedUrl, { referer: episodeUrl }).then(function (page) {
+    var rows = [];
+    var seen = {};
+
+    function add(url, referer, name) {
+      if (!url || seen[url] || !/^https?:/i.test(url)) return;
+      seen[url] = 1;
+      rows.push(row(String(name || "").trim() || label, url, { Referer: referer }, /\.m3u8/i.test(url)));
+    }
+
+    var sib = first(/player\.src\(\[\{src:\s*"([^"]+)"/, page.html);
+    if (sib) add(/^https?:/i.test(sib) ? sib : SIBNET + sib, page.url, "");
+
+    var files = /(?:file|src)\s*:\s*['"]([^'"]*\.(?:m3u8|mp4)[^'"]*)['"]/g;
+    var m;
+    while ((m = files.exec(page.html)) !== null) add(m[1], page.url, "");
+
+    var vids = first(/"videos"\s*:\s*(\[[^\]]*\])/, page.html);
+    if (vids) {
+      try {
+        JSON.parse(vids).forEach(function (v) {
+          var url = String((v && v.url) || "");
+          add(url.indexOf("//") === 0 ? "https:" + url : url, "https://ok.ru/", label + " " + ((v && v.name) || ""));
+        });
+      } catch (e) {
+        /* an unreadable videos array just yields no rows */
+      }
+    }
+    return rows;
+  });
+}
+
 function serverRows(server, episodeUrl) {
   var label = server.label || server.type || "Kaynak";
   if (server.resolveUrl) return dzen(server, episodeUrl);
@@ -147,9 +282,17 @@ function serverRows(server, episodeUrl) {
   if (server.streamUrl) {
     var url = abs(episodeUrl, server.streamUrl);
     if (!url) return Promise.resolve([]);
-    return Promise.resolve([row(label, url, { Referer: episodeUrl })]);
+    /* Everything but mailru is the site's HLS relay; mailru (and mp4=1) are MP4. */
+    var mp4 = server.type === "mailru" || /mp4=1/.test(server.streamUrl);
+    return Promise.resolve([row(label, url, { Referer: episodeUrl }, !mp4)]);
   }
-  /* src rows leave the site for third-party embeds (sibnet, vidmoly, ...); no direct media. */
+  /* src rows leave the site for third-party embeds (sibnet, vidmoly, ok.ru, ...). */
+  if (server.src) {
+    var embed = abs(episodeUrl, server.src);
+    return embed ? media(embed, episodeUrl, label) : Promise.resolve([]);
+  }
+  /* ytId rows would need YouTube signature extraction; emit nothing rather than a
+     watch URL no player here can open. */
   return Promise.resolve([]);
 }
 
@@ -160,35 +303,38 @@ function getStreams(tmdbId, mediaType, season, episode) {
   var episodeUrl = null;
 
   return titleOf(tmdbId, mediaType)
-    .then(function (title) {
-      if (!title) return null;
-      return text(BASE + "/ara/?q=" + encodeURIComponent(title) + "&page=1");
+    .then(function (meta) {
+      return firstHit(variants(meta.name), searchSite).then(function (href) {
+        if (href || !meta.imdb) return href;
+        return nativeTitle(meta.imdb).then(function (title) {
+          return firstHit(variants(title), searchSite);
+        });
+      });
     })
-    .then(function (search) {
-      if (!search) return null;
-      var href =
-        first(/<a href="([^"]*\/diziler\/[^"]*)"[^>]*class="[^"]*film-name/, search) ||
-        first(/<a [^>]*class="[^"]*film-name[^"]*"[^>]*href="([^"]+)"/, search) ||
-        first(/<a href="([^"]*\/diziler\/[^"]*)"/, search);
+    .then(function (href) {
       if (!href) return null;
       seriesUrl = abs(BASE, href);
-      return text(seriesUrl);
+      return seriesUrl ? text(seriesUrl) : null;
     })
     .then(function (detail) {
-      if (!detail) return [];
+      if (!detail) return null;
       var links = [];
       var re = /href="([^"]*-sezon-\d+-bolum-izle\/)"/g;
       var m;
       while ((m = re.exec(detail)) !== null) links.push(m[1]);
-      if (!links.length) return [];
       var exact = "-" + want + "-sezon-" + wantEp + "-bolum-izle/";
+      var pick = null;
       for (var i = 0; i < links.length; i++) {
-        if (links[i].indexOf(exact) !== -1) return abs(seriesUrl, links[i]);
+        if (links[i].indexOf(exact) !== -1) {
+          pick = links[i];
+          break;
+        }
       }
-      return abs(seriesUrl, links[0]);
+      /* A different season/episode is a miss, not a reason to play a neighbour. */
+      return pick ? abs(seriesUrl, pick) : null;
     })
     .then(function (target) {
-      if (!target) return [];
+      if (!target) return null;
       episodeUrl = target;
       return text(episodeUrl);
     })

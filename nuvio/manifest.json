@@ -297,7 +297,7 @@
       "id": "cizgimax",
       "name": "ÇizgiMax",
       "description": "ÇizgiMax anime arşivi; bölüm başına Dzen (MP4) ve dublaj kaynakları.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -690,7 +690,7 @@
       "id": "dizilla",
       "name": "Dizilla",
       "description": "Dizilla yabanci dizi arsivi (HLS + Turkce altyazi).",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -700,7 +700,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizilla.now&sz=128",
+      "logo": "https://www.google.com/s2/favicons?domain=dizilla.la&sz=128",
       "contentLanguage": [
         "tr"
       ]
