@@ -149,3 +149,50 @@ function getStreams(tmdbId, mediaType, season, episode) {
 }
 
 module.exports = { getStreams };
+
+
+/* NuvioMobile always calls getStreams with args.tmdbId (JsBindings.kt); the
+   value is a numeric TMDB id after TmdbService.ensureTmdbId. Resolve it to
+   IMDb so the existing Cinemeta/title flow keeps working. */
+var __origGetStreams = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  var raw = String(id || "");
+  if (!/^\d+$/.test(raw)) return __origGetStreams(raw, mediaType, season, episode);
+  var tv = mediaType !== "movie";
+  var headers = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
+  var key = typeof TMDB_API_KEY !== "undefined" ? TMDB_API_KEY : "";
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  var prop = tv ? "P4983" : "P4947";
+  function fromTmdb() {
+    if (!key) return Promise.resolve("");
+    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "/external_ids?api_key=" + encodeURIComponent(key), { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) { return String((json && json.imdb_id) || ""); })
+      .catch(function () { return ""; });
+  }
+  function fromWikidata() {
+    return fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + prop + "=" + raw), { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        var hits = (json && json.query && json.query.search) || [];
+        if (!hits.length) return "";
+        return fetch(api + "&action=wbgetentities&props=claims&ids=" + hits[0].title, { headers: headers });
+      })
+      .then(function (r) { return r && r.ok ? r.json() : null; })
+      .then(function (json) {
+        var entities = (json && json.entities) || {};
+        for (var entity in entities) {
+          var rows = ((entities[entity] || {}).claims || {}).P345 || [];
+          for (var i = 0; i < rows.length; i++) {
+            var value = rows[i] && rows[i].mainsnak && rows[i].mainsnak.datavalue && rows[i].mainsnak.datavalue.value;
+            if (/^tt\d+$/.test(String(value || ""))) return value;
+          }
+        }
+        return "";
+      })
+      .catch(function () { return ""; });
+  }
+  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
+    return __origGetStreams(imdb || raw, mediaType, season, episode);
+  }).catch(function () { return []; });
+};

@@ -812,6 +812,39 @@ function cinemetaTitle(id, mediaType) {
   });
 }
 
+/* Nuvio's home rows hand over a numeric TMDB id, which Cinemeta cannot resolve;
+   Wikidata's SPARQL endpoint maps it to the IMDb id and the label in one request. */
+function numericTitle(id, mediaType) {
+  if (!/^\d+$/.test(String(id || ""))) return Promise.resolve("");
+  var property = mediaType === "movie" ? "P4947" : "P4983";
+  var query = 'SELECT ?imdb ?labelTr ?labelEn WHERE { ?item wdt:' + property + ' "' + id + '" .' +
+    " OPTIONAL { ?item wdt:P345 ?imdb }" +
+    ' OPTIONAL { ?item rdfs:label ?labelTr FILTER(lang(?labelTr) = "tr") }' +
+    ' OPTIONAL { ?item rdfs:label ?labelEn FILTER(lang(?labelEn) = "en") } } LIMIT 1';
+  // Wikimedia rejects browser user agents on its APIs; a descriptive one passes.
+  return fetch("https://query.wikidata.org/sparql?format=json&query=" + encodeURIComponent(query), {
+    headers: { "user-agent": "bb-nuvio/1.0 (https://github.com/F0Rextasy/bigbullapp-cs)", accept: "application/json" }
+  }).then(function (response) {
+    return response.ok ? response.json() : null;
+  }).then(function (payload) {
+    var bindings = payload && payload.results && payload.results.bindings;
+    var row = bindings && bindings[0];
+    if (!row) return "";
+    var imdb = row.imdb ? String(row.imdb.value) : "";
+    return (imdb ? cinemetaTitle(imdb, mediaType) : Promise.resolve("")).then(function (name) {
+      if (name) return name;
+      var label = row.labelTr || row.labelEn;
+      return label ? cleanName(String(label.value)) : "";
+    });
+  }).catch(function () {
+    return "";
+  });
+}
+
+function mediaTitle(id, mediaType) {
+  return /^\d+$/.test(String(id || "")) ? numericTitle(id, mediaType) : cinemetaTitle(id, mediaType);
+}
+
 // ---------------------------------------------------------------- entry point
 
 function mediaHeaders(headers) {
@@ -841,8 +874,11 @@ function chain(items, worker) {
 function getStreams(tmdbId, mediaType, season, episode) {
   var wantedSeason = parseInt(season, 10) || 1;
   var wantedEpisode = parseInt(episode, 10) || 1;
-  return cinemetaTitle(tmdbId, mediaType).then(function (title) {
-    if (!title) return [];
+  return mediaTitle(tmdbId, mediaType).then(function (title) {
+    if (!title) {
+      console.log("[bb-nuvio][inatnetflix] baslik cozulemedi: " + tmdbId);
+      return [];
+    }
     return entries(CFG.url, CFG.host, CFG.sha, CFG.dataType).then(function (rows) {
       var hits = rankHits(rows, title);
       if (!hits.length) return [];
@@ -864,7 +900,8 @@ function getStreams(tmdbId, mediaType, season, episode) {
         });
       });
     });
-  }).catch(function () {
+  }).catch(function (error) {
+    console.log("[bb-nuvio][inatnetflix] " + (error && error.message ? error.message : error));
     return [];
   });
 }

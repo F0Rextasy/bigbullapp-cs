@@ -5,6 +5,23 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.7] - 2026-11-04
+
+### Eklendi
+- **Nuvio TMDB kimlikleri**: tüm sağlayıcılar Nuvio ana sayfasındaki sayısal TMDB kimliklerini IMDb'ye çeviriyor; kaynaklar bu kimliklerle de açılıyor.
+
+### Düzeltildi
+- **Anizm v8**: 15 saniyeyi aşan çevirmen/ayna taraması sınırlandırıldı.
+- **AsyaLuna v3**: süresi dolmuş gömülü ok.ru adresi kaldırıldı; arama tabanı mainUrl'den okunuyor.
+- **BirAsyaDizi v3**: 404 veren arama RSS ile değiştirildi; bölüm listesi düzeltildi.
+- **DDizimag**: Nuvio'da aynı adlı film yerine dizi seçiliyor.
+- **Dizikorea3 v6**: playerdkorea CDN'i tek kez yoklanıyor; 10 saniyelik gecikme kaldırıldı.
+- **DiziPal v5**: alan adı dizipal1593.com; oynatıcı UA engeli ve TMDB kimliği düzeltildi.
+- **FullHDFilmizlesene v4**: HLS master sesleri korunuyor; Türkçe/özgün ad eşleşmesi düzeltildi.
+- **HDFilmizle v5**: TMDB kimliği ve çok parçalı film oynatıcısı düzeltildi.
+- **Yabancidizi v6**: bölüm listesi ve TMDB kimliği düzeltildi.
+- **Nuvio Inat**: liste çözümü hızlandırıldı; engellenen ağlarda hata artık günlüğe yazılıyor.
+
 ## [1.6.6] - 2026-11-03
 
 ### Düzeltildi

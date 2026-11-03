@@ -722,7 +722,31 @@ function mediaHeaders(headers) {
   if (out.referer === "https://speedrestapi.com/") delete out.referer;
   return out;
 }
+/* Nuvio's own rows send a bare TMDB id; Wikidata maps it to a title this list indexes. */
+function numericTitle(id, mediaType) {
+  var prop = mediaType === "movie" ? "P4947" : "P4983";
+  var query = 'SELECT ?label ?lang WHERE { ?item wdt:' + prop + ' "' + id +
+    '" . ?item rdfs:label ?label . BIND(lang(?label) AS ?lang) FILTER(?lang IN ("tr","en")) } LIMIT 8';
+  return http("https://query.wikidata.org/bigdata/namespace/wdq/sparql?format=json&query=" +
+      encodeURIComponent(query), { headers: { accept: "application/sparql-results+json" } })
+    .then(function (r) {
+      var data = r.code === 200 ? parseJson(r.text) : null;
+      var rows = (data && data.results && data.results.bindings) || [];
+      var i, row, fallback = "";
+      for (i = 0; i < rows.length; i++) {
+        row = rows[i];
+        if (!row || !row.label || !row.label.value) continue;
+        if (!fallback) fallback = String(row.label.value).replace(/\s*\([^)]*\)\s*$/, "").trim();
+        if (row.lang && row.lang.value === "tr") {
+          return String(row.label.value).replace(/\s*\([^)]*\)\s*$/, "").trim();
+        }
+      }
+      return fallback;
+    })
+    .catch(function () { return ""; });
+}
 function titleOf(id, mediaType) {
+  if (/^\d+$/.test(String(id || ""))) return numericTitle(id, mediaType);
   var kind = mediaType === "tv" ? "series" : "movie";
   return http("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
     .then(function (r) {

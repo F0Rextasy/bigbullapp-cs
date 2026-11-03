@@ -722,9 +722,35 @@ function mediaHeaders(headers) {
   if (out.referer === "https://speedrestapi.com/") delete out.referer;
   return out;
 }
+/* Nuvio home rows send a numeric TMDB id; Wikidata links it to a title (tr label first). */
+function numericTitle(id, mediaType) {
+  var prop = mediaType === "movie" ? "P4947" : "P4983";
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return http(api + "&action=query&list=search&srlimit=1&srsearch=" +
+      encodeURIComponent("haswbstatement:" + prop + "=" + id))
+    .then(function (r) {
+      if (r.code !== 200) return "";
+      var hits = ((parseJson(r.text) || {}).query || {}).search || [];
+      if (!hits.length) return "";
+      return http(api + "&action=wbgetentities&props=labels&languages=tr|en&ids=" + hits[0].title)
+        .then(function (body) {
+          if (body.code !== 200) return "";
+          var entities = (parseJson(body.text) || {}).entities || {}, key, labels, label;
+          for (key in entities) {
+            labels = entities[key].labels || {};
+            label = (labels.tr || labels.en || {}).value;
+            if (label) return String(label).replace(/\s*\([^)]*\)\s*$/, "").trim();
+          }
+          return "";
+        });
+    })
+    .catch(function () { return ""; });
+}
 function titleOf(id, mediaType) {
-  var kind = mediaType === "tv" ? "series" : "movie";
-  return http("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
+  var key = String(id || "").trim();
+  if (/^\d+$/.test(key)) return numericTitle(key, mediaType);
+  var kind = mediaType === "movie" ? "movie" : "series";
+  return http("https://v3-cinemeta.strem.io/meta/" + kind + "/" + encodeURIComponent(key) + ".json")
     .then(function (r) {
       if (r.code !== 200) return "";
       var meta = parseJson(r.text);
@@ -762,7 +788,10 @@ function getStreams(tmdbId, mediaType, season, episode) {
   var wantEpisode = parseInt(episode, 10) || 1;
   return titleOf(tmdbId, mediaType)
     .then(function (title) {
-      if (!title) return null;
+      if (!title) {
+        console.log("[bb-nuvio][inatexxen] no title for " + tmdbId);
+        return null;
+      }
       return entries(CFG.url, CFG.dataType)
         .catch(function (e) {
           if (!CFG.fallbackUrl) throw e;

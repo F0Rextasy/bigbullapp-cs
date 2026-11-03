@@ -799,6 +799,39 @@ function rankHits(rows, title) {
   return out;
 }
 
+// Cinemeta only answers IMDb ids; Nuvio's home rows send numeric TMDB ids instead.
+function imdbOf(key, mediaType) {
+  if (/^tt\d+$/.test(key)) return Promise.resolve(key);
+  if (!/^\d+$/.test(key)) return Promise.resolve("");
+  var property = mediaType === "movie" ? "P4947" : "P4983";
+  var api = "https://www.wikidata.org/w/api.php?format=json&action=";
+  var headers = { "user-agent": INAT_UA, accept: "application/json" };
+  return fetch(api + "query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + property + "=" + key), {
+    headers: headers
+  }).then(function (response) {
+    return response.ok ? response.json() : null;
+  }).then(function (payload) {
+    var hits = payload && payload.query && payload.query.search;
+    if (!hits || !hits.length) return null;
+    return fetch(api + "wbgetentities&props=claims&ids=" + encodeURIComponent(hits[0].title), { headers: headers })
+      .then(function (response) { return response.ok ? response.json() : null; });
+  }).then(function (payload) {
+    var entities = (payload && payload.entities) || {}, entity;
+    for (entity in entities) {
+      if (!Object.prototype.hasOwnProperty.call(entities, entity)) continue;
+      var claims = (entities[entity] && entities[entity].claims) || {};
+      var rows = claims.P345 || [];
+      for (var i = 0; i < rows.length; i++) {
+        var value = rows[i] && rows[i].mainsnak && rows[i].mainsnak.datavalue;
+        if (value && typeof value.value === "string") return value.value;
+      }
+    }
+    return "";
+  }).catch(function () {
+    return "";
+  });
+}
+
 function cinemetaTitle(id, mediaType) {
   var kind = mediaType === "tv" ? "series" : "movie";
   return fetch("https://v3-cinemeta.strem.io/meta/" + kind + "/" + encodeURIComponent(id) + ".json", {
@@ -841,7 +874,12 @@ function chain(items, worker) {
 function getStreams(tmdbId, mediaType, season, episode) {
   var wantedSeason = parseInt(season, 10) || 1;
   var wantedEpisode = parseInt(episode, 10) || 1;
-  return cinemetaTitle(tmdbId, mediaType).then(function (title) {
+  // The manifest sample arrives as "tt35819970:tv:1:1"; the trailing fields restate the args.
+  var parts = String(tmdbId || "").split(":");
+  if (parts[1] === "movie" || parts[1] === "tv") mediaType = parts[1];
+  return imdbOf(parts[0], mediaType).then(function (imdb) {
+    return imdb ? cinemetaTitle(imdb, mediaType) : "";
+  }).then(function (title) {
     if (!title) return [];
     return entries(CFG.url, CFG.host, CFG.sha, CFG.dataType).then(function (rows) {
       var hits = rankHits(rows, title);

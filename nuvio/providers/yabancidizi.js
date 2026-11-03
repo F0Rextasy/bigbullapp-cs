@@ -51,11 +51,35 @@ function scoreOf(name, key) {
   return shared >= 8 ? 1 : 0;
 }
 
+/** Nuvio also passes numeric TMDB ids; Cinemeta only speaks IMDb, so Wikidata links the two. */
+function imdbOf(id, mediaType) {
+  if (!/^\d+$/.test(String(id || ""))) return Promise.resolve(id);
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return text(api + "&action=query&list=search&srlimit=1&srsearch=" +
+      encodeURIComponent("haswbstatement:" + (mediaType === "movie" ? "P4947" : "P4983") + "=" + id))
+    .then(function (body) {
+      var hits = (JSON.parse(body).query || {}).search || [];
+      if (!hits.length) return "";
+      return text(api + "&action=wbgetclaims&entity=" + hits[0].title + "&property=P345");
+    })
+    .then(function (body) {
+      var claims = body ? (JSON.parse(body).claims || {}).P345 || [] : [];
+      var value = claims.length && claims[0].mainsnak && claims[0].mainsnak.datavalue;
+      return value && value.value ? String(value.value) : "";
+    })
+    .catch(function () {
+      return "";
+    });
+}
+
 function titleOf(id, mediaType) {
   var kind = mediaType === "tv" ? "series" : "movie";
-  return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
+  return imdbOf(id, mediaType)
+    .then(function (imdb) {
+      return imdb ? text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + imdb + ".json") : "";
+    })
     .then(function (body) {
-      var meta = JSON.parse(body).meta || {};
+      var meta = body ? JSON.parse(body).meta || {} : {};
       return String(meta.name || "").trim();
     })
     .catch(function () {

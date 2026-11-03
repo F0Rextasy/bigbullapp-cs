@@ -722,7 +722,29 @@ function mediaHeaders(headers) {
   if (out.referer === "https://speedrestapi.com/") delete out.referer;
   return out;
 }
+/* Nuvio may hand over a numeric TMDB id; Cinemeta is IMDb-only, so Wikidata links the two. */
+var WIKI_HEADERS = { "user-agent": "bb-nuvio-inat4k01web/1.0 (https://github.com/F0Rextasy/bigbullapp-cs)", accept: "application/json" };
+function numericTitle(id, mediaType) {
+  var prop = mediaType === "tv" ? "P4983" : "P4947";
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return http(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + prop + "=" + id), { headers: WIKI_HEADERS })
+    .then(function (r) {
+      var search = r.code === 200 ? ((parseJson(r.text) || {}).query || {}).search || [] : [];
+      if (!search.length) return "";
+      return http(api + "&action=wbgetentities&props=labels&languages=tr|en&ids=" + search[0].title, { headers: WIKI_HEADERS }).then(function (e) {
+        var entities = e.code === 200 ? (parseJson(e.text) || {}).entities || {} : {};
+        for (var key in entities) {
+          var labels = entities[key].labels || {};
+          var label = (labels.tr || labels.en || {}).value;
+          if (label) return String(label).replace(/\s*\([^)]*\)\s*$/, "").trim();
+        }
+        return "";
+      });
+    })
+    .catch(function () { return ""; });
+}
 function titleOf(id, mediaType) {
+  if (/^\d+$/.test(String(id || ""))) return numericTitle(id, mediaType);
   var kind = mediaType === "tv" ? "series" : "movie";
   return http("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
     .then(function (r) {

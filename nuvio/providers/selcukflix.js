@@ -1,9 +1,10 @@
 // @provider {"id":"selcukflix","name":"SelcukFlix","types":["movie","tv"],"domain":"selcukflix.app","formats":["m3u8"],"sample":"tt0133093:movie:1:1","description":"SelcukFlix - Turkce dublaj/altyazili film ve diziler; AES secureData + pichive HLS master.","verified":false}
 /**
  * selcukflix — Nuvio provider (bb-nuvio).
- * Flow: Cinemeta title -> POST /api/bg/searchcontent (AES envelope) -> content page
- *       `#__NEXT_DATA__.pageProps.secureData` (same envelope) -> RelatedResults sources
- *       -> pichive iframe (NP_CONFIG master, or legacy openPlayer -> source2.php) -> HLS.
+ * Flow: numeric TMDB -> Wikidata -> IMDb; Cinemeta title -> POST /api/bg/searchcontent
+ *       (AES envelope) -> content page `#__NEXT_DATA__.pageProps.secureData` (same envelope)
+ *       -> RelatedResults sources -> pichive iframe (NP_CONFIG master, or legacy
+ *       openPlayer -> source2.php) -> HLS.
  * pichive.online answers 403 to Node's TLS fingerprint while curl from the same IP gets the
  * player, so the header is marked verified:false.
  */
@@ -12,6 +13,8 @@ var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, l
 var BASE = "https://selcukflix.app";
 var AES_KEY = "9bYMCNQiWsXIYFWYAu7EkdsSbmGBTyUI";
 var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+/** Wikidata rejects a browser UA; this resolver needs a descriptive one. */
+var WIKI_UA = "bb-nuvio-selcukflix/1.0 (+https://github.com/F0Rextasy/bigbullapp-cs)";
 
 function text(url, opts) {
   var o = opts || {};
@@ -184,6 +187,24 @@ function parse(sealed) {
 
 // ------------------------------------------------------------------ site
 
+/** Nuvio may hand a numeric TMDB id; Wikidata links it to the IMDb id Cinemeta speaks. */
+function imdbId(id, mediaType) {
+  var value = String(id || "");
+  if (!/^\d+$/.test(value)) return Promise.resolve(value);
+  var prop = mediaType === "movie" ? "P4947" : "P4983";
+  var query = "SELECT ?imdb WHERE { ?f wdt:" + prop + ' "' + value + '". ?f wdt:P345 ?imdb. } LIMIT 1';
+  return text("https://query.wikidata.org/sparql?format=json&query=" + encodeURIComponent(query), {
+    headers: { "User-Agent": WIKI_UA, Accept: "application/sparql-results+json" }
+  })
+    .then(function (body) {
+      var rows = (JSON.parse(body).results || {}).bindings || [];
+      return rows.length ? String(rows[0].imdb.value) : "";
+    })
+    .catch(function () {
+      return "";
+    });
+}
+
 function titleOf(id, mediaType) {
   var kind = mediaType === "tv" ? "series" : "movie";
   return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
@@ -342,7 +363,17 @@ function variants(master, playlist) {
   return list;
 }
 
-/** Master playlist -> one row per variant; keeps the master when it has no children. */
+/** Highest ladder rung, used when the master itself is the link we hand over. */
+function top(rows) {
+  var best = 0;
+  for (var i = 0; i < rows.length; i++) {
+    var n = parseInt(rows[i].quality, 10);
+    if (n > best) best = n;
+  }
+  return best ? best + "p" : "1080p";
+}
+
+/** Master -> variants; a master with audio renditions stays whole, a lone variant is silent. */
 function plain(master, referer) {
   var root = (origin(master) || "") + "/";
   return fetch(master, { headers: { "User-Agent": UA, Accept: "*/*", Referer: root } })
@@ -351,6 +382,7 @@ function plain(master, referer) {
     })
     .then(function (body) {
       var rows = body.indexOf("#EXTM3U") === 0 ? variants(master, body) : [];
+      if (body.indexOf("#EXT-X-MEDIA") !== -1) return [{ url: master, quality: top(rows) }];
       if (!rows.length) return [{ url: master, quality: "1080p" }];
       return rows;
     })
@@ -435,9 +467,12 @@ function getStreams(tmdbId, mediaType, season, episode) {
   var wantEp = parseInt(episode, 10) || 1;
   var pageUrl = null;
 
-  return titleOf(tmdbId, mediaType)
+  return imdbId(tmdbId, mediaType)
+    .then(function (id) {
+      return id ? titleOf(id, mediaType) : null;
+    })
     .then(function (meta) {
-      if (!meta.name) return null;
+      if (!meta || !meta.name) return null;
       return search(meta.name, mediaType === "tv").then(function (slug) {
         if (!slug) return null;
         if (mediaType !== "tv") return { path: slug, label: "" };

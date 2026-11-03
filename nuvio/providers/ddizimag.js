@@ -1,8 +1,8 @@
 // @provider {"id":"ddizimag","name":"DDizimag","types":["tv"],"domain":"ddizimag.com","formats":["m3u8"],"sample":"tt0903747:tv:1:1","description":"DDizimag yabancı dizi arşivi; HLS akışları pilavyer oynatıcısından gelir."}
 /**
  * ddizimag — Nuvio provider (bb-nuvio).
- * Flow: Cinemeta title -> /ara?q= -> /dizi/<slug>/sezon-S/bolum-E -> data-pv slug
- *       -> pilavyer s.php -> signed /api/stream.php playlist.
+ * Flow: TMDB id -> Wikidata -> IMDb -> Cinemeta title -> /ara?q= -> /dizi/<slug>/sezon-S/bolum-E
+ *       -> data-pv slug -> pilavyer s.php -> signed /api/stream.php playlist.
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
@@ -25,10 +25,41 @@ function first(pattern, body) {
   return m ? m[1] : null;
 }
 
+/* Nuvio sends TMDB ids from its own rows; Wikidata bridges them to the IMDb id Cinemeta keys on. */
+function imdbOf(id, mediaType) {
+  if (!/^\d+$/.test(String(id || ""))) return Promise.resolve(String(id || ""));
+  var prop = mediaType === "movie" ? "P4947" : "P4983";
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return text(api + "&action=query&list=search&srlimit=1&srsearch=" +
+      encodeURIComponent("haswbstatement:" + prop + "=" + id))
+    .then(function (body) {
+      var hits = (JSON.parse(body).query || {}).search || [];
+      if (!hits.length) return "";
+      return text(api + "&action=wbgetclaims&entity=" + hits[0].title + "&property=P345");
+    })
+    .then(function (body) {
+      if (!body) return "";
+      var claims = (JSON.parse(body).claims || {}).P345 || [];
+      for (var i = 0; i < claims.length; i++) {
+        var snak = claims[i].mainsnak || {};
+        if (snak.datavalue) return String(snak.datavalue.value || "");
+      }
+      return "";
+    })
+    .catch(function () {
+      return "";
+    });
+}
+
 function titleOf(id, mediaType) {
   var kind = mediaType === "tv" ? "series" : "movie";
-  return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
+  return imdbOf(id, mediaType)
+    .then(function (imdb) {
+      if (!imdb) return "";
+      return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + imdb + ".json");
+    })
     .then(function (body) {
+      if (!body) return "";
       var meta = JSON.parse(body).meta || {};
       return String(meta.name || "").trim();
     })
@@ -45,10 +76,11 @@ function fold(value) {
     .replace(/[^a-z0-9]+/g, " ");
 }
 
-/* Best card for the Cinemeta title: most shared words, else the first hit. */
+/* Best card for the Cinemeta title: exact slug, then series over film, then most shared words. */
 function pickCard(html, title) {
   var re = /<a href="https:\/\/ddizimag\.com\/(dizi|film)\/([^"?#]+)"/g;
-  var wanted = fold(title).split(" ").filter(function (w) {
+  var want = fold(title);
+  var wanted = want.split(" ").filter(function (w) {
     return w.length > 2;
   });
   var best = null;
@@ -57,7 +89,8 @@ function pickCard(html, title) {
   while ((m = re.exec(html)) !== null) {
     var path = "/" + m[1] + "/" + m[2];
     var hay = fold(m[2]);
-    var score = 0;
+    /* Same-name films outrank the series otherwise ("Stranger Things" exists as both). */
+    var score = hay === want ? 1000 : m[1] === "dizi" ? 100 : 0;
     for (var i = 0; i < wanted.length; i++) if (hay.indexOf(wanted[i]) !== -1) score++;
     if (score > bestScore) {
       bestScore = score;
@@ -95,7 +128,10 @@ function getStreams(tmdbId, mediaType, season, episode) {
 
   return titleOf(tmdbId, mediaType)
     .then(function (title) {
-      if (!title) return null;
+      if (!title) {
+        console.log("[bb-nuvio][ddizimag] başlık çözülemedi: " + tmdbId);
+        return null;
+      }
       wanted = title;
       return text(BASE + "/ara?q=" + encodeURIComponent(title));
     })

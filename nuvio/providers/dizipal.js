@@ -1,15 +1,17 @@
-// @provider {"id":"dizipal","name":"DiziPal","types":["movie","tv"],"domain":"dizipal1592.com","formats":["m3u8"],"sample":"tt0133093:movie:1:1","description":"DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.","verified":false}
+// @provider {"id":"dizipal","name":"DiziPal","types":["movie","tv"],"domain":"dizipal1593.com","formats":["m3u8"],"sample":"tt0133093:movie:1:1","description":"DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.","verified":false}
 /**
  * dizipal — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> POST /api/mj {action:searchContent} -> content/episode page
  *       -> `enc` fields (ciphertext/iv/salt/k) -> PBKDF2-HMAC-SHA512(999) + AES-256-CBC
  *       -> dplayer82 player -> NP_CONFIG master (or legacy openPlayer) -> HLS variants.
- * four.dplayer82.site answers 403 to Node's TLS fingerprint while curl from the same IP gets
- * the player, so the header is marked verified:false.
+ * The player CDN's Cloudflare rule 403s Chrome-style UAs (regardless of TLS) and undici's TLS
+ * fingerprint, so requests carry a Firefox UA; that passes both the CDN and the Wikidata lookup.
+ * The site moved from dizipal1592.com to dizipal1593.com; 1592 301s, and a redirected POST
+ * turns into a GET, which /api/mj rejects with 405.
  */
 
-var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
-var BASE = "https://dizipal1592.com";
+var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0";
+var BASE = "https://dizipal1593.com";
 var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 var K512HEX =
   "428a2f98d728ae22 7137449123ef65cd b5c0fbcfec4d3b2f e9b5dba58189dbbc 3956c25bf348b538 59f111f1b605d019 923f82a4af194f9b ab1c5ed5da6d8118 " +
@@ -338,10 +340,41 @@ function decryptCbc(key, iv, data) {
 
 // ------------------------------------------------------------------ site
 
+/* Nuvio sends TMDB ids from its own rows; Wikidata bridges them to the IMDb id Cinemeta keys on. */
+function imdbOf(id, mediaType) {
+  if (!/^\d+$/.test(String(id || ""))) return Promise.resolve(String(id || ""));
+  var prop = mediaType === "movie" ? "P4947" : "P4983";
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return text(api + "&action=query&list=search&srlimit=1&srsearch=" +
+      encodeURIComponent("haswbstatement:" + prop + "=" + id))
+    .then(function (body) {
+      var hits = (JSON.parse(body).query || {}).search || [];
+      if (!hits.length) return "";
+      return text(api + "&action=wbgetclaims&entity=" + hits[0].title + "&property=P345");
+    })
+    .then(function (body) {
+      if (!body) return "";
+      var claims = (JSON.parse(body).claims || {}).P345 || [];
+      for (var i = 0; i < claims.length; i++) {
+        var snak = claims[i].mainsnak || {};
+        if (snak.datavalue) return String(snak.datavalue.value || "");
+      }
+      return "";
+    })
+    .catch(function () {
+      return "";
+    });
+}
+
 function titleOf(id, mediaType) {
   var kind = mediaType === "tv" ? "series" : "movie";
-  return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
+  return imdbOf(id, mediaType)
+    .then(function (imdb) {
+      if (!imdb) return "";
+      return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + imdb + ".json");
+    })
     .then(function (body) {
+      if (!body) return "";
       var meta = JSON.parse(body).meta || {};
       return String(meta.name || "").trim();
     })

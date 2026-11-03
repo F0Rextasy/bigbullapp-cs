@@ -263,3 +263,55 @@ function getStreams(tmdbId, mediaType, season, episode) {
 }
 
 module.exports = { getStreams };
+
+/* NuvioMobile passes a numeric TMDB id (TmdbService.ensureTmdbId), not the
+   header sample's IMDb id. Resolve it before the Cinemeta-based flow. */
+var __tmdbOriginal = module.exports.getStreams;
+function __tmdbImdb(id, mediaType) {
+  var raw = String(id || "");
+  if (!/^\d+$/.test(raw)) return Promise.resolve(raw);
+  var tv = mediaType !== "movie";
+  var headers = { "User-Agent": UA, "Accept": "application/json" };
+  var key = typeof TMDB_API_KEY !== "undefined" ? TMDB_API_KEY : "";
+  var wikidata = "https://www.wikidata.org/w/api.php?format=json";
+  var prop = tv ? "P4983" : "P4947";
+
+  function fromTmdb() {
+    if (!key) return Promise.resolve("");
+    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "/external_ids?api_key=" + encodeURIComponent(key), { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) { return String((json && json.imdb_id) || ""); })
+      .catch(function () { return ""; });
+  }
+
+  function fromWikidata() {
+    return fetch(wikidata + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + prop + "=" + raw), { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        var hits = (json && json.query && json.query.search) || [];
+        if (!hits.length) return "";
+        return fetch(wikidata + "&action=wbgetentities&props=claims&ids=" + hits[0].title, { headers: headers });
+      })
+      .then(function (r) { return r && r.ok ? r.json() : null; })
+      .then(function (json) {
+        var entities = (json && json.entities) || {};
+        for (var entity in entities) {
+          var claims = (entities[entity] && entities[entity].claims) || {};
+          var rows = claims.P345 || [];
+          for (var i = 0; i < rows.length; i++) {
+            var value = rows[i] && rows[i].mainsnak && rows[i].mainsnak.datavalue && rows[i].mainsnak.datavalue.value;
+            if (/^tt\d+$/.test(String(value || ""))) return value;
+          }
+        }
+        return "";
+      })
+      .catch(function () { return ""; });
+  }
+
+  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); });
+}
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  return __tmdbImdb(id, mediaType).then(function (resolved) {
+    return __tmdbOriginal(resolved || id, mediaType, season, episode);
+  }).catch(function () { return []; });
+};

@@ -48,10 +48,10 @@ function abs(base, href) {
   return base.replace(/[^/]*$/, "") + href;
 }
 
-function titleOf(id, mediaType) {
+/* Cinemeta carries the English name; its imdb_id is the one the flow keeps. */
+function metaOf(imdb, mediaType) {
   var kind = mediaType === "tv" ? "series" : "movie";
-  var imdb = /^tt\d+$/.test(String(id)) ? String(id) : "";
-  return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
+  return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + imdb + ".json")
     .then(function (body) {
       var meta = JSON.parse(body).meta || {};
       return { name: String(meta.name || "").trim(), imdb: String(meta.imdb_id || imdb) };
@@ -59,6 +59,17 @@ function titleOf(id, mediaType) {
     .catch(function () {
       return { name: "", imdb: imdb };
     });
+}
+
+function titleOf(id, mediaType) {
+  var raw = String(id || "");
+  /* Nuvio's home rows send TMDB ids; numericMeta bridges them to a title + IMDb id. */
+  if (!/^tt\d+$/.test(raw)) {
+    return numericMeta(raw, mediaType).then(function (found) {
+      return { name: found.name || "", imdb: found.imdb || "" };
+    });
+  }
+  return metaOf(raw, mediaType);
 }
 
 /* Cinemeta names are English: "Miraculous: Tales of Ladybug & Cat Noir" only finds
@@ -97,6 +108,7 @@ function searchSite(query) {
         var keys = [norm(animes[i].name), norm(url.replace(/^.*\/diziler\//, "").replace(/-izle\/?$/, ""))];
         if (keys.indexOf(want) >= 0) exact = exact || url;
         else if (!prefix && keys.some(function (k) { return k && k.indexOf(want) === 0; })) prefix = url;
+        else if (!prefix && keys.some(function (k) { return k && k.split(/\s+/).indexOf(want) >= 0; })) prefix = url;
       }
       /* A lone suggestion is the site's own answer; a list is only picked by name. */
       return exact || prefix || (animes.length === 1 ? firstUrl : null);
@@ -123,6 +135,46 @@ function nativeTitle(imdb) {
         if (label) return String(label).replace(/\s*\([^)]*\)\s*$/, "").trim();
       }
       return "";
+    });
+}
+/* Nuvio's home rows send TMDB ids, not IMDb ids. Wikidata links the two: one entity
+   fetch yields the localized title the site indexes plus the IMDb id the native-title
+   fallback needs, so the numeric path costs the same two requests as before. */
+function numericMeta(id, mediaType) {
+  if (!/^\d+$/.test(String(id || ""))) return Promise.resolve({});
+  var prop = mediaType === "movie" ? "P4947" : "P4983";
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return text(api + "&action=query&list=search&srlimit=1&srsearch=" +
+      encodeURIComponent("haswbstatement:" + prop + "=" + id))
+    .then(function (body) {
+      var hits = (JSON.parse(body).query || {}).search || [];
+      if (!hits.length) return "";
+      return text(api + "&action=wbgetentities&props=claims%7Clabels&languages=tr%7Cen&ids=" + hits[0].title);
+    })
+    .then(function (body) {
+      if (!body) return {};
+      var entities = JSON.parse(body).entities || {};
+      for (var key in entities) {
+        var entity = entities[key] || {};
+        var label = ((entity.labels || {}).tr || (entity.labels || {}).en || {}).value;
+        var claims = (entity.claims || {}).P345 || [];
+        var imdb = "";
+        for (var i = 0; i < claims.length; i++) {
+          var value = ((claims[i] || {}).mainsnak || {}).datavalue;
+          if (value && /^tt\d+$/.test(String(value.value || ""))) {
+            imdb = String(value.value);
+            break;
+          }
+        }
+        return {
+          name: label ? String(label).replace(/\s*\([^)]*\)\s*$/, "").trim() : "",
+          imdb: imdb
+        };
+      }
+      return {};
+    })
+    .catch(function () {
+      return {};
     });
 }
 

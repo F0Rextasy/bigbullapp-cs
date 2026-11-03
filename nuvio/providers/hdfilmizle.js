@@ -67,8 +67,7 @@ function form(fields) {
   return out.join("&");
 }
 
-function titleOf(id, mediaType) {
-  var kind = mediaType === "tv" ? "series" : "movie";
+function cinemeta(id, kind) {
   return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
     .then(function (body) {
       var meta = JSON.parse(body).meta || {};
@@ -77,6 +76,47 @@ function titleOf(id, mediaType) {
     .catch(function () {
       return { name: "", year: "" };
     });
+}
+
+/** Nuvio rows carry TMDB ids too; Wikidata links them to the IMDb id Cinemeta wants. */
+function wikidata(id, mediaType) {
+  var prop = mediaType === "tv" ? "P4983" : "P4947";
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return text(api + "&action=query&list=search&srlimit=1&srsearch=" +
+      encodeURIComponent("haswbstatement:" + prop + "=" + id))
+    .then(function (body) {
+      var hits = (JSON.parse(body).query || {}).search || [];
+      if (!hits.length) return null;
+      return text(api + "&action=wbgetentities&props=claims|labels&languages=tr|en&ids=" + hits[0].title);
+    })
+    .then(function (body) {
+      if (!body) return null;
+      var entities = JSON.parse(body).entities || {};
+      for (var key in entities) {
+        var entity = entities[key] || {};
+        var claim = ((entity.claims || {}).P345 || [])[0];
+        var imdb = claim && claim.mainsnak && claim.mainsnak.datavalue && claim.mainsnak.datavalue.value;
+        var labels = entity.labels || {};
+        var label = ((labels.tr || labels.en || {}).value || "").trim();
+        return { imdb: /^tt\d+$/.test(imdb || "") ? imdb : "", label: label };
+      }
+      return null;
+    })
+    .catch(function () {
+      return null;
+    });
+}
+
+function metaOf(id, mediaType) {
+  var kind = mediaType === "tv" ? "series" : "movie";
+  if (/^tt\d+$/.test(id)) return cinemeta(id, kind);
+  return wikidata(id, mediaType).then(function (hit) {
+    if (!hit) return { name: "", year: "" };
+    if (!hit.imdb) return { name: hit.label, year: "" };
+    return cinemeta(hit.imdb, kind).then(function (meta) {
+      return meta.name ? meta : { name: hit.label, year: "" };
+    });
+  });
 }
 
 function norm(value) {
@@ -124,8 +164,11 @@ function cards(page, want, year) {
 function getStreams(tmdbId, mediaType, season, episode) {
   var title = "";
   var filmUrl = null;
+  // Harness shortcuts pass "imdbId:type:season:episode" as one argument.
+  var parts = String(tmdbId || "").split(":");
+  var type = parts.length > 1 ? parts[1] : mediaType;
 
-  return titleOf(tmdbId, mediaType)
+  return metaOf(parts[0], type)
     .then(function (meta) {
       title = meta.name;
       if (!title) return null;
@@ -143,7 +186,8 @@ function getStreams(tmdbId, mediaType, season, episode) {
       var nonce = first(/id="playex"[^>]*data-nonce="([^"]+)"/, page) || first(/"nonce"\s*:\s*"([^"]+)"/, page);
       if (!nonce) return [];
       var players = [];
-      var tags = all(/<a[^>]*class="[^"]*\boptions\b[^"]*"[^>]*>/g, page);
+      // Multi-part films (hrknTabs layout) label their sources "options2" with a part key.
+      var tags = all(/<a[^>]*class="[^"]*\boptions2?\b[^"]*"[^>]*>/g, page);
       for (var i = 0; i < tags.length; i++) {
         var tag = tags[i][0];
         var postId = first(/data-post-id="([^"]+)"/, tag);
@@ -237,7 +281,7 @@ function readPlayer(playerUrl, player) {
     return readQuality(master, playerUrl).then(function (quality) {
       return {
         name: "HDFilmizle",
-        title: "HDFilmizle - " + quality + " [" + (player.name || "SetPlay") + "]",
+        title: "HDFilmizle - " + quality + " [" + (player.name || "SetPlay") + (player.partKey ? " " + player.partKey : "") + "]",
         url: master,
         quality: quality,
         headers: { "User-Agent": MOBILE_UA, Accept: "*/*", Referer: playerUrl },

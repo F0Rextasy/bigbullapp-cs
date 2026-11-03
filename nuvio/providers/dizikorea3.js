@@ -37,7 +37,34 @@ function abs(base, href) {
   return base.replace(/[^/]*$/, "") + href;
 }
 
+/** Nuvio's home rows pass a numeric TMDB id; Wikidata maps it to the English title the site indexes. */
+function numericTitle(id, mediaType) {
+  if (!/^\d+$/.test(String(id || ""))) return Promise.resolve("");
+  var prop = mediaType === "movie" ? "P4947" : "P4983";
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return text(api + "&action=query&list=search&srlimit=1&srsearch=" +
+      encodeURIComponent("haswbstatement:" + prop + "=" + id))
+    .then(function (body) {
+      var hits = (JSON.parse(body).query || {}).search || [];
+      if (!hits.length) return "";
+      return text(api + "&action=wbgetentities&props=labels&languages=en|tr&ids=" + hits[0].title);
+    })
+    .then(function (body) {
+      var entities = JSON.parse(body).entities || {};
+      for (var key in entities) {
+        var labels = entities[key].labels || {};
+        var label = (labels.en || labels.tr || {}).value;
+        if (label) return String(label).replace(/\s*\([^)]*\)\s*$/, "").trim();
+      }
+      return "";
+    })
+    .catch(function () {
+      return "";
+    });
+}
+
 function titleOf(id, mediaType) {
+  if (/^\d+$/.test(String(id || ""))) return numericTitle(id, mediaType);
   var kind = mediaType === "tv" ? "series" : "movie";
   return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
     .then(function (body) {
@@ -114,11 +141,11 @@ function firePlayer(embed, found) {
   })
     .then(function (body) {
       var json = JSON.parse(body);
-      var keys = ["securedLink", "videoSource"];
-      for (var i = 0; i < keys.length; i++) {
-        var stream = String(json[keys[i]] || "");
-        if (!/^https?:/i.test(stream)) continue;
-        if (found.some(function (item) { return item.url === stream; })) continue;
+      // Both keys name the same playlist (`master.m3u8?md5=…` / `master.txt`), and the CDN
+      // stalls ~10s before rejecting a dead token, so probe it once.
+      var stream = String(json.securedLink || json.videoSource || "");
+      if (!/^https?:/i.test(stream)) return found;
+      if (!found.some(function (item) { return item.url === stream; })) {
         found.push({ url: stream, frame: embed, hls: true });
       }
       return found;

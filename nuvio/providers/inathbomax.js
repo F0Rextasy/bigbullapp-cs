@@ -864,9 +864,72 @@ function getStreams(tmdbId, mediaType, season, episode) {
         });
       });
     });
-  }).catch(function () {
+  }).catch(function (e) {
+    console.log("[bb-nuvio][inathbomax] " + (e && e.message));
     return [];
   });
 }
 
+// NuvioMobile always calls getStreams with a numeric TMDB id (JsBindings.kt); resolve it to
+// IMDb through Wikidata so the existing Cinemeta title lookup keeps working.
+var WIKIDATA_HEADERS = { "user-agent": "bb-nuvio/1.0 (provider id lookup)", accept: "application/json" };
+
+function imdbFromEntitySearch(id, property) {
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return fetch(api + "&action=query&list=search&srlimit=3&srsearch=" + encodeURIComponent("haswbstatement:" + property + "=" + id), { headers: WIKIDATA_HEADERS })
+    .then(function (response) { return response.ok ? response.json() : null; })
+    .then(function (payload) {
+      var hits = (payload && payload.query && payload.query.search) || [];
+      if (!hits.length) return "";
+      var ids = [];
+      for (var i = 0; i < hits.length; i++) ids.push(hits[i].title);
+      return fetch(api + "&action=wbgetentities&props=claims&ids=" + ids.join("|"), { headers: WIKIDATA_HEADERS })
+        .then(function (response) { return response.ok ? response.json() : null; })
+        .then(function (claims) {
+          var entities = (claims && claims.entities) || {};
+          for (var name in entities) {
+            var rows = (entities[name] && entities[name].claims && entities[name].claims.P345) || [];
+            for (var j = 0; j < rows.length; j++) {
+              var value = rows[j] && rows[j].mainsnak && rows[j].mainsnak.datavalue && rows[j].mainsnak.datavalue.value;
+              if (/^tt\d+$/.test(String(value || ""))) return String(value);
+            }
+          }
+          return "";
+        });
+    })
+    .catch(function () { return ""; });
+}
+
+// The Action API answers 429 under burst load; the query service is a separate quota.
+function imdbFromSparql(id, property) {
+  var query = "SELECT ?imdb WHERE { ?item wdt:" + property + " \"" + id + "\". ?item wdt:P345 ?imdb. } LIMIT 1";
+  return fetch("https://query.wikidata.org/sparql?format=json&query=" + encodeURIComponent(query), {
+    headers: { "user-agent": WIKIDATA_HEADERS["user-agent"], accept: "application/sparql-results+json" }
+  })
+    .then(function (response) { return response.ok ? response.json() : null; })
+    .then(function (payload) {
+      var rows = (payload && payload.results && payload.results.bindings) || [];
+      var value = rows[0] && rows[0].imdb ? String(rows[0].imdb.value || "") : "";
+      return /^tt\d+$/.test(value) ? value : "";
+    })
+    .catch(function () { return ""; });
+}
+
+function imdbFromTmdb(id, mediaType) {
+  var property = mediaType === "movie" ? "P4947" : "P4983";
+  return imdbFromEntitySearch(id, property).then(function (imdb) {
+    return imdb || imdbFromSparql(id, property);
+  });
+}
+
 module.exports = { getStreams };
+
+var streamsForId = module.exports.getStreams;
+
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  var raw = String(id === null || id === undefined ? "" : id).replace(/^\s+|\s+$/g, "");
+  if (!/^\d+$/.test(raw)) return streamsForId(raw, mediaType, season, episode);
+  return imdbFromTmdb(raw, mediaType).then(function (imdb) {
+    return imdb ? streamsForId(imdb, mediaType, season, episode) : [];
+  });
+};

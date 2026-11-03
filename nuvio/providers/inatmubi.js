@@ -659,12 +659,28 @@ function decodeResolver(value, configuration) {
   throw new Error("inat: resolver");
 }
 
+/** VK-hosted rows carry their id in a relative `...&video=<oid>_<id>` query, not in a URL. */
+function vkEmbed(url) {
+  var match = /(?:^|&)video=(-?\d+)_(\d+)/.exec(url);
+  return match ? "https://vk.com/video_ext.php?oid=" + match[1] + "&id=" + match[2] + "&hd=2" : "";
+}
+
 /** Returns {url, headers} for a playable stream, or null when only an embed page exists. */
 function resolve(entry) {
   if (!entry.url) return Promise.reject(new Error("inat: no url"));
-  if (!isHttp(entry.url)) return Promise.resolve(null);
   var handler = handlerOf(entry.type);
   var headers = extend(entry.headers, { "cache-control": "no-cache" });
+  if (!isHttp(entry.url)) {
+    var embed = vkEmbed(entry.url);
+    if (!embed) return Promise.resolve(null);
+    // The row's Regex1 spells the same `"hls": "..."` field, but its `.*?` prefix is outside
+    // this engine's literal-only pattern subset, so match the field here.
+    return request(embed, "GET", headers, null, false).then(function (body) {
+      var match = /"hls[^"]*"\s*:\s*"\s*([^"]+?)\s*"/.exec(body);
+      var target = match ? decodeCapturedUrl(match[1]) : null;
+      return target && isHttp(target) ? { url: target, headers: entry.headers } : null;
+    });
+  }
   if (handler === "web_mode" || handler === "link_mode") return Promise.resolve(null);
   if (handler.indexOf("SSprDrm") === 0) return Promise.resolve(null);
   if (TEKLI_HANDLERS[handler]) {
@@ -777,7 +793,7 @@ function rankHits(rows, title) {
   if (!wanted) return [];
   for (var i = 0; i < rows.length; i++) {
     var row = rows[i];
-    if (!row.url || !isHttp(row.url) || row.season || row.episode) continue;
+    if (!row.url || row.season || row.episode) continue;
     var name = fold(cleanName(row.name));
     if (!name) continue;
     var score;
@@ -799,16 +815,48 @@ function rankHits(rows, title) {
   return out;
 }
 
+function getJson(url) {
+  return fetch(url, { headers: { "user-agent": INAT_UA, accept: "application/json" } }).then(function (response) {
+    return response.ok ? response.json() : null;
+  }).catch(function () {
+    return null;
+  });
+}
+
 function cinemetaTitle(id, mediaType) {
   var kind = mediaType === "tv" ? "series" : "movie";
-  return fetch("https://v3-cinemeta.strem.io/meta/" + kind + "/" + encodeURIComponent(id) + ".json", {
-    headers: { "user-agent": INAT_UA, accept: "application/json" }
-  }).then(function (response) {
-    return response.ok ? response.json() : null;
-  }).then(function (payload) {
+  return getJson("https://v3-cinemeta.strem.io/meta/" + kind + "/" + encodeURIComponent(id) + ".json").then(function (payload) {
     return payload && payload.meta ? String(payload.meta.name || "").replace(/^\s+|\s+$/g, "") : "";
-  }).catch(function () {
-    return "";
+  });
+}
+
+// Nuvio's rows send a numeric TMDB id; Wikidata bridges it to the IMDb id Cinemeta speaks.
+var WIKIDATA = "https://www.wikidata.org/w/api.php?format=json";
+
+function wikidataItem(search) {
+  return getJson(WIKIDATA + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent(search)).then(function (payload) {
+    var hits = payload && payload.query && payload.query.search;
+    return hits && hits.length ? String(hits[0].title || "") : "";
+  });
+}
+
+function titleOf(id, mediaType) {
+  var raw = String(id || "");
+  if (/^tt\d+$/.test(raw)) return cinemetaTitle(raw, mediaType);
+  if (!/^\d+$/.test(raw)) return Promise.resolve("");
+  return wikidataItem("haswbstatement:" + (mediaType === "tv" ? "P4983" : "P4947") + "=" + raw).then(function (item) {
+    if (!item) return "";
+    return getJson(WIKIDATA + "&action=wbgetentities&props=claims&ids=" + item).then(function (payload) {
+      var entities = (payload && payload.entities) || {};
+      for (var key in entities) {
+        var claims = (entities[key].claims || {}).P345 || [];
+        for (var i = 0; i < claims.length; i++) {
+          var value = claims[i] && claims[i].mainsnak && claims[i].mainsnak.datavalue;
+          if (value && value.value) return cinemetaTitle(String(value.value), mediaType);
+        }
+      }
+      return "";
+    });
   });
 }
 
@@ -841,7 +889,7 @@ function chain(items, worker) {
 function getStreams(tmdbId, mediaType, season, episode) {
   var wantedSeason = parseInt(season, 10) || 1;
   var wantedEpisode = parseInt(episode, 10) || 1;
-  return cinemetaTitle(tmdbId, mediaType).then(function (title) {
+  return titleOf(tmdbId, mediaType).then(function (title) {
     if (!title) return [];
     return entries(CFG.url, CFG.host, CFG.sha, CFG.dataType).then(function (rows) {
       var hits = rankHits(rows, title);

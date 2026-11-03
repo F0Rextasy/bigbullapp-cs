@@ -1,4 +1,4 @@
-// @provider {"id":"asyaluna","name":"AsyaLuna","types":["tv"],"domain":"asyaluna.com","formats":["mp4","m3u8"],"sample":"tt39378892:tv:1:1","description":"AsyaLuna (asyaluna.com) Asya dizileri; bolum sayfasindaki ok.ru ve dogrudan akislar."}
+// @provider {"id":"asyaluna","name":"AsyaLuna","types":["tv"],"domain":"asyaluna.com","formats":["mp4","m3u8"],"sample":"tt39378892:tv:1:1","description":"AsyaLuna (asyaluna.com) Asya dizileri; bölüm sayfasındaki ok.ru ve doğrudan akışlar.","verified":false}
 /**
  * asyaluna — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /?s= -> series -> bolum (episode) -> page scan:
@@ -56,15 +56,55 @@ function norm(value) {
     .replace(/[^a-z0-9]+/g, " ");
 }
 
-function titleOf(id, mediaType) {
-  var kind = mediaType === "tv" ? "series" : "movie";
-  return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
+function cinemeta(imdb, mediaType) {
+  var kind = mediaType === "movie" ? "movie" : "series";
+  return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + imdb + ".json")
     .then(function (body) {
       return String((JSON.parse(body).meta || {}).name || "").trim();
     })
     .catch(function () {
       return "";
     });
+}
+
+/* Nuvio's home rows hand over a numeric TMDB id; Wikidata links it to IMDb (P4983 series / P4947 movie). */
+function tmdbMeta(id, mediaType) {
+  var prop = mediaType === "movie" ? "P4947" : "P4983";
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return text(api + "&action=query&list=search&srlimit=1&srsearch=" +
+      encodeURIComponent("haswbstatement:" + prop + "=" + id))
+    .then(function (body) {
+      var hits = (JSON.parse(body).query || {}).search || [];
+      if (!hits.length) return null;
+      return text(api + "&action=wbgetentities&props=claims|labels&languages=tr|en&ids=" + hits[0].title)
+        .then(function (raw) {
+          var entity = (JSON.parse(raw).entities || {})[hits[0].title] || {};
+          var claims = (entity.claims || {}).P345 || [];
+          for (var i = 0; i < claims.length; i++) {
+            var snak = claims[i].mainsnak || {};
+            if (snak.datavalue && snak.datavalue.value) return { imdb: String(snak.datavalue.value), title: "" };
+          }
+          var labels = entity.labels || {};
+          var label = (labels.tr || labels.en || {}).value || "";
+          return { imdb: "", title: String(label).replace(/\s*\([^)]*\)\s*$/, "").trim() };
+        });
+    })
+    .catch(function () {
+      return null;
+    });
+}
+
+function titleOf(id, mediaType) {
+  var key = String(id || "");
+  if (/^tt\d+$/.test(key)) return cinemeta(key, mediaType);
+  if (!/^\d+$/.test(key)) return Promise.resolve("");
+  return tmdbMeta(key, mediaType).then(function (found) {
+    if (!found) return "";
+    if (!found.imdb) return found.title;
+    return cinemeta(found.imdb, mediaType).then(function (name) {
+      return name || found.title;
+    });
+  });
 }
 
 /** Rank series links by how many title words appear in their slug; the site search order breaks ties. */

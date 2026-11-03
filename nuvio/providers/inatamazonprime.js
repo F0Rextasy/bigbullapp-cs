@@ -722,15 +722,37 @@ function mediaHeaders(headers) {
   if (out.referer === "https://speedrestapi.com/") delete out.referer;
   return out;
 }
-function titleOf(id, mediaType) {
-  var kind = mediaType === "tv" ? "series" : "movie";
-  return http("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
+// Nuvio's home rows send a numeric TMDB id, but the Inat catalogue is keyed by title and
+// Cinemeta only knows IMDb ids, so map TMDB -> IMDb through Wikidata.
+function imdbOf(id, mediaType) {
+  var raw = String(id || "").trim().replace(/^tmdb:/i, "");
+  if (/^tt\d+$/i.test(raw)) return Promise.resolve(raw);
+  if (!/^\d+$/.test(raw)) return Promise.resolve("");
+  var prop = mediaType === "movie" ? "P4947" : "P4983";
+  var sparql = "SELECT ?imdb WHERE{?item wdt:" + prop + ' "' + raw + '";wdt:P345 ?imdb.}LIMIT 1';
+  return http("https://query.wikidata.org/sparql?format=json&query=" + encodeURIComponent(sparql), {
+    headers: { accept: "application/sparql-results+json", "user-agent": "nuvio-inat/1.0" },
+  })
     .then(function (r) {
       if (r.code !== 200) return "";
-      var meta = parseJson(r.text);
-      return meta && meta.meta ? txt(meta.meta.name) : "";
+      var data = parseJson(r.text);
+      var rows = data && data.results && data.results.bindings;
+      return rows && rows.length ? txt(rows[0].imdb && rows[0].imdb.value) : "";
     })
     .catch(function () { return ""; });
+}
+function titleOf(id, mediaType) {
+  return imdbOf(id, mediaType).then(function (imdbId) {
+    if (!imdbId) return "";
+    var kind = mediaType === "tv" ? "series" : "movie";
+    return http("https://v3-cinemeta.strem.io/meta/" + kind + "/" + imdbId + ".json")
+      .then(function (r) {
+        if (r.code !== 200) return "";
+        var meta = parseJson(r.text);
+        return meta && meta.meta ? txt(meta.meta.name) : "";
+      })
+      .catch(function () { return ""; });
+  });
 }
 function resolveAll(targets) {
   var out = [];

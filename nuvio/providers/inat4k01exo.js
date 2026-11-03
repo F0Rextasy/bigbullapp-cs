@@ -722,13 +722,52 @@ function mediaHeaders(headers) {
   if (out.referer === "https://speedrestapi.com/") delete out.referer;
   return out;
 }
+/* Nuvio home rows hand a numeric TMDB id; Cinemeta only takes an IMDb id, so Wikidata bridges it.
+   Wikimedia throttles requests without a descriptive user-agent, so the call is tagged and retried once. */
+var WD_UA = "bb-nuvio/1.0 (https://github.com/F0Rextasy/bigbullapp-cs)";
+function wdJson(url, tries) {
+  return http(url, { headers: { "user-agent": WD_UA } }).then(function (r) {
+    var j = r.code === 200 ? parseJson(r.text) : null;
+    if (j || tries > 0) return j || {};
+    return wdJson(url, 1);
+  });
+}
+function imdbOf(id, mediaType) {
+  var raw = String(id || "");
+  if (!/^\d+$/.test(raw)) return Promise.resolve(raw);
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  var prop = mediaType === "movie" ? "P4947" : "P4983";
+  return wdJson(api + "&action=query&list=search&srlimit=1&srsearch=" +
+      encodeURIComponent("haswbstatement:" + prop + "=" + raw))
+    .then(function (j) {
+      var hits = ((j || {}).query || {}).search || [];
+      if (!hits.length) return {};
+      return wdJson(api + "&action=wbgetentities&props=claims&ids=" + hits[0].title);
+    })
+    .then(function (j) {
+      var ents = (j || {}).entities || {}, k, claims, i, v;
+      for (k in ents) {
+        claims = (ents[k].claims || {}).P345 || [];
+        for (i = 0; i < claims.length; i++) {
+          v = claims[i] && claims[i].mainsnak && claims[i].mainsnak.datavalue;
+          v = v && v.value;
+          if (typeof v === "string" && /^tt\d+$/.test(v)) return v;
+        }
+      }
+      return "";
+    });
+}
 function titleOf(id, mediaType) {
   var kind = mediaType === "tv" ? "series" : "movie";
-  return http("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
-    .then(function (r) {
-      if (r.code !== 200) return "";
-      var meta = parseJson(r.text);
-      return meta && meta.meta ? txt(meta.meta.name) : "";
+  return imdbOf(id, mediaType)
+    .then(function (imdb) {
+      if (!imdb) return "";
+      return http("https://v3-cinemeta.strem.io/meta/" + kind + "/" + imdb + ".json")
+        .then(function (r) {
+          if (r.code !== 200) return "";
+          var meta = parseJson(r.text);
+          return meta && meta.meta ? txt(meta.meta.name) : "";
+        });
     })
     .catch(function () { return ""; });
 }

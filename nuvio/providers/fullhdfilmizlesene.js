@@ -1,14 +1,16 @@
 // @provider {"id":"fullhdfilmizlesene","name":"FullHDFilmizlesene","types":["movie"],"domain":"fullhdfilmizlesene.now","formats":["m3u8"],"sample":"tt0133093:movie:1:1","description":"FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.","verified":false}
 /**
  * fullhdfilmizlesene — Nuvio provider (bb-nuvio).
- * Flow: Cinemeta title -> /arama/<q> -> film page -> `var scx` (base64 rot13 sources)
- *       -> rapidvid atom player -> atomCodecTelemetry h264 HLS master + jwSetup caption tracks.
- * The site answers Cloudflare "managed challenge" to Node's TLS fingerprint (curl gets the
- * real page from the same IP), so the header is marked verified:false.
+ * Flow: TMDB id -> Wikidata -> IMDb -> Cinemeta title -> /arama/<q> -> film page
+ *       -> `var scx` (base64 rot13 sources) -> rapidvid atom player -> atomCodecTelemetry
+ *       h264 HLS master (kept whole: it owns the audio renditions) + jwSetup captions.
+ * Cloudflare answers Node's default TLS cipher list with a managed challenge (curl and a
+ * Chrome-cipher client get 200 from the same IP), so the header stays verified:false.
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
 var BASE = "https://www.fullhdfilmizlesene.now";
+var WIKI_UA = "bb-nuvio/1.0 (nuvio provider; bb-nuvio@users.noreply.github.com)";
 var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 function text(url, opts) {
@@ -66,6 +68,28 @@ function decodeSource(value) {
   return decode(rotated);
 }
 
+/** Nuvio can pass a numeric TMDB id; Wikidata maps it to the IMDb id Cinemeta needs. */
+function imdbId(id, mediaType) {
+  var value = String(id || "").trim();
+  if (/^tt\d+/.test(value)) return Promise.resolve(value);
+  if (!/^\d+$/.test(value)) return Promise.resolve("");
+  var property = mediaType === "tv" ? "P4983" : "P4947";
+  var query = "SELECT ?imdb WHERE { ?w wdt:" + property + ' "' + value + '". ?w wdt:P345 ?imdb. } LIMIT 1';
+  return fetch("https://query.wikidata.org/sparql?format=json&query=" + encodeURIComponent(query), {
+    headers: { "User-Agent": WIKI_UA, Accept: "application/sparql-results+json" }
+  })
+    .then(function (r) {
+      return r.ok ? r.text() : "";
+    })
+    .then(function (body) {
+      var rows = JSON.parse(body).results.bindings;
+      return rows && rows[0] && rows[0].imdb ? rows[0].imdb.value : "";
+    })
+    .catch(function () {
+      return "";
+    });
+}
+
 function titleOf(id, mediaType) {
   var kind = mediaType === "tv" ? "series" : "movie";
   return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
@@ -78,40 +102,56 @@ function titleOf(id, mediaType) {
     });
 }
 
+/** Turkish letters have no a-z spelling, so "Kış Uykusu" would otherwise normalize to "k uykusu". */
 function norm(value) {
   return String(value || "")
+    .replace(/[ıİI]/g, "i")
+    .replace(/[şŞ]/g, "s")
+    .replace(/[ğĞ]/g, "g")
+    .replace(/[çÇ]/g, "c")
+    .replace(/[öÖ]/g, "o")
+    .replace(/[üÜ]/g, "u")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
 }
 
-/** `<li class="film">`: a.tt title/href, span.film-yil year. */
+/** `<li class="film">`: a.tt title/href, span.film-title (local) + span.kt (original), span.film-yil year. */
 function cards(html) {
   var out = [];
   var blocks = all(/<li class="film">([\s\S]*?)<\/li>/g, html);
   for (var i = 0; i < blocks.length; i++) {
     var href = first(/<a class="tt" href="([^"]+)"/, blocks[i][1]) || first(/href="([^"]+)"/, blocks[i][1]);
     if (!href) continue;
+    var local = first(/<span class="film-title">([^<]*)</, blocks[i][1]) || first(/>([^<]*) izle</, blocks[i][1]) || "";
+    var original = first(/<span class="kt">([^<]*)</, blocks[i][1]) || "";
     out.push({
       url: href,
-      title: first(/<span class="film-title">([^<]*)</, blocks[i][1]) || first(/>([^<]*) izle</, blocks[i][1]) || "",
+      title: (local + " " + original).trim(),
       year: (first(/<span class="film-yil">(\d{4})</, blocks[i][1]) || "").trim()
     });
   }
   return out;
 }
 
+/** The site appends the original title ("Başlangıç - Inception"), so rank instead of prefix-only. */
 function pick(list, title, year) {
   var want = norm(title);
+  if (!want) return list[0] || null;
   var best = null;
+  var top = 0;
   for (var i = 0; i < list.length; i++) {
     var card = list[i];
     var name = norm(card.title);
-    if (!want || name.indexOf(want) !== 0) continue;
-    if (year && card.year === year) return card;
-    if (!best) best = card;
+    var score = name === want ? 3 : name.indexOf(want) === 0 ? 2 : (" " + name + " ").indexOf(" " + want + " ") !== -1 ? 1 : 0;
+    if (!score) continue;
+    if (year && card.year === year) score += 10;
+    if (score > top) {
+      best = card;
+      top = score;
+    }
   }
-  return best || (want ? null : list[0]);
+  return best;
 }
 
 function abs(base, href) {
@@ -186,43 +226,65 @@ function resolveAtom(embed, label) {
       }
     }
 
-    return plain(stream, embed, label).then(function (rows) {
-      var out = [];
-      for (var j = 0; j < rows.length; j++) out.push({ url: rows[j].url, quality: rows[j].quality, label: label, subtitles: subs });
-      return out;
+    return bestQuality(stream, embed).then(function (quality) {
+      return [{ url: stream, quality: quality, label: label, subtitles: subs }];
     });
   });
 }
 
-/** Master playlist -> one entry per variant; keeps the master when it has a single child. */
-function plain(master, referer, label) {
+/** The master owns its #EXT-X-MEDIA audio groups, so it must reach the player whole:
+ *  a child variant is video-only (silent) and the best variant only names the row. */
+function bestQuality(master, referer) {
   return fetch(master, { headers: { "User-Agent": UA, Accept: "*/*", Referer: referer } })
     .then(function (r) {
       return r.ok ? r.text() : "";
     })
     .then(function (body) {
-      if (body.indexOf("#EXTM3U") !== 0) return [];
       var rows = variants(master, body);
-      if (!rows.length) return [{ url: master, quality: "1080p" }];
-      var out = [];
-      for (var i = 0; i < rows.length; i++) out.push({ url: rows[i].url, quality: rows[i].quality });
-      return out;
+      var top = 0;
+      for (var i = 0; i < rows.length; i++) top = Math.max(top, parseInt(rows[i].quality, 10) || 0);
+      return top ? top + "p" : "1080p";
     })
     .catch(function () {
-      return [{ url: master, quality: "1080p" }];
+      return "1080p";
     });
+}
+
+/** One scx entry -> rows. The label is captured here, not read after the loop. */
+function job(source, key, entry, referer) {
+  var label = decode(source.tt).trim() || key;
+  var embed = decodeSource(entry);
+  if (!embed || !/^https?:/i.test(embed)) return Promise.resolve(null);
+  if (embed.indexOf("rapidvid.") !== -1) {
+    return resolveAtom(embed, label).catch(function () {
+      return null;
+    });
+  }
+  if (embed.indexOf(".m3u8") !== -1) {
+    return bestQuality(embed, referer)
+      .then(function (quality) {
+        return [{ url: embed, quality: quality, label: label, subtitles: [] }];
+      })
+      .catch(function () {
+        return null;
+      });
+  }
+  return Promise.resolve(null);
 }
 
 function getStreams(tmdbId, mediaType) {
   var filmUrl = null;
 
-  return titleOf(tmdbId, mediaType)
-    .then(function (meta) {
-      if (!meta.name) return null;
-      var term = meta.name.replace(/ /g, "+");
-      return text(BASE + "/arama/" + term).then(function (search) {
-        var hit = pick(cards(search), meta.name, meta.year);
-        return hit ? hit.url : null;
+  return imdbId(tmdbId, mediaType)
+    .then(function (id) {
+      if (!id) return null;
+      return titleOf(id, mediaType).then(function (meta) {
+        if (!meta.name) return null;
+        var term = encodeURIComponent(meta.name).replace(/%20/g, "+");
+        return text(BASE + "/arama/" + term).then(function (search) {
+          var hit = pick(cards(search), meta.name, meta.year);
+          return hit ? abs(BASE, hit.url) : null;
+        });
       });
     })
     .then(function (url) {
@@ -244,20 +306,7 @@ function getStreams(tmdbId, mediaType) {
       for (var key in scx) {
         var source = scx[key];
         if (!source || !source.sx || !source.sx.t) continue;
-        var label = decode(source.tt).trim() || key;
-        for (var i = 0; i < source.sx.t.length; i++) {
-          var embed = decodeSource(source.sx.t[i]);
-          if (!embed || !/^https?:/i.test(embed)) continue;
-          if (embed.indexOf("rapidvid.") !== -1) {
-            jobs.push(resolveAtom(embed, label).catch(function () { return null; }));
-          } else if (embed.indexOf(".m3u8") !== -1) {
-            jobs.push(plain(embed, filmUrl, label).then(function (rows) {
-              var out = [];
-              for (var j = 0; j < rows.length; j++) out.push({ url: rows[j].url, quality: rows[j].quality, label: label, subtitles: [] });
-              return out;
-            }).catch(function () { return null; }));
-          }
-        }
+        for (var i = 0; i < source.sx.t.length; i++) jobs.push(job(source, key, source.sx.t[i], filmUrl));
       }
       if (!jobs.length) return [];
       return Promise.all(jobs);

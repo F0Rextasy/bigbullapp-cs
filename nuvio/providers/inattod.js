@@ -812,6 +812,32 @@ function cinemetaTitle(id, mediaType) {
   });
 }
 
+/** Nuvio can pass a numeric TMDB id; Cinemeta only answers IMDb ids, so resolve via Wikidata. */
+var TMDB_STATEMENT = { tv: "P4983", movie: "P4947" };
+// Wikimedia rejects browser user agents on the query service.
+var WIKIDATA_UA = "InatNuvio/1.0 (cloudstream-nuvio-provider)";
+
+function imdbIds(id, mediaType) {
+  var value = text(id);
+  if (!/^\d+$/.test(value)) return Promise.resolve(value ? [value] : []);
+  var query = "SELECT ?imdb WHERE { ?s wdt:" + (TMDB_STATEMENT[mediaType] || TMDB_STATEMENT.tv) +
+    " \"" + value + "\" . ?s wdt:P345 ?imdb } LIMIT 3";
+  return fetch("https://query.wikidata.org/sparql?format=json&query=" + encodeURIComponent(query), {
+    headers: { "user-agent": WIKIDATA_UA, accept: "application/sparql-results+json" }
+  }).then(function (response) {
+    return response.ok ? response.json() : null;
+  }).then(function (payload) {
+    var rows = payload && payload.results && payload.results.bindings || [], out = [];
+    for (var i = 0; i < rows.length && out.length < 3; i++) {
+      var found = rows[i].imdb ? String(rows[i].imdb.value) : "";
+      if (/^tt\d+$/.test(found) && out.indexOf(found) < 0) out.push(found);
+    }
+    return out;
+  }).catch(function () {
+    return [];
+  });
+}
+
 // ---------------------------------------------------------------- entry point
 
 function mediaHeaders(headers) {
@@ -838,10 +864,8 @@ function chain(items, worker) {
   return promise;
 }
 
-function getStreams(tmdbId, mediaType, season, episode) {
-  var wantedSeason = parseInt(season, 10) || 1;
-  var wantedEpisode = parseInt(episode, 10) || 1;
-  return cinemetaTitle(tmdbId, mediaType).then(function (title) {
+function streamsOf(id, mediaType, wantedSeason, wantedEpisode) {
+  return cinemetaTitle(id, mediaType).then(function (title) {
     if (!title) return [];
     return entries(CFG.url, CFG.host, CFG.sha, CFG.dataType).then(function (rows) {
       var hits = rankHits(rows, title);
@@ -864,6 +888,22 @@ function getStreams(tmdbId, mediaType, season, episode) {
         });
       });
     });
+  }).catch(function () {
+    return [];
+  });
+}
+
+function getStreams(tmdbId, mediaType, season, episode) {
+  var wantedSeason = parseInt(season, 10) || 1;
+  var wantedEpisode = parseInt(episode, 10) || 1;
+  return imdbIds(tmdbId, mediaType).then(function (ids) {
+    var step = function (index) {
+      if (index >= ids.length) return Promise.resolve([]);
+      return streamsOf(ids[index], mediaType, wantedSeason, wantedEpisode).then(function (streams) {
+        return streams.length ? streams : step(index + 1);
+      });
+    };
+    return step(0);
   }).catch(function () {
     return [];
   });

@@ -17,6 +17,8 @@ var CFG = {
  */
 
 var INAT_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
+// Wikimedia blocks browser-spoofed user agents from fetch clients; a descriptive one is served.
+var WIKIDATA_UA = "inatgain-nuvio/1.0 (cloudstream repo; +https://github.com/F0Rextasy/bigbullapp-cs)";
 var CERT_SHA256 = "7cc771973665660f0653fce2e9490e48b92be8432a88d74f91703a716f6b4692";
 var ENCODED_KEY_HEX = "4c50054a43216168797045480a046734372e298080c489a2f8a4b8b5819a9f93efb3bbf0f2525a4ca6";
 var RAW_RESPONSE_KEY = "a4osa8x1yl4w3vrk";
@@ -799,6 +801,29 @@ function rankHits(rows, title) {
   return out;
 }
 
+/** Nuvio may hand over a numeric TMDB id; Cinemeta only knows IMDb, so map it first. */
+function tmdbToImdb(id, mediaType) {
+  var prop = mediaType === "tv" ? "P4983" : "P4947";
+  var query = 'SELECT ?imdb WHERE { ?s wdt:' + prop + ' "' + id + '" . ?s wdt:P345 ?imdb } LIMIT 1';
+  return fetch("https://query.wikidata.org/sparql?format=json&query=" + encodeURIComponent(query), {
+    headers: { "user-agent": WIKIDATA_UA, accept: "application/sparql-results+json" }
+  }).then(function (response) {
+    return response.ok ? response.json() : null;
+  }).then(function (payload) {
+    var rows = payload && payload.results && payload.results.bindings;
+    var value = rows && rows.length ? String((rows[0].imdb || {}).value || "") : "";
+    return /^tt\d+$/i.test(value) ? value : "";
+  }).catch(function () {
+    return "";
+  });
+}
+
+function imdbId(id, mediaType) {
+  var value = String(id === null || id === undefined ? "" : id).replace(/^\s+|\s+$/g, "");
+  if (/^tt\d+$/i.test(value)) return Promise.resolve(value);
+  return /^\d+$/.test(value) ? tmdbToImdb(value, mediaType) : Promise.resolve("");
+}
+
 function cinemetaTitle(id, mediaType) {
   var kind = mediaType === "tv" ? "series" : "movie";
   return fetch("https://v3-cinemeta.strem.io/meta/" + kind + "/" + encodeURIComponent(id) + ".json", {
@@ -841,24 +866,27 @@ function chain(items, worker) {
 function getStreams(tmdbId, mediaType, season, episode) {
   var wantedSeason = parseInt(season, 10) || 1;
   var wantedEpisode = parseInt(episode, 10) || 1;
-  return cinemetaTitle(tmdbId, mediaType).then(function (title) {
-    if (!title) return [];
-    return entries(CFG.url, CFG.host, CFG.sha, CFG.dataType).then(function (rows) {
-      var hits = rankHits(rows, title);
-      if (!hits.length) return [];
-      return chain(hits, function (hit) {
-        return collect(hit, wantedSeason, wantedEpisode, 0).then(function (leaves) {
-          return chain(leaves.slice(0, 3), function (leaf) {
-            return resolve(leaf).then(function (stream) {
-              if (!stream || !stream.url) return [];
-              return [{
-                name: CFG.name,
-                title: CFG.name + " - " + (leaf.name || title),
-                url: stream.url,
-                quality: "auto",
-                headers: mediaHeaders(stream.headers || leaf.headers || {}),
-                subtitles: []
-              }];
+  return imdbId(tmdbId, mediaType).then(function (id) {
+    if (!id) return [];
+    return cinemetaTitle(id, mediaType).then(function (title) {
+      if (!title) return [];
+      return entries(CFG.url, CFG.host, CFG.sha, CFG.dataType).then(function (rows) {
+        var hits = rankHits(rows, title);
+        if (!hits.length) return [];
+        return chain(hits, function (hit) {
+          return collect(hit, wantedSeason, wantedEpisode, 0).then(function (leaves) {
+            return chain(leaves.slice(0, 3), function (leaf) {
+              return resolve(leaf).then(function (stream) {
+                if (!stream || !stream.url) return [];
+                return [{
+                  name: CFG.name,
+                  title: CFG.name + " - " + (leaf.name || title),
+                  url: stream.url,
+                  quality: "auto",
+                  headers: mediaHeaders(stream.headers || leaf.headers || {}),
+                  subtitles: []
+                }];
+              });
             });
           });
         });

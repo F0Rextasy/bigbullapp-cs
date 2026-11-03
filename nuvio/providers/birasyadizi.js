@@ -114,7 +114,9 @@ function choose(list, wantSe, wantEp) {
     pool.push(e);
   }
   for (i = 0; i < pool.length; i++) if (pool[i].episode === wantEp) return pool[i];
-  return pool[0] || null;
+  // only an unnumbered listing is a sane guess; a missing episode stays missing
+  for (i = 0; i < pool.length; i++) if (!pool[i].episode) return pool[i];
+  return null;
 }
 
 function frames(html) {
@@ -190,45 +192,164 @@ function players(page, referer, out) {
           .catch(function () {});
       });
   });
+
   return chain;
 }
 
+/* Nuvio's own rows hand over TMDB ids; Wikidata links them to a title this site lists. */
+function wikidataTitle(id, mediaType) {
+  if (!/^\d+$/.test(String(id || ""))) return Promise.resolve("");
+  var prop = mediaType === "movie" ? "P4947" : "P4983";
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return text(api + "&action=query&list=search&srlimit=1&srsearch=" +
+      encodeURIComponent("haswbstatement:" + prop + "=" + id))
+    .then(function (body) {
+      var hits = (JSON.parse(body).query || {}).search || [];
+      if (!hits.length) return "";
+      return text(api + "&action=wbgetentities&props=labels&languages=en|tr&ids=" + hits[0].title);
+    })
+    .then(function (body) {
+      if (!body) return "";
+      var entities = JSON.parse(body).entities || {};
+      for (var key in entities) {
+        var labels = entities[key].labels || {};
+        var label = (labels.en || labels.tr || {}).value;
+        if (label) return String(label).replace(/\s*\([^)]*\)\s*$/, "").trim();
+      }
+      return "";
+    })
+    .catch(function () {
+      return "";
+    });
+}
+
+function titleFor(id, mediaType) {
+  return /^\d+$/.test(String(id || "")) ? wikidataTitle(id, mediaType) : titleOf(id, mediaType);
+}
+
+/* The site's WordPress RSS search answers in ~10 KB and each <item> carries the
+   episode's player iframe; /?s= and the pages behind it are ~370 KB and take 10-60 s. */
+function feedItems(query) {
+  return text(BASE + "/?s=" + encodeURIComponent(query) + "&feed=rss2").then(function (xml) {
+    var out = [], re = /<item>([\s\S]*?)<\/item>/g, m;
+    if (xml.indexOf("<rss") === -1) return out;
+    while ((m = re.exec(xml)) !== null) {
+      var link = String(first(/<link>([\s\S]*?)<\/link>/, m[1]) || "").trim();
+      if (!link) continue;
+      var body = first(/<content:encoded>([\s\S]*?)<\/content:encoded>/, m[1]) || "";
+      out.push({
+        url: link,
+        title: clean(first(/<title>([\s\S]*?)<\/title>/, m[1])).replace(/<!\[CDATA\[|\]\]>/g, ""),
+        html: body.replace(/^\s*<!\[CDATA\[/, "").replace(/\]\]>\s*$/, "")
+      });
+    }
+    return out;
+  });
+}
+
+function feedEpisode(items, wantSe, wantEp) {
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].url.indexOf("/bolum/") === -1) continue;
+    var num = first(/-(\d+)-bolum/, items[i].url) || first(/(\d+)\s*\.\s*b[oö]l[uü]m/i, items[i].title);
+    var se = parseInt(first(/-sezon-(\d+)-/, items[i].url), 10) || 0;
+    if ((num ? parseInt(num, 10) : 0) === wantEp && (!se || se === wantSe)) return items[i];
+  }
+  return null;
+}
+
+/* Two light queries: the title itself, then the episode title the site gives it. */
+function feedLookup(title, wantSe, wantEp) {
+  var found = { series: null, ep: null };
+  var queries = [title, title + " " + wantEp + ". Bölüm"];
+  function step(q) {
+    if (q >= queries.length || found.ep) return Promise.resolve(found);
+    return feedItems(queries[q]).then(function (items) {
+      for (var i = 0; i < items.length; i++) {
+        if (!found.series && /\/dizi\//.test(items[i].url)) found.series = items[i].url;
+      }
+      found.ep = feedEpisode(items, wantSe, wantEp);
+      return step(q + 1);
+    });
+  }
+  return step(0).catch(function () {
+    return found;
+  });
+}
+
+function okId(html) {
+  var re = /<iframe[^>]+(?:src|vdo-src|data-src)="([^"]*videoembed\/\d+[^"]*)"/g, m;
+  while ((m = re.exec(String(html || ""))) !== null) {
+    if (/ok\.ru|odnoklassniki/.test(m[1])) return first(/videoembed\/(\d+)/, m[1]);
+  }
+  return null;
+}
+
+/* A feed item already holds the player iframe, so no page has to be fetched. */
+function playFeed(html, out) {
+  scan(html, BASE, BASE, out);
+  var id = okId(html);
+  if (!id) return Promise.resolve();
+  return okru(id)
+    .then(function (vids) {
+      for (var i = 0; i < vids.length; i++) push(out, vids[i].url, vids[i].label, "https://ok.ru/");
+    })
+    .catch(function () {});
+}
+
+function playPage(url, out) {
+  return text(url).then(function (page) {
+    return players(page, url, out);
+  });
+}
+
 function getStreams(tmdbId, mediaType, season, episode) {
+  var packed = String(tmdbId || "").split(":"); // sample form "tt27714020:tv:1:1"
+  if (packed.length > 1) {
+    tmdbId = packed[0];
+    mediaType = packed[1] || mediaType;
+    season = packed[2] || season;
+    episode = packed[3] || episode;
+  }
   var wantSe = parseInt(season, 10) || 1;
   var wantEp = parseInt(episode, 10) || 1;
-  var epUrl = null;
-  var out = [];
+  var out = [], series = null, epUrl = null;
 
-  return titleOf(tmdbId, mediaType)
+  return titleFor(tmdbId, mediaType)
     .then(function (title) {
       if (!title) return null;
-      // shortcut: titles are matched on the site's own listings, so a Cinemeta name the
-      // site spells differently (localized) yields no source instead of a wrong one.
-      return text(BASE + "/?s=" + encodeURIComponent(title)).then(function (html) {
-        return pick(cards(html), title);
+      // shortcut: titles are matched on the site's own listings, so a name the site
+      // spells differently (localized) yields no source instead of a wrong one.
+      return feedLookup(title, wantSe, wantEp).then(function (found) {
+        series = found.series;
+        if (found.ep) {
+          epUrl = found.ep.url;
+          if (okId(found.ep.html)) return playFeed(found.ep.html, out);
+          return null;
+        }
+        if (series) return null;
+        return text(BASE + "/?s=" + encodeURIComponent(title)).then(function (html) {
+          var hit = pick(cards(html), title);
+          series = hit ? hit.url : null;
+        });
       });
     })
-    .then(function (hit) {
-      if (!hit) return null;
-      return text(hit.url);
+    .then(function () {
+      if (out.length || !epUrl) return null;
+      return playPage(epUrl, out);
     })
-    .then(function (html) {
-      if (!html) return null;
-      var ep = choose(episodes(html), wantSe, wantEp);
-      if (!ep) return null;
-      epUrl = ep.url;
-      return text(epUrl);
-    })
-    .then(function (page) {
-      if (!page) return [];
-      return players(page, epUrl, out);
+    .then(function () {
+      if (out.length || epUrl || !series) return null;
+      return text(series).then(function (html) {
+        var ep = choose(episodes(html), wantSe, wantEp);
+        return ep ? playPage(ep.url, out) : null;
+      });
     })
     .then(function () {
       return out;
     })
     .catch(function (e) {
       console.log("[bb-nuvio][birasyadizi] " + (e && e.message));
-      return [];
+      return out;
     });
 }
 

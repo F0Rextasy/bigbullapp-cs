@@ -1,8 +1,11 @@
 // @provider {"id":"anizm","name":"Anizm","types":["tv"],"domain":"turkanime.info","formats":["m3u8"],"sample":"tt12343534:tv:1:1","description":"Anizm (turkanime.info) Turkce altyazili anime; kendi oynatcisindan HLS master."}
 /**
  * anizm — Nuvio provider (bb-nuvio).
- * Flow: Cinemeta title -> /arama -> anime detail -> episode -> cevirmen (translator) JSON
+ * Flow: title -> /arama -> anime detail -> episode -> cevirmen (translator) JSON
  *       -> /player/{id} redirect -> anizmplayer getVideo (videoSource) | puffytr native.m3u8.
+ * Each /player probe costs a 302 plus a POST, so mirrors are probed in small parallel
+ * batches and the walk stops as soon as MAX_LINKS answer (the site's own player is the
+ * first mirror, usually the only request that has to finish).
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
@@ -50,7 +53,34 @@ function abs(base, href) {
   return base.replace(/[^/]*$/, "") + href;
 }
 
+/* Nuvio's own rows send a numeric TMDB id; Wikidata links it to the site-searchable label. */
+function wikidataTitle(id, mediaType) {
+  var prop = mediaType === "movie" ? "P4947" : "P4983";
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return text(api + "&action=query&list=search&srlimit=1&srsearch=" +
+      encodeURIComponent("haswbstatement:" + prop + "=" + id))
+    .then(function (body) {
+      var hits = (JSON.parse(body).query || {}).search || [];
+      if (!hits.length) return "";
+      return text(api + "&action=wbgetentities&props=labels&languages=tr|en&ids=" + hits[0].title);
+    })
+    .then(function (body) {
+      if (!body) return "";
+      var entities = JSON.parse(body).entities || {};
+      for (var key in entities) {
+        var labels = entities[key].labels || {};
+        var label = (labels.tr || labels.en || {}).value;
+        if (label) return String(label).replace(/\s*\([^)]*\)\s*$/, "").trim();
+      }
+      return "";
+    })
+    .catch(function () {
+      return "";
+    });
+}
+
 function titleOf(id, mediaType) {
+  if (/^\d+$/.test(String(id || ""))) return wikidataTitle(id, mediaType);
   var kind = mediaType === "tv" ? "series" : "movie";
   return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
     .then(function (body) {
@@ -139,11 +169,102 @@ function puffytr(embed) {
   return Promise.resolve({ url: origin + "/stream/" + slug + "/native.m3u8", referer: embed });
 }
 
+/** One translator's mirror list; a dead translator must not stop the next one. */
+function videoList(url, episodeUrl) {
+  return text(url, { referer: episodeUrl })
+    .then(function (raw) {
+      return (JSON.parse(raw).videos || []).filter(function (video) {
+        return video && video.id;
+      }).map(function (video) {
+        video.label = video.name || "Video";
+        return video;
+      });
+    })
+    .catch(function () {
+      return [];
+    });
+}
+
+/** Round-robin by mirror rank so every translator's first player is tried before any second. */
+function interleave(lists) {
+  var out = [];
+  var deepest = 0;
+  var i;
+  for (i = 0; i < lists.length; i++) deepest = Math.max(deepest, lists[i].length);
+  for (var rank = 0; rank < deepest && out.length < MAX_MIRRORS; rank++) {
+    for (i = 0; i < lists.length && out.length < MAX_MIRRORS; i++) {
+      if (lists[i][rank]) out.push(lists[i][rank]);
+    }
+  }
+  return out;
+}
+
+/** /player/{id} is a same-host 302 to the embed; the embed page decides the stream. */
+function embedOf(video, episodeUrl) {
+  var playerUrl = BASE + "/player/" + video.id;
+  return follow(playerUrl, episodeUrl)
+    .then(function (target) {
+      if (!target || target === playerUrl) return null;
+      return playerOf(target, episodeUrl);
+    })
+    .catch(function () {
+      return null;
+    });
+}
+
+function probe(videos, episodeUrl, state, from) {
+  if (from >= videos.length || state.rows.length >= MAX_LINKS) return Promise.resolve();
+  var batch = videos.slice(from, from + BATCH);
+  return Promise.all(batch.map(function (video) {
+    return embedOf(video, episodeUrl).then(function (play) {
+      return play ? { play: play, label: video.label } : null;
+    });
+  })).then(function (hits) {
+    for (var i = 0; i < hits.length; i++) {
+      var hit = hits[i];
+      if (!hit || state.seen[hit.play.url] || state.rows.length >= MAX_LINKS) continue;
+      state.seen[hit.play.url] = true;
+      state.rows.push({
+        name: "anizm",
+        title: "anizm - " + hit.label + " [HLS]",
+        url: hit.play.url,
+        quality: "auto",
+        headers: { Referer: hit.play.referer, Accept: "*/*" },
+        subtitles: []
+      });
+    }
+    return probe(videos, episodeUrl, state, from + BATCH);
+  });
+}
+
+/** Two translators per round; later rounds run only while nothing playable was found. */
+function round(sources, offset, episodeUrl, state) {
+  if (offset >= sources.length || state.rows.length >= MAX_LINKS) return Promise.resolve();
+  var slice = sources.slice(offset, offset + MAX_TRANSLATORS);
+  return Promise.all(slice.map(function (url) {
+    return videoList(url, episodeUrl);
+  }))
+    .then(function (lists) {
+      return probe(interleave(lists), episodeUrl, state, 0);
+    })
+    .then(function () {
+      return round(sources, offset + MAX_TRANSLATORS, episodeUrl, state);
+    });
+}
+
 function getStreams(tmdbId, mediaType, season, episode) {
+  // The repo harness may be fed the header sample ("tt12343534:tv:1:1") as the id.
+  var sample = String(tmdbId || "").split(":");
+  if (sample.length > 1) {
+    tmdbId = sample[0];
+    mediaType = sample[1] || mediaType;
+    season = sample[2] || season;
+    episode = sample[3] || episode;
+  }
   var want = parseInt(episode, 10) || 1;
   var seasonNo = parseInt(season, 10) || 1;
   var episodeUrl = null;
-  var rows = [];
+  var state = { rows: [], seen: {} };
   var wantTitle = "";
 
   return titleOf(tmdbId, mediaType)
@@ -183,81 +304,21 @@ function getStreams(tmdbId, mediaType, season, episode) {
         }
       }
       if (!sources.length) return [];
-      return walkSources(sources, episodeUrl, rows);
+      return round(sources.slice(0, MAX_SOURCES), 0, episodeUrl, state);
     })
     .then(function () {
-      return rows;
+      return state.rows;
     })
     .catch(function (e) {
       console.log("[bb-nuvio][anizm] " + (e && e.message));
-      return [];
+      return state.rows;
     });
 }
 
-/** Collect up to MAX_LINKS playable mirrors across the first few translators, first mirror first. */
-function walkSources(sources, episodeUrl, rows) {
-  var videos = [];
-  var seen = {};
-
-  function collect(i) {
-    if (i >= sources.length || videos.length >= MAX_MIRRORS) return Promise.resolve();
-    return text(sources[i], { referer: episodeUrl })
-      .then(function (raw) {
-        var list = [];
-        try {
-          list = JSON.parse(raw).videos || [];
-        } catch (e) {
-          list = [];
-        }
-        for (var j = 0; j < list.length; j++) {
-          if (list[j] && list[j].id) {
-            list[j].label = list[j].name || "Video";
-            videos.push(list[j]);
-          }
-        }
-        return collect(i + 1);
-      }, function () {
-        return collect(i + 1);
-      });
-  }
-
-  function tryVideo(i) {
-    if (i >= videos.length || rows.length >= MAX_LINKS) return Promise.resolve();
-    var video = videos[i];
-    var playerUrl = BASE + "/player/" + video.id;
-    return follow(playerUrl, episodeUrl)
-      .catch(function () {
-        return null;
-      })
-      .then(function (target) {
-        if (!target || target === playerUrl) return null;
-        return playerOf(target, episodeUrl);
-      })
-      .then(function (play) {
-        if (play && !seen[play.url]) {
-          seen[play.url] = true;
-          rows.push({
-            name: "anizm",
-            title: "anizm - " + video.label + " [HLS]",
-            url: play.url,
-            quality: "auto",
-            headers: { Referer: play.referer, Accept: "*/*" },
-            subtitles: []
-          });
-        }
-        return tryVideo(i + 1);
-      })
-      .catch(function () {
-        return tryVideo(i + 1);
-      });
-  }
-
-  return collect(0).then(function () {
-    return tryVideo(0);
-  });
-}
-
 var MAX_LINKS = 3;
-var MAX_MIRRORS = 12;
+var MAX_MIRRORS = 6;
+var MAX_TRANSLATORS = 2;
+var MAX_SOURCES = 4;
+var BATCH = 3;
 
 module.exports = { getStreams };
