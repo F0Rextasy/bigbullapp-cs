@@ -8,7 +8,12 @@ var BASE = "https://www.minikago.com.tr";
 var SKIP = /(tanıtım|tanitim|yakında|yakinda|fragman)/i;
 
 function text(url, referer) {
-  var headers = { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" };
+  var headers = {
+    "User-Agent": UA,
+    "Accept-Language": "tr-TR,tr;q=0.9",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "X-Requested-With": "XMLHttpRequest"
+  };
   if (referer) headers.Referer = referer;
   return fetch(url, { headers: headers }).then(function (r) {
     if (!r.ok) throw new Error("HTTP " + r.status + " " + url);
@@ -37,7 +42,7 @@ function titleOf(id, mediaType) {
 }
 
 function episodeUrl(term) {
-  return text(BASE + "/arama?q=" + encodeURIComponent(term).replace(/%20/g, "+")).then(function (page) {
+  function pick(page) {
     var re = /<div class="search-item">\s*<a href="([^"]+)"[\s\S]{0,600}?<h2 class="item-content-title"[^>]*>([\s\S]*?)<\/h2>/g;
     var m;
     var exact = null;
@@ -52,7 +57,10 @@ function episodeUrl(term) {
       if (!loose) loose = url;
     }
     return exact || loose;
-  });
+  }
+  return text(BASE + "/arama?q=" + encodeURIComponent(term).replace(/%20/g, "+"))
+    .then(pick)
+    .catch(function () { return text(BASE + "/arama?q=").then(pick); });
 }
 
 function getStreams(imdbId, mediaType, season, episode) {

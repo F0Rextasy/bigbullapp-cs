@@ -1,6 +1,6 @@
 {
-  "generated": "2026-11-02",
-  "note": "95 TR modül; Inat 35 platformundan 11'i aktif, 24'ü settings.gradle.kts disabled listesinde pasif. Dizigecesi v5 canlı runner/HLS pass.",
+  "generated": "2026-11-03",
+  "note": "93 aktif TR modül; Cloudstream runner 82/82 PASS, 58 beta durumu kaldırıldı. Inat 35 platformundan 11'i aktif, 24'ü settings.gradle.kts disabled listesinde pasif. Nuvio 89/102 açık; HDFilmCehennemi ve MinikaGO düzeltildi.",
   "modules": [
     {
       "module": "AniArsiv",

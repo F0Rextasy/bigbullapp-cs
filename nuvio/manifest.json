@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -940,7 +940,7 @@
       "id": "hdfilmcehennemi",
       "name": "HDFilmCehennemi",
       "description": "HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -1605,7 +1605,7 @@
       "id": "minikago",
       "name": "MinikaGO",
       "description": "MinikaGO Web TV bölümleri (doğrudan MP4 akışı).",
-      "version": "1.0.0",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "tv"

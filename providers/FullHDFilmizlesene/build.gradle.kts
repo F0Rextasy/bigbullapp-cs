@@ -5,7 +5,7 @@ cloudstream {
     description = "FullHDFilmizlesene — fullhdfilmizlesene.now (Türkçe dublaj/altyazılı film arşivi)"
     authors = listOf("F0Rextasy")
 
-    status = 3
+    status = 1
 
     tvTypes = listOf("Movie")
     language = "tr"

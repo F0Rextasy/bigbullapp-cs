@@ -86,7 +86,7 @@ Tek modül derleme ve cihaza kurulum:
 
 ## Eklentiler
 
-`✓` var · `—` sitede yok · `film` yalnız filmlerde · `beta` doğrulanmamış sürüm
+`✓` var · `—` sitede yok · `film` yalnız filmlerde
 
 `Inat*` platformlarından runner’da pass olmayan 24 tanesi pasif; kaynakları korunuyor.
 
@@ -98,57 +98,57 @@ Tek modül derleme ve cihaza kurulum:
 | `Anizm` | turkanime.info | Anime | — | — | ✓ | — | — | ✓ |
 | `Anizium` | anizium.co | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `AsyaAnimeleri` | asyaanimeleri.top | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
-| `AsyaBox` **beta** | asyabox.co | Dizi | — | — | — | — | — | — |
-| `AsyaDizi` **beta** | asyadizi.com | Dizi | — | — | — | — | — | — |
-| `Asyadizileriizle` **beta** | asyadizileriizle.com | Dizi | — | — | — | — | — | — |
+| `AsyaBox` | asyabox.co | Dizi | — | — | — | — | — | — |
+| `AsyaDizi` | asyadizi.com | Dizi | — | — | — | — | — | — |
+| `Asyadizileriizle` | asyadizileriizle.com | Dizi | — | — | — | — | — | — |
 | `AsyaLog` | asyalog.co | Asya dizi/film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
-| `AsyaLuna` **beta** | asyaluna.com | Dizi | — | — | — | — | — | — |
-| `AsyaWatch` **beta** | asyawatch.com | Asya dizi/film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `AsyaLuna` | asyaluna.com | Dizi | — | — | — | — | — | — |
+| `AsyaWatch` | asyawatch.com | Asya dizi/film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `ATV` **(pasif)** | atv.com.tr | Dizi | — | — | — | — | — | — |
-| `BelgeselX` **beta** | belgeselx.com | Belgesel | — | — | — | — | — | — |
-| `BirAsyaDizi` **beta** | birasyadizi.cx | Dizi | — | — | — | — | — | — |
-| `CanliDizi` **beta** | canlidizi.sbs | Dizi | — | — | — | — | — | — |
-| `CanliYayinKanallari` **beta** | tabii.com | Canlı TV | — | — | — | — | — | — |
+| `BelgeselX` | belgeselx.com | Belgesel | — | — | — | — | — | — |
+| `BirAsyaDizi` | birasyadizi.cx | Dizi | — | — | — | — | — | — |
+| `CanliDizi` | canlidizi.sbs | Dizi | — | — | — | — | — | — |
+| `CanliYayinKanallari` | tabii.com | Canlı TV | — | — | — | — | — | — |
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
 | `CizgiSite` | www.cizgi.site | Dizi | — | — | — | — | — | — |
-| `Ddizi` **beta** | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
-| `DDizimag` **beta** | ddizimag.com | Dizi | — | — | — | — | — | — |
-| `Deokwave` **beta** | deokwave.com | Dizi | — | — | — | — | — | — |
-| `DiziAbi` **beta** | diziabi.net | Film | — | — | — | — | — | — |
+| `Ddizi` | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
+| `DDizimag` | ddizimag.com | Dizi | — | — | — | — | — | — |
+| `Deokwave` | deokwave.com | Dizi | — | — | — | — | — | — |
+| `DiziAbi` | diziabi.net | Film | — | — | — | — | — | — |
 | `Dizibaba` | dizibaba.net | Film | — | — | — | — | — | — |
-| `DiziBal` **beta** | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |
-| `DiziBol` **beta** | dizibol.org | Dizi | — | — | — | — | — | — |
-| `DiziBoxTv` **beta** | diziboxtv.com | Dizi | — | — | — | — | — | — |
-| `DiziCaN` **beta** | dizican.cc | Dizi | — | — | — | — | — | — |
-| `DiziFilmIzle` **beta** | dizifilmizle.to | Film | — | — | — | — | — | — |
-| `Dizifon` **beta** | dizifon.cc | Dizi | — | — | — | — | — | — |
+| `DiziBal` | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |
+| `DiziBol` | dizibol.org | Dizi | — | — | — | — | — | — |
+| `DiziBoxTv` | diziboxtv.com | Dizi | — | — | — | — | — | — |
+| `DiziCaN` | dizican.cc | Dizi | — | — | — | — | — | — |
+| `DiziFilmIzle` | dizifilmizle.to | Film | — | — | — | — | — | — |
+| `Dizifon` | dizifon.cc | Dizi | — | — | — | — | — | — |
 | `Dizigecesi` | dizigecesi.com | Film | — | — | — | — | — | — |
-| `Dizigom` **beta** | dizigom.news | Film | — | — | — | — | — | — |
+| `Dizigom` | dizigom.news | Film | — | — | — | — | — | — |
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi82.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
-| `Dizirella` **beta** | dizirella.one | Dizi | — | — | — | — | — | — |
+| `Dizirella` | dizirella.one | Dizi | — | — | — | — | — | — |
 | `DiziYou` | diziyou.one | Dizi | — | — | ✓ | ✓ | — | ✓ |
 | `Diziasia` | diziasia.com | Asya dizi | ✓ | ✓ | — | — | — | — |
 | `Dizibox` | dizibox.live | Dizi | — | — | ✓ | ✓ | — | ✓ |
 | `DiziboxIzle` | diziboxizle.com | Dizi | ✓ | — | ✓ | ✓ | — | ✓ |
 | `Dizikorea3` | dizikorea3.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | film | ✓ |
 | `Dizilla` | dizilla.now | Dizi | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `DiziMom` **beta** | ddizimom.net | Dizi | — | — | — | — | — | — |
+| `DiziMom` | ddizimom.net | Dizi | — | — | — | — | — | — |
 | `DiziPal` | dizipal1592.com | Dizi/Film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
 | `DiziPod` | dizipod.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `DMAX` | dmax.com.tr | Dizi | — | — | — | — | — | — |
 | `DramaDizilerim` | dramadizilerim.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
-| `FilmEkseni` **beta** | filmekseni.vip | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `Filmizyon` **beta** | filmizyon.net | Film | — | — | — | — | — | — |
-| `FilmModu` **beta** | filmmodu.news | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `FullHDFilm` **beta** | fullhdfilmizlebox.vip | Film | — | — | — | — | — | ✓ |
-| `FullHDFilmizlesene` **beta** | fullhdfilmizlesene.now | Film | — | — | ✓ | — | — | ✓ |
-| `HDFilmCehennemi` **beta** | hdfilmcehennemi.nl | Film | — | — | — | — | — | — |
+| `FilmEkseni` | filmekseni.vip | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `Filmizyon` | filmizyon.net | Film | — | — | — | — | — | — |
+| `FilmModu` | filmmodu.news | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `FullHDFilm` | fullhdfilmizlebox.vip | Film | — | — | — | — | — | ✓ |
+| `FullHDFilmizlesene` | fullhdfilmizlesene.now | Film | — | — | ✓ | — | — | ✓ |
+| `HDFilmCehennemi` | hdfilmcehennemi.nl | Film | — | — | — | — | — | — |
 | `HDFilmCehennemi2` | hdfilmcehennemi2.biz | Film | — | — | — | — | — | — |
-| `HDFilmDelisi` **beta** | hdfilmdelisi.one | Film | ✓ | — | — | — | ✓ | ✓ |
+| `HDFilmDelisi` | hdfilmdelisi.one | Film | ✓ | — | — | — | ✓ | ✓ |
 | `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
-| `HDFilmizle` **beta** | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `HDFilmizleBest` **beta** | hdfilmizle.best | Dizi | — | — | — | — | — | — |
+| `HDFilmizle` | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `HDFilmizleBest` | hdfilmizle.best | Dizi | — | — | — | — | — | — |
 | `InatListe1Tr` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
 | `InatListe2Glb` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
 | `InatListe3Tr` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
@@ -162,54 +162,54 @@ Tek modül derleme ve cihaza kurulum:
 | `InatEbaTv` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
 | `InatCocuk` **pasif** | diziboxen.help | Çocuk | — | — | — | — | — | — |
 | `InatDini` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
-| `InatExxen` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
-| `InatGain` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
-| `InatNetflix` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
-| `InatHboMax` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
-| `InatDisney` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
-| `InatAmazonPrime` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
-| `InatTabii` **beta** | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatExxen` | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatGain` | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatNetflix` | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatHboMax` | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatDisney` | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatAmazonPrime` | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatTabii` | diziboxen.help | Dizi | — | — | — | — | — | — |
 | `InatMubi` **pasif** | diziboxen.help | Film | — | — | — | — | — | — |
 | `InatTod` **pasif** | sprboxs.bar | Dizi | — | — | — | — | — | — |
 | `InatYabanciDiziler` **pasif** | diziboxen.help | Dizi | — | — | — | — | — | — |
 | `InatYerliDiziler` **pasif** | diziboxen.help | Dizi | — | — | — | — | — | — |
-| `InatYerliFilmler` **beta** | diziboxen.help | Film | — | — | — | — | — | — |
+| `InatYerliFilmler` | diziboxen.help | Film | — | — | — | — | — | — |
 | `Inat4k01Exo` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k01Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k02Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k03Exo` | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
-| `Inat4k03Web` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k03Web` | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k04Exo` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k04Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
-| `Inat4k06Exo` **beta** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k06Exo` | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k06Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k07Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
-| `JetFilmizle` **beta** | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
+| `JetFilmizle` | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
 | `KanalD` | kanald.com.tr | Dizi | — | — | — | — | — | — |
-| `KoreanTurk` **beta** | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
+| `KoreanTurk` | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
 | `Kultfilmler` | kultfilmler.net | Film | ✓ | — | — | ✓ | ✓ | ✓ |
-| `LoveFilm` **beta** | lovefilmizle.net | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `LoveFilm` | lovefilmizle.net | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `MinikaCocuk` **(pasif)** | minikacocuk.com.tr | Dizi | — | — | — | — | — | — |
 | `MinikaGO` | minikago.com.tr | Çocuk | — | — | — | — | — | — |
 | `NetFilmizle` | netfilmizle.com | Film | — | — | — | — | — | — |
 | `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
-| `SelcukFlix` **beta** | selcukflix.app | Dizi/Film | — | — | — | — | ✓ | ✓ |
+| `SelcukFlix` | selcukflix.app | Dizi/Film | — | — | — | — | ✓ | ✓ |
 | `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `Sezonlukdizi` **beta** | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
-| `ShowTV` **beta** | showtv.com.tr | Dizi | — | — | — | — | — | — |
-| `SinemaCX` **beta** | sinemacc.com | Film | — | — | — | ✓ | ✓ | ✓ |
+| `Sezonlukdizi` | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
+| `ShowTV` | showtv.com.tr | Dizi | — | — | — | — | — | — |
+| `SinemaCX` | sinemacc.com | Film | — | — | — | ✓ | ✓ | ✓ |
 | `Sinezy` | sinezy.si | Film | — | — | — | — | — | — |
-| `Sinemakolik` **beta** | sinemakolik.com | Film | — | — | — | — | — | — |
-| `SonAnime` **beta** | sonanime.com | Dizi | — | — | — | — | — | — |
+| `Sinemakolik` | sinemakolik.com | Film | — | — | — | — | — | — |
+| `SonAnime` | sonanime.com | Dizi | — | — | — | — | — | — |
 | `StarTV` | startv.com.tr | Dizi | — | — | — | — | — | — |
 | `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
-| `TurkceDizi` **beta** | turkcedizi.com | Film | — | — | — | — | — | ✓ |
-| `TV8` **beta** | tv8.com.tr | Dizi | — | — | — | — | — | — |
-| `UltraFilmizle` **beta** | ufilmizle.com | Film | — | — | — | — | — | — |
+| `TurkceDizi` | turkcedizi.com | Film | — | — | — | — | — | ✓ |
+| `TV8` | tv8.com.tr | Dizi | — | — | — | — | — | — |
+| `UltraFilmizle` | ufilmizle.com | Film | — | — | — | — | — | — |
 | `WebdramaTurkey2` | webdramaturkey2.com | Asya dizi/film | ✓ | — | — | ✓ | ✓ | — |
-| `Weboo` **beta** | weboo.com.tr | Dizi | — | — | — | — | — | — |
+| `Weboo` | weboo.com.tr | Dizi | — | — | — | — | — | — |
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
-| `YesilCamTv` **beta** | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
+| `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
 **Inat notu:** Inat'ın **35 platformu ayrı modül** olarak tutulur; runner’da pass olan **11 platform aktif**, pass olmayan **24 platform pasif**. Aktif platformlar: Liste 4K 03 Exo/Web, 4K 06 Exo, Exxen, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii ve Yerli Filmler. Depoda toplam **93 aktif modül** var; `ATV` ve `MinikaCocuk` upstream oynatıcı endpoint'leri timeout verdiği için pasif, kaynakları korunuyor. Pasif platformlar `settings.gradle.kts` `disabled` listesinde; kaynak dosyaları korunuyor.
 
@@ -267,19 +267,29 @@ desteklemez; her satır ilk sayfayı gösterir. JS ile render edilen siteler (ö
 Başlık çözümü anahtarsız Cinemeta üzerinden yapılır, TMDB anahtarı gerekmez. Yalnız **sideload**
 edilen Nuvio sürümleri plugin destekler; mağaza sürümlerinde Plugins bölümü yoktur.
 
-## Canlı TV (beta)
+## Canlı TV
 
 Canlı yayın modülleri `TvType.Live` kullanır; `loadLinks` yoktur, kanal URL'si doğrudan
 `newLiveStreamLoadResponse` ile verilir.
 
 | Eklenti | Kaynak | Kanal | Not |
 |---|---|---|---|
-| `CanliTV` **beta** | iptv-org TR M3U | 172 | 5 ana grup + arama; M3U listesi her gün güncellenir |
-| `CanliYayinKanallari` **beta** | sabit HLS | 46 | 403/404 veren 7 kayıt çıkarıldı |
+| `CanliTV` | iptv-org TR M3U | 172 | 5 ana grup + arama; M3U listesi her gün güncellenir |
+| `CanliYayinKanallari` | sabit HLS | 46 | 403/404 veren 7 kayıt çıkarıldı |
 | `TLCtr` | TLC | 1 | TLC Canlı; 720/480/360 HLS adresleri HTTP 200 |
 
 `CanliYayinKanallari` için “doğrulanmış” yalnız **HTTP 200 HLS adresi** anlamındadır; oynatma
 tek başına bu testle garanti edilmez.
+
+## Doğrulama (2026-11-03)
+
+- Cloudstream host runner: **82/82 PASS**, 93 aktif modül.
+- Emülatör smoke: DiziPal, AsyaWatch ve MinikaGO arama → detay → oynatma PASS.
+- Nuvio host: 102 sağlayıcı tarandı; **89/89 aktif** tek tek doğrulandı. HDFilmCehennemi,
+  MinikaGO, Dizikorea3 ve Inat 4K 03 Exo/Web düzeltildi/doğrulandı; Inat 4K 03 Web 120 sn'ye
+  kadar sürebiliyor.
+- HDFilmCehennemi Android emülatöründe Cloudflare/TLS nedeniyle arama yanıtı JSON dönmedi;
+  host runner PASS. Bu cihaz sınırı README’de etiketle gizlenmez.
 
 ## Eklenti ayarları
 
@@ -299,7 +309,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          95 modül
+  Yabancidizi/          93 modül
 nuvio/                  Nuvio eklenti deposu (102 sağlayıcı, sağlayıcı başına tek dosya)
 ```
 

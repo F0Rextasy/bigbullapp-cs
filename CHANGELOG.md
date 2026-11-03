@@ -5,6 +5,14 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.3] - 2026-11-03
+
+### Düzeltildi
+- **Nuvio HDFilmCehennemi**: arama sonucu tam başlıkla eşleştiriliyor; kaçışlı oynatıcı adresi çözülüyor.
+- **Nuvio MinikaGO**: arama ve bölüm isteklerine tarayıcı/XHR başlıkları eklendi; MP4 akışı dönüyor.
+- **Nuvio doğrulayıcı**: sağlayıcı başına zaman aşımı ve boş sonuçta tek tekrar eklendi.
+- **Aktif sağlayıcılar**: runner'da pass olan 58 modülün beta durumu kaldırıldı.
+
 ## [1.6.2] - 2026-11-02
 
 ### Düzeltildi

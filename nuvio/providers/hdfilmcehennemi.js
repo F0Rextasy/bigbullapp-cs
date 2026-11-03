@@ -322,9 +322,10 @@ function getStreams(tmdbId, mediaType) {
         for (var i = 0; i < rows.length; i++) {
           var href = first(/href="([^"]+)"/, rows[i]);
           if (!href) continue;
-          if (!fallback) fallback = href;
-          var slug = norm(href.split("/").filter(Boolean).pop() || "");
-          if (want && slug.indexOf(want) === 0) return href;
+          var title = first(/<img[^>]*alt="([^"]*)"/, rows[i]) || "";
+          var titleNorm = norm(title.replace(/&[a-z]+;/gi, " "));
+          if (want && titleNorm === want) return href;
+          if (want && titleNorm.indexOf(want) === 0 && !fallback) fallback = href;
         }
         return fallback;
       });
@@ -336,7 +337,8 @@ function getStreams(tmdbId, mediaType) {
     })
     .then(function (page) {
       if (!page) return null;
-      embed = first(/<iframe[^>]*(?:data-src|src)="([^"]+)"/, page);
+      var raw = String(page).replace(/\\\//g, "/");
+      embed = first(/<iframe[^>]*(?:data-src|src)="([^"]+)"/, raw);
       if (!embed) return null;
       return text(embed, { referer: BASE + "/" });
     })

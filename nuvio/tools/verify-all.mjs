@@ -30,18 +30,33 @@ for (const file of fs.readdirSync(providersDir).sort()) {
   }
   const [imdbId, type, season, episode] = meta.sample.split(":");
   const module = { exports: {} };
-  const sandbox = { module, exports: module.exports, console: { log() {} }, fetch, URL, encodeURIComponent, decodeURIComponent, Promise };
+  const controller = new AbortController();
+  const timeoutMs = Number(process.env.NUVIO_VERIFY_TIMEOUT_MS || 20000);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  const timedFetch = (url, options = {}) => fetch(url, { ...options, signal: controller.signal });
+  const sandbox = { module, exports: module.exports, console: { log() {} }, fetch: timedFetch, URL, encodeURIComponent, decodeURIComponent, Promise };
   vm.createContext(sandbox);
   let note = "";
   let ok = false;
   try {
     vm.runInContext(code, sandbox, { filename: file });
-    const out = await module.exports.getStreams(imdbId, type, season, episode);
+    let out;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        out = await module.exports.getStreams(imdbId, type, season, episode);
+      } catch (e) {
+        if (attempt === 1) throw e;
+      }
+      if (Array.isArray(out) && out.length > 0) break;
+      if (attempt === 0) await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
     const rowsOut = Array.isArray(out) ? out : [];
     ok = rowsOut.length > 0;
     note = ok ? `${rowsOut.length} stream(s) — ${String(rowsOut[0].url).slice(0, 60)}` : "0 streams";
   } catch (e) {
-    note = `threw: ${e.message}`;
+    note = e.name === "AbortError" ? `timeout ${timeoutMs}ms` : `threw: ${e.message}`;
+  } finally {
+    clearTimeout(timer);
   }
   rows.push({ id, ok, note });
 }
