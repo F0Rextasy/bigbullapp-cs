@@ -16,6 +16,7 @@ sayı arttığında güncelleme sunar.
 - **Nuvio Inat 4K 03 Web**: film çözümlemesi belirgin şekilde hızlandı.
 - **Dizilla v10**: yeni alan adı dizilla.la; oynatıcı referer'ı sabitlendi.
 - **MinikaGO v4**: ana sayfa çizgi film kartları ve arama düzeltildi.
+- **DDizimag v3**: pilavyer oynatıcı akışı, film kartları ve çok sezonlu bölümler düzeltildi.
 
 ## [1.6.5] - 2026-11-03
 
