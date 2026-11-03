@@ -10,7 +10,6 @@ import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
-import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
@@ -50,22 +49,50 @@ class MinikaGOProvider : MainAPI() {
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
         val doc = app.get(request.data, headers = uaHeaders).document
-        val items = doc.select("a[href*='/bolum/']").mapNotNull { it.toSearchResult() }
-            .distinctBy { it.url }
+        // Bölüm bağlantısı kartın görselinde; başlık ayrı showcase-text bağlantısında durur.
+        val items = doc.select("div.showcase-item").mapNotNull { item ->
+            val url = item.selectFirst("div.showcase-image a[href*='/bolum/']")?.attr("href")
+                ?.let { fixUrlNull(it) } ?: return@mapNotNull null
+            val title = item.selectFirst("a.showcase-text span")?.text()?.trim()
+                ?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            if (SKIP.containsMatchIn(title)) return@mapNotNull null
+            newMovieSearchResponse(title, url, TvType.Movie) {
+                this.posterUrl = item.selectFirst("div.showcase-image img")?.attr("src")
+                    ?.let { fixUrlNull(it) }
+            }
+        }.distinctBy { it.url }
         return newHomePageResponse(request.name, items, hasNext = false)
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val doc = app.get("$mainUrl/arama", params = mapOf("q" to query.trim()), headers = uaHeaders).document
-        val needle = normalize(query)
+        val term = query.trim()
+        if (term.isBlank()) return emptyList()
+        val doc = searchPage(term) ?: return emptyList()
+        val needle = normalize(term)
         return doc.select("div.search-item").mapNotNull { item ->
             val title = item.selectFirst("h2.item-content-title")?.text()?.trim() ?: return@mapNotNull null
-            if (needle.isNotBlank() && !normalize(title).contains(needle)) return@mapNotNull null
+            if (!normalize(title).contains(needle)) return@mapNotNull null
             if (SKIP.containsMatchIn(title)) return@mapNotNull null
             val url = item.selectFirst("a[href*='/bolum/']")?.attr("href")
                 ?.let { fixUrlNull(it) } ?: return@mapNotNull null
             newMovieSearchResponse(title, url, TvType.Movie)
         }.distinctBy { it.url }
+    }
+
+    /** Site /arama 500 dönebildiği için query= birincil, q= yedek; ikisi de düşerse hata bildirilir. */
+    private suspend fun searchPage(term: String): Document? {
+        var reachable = false
+        for (param in listOf("query", "q")) {
+            val doc = try {
+                app.get("$mainUrl/arama", params = mapOf(param to term), headers = uaHeaders)
+                    .document.also { reachable = true }
+            } catch (_: Exception) {
+                continue
+            }
+            if (doc.selectFirst("div.search-item") != null) return doc
+        }
+        if (!reachable) throw ErrorLoadingException("$name: arama yanıt vermedi. $REPORT_HINT")
+        return null
     }
 
     override suspend fun load(url: String): LoadResponse? {
@@ -107,14 +134,6 @@ class MinikaGOProvider : MainAPI() {
         return true
     }
 
-    private fun org.jsoup.nodes.Element.toSearchResult(): SearchResponse? {
-        val href = fixUrlNull(attr("href")) ?: return null
-        val title = text().trim().takeIf { it.isNotBlank() } ?: return null
-        if (SKIP.containsMatchIn(title)) return null
-        return newMovieSearchResponse(title, href, TvType.Movie) {
-            this.posterUrl = selectFirst("img")?.attr("src")?.let { fixUrlNull(it) }
-        }
-    }
 
     private fun normalize(value: String): String = value.lowercase()
         .replace('ı', 'i').replace('ş', 's').replace('ğ', 'g')

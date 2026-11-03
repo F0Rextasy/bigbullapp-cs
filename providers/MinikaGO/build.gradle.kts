@@ -1,4 +1,4 @@
-version = 3
+version = 4
 
 cloudstream {
     description = "MinikaGO — çocuk dizileri ve bölümleri (MP4)"
