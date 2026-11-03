@@ -20,13 +20,15 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.newExtractorLink
+import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.brotli.dec.BrotliInputStream
-import java.io.ByteArrayInputStream
-import java.util.zip.GZIPInputStream
+import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import java.io.ByteArrayInputStream
+import java.util.zip.GZIPInputStream
 
 private fun Element.posterSrcLazy(): String? =
     attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
@@ -46,6 +48,42 @@ class CizgiSiteProvider : MainAPI() {
     )
 
     private val client = OkHttpClient()
+
+    private fun vkApiMedia(frame: String, page: String): List<Pair<String, String>> {
+        val oid = Regex("""[?&]oid=(-?\d+)""").find(frame)?.groupValues?.get(1) ?: return emptyList()
+        val id = Regex("""[?&]id=(\d+)""").find(frame)?.groupValues?.get(1) ?: return emptyList()
+        val hash = Regex("""[?&]hash=([0-9a-fA-F]+)""").find(frame)?.groupValues?.get(1).orEmpty()
+        val token = Regex("""access_token"\s*:\s*"(anonym\.[^"]+)"""").find(page)?.groupValues?.get(1)
+            ?: return emptyList()
+        val body = FormBody.Builder()
+            .add("owner_id", oid)
+            .add("video_id", id)
+            .add("hash", hash)
+            .add("access_token", token)
+            .build()
+        val request = Request.Builder()
+            .url("https://api.vk.com/method/video.getEmbed?v=5.289&client_id=6287487")
+            .header("User-Agent", uaHeaders.getValue("User-Agent"))
+            .header("Origin", "https://vk.com")
+            .header("Referer", "https://vk.com/")
+            .post(body)
+            .build()
+        val text = runCatching {
+            client.newCall(request).execute().use { response ->
+                if (response.isSuccessful) response.body?.string() else null
+            }
+        }.getOrNull() ?: return emptyList()
+        val files = runCatching {
+            JSONObject(text).optJSONObject("response")
+                ?.optJSONObject("video")?.optJSONObject("files")
+        }.getOrNull() ?: return emptyList()
+        return files.keys().asSequence()
+            .map { it to files.optString(it) }
+            .filter { (kind, url) ->
+                url.startsWith("http") && (kind.startsWith("mp4_") || kind.startsWith("hls"))
+            }
+            .toList()
+    }
 
     private fun fetchHtml(url: String, referer: String? = null, browserHeaders: Boolean = true): String {
         val request = Request.Builder().url(url)
@@ -190,9 +228,10 @@ class CizgiSiteProvider : MainAPI() {
                             .replace("\\\\/", "/").replace("\\/", "/").replace("\\u0026", "&")
                     }.toList()
             var media = extract(embed)
+            if (media.isEmpty()) media = vkApiMedia(frame, embed)
             if (media.isEmpty()) {
                 embed = runCatching { fetchHtml(frame, data, browserHeaders = false) }.getOrNull() ?: continue
-                media = extract(embed)
+                media = extract(embed).ifEmpty { vkApiMedia(frame, embed) }
             }
             for ((kind, url) in media) {
                 val quality = getQualityFromName(kind)
@@ -200,6 +239,7 @@ class CizgiSiteProvider : MainAPI() {
                 val type = if (kind.startsWith("hls")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
                 callback.invoke(newExtractorLink(name, kind, url, type) {
                     this.referer = frame
+                    this.headers = mapOf("User-Agent" to uaHeaders.getValue("User-Agent"))
                     this.quality = quality
                 })
                 found = true
