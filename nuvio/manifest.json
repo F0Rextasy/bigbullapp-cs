@@ -670,7 +670,7 @@
       "id": "dizilife",
       "name": "DiziLife",
       "description": "DiziLife - yabanci dizi ve filmler, Turkce altyazi/dublaj (korumali HLS).",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -681,7 +681,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizi82.life&sz=128",
+      "logo": "https://www.google.com/s2/favicons?domain=dizi83.life&sz=128",
       "contentLanguage": [
         "tr"
       ]
@@ -1134,7 +1134,7 @@
       "id": "inat4k03web",
       "name": "Inat 4K 03 Web",
       "description": "Inat 4K Film 03 Web katalogu (lovefilmizle, exo uzerinden cozulur).",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
