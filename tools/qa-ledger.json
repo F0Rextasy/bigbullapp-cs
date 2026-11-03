@@ -1,6 +1,6 @@
 {
-  "generated": "2026-11-03",
-  "note": "93 aktif TR modül; Cloudstream runner 82/82 PASS, 58 beta durumu kaldırıldı. Inat 35 platformundan 11'i aktif, 24'ü settings.gradle.kts disabled listesinde pasif. Nuvio 90/102 açık; HDFilmCehennemi, MinikaGO ve ATV canlı doğrulandı.",
+  "generated": "2026-11-04",
+  "note": "93 aktif TR modül; Cloudstream 2026-11-04 tam derleme PASS (make + makePluginsJson, 93 plugin). Nuvio 102 sağlayıcıya sayısal TMDB kimlik çözümü eklendi; manifest 1.6.7. Inat CDN bu ağdan Cloudflare 1006 veriyor; AsyaLuna upstream 500, DDizimag/Yabancidizi ISP bloklu, FullHDFilmizlesene/SelcukFlix Node TLS engelli. Bu engeller sağlayıcı hatası sayılmadı.",
   "modules": [
     {
       "module": "AniArsiv",
@@ -29,8 +29,8 @@
     {
       "module": "Anizm",
       "result": "pass",
-      "evidence": "runner 2026-11-02: pass, links=4, ep=293",
-      "runner": "qa 2026-11-02"
+      "evidence": "Nuvio 2026-11-04: tt12343534 3 stream, sayısal 95479 3 stream; Cloudstream v8 compile PASS; master.txt 200.",
+      "runner": "qa 2026-11-04"
     },
     {
       "module": "AsyaAnimeleri",
@@ -64,9 +64,9 @@
     },
     {
       "module": "AsyaLuna",
-      "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=2, ep=2",
-      "runner": "autopilot.py 2026-10-30"
+      "result": "blocked",
+      "evidence": "Nuvio 2026-11-04: asyaluna.com her yol HTTP 500 (WordPress fatal); 23 mirror NXDOMAIN. Cloudstream v3 compile PASS; sahte akış yok.",
+      "runner": "qa 2026-11-04"
     },
     {
       "module": "AsyaWatch",
@@ -89,8 +89,8 @@
     {
       "module": "BirAsyaDizi",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=2, ep=2",
-      "runner": "autopilot.py 2026-10-30"
+      "evidence": "Nuvio 2026-11-04: tt27714020 4 stream (RSS 10 KB akış); sayısal TMDB Wikidata; Cloudstream v3 compile PASS.",
+      "runner": "qa 2026-11-04"
     },
     {
       "module": "CanliDizi",
@@ -113,8 +113,8 @@
     {
       "module": "Cizgimax",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=3, ep=1180",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "Nuvio 2026-11-04: tt12343534 2 Dzen; Gumball 37606/tt1942683 S01E03 1 VidMoly stream; S01E01 yalnız Sibnet 403/503 blocker. Cloudstream build PASS.",
+      "runner": "qa 2026-11-04"
     },
     {
       "module": "CizgiSite",
@@ -130,9 +130,9 @@
     },
     {
       "module": "DDizimag",
-      "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=7",
-      "runner": "autopilot.py 2026-10-30"
+      "result": "blocked",
+      "evidence": "Nuvio 2026-11-04: ddizimag.com ISP SNI RST (TLS 0 byte; HTTP 307 BTK); kod düzeltmeleri (numeric TMDB + dizi seçimi) r.jina.ai köprüsüyle canlı doğrulandı.",
+      "runner": "qa 2026-11-04"
     },
     {
       "module": "Deokwave",
@@ -203,8 +203,8 @@
     {
       "module": "DiziPal",
       "result": "pass",
-      "evidence": "runner 2026-11-02: /arama-yap araması, links=2 (480p/1080p), ep=16",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "2026-11-04: dizipal1592.com -> 301 -> dizipal1593.com 200; Nuvio node:https e2e tt0133093 ve 603 -> 2 HLS (dplayer82 Firefox UA); harness undici TLS 403; Cloudstream v5 compile PASS.",
+      "runner": "qa 2026-11-04"
     },
     {
       "module": "DiziPod",
@@ -245,8 +245,8 @@
     {
       "module": "Dizikorea3",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=33",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "Nuvio 2026-11-04: tt43088191 ve 316197 -> 1 stream (vidmoly 1080p); playerdkorea 10 sn gecikmesi kaldırıldı; Cloudstream v6 compile PASS.",
+      "runner": "qa 2026-11-04"
     },
     {
       "module": "Dizilla",
@@ -293,8 +293,8 @@
     {
       "module": "FullHDFilmizlesene",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "2026-11-04: rapidvid master + ses rendition canlı 200; Cloudstream v4 compile PASS; Nuvio CF/TLS engeli nedeniyle kapalı.",
+      "runner": "qa 2026-11-04"
     },
     {
       "module": "HDFilmCehennemi",
@@ -323,8 +323,8 @@
     {
       "module": "HDFilmizle",
       "result": "pass",
-      "evidence": "runner 2026-11-02: div.playex player, links=1 (1080p HLS), subs=2",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "Nuvio 2026-11-04: tt0133093 ve 603 -> 1 stream; options2 çok parçalı film; Cloudstream v5 compile PASS.",
+      "runner": "qa 2026-11-04"
     },
     {
       "module": "HDFilmizleBest",
@@ -365,8 +365,8 @@
     {
       "module": "MinikaCocuk",
       "result": "pass",
-      "evidence": "runner 2026-10-31: pass, links=1, ep=0",
-      "runner": "autopilot.py 2026-10-31"
+      "evidence": "Nuvio 2026-11-04: tt0487849 Pocoyo 1 MP4; Cloudstream v6 kaynak düzeltildi ancak modül hâlâ settings.gradle.kts disabled.",
+      "runner": "qa 2026-11-04"
     },
     {
       "module": "NetFilmizle",
@@ -461,8 +461,8 @@
     {
       "module": "Yabancidizi",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "2026-11-04: WARP proxy ile tt0903747 2 stream (720/1080 HLS), tt8079248 ve 559969 da stream; Cloudstream v6 compile PASS.",
+      "runner": "qa 2026-11-04"
     },
     {
       "module": "YesilCamTv",

@@ -36,7 +36,7 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 /**
- * DiziPal — dizipal1592.com (Next.js arayüzü, Türkçe dizi + film, platform bölümleri).
+ * DiziPal — dizipal1593.com (Next.js arayüzü, Türkçe dizi + film, platform bölümleri).
  *
  * Arama `POST /api/mj` JSON servisine gider (`action=searchContent`). Liste ve detay sayfaları
  * sunucu tarafında render edilir; künye `application/ld+json` (TVSeries/Movie) bloğundadır.

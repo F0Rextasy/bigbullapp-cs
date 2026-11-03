@@ -436,27 +436,6 @@
       "latencyMs": 397,
       "title": "KoreanTürk - En Güncel Kore Dizileri ve Filmleri izle"
     },
-    "dizipal1592.com": {
-      "id": "dizipal1592-com",
-      "name": "DiziPal",
-      "mainUrl": "https://dizipal1592.com",
-      "status": "implemented",
-      "http": 200,
-      "title": "Dizipal | Dizipal Orijinal | Dizipal Güncel",
-      "language": "tr",
-      "tvTypes": [
-        "TvSeries",
-        "Movie"
-      ],
-      "poolNames": [
-        "DiziPal"
-      ],
-      "source": "provider-source",
-      "health": "ok",
-      "checked": "2026-10-29T19:23:07Z",
-      "latencyMs": 321,
-      "module": "DiziPal"
-    },
     "dizipod.com": {
       "id": "dizipod-com",
       "name": "DiziPod",
@@ -1721,6 +1700,27 @@
         "Inat4k06Web",
         "Inat4k07Web"
       ]
+    },
+    "dizipal1593.com": {
+      "id": "dizipal1593-com",
+      "name": "DiziPal",
+      "mainUrl": "https://dizipal1593.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "Dizipal | Dizipal Orijinal | Dizipal Güncel",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "poolNames": [
+        "DiziPal"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-11-03T21:16:05Z",
+      "latencyMs": 321,
+      "module": "DiziPal"
     }
   }
 }
