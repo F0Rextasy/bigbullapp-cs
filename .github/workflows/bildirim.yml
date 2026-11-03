@@ -41,7 +41,7 @@ jobs:
           CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD -- \
             providers nuvio/providers nuvio/manifest.json \
             | cut -d/ -f2 | sort -u)
-          if [ -z "$CHANGED" ]; then
+          if [ -z "$CHANGED" ] && [ "$FORCE" != "true" ]; then
             echo "Sağlayıcı değişikliği yok; bildirim atlandı."
             exit 0
           fi
