@@ -17,6 +17,7 @@ sayı arttığında güncelleme sunar.
 - **Dizilla v10**: yeni alan adı dizilla.la; oynatıcı referer'ı sabitlendi.
 - **MinikaGO v4**: ana sayfa çizgi film kartları ve arama düzeltildi.
 - **DDizimag v3**: pilavyer oynatıcı akışı, film kartları ve çok sezonlu bölümler düzeltildi.
+- **DiziLife v6**: yeni alan adı dizi83.life.
 
 ## [1.6.5] - 2026-11-03
 

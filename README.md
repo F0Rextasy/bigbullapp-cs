@@ -125,7 +125,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Dizigecesi` | dizigecesi.com | Film | — | — | — | — | — | — |
 | `Dizigom` | dizigom.news | Film | — | — | — | — | — | — |
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
-| `DiziLife` | dizi82.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
+| `DiziLife` | dizi83.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
 | `Dizirella` | dizirella.one | Dizi | — | — | — | — | — | — |
 | `DiziYou` | diziyou.one | Dizi | — | — | ✓ | ✓ | — | ✓ |
 | `Diziasia` | diziasia.com | Asya dizi | ✓ | ✓ | — | — | — | — |
