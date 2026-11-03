@@ -1529,7 +1529,10 @@
   "id": "tt15404360",
   "poster": "https://images.metahub.space/poster/medium/tt15404360/img"
  },
- "series|the great flood": null,
+ "series|the great flood": {
+  "id": "tt2235759",
+  "poster": "https://images.metahub.space/poster/medium/tt2235759/img"
+ },
  "series|kpop demon hunters": null,
  "series|girls on the wire": null,
  "series|demon city": {
@@ -2892,7 +2895,10 @@
  "movie|peaky blinders l ms z adam": null,
  "movie|g lgenin kenari": null,
  "movie|gece devriyesi": null,
- "movie|cam sehpa": null,
+ "movie|cam sehpa": {
+  "id": "tt8361028",
+  "poster": "https://images.metahub.space/poster/medium/tt8361028/img"
+ },
  "movie|d i s c o": {
   "id": "tt39105882",
   "poster": "https://images.metahub.space/poster/medium/tt39105882/img"
@@ -4533,5 +4539,33 @@
   "id": "tt34890576",
   "poster": "https://m.media-amazon.com/images/M/MV5BMjNlMjM4NTAtYjE5YS00ZGYyLWEyMTYtNjFlMmIxZDEzYjhhXkEyXkFqcGc@._V1_SX250.jpg"
  },
- "movie|portekiz a ki 2026": null
+ "movie|portekiz a ki 2026": null,
+ "series|sora wa akai kawa no hotori": null,
+ "series|chitose kun wa ramune bin no naka part 2": null,
+ "series|gensou suikoden": null,
+ "series|tsuihou sareta cheat fuyo majutsushi wa kimama na second life wo ouka suru ore wa buki dake ja naku arayuru mono ni kyouka point wo fuyo dekiru shi ore no ishi de itsudemo kouka wo kaijo dekiru kedo nokotta hitotachi daijoubu": null,
+ "series|choujun choujou senpai": null,
+ "series|shiotaiou no satou san ga ore ni dake amai": null,
+ "series|kyouran reijou nia liston": {
+  "id": "tt41296544",
+  "poster": "https://images.metahub.space/poster/medium/tt41296544/img"
+ },
+ "series|undercover miss hong": {
+  "id": "tt39219419",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTkwZTc1MzQtNWJhNi00MTE2LTgxOWYtYTBkNGQ4MjFhYzQ5XkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "series|in your radiant season": {
+  "id": "tt39369595",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTJiMzVjZjEtZmNjYS00YzVhLWFjNWQtNTE4MGUyZDM3ZWVhXkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "movie|y netilemez tezz": null,
+ "movie|araf": {
+  "id": "tt2249712",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTM4ODA5NzU0Ml5BMl5BanBnXkFtZTcwNjg1NTAyOA@@._V1_SX250.jpg"
+ },
+ "movie|the outpost": {
+  "id": "tt3833480",
+  "poster": "https://images.metahub.space/poster/medium/tt3833480/img"
+ },
+ "movie|haylaz": null
 }
