@@ -1,4 +1,4 @@
-// @provider {"id":"atv","name":"ATV","types":["tv"],"domain":"atv.com.tr","formats":["mp4"],"sample":"tt1534360:tv:1:1","description":"ATV dizi bolumleri (atv.com.tr VOD MP4 akislari).","verified":false}
+// @provider {"id":"atv","name":"ATV","types":["tv"],"domain":"atv.com.tr","formats":["mp4"],"sample":"tt1534360:tv:1:1","description":"ATV dizi bolumleri (atv.com.tr VOD MP4 akislari).","verified":true}
 /**
  * atv — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> atv.com.tr/<slug>/<ep>-bolum/izle -> VOD mp4.

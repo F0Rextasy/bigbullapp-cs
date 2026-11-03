@@ -229,9 +229,11 @@ Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Reposito
 **Refresh** → sağlayıcıları tek tek aç. Tam liste: [`nuvio/manifest.json`](nuvio/manifest.json).
 
 **Kapsam**: Cloudstream'deki VOD sağlayıcılarının tamamı Nuvio'da da var — **102 sağlayıcı**.
-89'u canlı doğrulanmış; manifest'te `"enabled": true` ile gelir. Kalan 13'ü (`AsyaWatch`,
-`SelcukFlix`, `DiziPal`, `FullHDFilmizlesene`, `Inat 4K 01/02/04/07`, `Inat Mubi`, `MinikaCocuk`, `ATV`) Cloudflare/
-İnat CDN engeli, upstream 502/404 veya ATV/MinikaCocuk VOD timeout'u nedeniyle doğrulanamadı; `"enabled": false` ile yayınlanır.
+90'ı canlı doğrulanmış; manifest'te `"enabled": true` ile gelir. Kalan 12'si (`AsyaWatch`,
+`SelcukFlix`, `DiziPal`, `FullHDFilmizlesene`, `Inat 4K 01/02/04/07`, `Inat Mubi`, `MinikaCocuk`)
+Cloudflare/İnat CDN engeli veya upstream 502/404 nedeniyle doğrulanamadı; `"enabled": false` ile
+yayınlanır. **ATV** Nuvio'da iki ardışık canlı testte geçtiği için açıktır; Cloudstream ATV modülü
+`/izle` VOD endpoint'i timeout verdiği için ayrıca pasiftir.
 Repo eklemek sağlayıcıları çalıştırmaz: Plugins ekranında **Enable plugin providers globally** ve
 istediğin sağlayıcıların anahtarı ayrıca açılır.
 
@@ -285,9 +287,9 @@ tek başına bu testle garanti edilmez.
 
 - Cloudstream host runner: **82/82 PASS**, 93 aktif modül.
 - Emülatör smoke: DiziPal, AsyaWatch ve MinikaGO arama → detay → oynatma PASS.
-- Nuvio host: 102 sağlayıcı tarandı; **89/89 aktif** tek tek doğrulandı. HDFilmCehennemi,
-  MinikaGO, Dizikorea3 ve Inat 4K 03 Exo/Web düzeltildi/doğrulandı; Inat 4K 03 Web 120 sn'ye
-  kadar sürebiliyor.
+- Nuvio host: 102 sağlayıcı tarandı; **90/90 aktif** tek tek doğrulandı. HDFilmCehennemi iki
+  ardışık canlı testte PASS; MinikaGO, Dizikorea3 ve Inat 4K 03 Exo/Web düzeltildi/doğrulandı;
+  Inat 4K 03 Web 120 sn'ye kadar sürebiliyor.
 - HDFilmCehennemi Android emülatöründe Cloudflare/TLS nedeniyle arama yanıtı JSON dönmedi;
   host runner PASS. Bu cihaz sınırı README’de etiketle gizlenmez.
 

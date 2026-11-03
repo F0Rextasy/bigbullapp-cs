@@ -5,6 +5,12 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.4] - 2026-11-03
+
+### Düzeltildi
+- **Nuvio ATV**: iki ardışık canlı testte MP4 döndürdüğü için etkinleştirildi.
+- **Nuvio doğrulayıcı**: yavaş Inat 4K sağlayıcıları için 180 saniye timeout kuralı belgelendi.
+
 ## [1.6.3] - 2026-11-03
 
 ### Düzeltildi

@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -240,13 +240,13 @@
       "id": "atv",
       "name": "ATV",
       "description": "ATV dizi bolumleri (atv.com.tr VOD MP4 akislari).",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
       ],
       "filename": "providers/atv.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "mp4"
       ],
