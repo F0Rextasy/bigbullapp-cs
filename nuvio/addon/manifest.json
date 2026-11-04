@@ -1,6 +1,6 @@
 {
   "id": "org.bigbull.trcatalog",
-  "version": "1.6.6",
+  "version": "1.6.8",
   "name": "BigBull TR Katalog",
   "description": "Cloudstream sağlayıcılarının güncel listeleri. Katalog verir; meta ve akışı Cinemeta ile BigBull Nuvio eklentileri sağlar.",
   "resources": [
