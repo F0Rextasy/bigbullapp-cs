@@ -47,11 +47,19 @@ jobs:
           fi
 
           CUR_VERSION=$(grep -m1 '^## \[' CHANGELOG.md | sed -nE 's/^## \[([^]]+)\].*/\1/p')
-          PREV=$(git log -1 --format=%H HEAD^ -- providers nuvio/providers nuvio/manifest.json || true)
+          # Zincir push'ta "önceki sağlayıcı commit" hâlâ aynı sürümün içinde kalır;
+          # sürüm karşılaştırması PUSH-ÖNCESİ sınır (github.event.before) üzerinden yapılır.
+          BEFORE=${{ github.event.before }}
           PREV_VERSION=""
-          if [ -n "$PREV" ]; then
-            PREV_VERSION=$(git show "${PREV}:CHANGELOG.md" 2>/dev/null \
+          if [ -n "$BEFORE" ] && git cat-file -e "$BEFORE" 2>/dev/null; then
+            PREV_VERSION=$(git show "$BEFORE:CHANGELOG.md" 2>/dev/null \
               | grep -m1 '^## \[' | sed -nE 's/^## \[([^]]+)\].*/\1/p' || true)
+          else
+            PREV=$(git log -1 --format=%H HEAD^ -- providers nuvio/providers nuvio/manifest.json || true)
+            if [ -n "$PREV" ]; then
+              PREV_VERSION=$(git show "${PREV}:CHANGELOG.md" 2>/dev/null \
+                | grep -m1 '^## \[' | sed -nE 's/^## \[([^]]+)\].*/\1/p' || true)
+            fi
           fi
           if [ "$FORCE" != "true" ] && [ -n "$CUR_VERSION" ] && [ "$PREV_VERSION" = "$CUR_VERSION" ]; then
             echo "Aynı sürüm için son sağlayıcı commit'i zaten bildirildi; atlandı."
