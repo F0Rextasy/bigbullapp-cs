@@ -220,10 +220,16 @@ class HDFilmDiziIzleProvider : MainAPI() {
         val text = resp.text.replace("\\/", "/").replace("\\\"", "\"")
         var found = false
         val seen = mutableSetOf<String>()
-        suspend fun emit(stream: String, label: String, referer: String) {
+        suspend fun emit(
+            stream: String,
+            label: String,
+            referer: String,
+            forcedType: ExtractorLinkType? = null,
+        ) {
             if (!stream.startsWith("http") || !seen.add(stream)) return
             if (stream.contains("cloudflare.com/static/")) return
-            val type = if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+            val type = forcedType
+                ?: if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
             val quality = getQualityFromName(label)
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
@@ -254,17 +260,36 @@ class HDFilmDiziIzleProvider : MainAPI() {
                     emit(target, "Player", data)
                     continue
                 }
+                val innerResp = runCatching { app.get(target, headers = uaHeaders, referer = data) }
+                    .getOrNull() ?: continue
+                val innerRaw = innerResp.text
+                val inner = innerResp.document
+                val innerHtml = inner.outerHtml().replace("\\/", "/")
+                val master = xorFile(innerRaw)
+                if (master != null) {
+                    val playerBase = baseHref(innerRaw)
+                    val masterText = runCatching {
+                        app.get(master, headers = uaHeaders, referer = playerBase).text
+                    }.getOrNull().orEmpty()
+                    val height = Regex("""RESOLUTION=\d+x(\d+)""").findAll(masterText)
+                        .mapNotNull { it.groupValues[1].toIntOrNull() }.maxOrNull()
+                    emit(
+                        master,
+                        listOfNotNull(source.removeSuffix("_url"), height?.let { "${it}p" }).joinToString(" "),
+                        playerBase,
+                        forcedType = if (masterText.contains("#EXTM3U")) ExtractorLinkType.M3U8 else null,
+                    )
+                    continue
+                }
                 if (loadExtractor(target, data, subtitleCallback, callback)) {
                     found = true
                     continue
                 }
-                val inner = runCatching { app.get(target, headers = uaHeaders, referer = data).document }
-                    .getOrNull() ?: continue
                 for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""")
-                    .findAll(inner.outerHtml().replace("\\/", "/"))) {
+                    .findAll(innerHtml)) {
                     emit(m.value, "Player", target)
                 }
-                for (m in Regex("""["'](/[^"']+\.m3u8(?:\?[^"']*)?)["']""").findAll(inner.outerHtml())) {
+                for (m in Regex("""["'](/[^"']+\.m3u8(?:\?[^"']*)?)["']""").findAll(innerHtml)) {
                     emit(fixUrl(m.groupValues[1]), "Player", target)
                 }
                 for (frame in inner.select("iframe[src]")) {
@@ -325,6 +350,28 @@ class HDFilmDiziIzleProvider : MainAPI() {
         }
         return found
     }
+
+    /** playhd player hides the master playlist in an inline XOR byte array (mirrors the site's player JS). */
+    private fun xorFile(html: String): String? {
+        val re = Regex("""\(function\(d,\s*k\)[\s\S]{0,300}?\}\)\(\[([\d,\s]+)\],\s*"([^"]+)"\)""")
+        for (match in re.findAll(html)) {
+            val key = match.groupValues[2]
+            val out = StringBuilder()
+            match.groupValues[1].split(',').forEachIndexed { i, raw ->
+                val byte = raw.trim().toIntOrNull() ?: return@forEachIndexed
+                out.append((byte xor key[i % key.length].code xor ((i * 17 + 13) and 255)).toChar())
+            }
+            val url = out.toString()
+            if (url.startsWith("http://") || url.startsWith("https://")) return url
+        }
+        return null
+    }
+
+    /** The player's master playlist only answers to its own origin, given by the page's <base href>. */
+    private fun baseHref(html: String): String =
+        Regex("""<base\s+href="([^"]+)"""", RegexOption.IGNORE_CASE).find(html)?.groupValues?.get(1)
+            ?: "https://vidrame.pro/"
+
     private fun decryptSource(value: String): String {
         val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
         val key = "0123456789abcdef0123456789abcdef".toByteArray(Charsets.ISO_8859_1)

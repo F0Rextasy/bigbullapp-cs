@@ -180,8 +180,6 @@ class YesilCamTvProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf("https://rumble.com/hls-vod/3bdV8HAQsis/playlist.m3u8")
-        for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
@@ -200,8 +198,12 @@ class YesilCamTvProvider : MainAPI() {
         }
         val frames = resp.document.select("iframe[src]").mapNotNull { fixUrlNull(it.attr("src")) }.distinct()
         for (frame in frames) {
-            if (frame.contains("rumble.com/embed")) loadRumble(frame, callback) else if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
+            if (!frame.contains("rumble.com/embed") && loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
+        val rumble = (frames.filter { it.contains("rumble.com/embed") } +
+            Regex("""rumble\.com/embed/[^/?#"'\s<>]+""").findAll(text).map { "https://${it.value}" })
+            .mapNotNull { Regex("""rumble\.com/embed/([^/?#"']+)""").find(it)?.groupValues?.get(1) }.distinct()
+        for (id in rumble) if (loadRumble(id, callback)) found = true
         val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in subs) {
             if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))
@@ -212,22 +214,39 @@ class YesilCamTvProvider : MainAPI() {
         return found
     }
 
-    private suspend fun loadRumble(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
-        val id = Regex("""rumble\.com/embed/([^/?#]+)""").find(embed)?.groupValues?.get(1) ?: return false
+    /* Rumble embed HTML carries "<key>":{"url":...,"meta":{...,"h":NNN}} per quality. */
+    private suspend fun loadRumble(id: String, callback: (ExtractorLink) -> Unit): Boolean {
         val body = runCatching {
             app.get(
                 "https://rumble.com/embed/$id/",
                 headers = uaHeaders + mapOf("Referer" to "https://rumble.com/"),
-            ).text
+            ).text.replace("\\/", "/")
         }.getOrNull() ?: return false
-        val stream = Regex(""""(?:hls|url)"\s*:\s*"((?:https?:)?//[^"]+?\.m3u8[^"]*)"""") 
-            .find(body)?.groupValues?.get(1)?.replace("\\/", "/") ?: return false
-        callback.invoke(
-            newExtractorLink(name, "Rumble", stream, ExtractorLinkType.M3U8) {
+        val seen = mutableSetOf<String>()
+        val qualities = mutableSetOf<Int>()
+        var found = false
+        val rows = Regex(""""(\d+|tar|mp4)":\{"url":"(https:[^"]+?)","meta":\{"bitrate":\d+,"size":\d+,"w":\d+,"h":(\d+)""")
+            .findAll(body)
+        for (row in rows) {
+            val url = row.groupValues[2]
+            val quality = getQualityFromName("${row.groupValues[3]}p")
+            if (!url.contains("r_file=chunklist.m3u8") || !seen.add(url) || !qualities.add(quality)) continue
+            if (!Settings.qualityAllowed(quality)) continue
+            callback.invoke(newExtractorLink(name, "Rumble", url, ExtractorLinkType.M3U8) {
                 this.referer = "https://rumble.com/"
-                this.quality = getQualityFromName("1080p")
-            }
-        )
-        return true
+                this.quality = quality
+            })
+            found = true
+        }
+        if (!found) {
+            val master = Regex(""""url"\s*:\s*"(https:[^"]+?\.m3u8[^"]*)"""")
+                .find(body)?.groupValues?.get(1) ?: return false
+            callback.invoke(newExtractorLink(name, "Rumble", master, ExtractorLinkType.M3U8) {
+                this.referer = "https://rumble.com/"
+                this.quality = getQualityFromName("")
+            })
+            found = true
+        }
+        return found
     }
 }

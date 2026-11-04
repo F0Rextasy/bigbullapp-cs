@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "Dizifon — Türkçe içerik (autopilot)"

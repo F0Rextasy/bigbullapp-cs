@@ -35,8 +35,9 @@ import org.json.JSONObject
 /**
  * DiziboxIzle — diziboxizle.com
  *
- * Search hits are episode posts, so results are folded back to their series page
- * (`<slug>-<n>-sezon-<m>-bolum` -> `<slug>`). The player is a plain ok.ru iframe.
+ * The site search only indexes episode posts (`<slug>-<n>-sezon-<m>-bolum`), so hits are folded
+ * back to their series page and merged with the `/dizi-arsivi/?kelime=` title filter.
+ * Episodes embed ok.ru; diziboxtv's `/player/<id>` + CDN master flow does not exist here.
  */
 class DiziboxIzleProvider : MainAPI() {
     override var mainUrl = "https://diziboxizle.com"
@@ -102,14 +103,39 @@ class DiziboxIzleProvider : MainAPI() {
     override suspend fun search(query: String): List<SearchResponse> =
         search(query, 1)?.items ?: emptyList()
 
+    /**
+     * `wp-json/wp/v2/search` and the theme's `data_fetch` both match episode titles with AND
+     * semantics, so a series vanishes as soon as one query word is missing from its episode names
+     * (multi-word titles answered `[]`). The archive's `kelime` filter matches series titles
+     * directly, so both indexes are merged, archive cards first.
+     */
     override suspend fun search(query: String, page: Int): SearchResponseList? {
-        val res = app.get(
-            "$mainUrl/wp-json/wp/v2/search",
-            params = mapOf("search" to query, "per_page" to "20", "page" to page.toString()),
+        val term = query.trim()
+        if (term.isEmpty()) return newSearchResponseList(emptyList(), false)
+        val archive = runCatching {
+            app.get(
+                if (page > 1) "$mainUrl/dizi-arsivi/page/$page/" else "$mainUrl/dizi-arsivi/",
+                params = mapOf("kelime" to term),
+            ).document
+        }.getOrNull()
+        val cards = archive?.select("div.single-item")?.mapNotNull { it.toArchiveResult() }.orEmpty()
+        return newSearchResponseList(
+            (cards + episodeSearch(term, page)).distinctBy { it.url },
+            archive?.selectFirst(".paginate-links a.next") != null,
         )
-        if (!res.isSuccessful) return newSearchResponseList(emptyList(), false)
-        val results = JSONArray(res.text)
-        val items = (0 until results.length()).mapNotNull { index ->
+    }
+
+    /** Episode posts from `wp-json`, folded back to their series page. */
+    private suspend fun episodeSearch(term: String, page: Int): List<SearchResponse> {
+        val res = runCatching {
+            app.get(
+                "$mainUrl/wp-json/wp/v2/search",
+                params = mapOf("search" to term, "per_page" to "20", "page" to page.toString()),
+            )
+        }.getOrNull() ?: return emptyList()
+        if (!res.isSuccessful) return emptyList()
+        val results = runCatching { JSONArray(res.text) }.getOrNull() ?: return emptyList()
+        return (0 until results.length()).mapNotNull { index ->
             val item = results.optJSONObject(index) ?: return@mapNotNull null
             val episodeUrl = item.optString("url")
             if (episodeUrl.isBlank()) return@mapNotNull null
@@ -120,8 +146,6 @@ class DiziboxIzleProvider : MainAPI() {
                 .trim()
             newTvSeriesSearchResponse(title.ifBlank { series.substringAfterLast('/') }, series, TvType.TvSeries)
         }.distinctBy { it.url }
-        val totalPages = res.headers["X-WP-TotalPages"]?.toIntOrNull() ?: 0
-        return newSearchResponseList(items, page < totalPages)
     }
 
     /** Header live search (`action=data_fetch`); its nonce is scraped once per process from any page. */
@@ -137,6 +161,8 @@ class DiziboxIzleProvider : MainAPI() {
         if (res.text.trim() == "0") { // nonce rejected
             return if (refreshedNonce) null else quickSearch(query, true)
         }
+        // Null (not an empty list) hands the query to search(): the live search only knows titles
+        // whose name contains the whole keyword string, so it answers "bulunamadı" too eagerly.
         return res.document.select(".searchelement").mapNotNull { element ->
             val anchor = element.children().firstOrNull { it.tagName() == "a" } ?: return@mapNotNull null
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
@@ -146,7 +172,7 @@ class DiziboxIzleProvider : MainAPI() {
                 this.posterUrl = fixUrlNull(element.selectFirst(".search-cat-img img")?.posterSrcLazy())
                 this.year = element.selectFirst("#search-cat-year")?.text()?.trim()?.toIntOrNull()
             }
-        }.distinctBy { it.url }
+        }.distinctBy { it.url }.ifEmpty { null }
     }
 
     private suspend fun quickSearchNonce(force: Boolean): String? {

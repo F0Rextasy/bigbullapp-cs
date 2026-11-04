@@ -17,6 +17,14 @@ sayı arttığında güncelleme sunar.
 - **DiziCaN v4**: arama uç noktası siteye göre düzeltildi (`?s=`); çok kelimeli sorgularda tek-kelime ikinci deneme eklendi; runner'da links=1 PASS.
 - **SonAnime v3**: api.sonanime.com sezon/bölüm listesi ile gerçek seri yapısına geçti; 1080/720/480/360 MP4 kademeleri göreceli yollarla da çalışıyor.
 
+### Düzeltildi
+- **Dizifon v3**: arama ASCII-katlanmış sorguyla site sıralamasına göre; süresi geçmiş ok.ru sabit linki kaldırıldı; ok.ru kalite adları düzeltildi.
+- **Diziboxizle v8**: arama `wp-json` AND-tuzaklamasına takılmıyor; site başlık filtresi (`/dizi-arsivi/?kelime=`) ve tekilleştirme eklendi; runner PASS 11 arama/6 link.
+- **YesilCamTv v3**: sabit rumble linki kaldırıldı; rumble id listesi embed+sayfa metninden toplanıp kalite başına HLS üretiyor (2 link 200).
+- **UltraFilmizle v4**:Hotstream master `Accept: */*` gerektiriyor (yoksa 404); link başlıklarına stream header seti eklendi, kalite tespiti 1080p düzeldi.
+- **HDFilmDiziIzle v3**: playhd sayfasındaki XOR gizli master (`master.txt`) çözücü eklendi; vidrame origin referer ile 1080p HLS.
+- **InatYerliFilmler v2**: MODE_SINGLE token artık headers/params taşıyor (8→10 alan, geriye uyumlu); Inat ortak motoruna tek-satır filmlerde doğru resolver bilgisi gidiyor.
+
 ### Eklendi
 - **Nuvio sağlayıcı sürümleri**: manifest sürümleri artık CHANGELOG'daki `vN` numaralarından üretiliyor; kod cache'i davranış değişikliklerini yakalar.
 - **Nuvio kataloğu**: addon listeleri yeniden üretildi, manifest 1.6.7 tabanına güncellendi.

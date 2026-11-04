@@ -418,6 +418,12 @@ private fun stringMap(value: JSONObject): Map<String, String> {
     return result
 }
 
+private fun jsonOf(values: Map<String, String>): String {
+    val obj = JSONObject()
+    for ((key, value) in values) obj.put(key, value)
+    return obj.toString()
+}
+
 private class InatDecodeException : Exception()
 
 /**
@@ -786,7 +792,11 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
                     entry.type !in setOf("tv_mode", "dizi_mode", "sezon_mode", "bolum_mode")
                 if (single) {
                     newMovieLoadResponse(entry.name.ifBlank { cfg.name }, url, TvType.Movie,
-                        tokenUrl(MODE_SINGLE, entry.url, ref.index, entry.name, entry.host, entry.pin, entry.type)) {
+                        tokenUrl(
+                            MODE_SINGLE, entry.url, ref.index, entry.name,
+                            entry.host, entry.pin, entry.type,
+                            headers = entry.headers, params = entry.params,
+                        )) {
                         this.posterUrl = entry.img.ifBlank { null }
                         this.plot = entry.plot.ifBlank { null }
                     }
@@ -819,8 +829,8 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
                     type = ref.dataType,
                     img = "",
                     plot = "",
-                    headers = emptyMap(),
-                    params = emptyMap(),
+                    headers = ref.headers,
+                    params = ref.params,
                     host = ref.host,
                     pin = ref.pin,
                     dataType = ref.dataType,
@@ -1043,12 +1053,18 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
         host: String = cfg.host,
         pin: String = cfg.sha,
         dataType: String = cfg.dataType,
+        headers: Map<String, String> = emptyMap(),
+        params: Map<String, String> = emptyMap(),
     ): String {
         val separator = if (cfg.url.contains('?')) "&" else "?"
         return cfg.url + separator + "inat=" +
-            base64UrlEncode(token(mode, url, index, name, host, pin, dataType))
+            base64UrlEncode(token(mode, url, index, name, host, pin, dataType, headers, params))
     }
 
+    /**
+     * The row's own headers and resolver parameters ride along, because a single-row link never
+     * re-reads the list: without them the resolver loses its Regex1 and the embed-page session.
+     */
     private fun token(
         mode: String,
         url: String,
@@ -1057,6 +1073,8 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
         host: String = cfg.host,
         pin: String = cfg.sha,
         dataType: String = cfg.dataType,
+        headers: Map<String, String> = emptyMap(),
+        params: Map<String, String> = emptyMap(),
     ): String = listOf(
         TOKEN_PREFIX,
         mode,
@@ -1066,6 +1084,8 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
         host,
         pin,
         dataType,
+        base64UrlEncode(jsonOf(headers)),
+        base64UrlEncode(jsonOf(params)),
     ).joinToString("|")
 
     private fun parseToken(data: String): ItemRef? {
@@ -1078,7 +1098,8 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
         }
         if (!raw.startsWith("$TOKEN_PREFIX|")) return null
         val parts = raw.split("|")
-        if (parts.size != 8) return null
+        // Tokens written before the header/param fields have eight parts and stay readable.
+        if (parts.size != 8 && parts.size != 10) return null
         return ItemRef(
             mode = parts[1],
             url = parts[2],
@@ -1087,6 +1108,8 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
             host = parts[5],
             pin = parts[6],
             dataType = parts[7],
+            headers = if (parts.size == 10) normalizeHeaders(base64UrlDecode(parts[8])) else emptyMap(),
+            params = if (parts.size == 10) stringMap(entryObject(base64UrlDecode(parts[9]))) else emptyMap(),
         )
     }
 
@@ -1104,6 +1127,8 @@ open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
         val host: String,
         val pin: String,
         val dataType: String,
+        val headers: Map<String, String> = emptyMap(),
+        val params: Map<String, String> = emptyMap(),
     )
 }
 

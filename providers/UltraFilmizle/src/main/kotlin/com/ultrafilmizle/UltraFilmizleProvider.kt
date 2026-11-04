@@ -50,6 +50,8 @@ class UltraFilmizleProvider : MainAPI() {
     override val supportedTypes = setOf(TvType.Movie)
 
     private val headers get() = browserHeaders
+    // hotstream /list/ 404s unless Accept is exactly */* ; the player must send it too.
+    private val streamHeaders get() = browserHeaders + ("Accept" to "*/*")
 
     override val mainPage get() = mainPageOf(
         "$mainUrl/" to "Ana Sayfa",
@@ -134,7 +136,7 @@ class UltraFilmizleProvider : MainAPI() {
             throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
         }
         val master = runCatching {
-            app.get(stream, headers = headers, referer = embed).text
+            app.get(stream, headers = streamHeaders, referer = embed).text
         }.getOrNull().orEmpty()
         val quality = MASTER_HEIGHT.findAll(master).mapNotNull { it.groupValues[1].toIntOrNull() }
             .maxOrNull() ?: Qualities.Unknown.value
@@ -143,7 +145,7 @@ class UltraFilmizleProvider : MainAPI() {
         }
         callback(newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
             this.referer = embed
-            this.headers = headers
+            this.headers = streamHeaders
             this.quality = quality
         })
 

@@ -1,4 +1,4 @@
-version = 1
+version = 2
 cloudstream {
     description = "Inat Baks — Yerli Filmler (si̇nema & fi̇lmler, imzalı Inat API)"
     authors = listOf("F0Rextasy")

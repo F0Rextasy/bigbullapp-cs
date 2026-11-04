@@ -103,15 +103,16 @@ class DizifonProvider : MainAPI() {
         val ROWS = listOf("Diziler", "Dram", "Fantastik", "Gençlik", "Komedi", "Okul", "Romantik", "Tarihi", "Yaşam", "Anime", "Çin Dizileri", "Japon Dizileri", "Kore Dizileri", "Tayland Dizileri", "Aksiyon", "Arkadaşlık", "Doğaüstü", "Gerilim", "Gizem", "Hukuk", "İş", "Korku", "Medikal", "Müzik", "Spor", "Suç")
     }
 
-    private val pathPrefixes = listOf("/dizi/")
-
     override suspend fun search(query: String): List<SearchResponse> {
-        val q = if (false) asciiFold(query) else query
-        val url = "https://www.dizifon.cc/?s={q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
-        return cards(app.get(url, headers = uaHeaders).document, q)
+        // Site search returns nothing for Turkish diacritics ("aşk" -> 0), so query the folded form.
+        val q = asciiFold(query).trim()
+        val all = cards(app.get("$mainUrl/?s=" + java.net.URLEncoder.encode(q, "UTF-8"), headers = uaHeaders).document)
+        if (q.isBlank()) return all
+        val hits = all.filter { asciiFold(it.name).contains(q, ignoreCase = true) }
+        return hits.ifEmpty { all }
     }
 
-    private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
+    private fun cards(doc: Document): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
         if (listOf("/dizi/").none { path.startsWith(it) }) return@mapNotNull null
@@ -122,8 +123,6 @@ class DizifonProvider : MainAPI() {
             .ifBlank { card.text().trim() }
             .ifBlank { img.attr("alt").trim() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
-        if (query != null && !title.contains(query, ignoreCase = true) &&
-            !href.contains(query, ignoreCase = true)) return@mapNotNull null
         val hrefLower = href.lowercase()
         val isSeries = hrefLower.contains("/dizi/") || hrefLower.contains("/seri/") ||
             hrefLower.contains("/anime/") || hrefLower.contains("/series/")
@@ -164,15 +163,18 @@ class DizifonProvider : MainAPI() {
             if (basePath.isNotBlank() && !path.startsWith(basePath) &&
                 !path.contains(slug) && !path.contains(slugBase)) return@mapNotNull null
             if (!Regex("""(?:bolum|episode|sezon|season)""", RegexOption.IGNORE_CASE).containsMatchIn(path)) return@mapNotNull null
-            val number = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
-                .find(path)?.groupValues?.getOrNull(2)?.toIntOrNull()
+            val seasonMatch = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
+                .find(path)
+            val season = seasonMatch?.groupValues?.getOrNull(1)?.toIntOrNull()
+            val number = seasonMatch?.groupValues?.getOrNull(2)?.toIntOrNull()
                 ?: Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
                 ?: Regex("""(\d+)[-_]bolum""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
             newEpisode(href) {
                 this.name = anchor.text().trim().ifBlank { "Bölüm $number" }
+                this.season = season
                 this.episode = number
             }
-        }.distinctBy { it.data }.sortedBy { it.episode ?: 0 }
+        }.distinctBy { it.data }.sortedWith(compareBy({ it.season ?: 1 }, { it.episode ?: 0 }))
         if (episodes.isNotEmpty()) {
             return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
@@ -210,8 +212,6 @@ class DizifonProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>("https://ok6-30.vkuser.net/?expires=1793448334623&srcIp=176.33.107.59&pr=10&srcAg=CHROME&ms=95.142.206.34&type=3&sig=01ecvoBOZ9I&ct=0&urls=185.180.203.46%3B176.112.172.39&clientType=0&zs=65&id=21292777474783")
-        for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
@@ -248,7 +248,9 @@ class DizifonProvider : MainAPI() {
                     if (loadExtractor(subUrl, frame, subtitleCallback, callback)) found = true
                 }
             }
-            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) loadOkRu(frame, callback) else if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
+            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) {
+                if (loadOkRu(frame, callback)) found = true
+            } else if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
         val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in subs) {
@@ -278,7 +280,14 @@ class DizifonProvider : MainAPI() {
             callback.invoke(
                 newExtractorLink(name, "OkRu $label", stream, ExtractorLinkType.VIDEO) {
                     this.referer = "https://ok.ru/"
-                    this.quality = getQualityFromName(label.uppercase())
+                    this.quality = when (label.lowercase()) {
+                        "mobile", "lowest" -> 240
+                        "low" -> 360
+                        "sd" -> 480
+                        "hd" -> 720
+                        "full" -> 1080
+                        else -> getQualityFromName(label.uppercase())
+                    }
                 }
             )
             found = true
