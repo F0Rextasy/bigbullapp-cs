@@ -167,8 +167,8 @@
     {
       "module": "DiziCaN",
       "result": "pass",
-      "evidence": "fix 2026-11-04: arama ucu /arama/?s= düzeltildi + tek-kelime fallback (Nuvio zinciriyle aynı); runner PASS search sonrası links=1 (runner 2026-11-03 links=0, sorunun arama katmanı olduğu görüldü); Nuvio canlı doğrulama paralel ajan turunda beklemede",
-      "runner": "jvm-runner 2026-11-04"
+      "evidence": "fix 2026-11-04: arama ucu /arama/→/?s= + tek-kelime fallback; Nuvio canlı PASS (2 ayrı koşu, 1-2 link). Runner kanıtı dalgalı: run-all-bilinmeyen.json links=1 PASS; run-all-dizican.json links=0 extractor-unsupported (vidmoly stub sınıfı) — cihaz kanıtı bekliyor",
+      "runner": "jvm-runner + Nuvio LIVE 2026-11-04"
     },
     {
       "module": "DiziFilmIzle",
