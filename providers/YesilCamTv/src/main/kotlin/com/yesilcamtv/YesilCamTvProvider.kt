@@ -84,9 +84,13 @@ class YesilCamTvProvider : MainAPI() {
 
     private val pathPrefixes = listOf("/")
 
+
     override suspend fun search(query: String): List<SearchResponse> {
-        val url = "https://yesilcamtv.com.tr/?s={q}".replace("{q}", java.net.URLEncoder.encode(query, "UTF-8"))
-        return cards(app.get(url, headers = uaHeaders).document)
+        // site araması yalnız tek kelimede çalışıyor; çok kelimede ilk kelimeyle tekrar dene
+        suspend fun probe(q: String) = cards(app.get("https://yesilcamtv.com.tr/?s=" + java.net.URLEncoder.encode(q, "UTF-8"), headers = uaHeaders).document)
+        val direct = probe(query)
+        if (direct.isNotEmpty() || !query.contains(' ')) return direct
+        return probe(query.trim().split(Regex("\\s+")).first())
     }
 
     private fun cards(doc: Document): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->

@@ -109,7 +109,7 @@ class DizifonProvider : MainAPI() {
         val all = cards(app.get("$mainUrl/?s=" + java.net.URLEncoder.encode(q, "UTF-8"), headers = uaHeaders).document)
         if (q.isBlank()) return all
         val hits = all.filter { asciiFold(it.name).contains(q, ignoreCase = true) }
-        return hits.ifEmpty { all }
+        return hits // site ?s= sorguyu yok sayıp sabit liste döndürüyor; eşleşme yoksa boş dön (alakasız kart gösterme)
     }
 
     private fun cards(doc: Document): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->

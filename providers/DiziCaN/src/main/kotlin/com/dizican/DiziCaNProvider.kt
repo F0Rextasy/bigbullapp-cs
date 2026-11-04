@@ -154,16 +154,19 @@ class DiziCaNProvider : MainAPI() {
             val path = href.substringAfter(mainUrl).substringBefore('?')
             if (basePath.isNotBlank() && !path.startsWith(basePath) &&
                 !path.contains(slug) && !path.contains(slugBase)) return@mapNotNull null
-            val match = Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path) ?: return@mapNotNull null
-            val number = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
-                .find(path)?.groupValues?.getOrNull(2)?.toIntOrNull()
-                ?: Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
-                ?: Regex("""(\d+)[-_]bolum""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
+            // site bölüm sayfaları: /bolum/<slug>-(S)-sezon-(E)-bolum/ veya /bolum/<slug>-(E)-bolum-izle/
+            if (!path.contains("/bolum/")) return@mapNotNull null
+            val seasonEp = Regex("""(\d+)-sezon-(\d+)-bolum""").find(path)
+            val number = seasonEp?.groupValues?.get(2)?.toIntOrNull()
+                ?: Regex("""(\d+)-bolum""").find(path)?.groupValues?.get(1)?.toIntOrNull()
+                ?: Regex("""(?:bolum|episode)[^/]*?[-_](\d+)""").find(path)?.groupValues?.get(1)?.toIntOrNull()
+                ?: return@mapNotNull null
             newEpisode(href) {
-                this.name = anchor.text().trim().ifBlank { "Bölüm $number" }
+                if (seasonEp != null) this.season = seasonEp.groupValues[1].toIntOrNull() ?: 1
                 this.episode = number
+                this.name = anchor.text().trim().ifBlank { "Bölüm $number" }
             }
-        }.distinctBy { it.data }.sortedBy { it.episode ?: 0 }
+        }.distinctBy { it.data }.sortedWith(compareBy({ it.season ?: 1 }, { it.episode ?: 0 }))
         if (episodes.isNotEmpty()) {
             return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
@@ -226,6 +229,11 @@ class DiziCaNProvider : MainAPI() {
                 emit(frame, "Embed", data)
                 continue
             }
+            // ok.ru embed'i çekirdek extractor'ı çözemiyor (çöp "Embed" linki); özel çözücüye yönlendir
+            if (frame.contains("ok.ru/videoembed")) {
+                if (loadOkRu(frame, callback)) found = true
+                continue
+            }
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
                 val innerText = inner.replace("\\/", "/")
@@ -249,4 +257,37 @@ class DiziCaNProvider : MainAPI() {
         return found
     }
 
+    // ok.ru videoPlayerMetadata çözücüsü (Dizifon'da cihaz kanıtlı).
+    private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
+        val id = Regex("""videoembed/(\d+)""").find(embed)?.groupValues?.get(1) ?: return false
+        val body = runCatching {
+            app.post(
+                "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
+                data = emptyMap(),
+                headers = mapOf("User-Agent" to "Mozilla/5.0 (Linux; Android 13)", "Referer" to "https://ok.ru/"),
+            ).text
+        }.getOrNull() ?: return false
+        val videos = runCatching { JSONObject(body).optJSONArray("videos") }.getOrNull() ?: return false
+        var found = false
+        for (i in 0 until videos.length()) {
+            val item = videos.optJSONObject(i) ?: continue
+            val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
+            val label = item.optString("name").ifBlank { "OkRu" }
+            callback.invoke(
+                newExtractorLink(name, "OkRu $label", stream, ExtractorLinkType.VIDEO) {
+                    this.referer = "https://ok.ru/"
+                    this.quality = when (label.lowercase()) {
+                        "mobile", "lowest" -> 240
+                        "low" -> 360
+                        "sd" -> 480
+                        "hd" -> 720
+                        "full" -> 1080
+                        else -> getQualityFromName(label.uppercase())
+                    }
+                }
+            )
+            found = true
+        }
+        return found
+    }
 }

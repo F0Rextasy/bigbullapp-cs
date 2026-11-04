@@ -167,8 +167,10 @@
     {
       "module": "DiziCaN",
       "result": "pass",
-      "evidence": "fix 2026-11-04: arama ucu /arama/→/?s= + tek-kelime fallback; Nuvio canlı PASS (2 ayrı koşu, 1-2 link). Runner kanıtı dalgalı: run-all-bilinmeyen.json links=1 PASS; run-all-dizican.json links=0 extractor-unsupported (vidmoly stub sınıfı) — cihaz kanıtı bekliyor",
-      "runner": "jvm-runner + Nuvio LIVE 2026-11-04"
+      "evidence": "v",
+      "runner": "jvm-runner + Nuvio LIVE 2026-11-04",
+      "device": "PARTIAL",
+      "date": "2026-11-04"
     },
     {
       "module": "DiziFilmIzle",
@@ -179,8 +181,10 @@
     {
       "module": "Dizifon",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=2, ep=2",
-      "runner": "autopilot.py 2026-10-30"
+      "evidence": "v",
+      "runner": "autopilot.py 2026-10-30",
+      "device": "PARTIAL",
+      "date": "2026-11-04"
     },
     {
       "module": "Dizigom",
@@ -323,8 +327,10 @@
     {
       "module": "HDFilmDiziIzle",
       "result": "pass",
-      "evidence": "runner 2026-11-01: pass, links=1; bot streams=1 (gerçek HLS)",
-      "runner": "qa 2026-11-01"
+      "evidence": "v",
+      "runner": "qa 2026-11-01",
+      "device": "PARTIAL",
+      "date": "2026-11-04"
     },
     {
       "module": "HDFilmizle",
@@ -449,8 +455,10 @@
     {
       "module": "UltraFilmizle",
       "result": "pass",
-      "evidence": "runner 2026-10-31: pass, links=1, ep=0",
-      "runner": "autopilot.py 2026-10-31"
+      "evidence": "v",
+      "runner": "autopilot.py 2026-10-31",
+      "device": "PARTIAL",
+      "date": "2026-11-04"
     },
     {
       "module": "WebdramaTurkey2",
@@ -473,8 +481,10 @@
     {
       "module": "YesilCamTv",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-      "runner": "autopilot.py 2026-10-30"
+      "evidence": "v",
+      "runner": "autopilot.py 2026-10-30",
+      "device": "PARTIAL",
+      "date": "2026-11-04"
     },
     {
       "module": "StarTV",
@@ -653,8 +663,10 @@
     {
       "module": "InatYerliFilmler",
       "result": "pass",
-      "evidence": "runner 2026-11-01: 1 bağlantı, kategori dolu",
-      "runner": "qa 2026-11-01"
+      "evidence": "v",
+      "runner": "qa 2026-11-01",
+      "device": "PARTIAL",
+      "date": "2026-11-04"
     },
     {
       "module": "Inat4k01Exo",

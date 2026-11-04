@@ -31,6 +31,7 @@ import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import org.json.JSONObject
+import org.json.JSONArray
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -81,8 +82,19 @@ class UltraFilmizleProvider : MainAPI() {
 
     override suspend fun search(query: String, page: Int): SearchResponseList? {
         if (page > 1) return newSearchResponseList(emptyList(), false)
+        // tema ?s= sorguyu yok sayıp "son eklenenler" döndürüyor; gerçek arama wp-json'da
+        val items = runCatching {
+            val arr = JSONArray(app.get("$mainUrl/wp-json/wp/v2/search", params = mapOf("search" to query.trim(), "per_page" to "20"), headers = headers).text)
+            (0 until arr.length()).mapNotNull { i ->
+                val o = arr.getJSONObject(i)
+                val title = o.optString("title").takeIf { it.isNotBlank() } ?: return@mapNotNull null
+                val url = o.optString("url").takeIf { it.isNotBlank() } ?: return@mapNotNull null
+                newMovieSearchResponse(title, url, TvType.Movie)
+            }
+        }.getOrNull().orEmpty()
+        if (items.isNotEmpty()) return newSearchResponseList(items, false)
         val doc = app.get(mainUrl, params = mapOf("s" to query.trim()), headers = headers).document
-        return newSearchResponseList(doc.cards(), false)
+        return newSearchResponseList(doc.cards().filter { it.name.contains(query.trim(), ignoreCase = true) }, false)
     }
 
     override suspend fun load(url: String): LoadResponse? {
