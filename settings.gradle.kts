@@ -14,6 +14,9 @@ val disabled = listOf(
     "MinikaCocuk",
     // atv.com.tr /izle endpoint'i 2026-11-02'den beri timeout; oynatılabilir VOD yok.
     "ATV",
+    // Nuvio tarafinda enabled:true birakilanlar: inat4k06web, inattod,
+    // inatyabancidiziler, inatyerlidiziler (nuvio/manifest.json); canli dogrulama
+    // Nuvio'dan akiyor, CS tarafi runner'i bekliyor.
 )
 
 File(rootDir, "providers").eachDir { dir ->

@@ -108,6 +108,7 @@ Tek modül derleme ve cihaza kurulum:
 | `BelgeselX` | belgeselx.com | Belgesel | — | — | — | — | — | — |
 | `BirAsyaDizi` | birasyadizi.cx | Dizi | — | — | — | — | — | — |
 | `CanliDizi` | canlidizi.sbs | Dizi | — | — | — | — | — | — |
+| `CanliTV` | iptv-org TR M3U | Canlı TV | — | — | — | — | — | — |
 | `CanliYayinKanallari` | tabii.com | Canlı TV | — | — | — | — | — | — |
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
 | `CizgiSite` | www.cizgi.site | Dizi | — | — | — | — | — | — |

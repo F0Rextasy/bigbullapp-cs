@@ -141,7 +141,7 @@
       "latencyMs": 1168,
       "title": "Yabancı Dizi İzle, Film İzle, Anime İzle | Türkçe Dublaj &amp; Altyazılı | Yabancıdizi - Yabancı Dizi, İzle, Film İzle, "
     },
-    "dizi82.life": {
+    "dizi83.life": {
       "id": "dizi82-life",
       "name": "DiziLife",
       "mainUrl": "https://dizi83.life",
@@ -661,7 +661,7 @@
       "source": "provider-source",
       "module": "AnimeciX"
     },
-    "dizilla.now": {
+    "dizilla.la": {
       "id": "dizilla-now",
       "name": "Dizilla",
       "mainUrl": "https://dizilla.la",
@@ -1375,6 +1375,7 @@
       "name": "ATV",
       "mainUrl": "https://www.atv.com.tr",
       "status": "implemented",
+      "disabled": true,
       "http": 200,
       "title": "Aşk ve Taht Dizisi",
       "language": "tr",
@@ -1475,6 +1476,7 @@
       "name": "MinikaCocuk",
       "mainUrl": "https://www.minikacocuk.com.tr",
       "status": "implemented",
+      "disabled": true,
       "http": 200,
       "title": "MinikaCocuk",
       "language": "tr",
@@ -1605,7 +1607,8 @@
       ],
       "source": "provider-source",
       "health": "unknown",
-      "module": "Inat",
+      "module": null,
+      "disabled": true,
       "modules": [
         "InatListe1Tr",
         "InatListe2Glb",
@@ -1645,7 +1648,8 @@
       ],
       "source": "provider-source",
       "health": "unknown",
-      "module": "Inat",
+      "module": null,
+      "disabled": true,
       "modules": [
         "InatSpor",
         "InatDerbiler",
@@ -1667,7 +1671,8 @@
       ],
       "source": "provider-source",
       "health": "unknown",
-      "module": "Inat",
+      "module": null,
+      "disabled": true,
       "modules": [
         "InatPremium"
       ]
@@ -1687,7 +1692,8 @@
       ],
       "source": "provider-source",
       "health": "unknown",
-      "module": "Inat",
+      "module": null,
+      "disabled": true,
       "modules": [
         "Inat4k01Exo",
         "Inat4k01Web",

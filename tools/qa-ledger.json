@@ -1,6 +1,6 @@
 {
   "generated": "2026-11-04",
-  "note": "93 aktif TR modül; Cloudstream 2026-11-04 tam derleme PASS (make + makePluginsJson, 93 plugin). Nuvio 102 sağlayıcıya sayısal TMDB kimlik çözümü eklendi; manifest 1.6.7. Inat CDN bu ağdan Cloudflare 1006 veriyor; AsyaLuna upstream 500, DDizimag/Yabancidizi ISP bloklu, FullHDFilmizlesene/SelcukFlix Node TLS engelli. Bu engeller sağlayıcı hatası sayılmadı.",
+  "note": "93 aktif TR modül; Cloudstream 2026-11-04 tam derleme PASS (make + makePluginsJson, 93 plugin, 1.6.8). Nuvio manifest 1.6.8, sürümler CHANGELOG vN'den üretiliyor; Inat CDN bu ağdan Cloudflare 1006 veriyor; AsyaLuna upstream 500, DDizimag/Yabancidizi ISP bloklu, FullHDFilmizlesene/SelcukFlix/DiziPal Node TLS 403 engelli, AsyaWatch pichive 404. Bu engeller sağlayıcı hatası sayılmadı; Inat 4 Inat listesi ve 4 düzeltilmiş sağlayıcı Nuvio LIVE koşusuyla kanıtlandı/kapalı bırakıldı.",
   "modules": [
     {
       "module": "AniArsiv",
@@ -191,8 +191,8 @@
     {
       "module": "DiziLife",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=9",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "verify.py 2026-11-04: /ara?q=gibi -> detay -> bölüm -> player -> decrypt -> #EXTM3U (tam geçit, domain dizi83.life)",
+      "runner": "verify.py 2026-11-04"
     },
     {
       "module": "DiziMom",
@@ -251,8 +251,14 @@
     {
       "module": "Dizilla",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=120",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "probe 2026-11-04: /ara?q=gibi 200, 5 kart, detay 200, sezon/bolum bağlantısı mevcut (tam zincir koşusu yok; domain dizilla.la)",
+      "runner": "verify-probe 2026-11-04"
+    },
+    {
+      "module": "MinikaGO",
+      "result": "pass",
+      "evidence": "probe 2026-11-04: /arama?q=aslan 200, 63 bölüm bağlantısı (runner yok; minikago.com.tr)",
+      "runner": "verify-probe 2026-11-04"
     },
     {
       "module": "DMAX",
@@ -469,12 +475,6 @@
       "result": "pass",
       "evidence": "runner 2026-10-30: pass, links=1, ep=0",
       "runner": "autopilot.py 2026-10-30"
-    },
-    {
-      "module": "MinikaGO",
-      "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-      "runner": "bench_runner.py 2026-10-30"
     },
     {
       "module": "StarTV",

@@ -18,27 +18,32 @@ oluşturulmalı; token/chat_id repoya yazılmaz, GitHub Secrets'ta tutulur.
 
 ## 3. GitHub Secrets
 
+Yalnız bot token'ı gerekiyor; `chat_id` ve duyuru konusu
+`tools/telegram-topics.json`'dan okunur (`bildirim.yml`).
+
 ```bash
 gh secret set TELEGRAM_BOT_TOKEN -R F0Rextasy/bigbullapp-cs
-gh secret set TELEGRAM_CHAT_ID   -R F0Rextasy/bigbullapp-cs
 ```
 
-## 4. Test
+## 4. Test / zorla gönder
 
 ```bash
-gh workflow run bildirim.yml -R F0Rextasy/bigbullapp-cs --ref master
+gh workflow run bildirim.yml -R F0Rextasy/bigbullapp-cs --ref master --field force=true
 ```
 
-Secrets yoksa workflow sessizce atlar (hata vermez).
+- Secrets yoksa workflow sessizce atlar (hata vermez).
+- `force=true` iki kapıyı da atlar: sağlayıcı dosyası değişmese ve CHANGELOG sürümü
+  değişmese de bildirim gider.
 
 ## Notlar
 
-- `github.token` ile yapılan push'lar **başka workflow'u tetiklemez**. Bu yüzden domain botu,
-  commit'ten sonra `gh workflow run bildirim.yml` çağırır (`actions: write` izniyle).
-- Domain botu bilinçli olarak **GH_PAT kullanmaz**: PAT push'u `push` olayını tetikler ve
-  Build/Bildirim iki kez çalışırdı. Tek yol: GITHUB_TOKEN + açık `workflow run`.
-- Kullanıcı push'ları `push` olayıyla bildirimi kendiliğinden tetikler.
-- Mesaj içeriği: kısa SHA, commit başlığı, yazar, değişen dosya sayısı, commit bağlantısı.
+- `github.token` ile yapılan push'lar **başka workflow'u tetiklemez**. Kullanıcı push'ları
+  `push` olayıyla bildirimi kendiliğinden yürütür; bot ya da başka token iten otomasyon
+  varsa bildirimi açıkça `gh workflow run` ile çağırmak gerekir.
+- Bildirim, CHANGELOG'un en üst sürümünü ve o sürüm bölümündeki satırları
+  `Duyuru` forum konusuna gönderir (hedef: `tools/telegram-topics.json`).
+- Aynı CHANGELOG sürümünü taşıyan ikinci sağlayıcı commit'i sessiz kalır; kaçan
+  bildirimleri `force=true` ile gönder.
 
 ## Güvenlik
 

@@ -57,7 +57,7 @@ jobs:
           cd "$GITHUB_WORKSPACE/src"
           chmod +x gradlew
           ./gradlew make makePluginsJson --console=plain
-          cp providers/*/build/*.cs3 "$GITHUB_WORKSPACE/builds"
+          cp providers/*/build/*.cs3 "$GITHUB_WORKSPACE/builds" || { echo "cs3 üretilemedi"; exit 1; }
           cp build/plugins.json "$GITHUB_WORKSPACE/builds"
 
       - name: builds dalını yayınla

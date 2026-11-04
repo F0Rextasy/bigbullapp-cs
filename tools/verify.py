@@ -339,7 +339,7 @@ def verify_yabancidizi() -> dict:
 
 
 def verify_dizilife() -> dict:
-    return verify_shared_player(base("dizi82.life"), "/ara?q=gibi", r'href="([^"]*/dizi/[^"]+)"')
+    return verify_shared_player(base("dizi83.life"), "/ara?q=gibi", r'href="([^"]*/dizi/[^"]+)"')
 
 
 VERIFIERS = {
@@ -350,7 +350,7 @@ VERIFIERS = {
     "asyaanimeleri.top": verify_asyaanimeleri,
     "kultfilmler.net": verify_kultfilmler,
     "yabancidizi.live": verify_yabancidizi,
-    "dizi82.life": verify_dizilife,
+    "dizi83.life": verify_dizilife,
 }
 
 
