@@ -72,9 +72,19 @@ jobs:
             /^- / { sub(/^- /, "• "); print }
           ' || true)
           [ -n "$DETAILS" ] && DETAILS="${DETAILS}${NL}"
-          DETAILS=$(printf '%s' "$DETAILS" | sed 's/\*\*//g; s/`//g')
           [ -z "$DETAILS" ] && DETAILS="• Depo güncellemesi yapıldı.${NL}"
+          # HTML kaçırma ÖNCE, sonra kendi etiketlerimiz: bölüm başlıkları ve **Ad vX** kalın
           DETAILS=$(printf '%s' "$DETAILS" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
+          DETAILS=$(printf '%s' "$DETAILS" | sed -E \
+            -e "s/^— Eklendi/✨ <b><i>Eklendi<\/i><\/b>/" \
+            -e "s/^— Düzeltildi/🛠 <b><i>Düzeltildi<\/i><\/b>/" \
+            -e "s/^— Değişti/🔄 <b><i>Değişti<\/i><\/b>/" \
+            -e "s/^— Kaldırıldı/🗑 <b><i>Kaldırıldı<\/i><\/b>/" \
+            -e "s/^— (.*)$/— <b><i>\1<\/i><\/b>/" \
+            -e "s/\*\*([^*]+)\*\*/<b>\1<\/b>/g" \
+            -e "s/\`//g")
+          DETAILS=$(printf '%s' "$DETAILS" | awk '{ total += length($0) + 1; if (total > 3600) { print "• … ve daha fazlası — değişiklik notuna bakın"; exit } print }')
+          DETAILS="${DETAILS}${NL}"
           HEADING=$(grep -m1 '^## \[' CHANGELOG.md || true)
           VERSION=$(printf '%s' "$HEADING" | sed -nE 's/^## \[([^]]+)\].*/\1/p')
           VERSION_LABEL=""
