@@ -437,8 +437,8 @@
     {
       "module": "TurkceDizi",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=4, ep=0",
-      "runner": "autopilot.py 2026-10-30"
+      "evidence": "port 2026-11-04: Nuvio JS zinciri Kotlin'e taşındı (iframeUrl + ters-base64 + OpenSSL AES); python uçtan uca master.m3u8 200 (720p/1080p + tr/en altyazı) doğrulandı; cihaz UI oynatma denemesi runner-ortam engelli",
+      "runner": "verify-probe 2026-11-04"
     },
     {
       "module": "TV8",

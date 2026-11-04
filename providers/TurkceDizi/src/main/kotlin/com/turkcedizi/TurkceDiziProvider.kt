@@ -242,6 +242,42 @@ class TurkceDiziProvider : MainAPI() {
             }
             if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
+        // turkcedizi şeması (Nuvio JS zincirinin Kotlin port'u):
+        // sayfa -> iframeUrl -> "ters-base64 + OpenSSL AES" oynatıcı -> master.m3u8 (varyantlar + VTT)
+        val playerUrl = Regex("""iframeUrl\\?"\s*:\s*\\?"([^"\s\\]+)""").find(text)?.groupValues?.get(1)
+        if (playerUrl != null) {
+            val url = if (playerUrl.startsWith("//")) "https:$playerUrl" else fixUrl(playerUrl)
+            val playerHtml = runCatching { app.get(url, headers = uaHeaders, referer = data).text }.getOrNull()
+            val plain = playerHtml?.let { runCatching { decodeTurkceDiziPlayer(it) }.getOrNull() }
+            val master = plain?.let { p -> Regex("""file\s*:\s*"([^"]+)""").find(p)?.groupValues?.get(1) }
+            if (master != null) {
+                emit(master, "master", url)
+                val playlist = runCatching { app.get(master, headers = uaHeaders, referer = url).text }.getOrNull() ?: ""
+                val lines = playlist.lines()
+                var variants = 0
+                for (i in lines.indices) {
+                    if (!lines[i].startsWith("#EXT-X-STREAM-INF")) continue
+                    val h = Regex("RESOLUTION=\\d+x(\\d+)").find(lines[i])?.groupValues?.get(1)
+                    var j = i + 1
+                    while (j < lines.size && (lines[j].isBlank() || lines[j].startsWith("#"))) j++
+                    if (j < lines.size) {
+                        emit(java.net.URI(master).resolve(lines[j].trim()).toString(), h?.plus("p") ?: "auto", url)
+                        variants++
+                    }
+                }
+                if (variants == 0 && playlist.startsWith("#EXTM3U")) emit(master, "master", url)
+                for (s in Regex("#EXT-X-MEDIA:[^\\r\\n]*TYPE=SUBTITLES[^\\r\\n]*").findAll(playlist).take(3)) {
+                    val uri = Regex("URI=\"([^\"]+)\"").find(s.value)?.groupValues?.get(1) ?: continue
+                    val lang = Regex("LANGUAGE=\"([^\"]+)\"").find(s.value)?.groupValues?.get(1)?.lowercase() ?: "tr"
+                    val up = java.net.URI(master).resolve(uri).toString()
+                    val body = runCatching { app.get(up, headers = uaHeaders, referer = url).text }.getOrNull() ?: continue
+                    val vtt = body.lines().firstOrNull { it.isNotBlank() && !it.startsWith("#") } ?: continue
+                    if (Settings.subtitleAllowed(lang)) {
+                        subtitleCallback.invoke(SubtitleFile(lang, java.net.URI(up).resolve(vtt.trim()).toString()))
+                    }
+                }
+            }
+        }
         val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in subs) {
             if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))
@@ -252,4 +288,44 @@ class TurkceDiziProvider : MainAPI() {
         return found
     }
 
+    private fun jstr(s: String): ByteArray {
+        // JS atob boşluk/ters eğik çizgiyi esnetir; android Base64 esnetmez, filtrele.
+        val letters = s.filter { it.isLetterOrDigit() || it == '+' || it == '/' }.replace('-', '+').replace('_', '/')
+        val pad = (4 - letters.length % 4) % 4
+        return try {
+            android.util.Base64.decode(letters + "=".repeat(pad), android.util.Base64.DEFAULT)
+        } catch (_: Exception) {
+            ByteArray(0)
+        }
+    }
+
+    // CryptoJS.AES.decrypt(passphrase, blob) == EVP_BytesToKey(MD5) + AES-256-CBC + "Salted__"
+    private fun decodeTurkceDiziPlayer(html: String): String? {
+        val decoder = Regex(
+            """var\s+(_\w+)\s*=\s*function\s*\(\s*s\s*\)\s*\{\s*return\s+atob\(\s*s\.split\(\s*''\s*\)\.reverse\(\)\.join\(\s*''\s*\)\s*\)\s*\}"""
+        ).find(html)?.groupValues?.get(1) ?: return null
+        val parts = Regex("$decoder\\(\"([^\"]*)\"\\)").findAll(html)
+            .mapNotNull { it.groupValues?.get(1) }.toList()
+        if (parts.size < 2) return null
+        val payload = String(jstr(String(jstr(parts[0].reversed()), Charsets.UTF_8)), Charsets.UTF_8)
+        val blob = jstr(payload)
+        if (blob.size < 17 || String(blob, 0, 8, Charsets.UTF_8) != "Salted__") return null
+        val passphrase = jstr(parts[1].reversed())
+        val salt = blob.copyOfRange(8, 16)
+        val md = java.security.MessageDigest.getInstance("MD5")
+        var prev = ByteArray(0)
+        val derived = ArrayList<Byte>(48)
+        while (derived.size < 48) {
+            md.reset(); md.update(prev); md.update(passphrase); md.update(salt)
+            prev = md.digest()
+            derived.addAll(prev.toList())
+        }
+        val cipher = javax.crypto.Cipher.getInstance("AES/CBC/PKCS5Padding")
+        cipher.init(
+            javax.crypto.Cipher.DECRYPT_MODE,
+            javax.crypto.spec.SecretKeySpec(derived.subList(0, 32).toByteArray(), "AES"),
+            javax.crypto.spec.IvParameterSpec(derived.subList(32, 48).toByteArray()),
+        )
+        return String(cipher.doFinal(blob.copyOfRange(16, blob.size)), Charsets.UTF_8)
+    }
 }
