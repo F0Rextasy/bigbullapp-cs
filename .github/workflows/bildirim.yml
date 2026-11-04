@@ -1,9 +1,9 @@
 name: Bildirim
 
 on:
-  push:
-    branches:
-      - master
+  workflow_run:
+    workflows: ["Derleme"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       force:
@@ -16,11 +16,16 @@ permissions:
 
 jobs:
   telegram:
+    # Bildirim yalnızca Derleme BAŞARILI olduktan sonra gider; başarısız derleme sessizdir.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
     runs-on: ubuntu-latest
     steps:
       - name: Kaynak kodu çek
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
           fetch-depth: 0
 
       - name: Telegram'a gönder
