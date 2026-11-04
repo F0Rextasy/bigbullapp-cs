@@ -1590,7 +1590,10 @@
   "id": "tt32278481",
   "poster": "https://images.metahub.space/poster/medium/tt32278481/img"
  },
- "movie|bir koyun polisiyesi": null,
+ "movie|bir koyun polisiyesi": {
+  "id": "tt11760270",
+  "poster": "https://images.metahub.space/poster/medium/tt11760270/img"
+ },
  "series|from": {
   "id": "tt9813792",
   "poster": "https://images.metahub.space/poster/medium/tt9813792/img"
@@ -3340,7 +3343,10 @@
  "movie|under salt marsh": null,
  "movie|en yakin arkada im sevgilisi ve ben": null,
  "movie|bana ans dileme": null,
- "movie|rock kampi 3": null,
+ "movie|rock kampi 3": {
+  "id": "tt0495624",
+  "poster": "https://images.metahub.space/poster/medium/tt0495624/img"
+ },
  "movie|daha da seksi": {
   "id": "tt0094934",
   "poster": "https://images.metahub.space/poster/medium/tt0094934/img"
@@ -4804,15 +4810,96 @@
   "id": "tt10377864",
   "poster": "https://images.metahub.space/poster/medium/tt10377864/img"
  },
- "movie|bir ba kadir 2 sezon": null,
+ "movie|bir ba kadir 2 sezon": {
+  "id": "tt11760270",
+  "poster": "https://images.metahub.space/poster/medium/tt11760270/img"
+ },
  "movie|resident evil 2026": {
   "id": "tt35538033",
   "poster": "https://images.metahub.space/poster/medium/tt35538033/img"
  },
  "series|pie and the 7 witches": null,
- "series|itaewon class thai edition": null,
+ "series|itaewon class thai edition": {
+  "id": "tt11239552",
+  "poster": "https://images.metahub.space/poster/medium/tt11239552/img"
+ },
  "series|high low born to be high": {
   "id": "tt39046106",
   "poster": "https://images.metahub.space/poster/medium/tt39046106/img"
+ },
+ "movie|firavun faresi": null,
+ "movie|the mongoose": {
+  "id": "tt13611778",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDBmN2E2YTQtMWE2Ni00ZjMxLWE4NGItODk2ZDZjZDU0MjdlXkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "movie|fantastic beasts 3 the secrets of dumbledore": null,
+ "movie|fantastic beasts 2 the crimes of grindelwald": null,
+ "movie|fantastic beasts and where to find them": {
+  "id": "tt3183660",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjMxOTM1OTI4MV5BMl5BanBnXkFtZTgwODE5OTYxMDI@._V1_SX250.jpg"
+ },
+ "movie|apocalypse z 2 new world": null,
+ "movie|apocalypse z the beginning of the end": {
+  "id": "tt27599851",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjBiMDZjMzMtYzRjYS00ODc0LTlmNDEtYjQxYjJkYjdhODdkXkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "movie|you me us": {
+  "id": "tt38504402",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjEyMTdjZDAtNzQ1MC00ZmQ1LTlhNjgtYjMwNjYzNWIwMThhXkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "movie|verity": {
+  "id": "tt32261958",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmE0OWRiNzktY2MwMy00YzQ5LWFkMzctNjI1ZWQ1NTRiZGM3XkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "movie|lee cronin s the mummy": {
+  "id": "tt32612507",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWQ1NzI2YTUtN2E0ZS00YzVmLTkxNjktMWIzNTYwMzkyOTU0XkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "movie|bring her back": {
+  "id": "tt32246771",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTlhYTk1ZTEtOWY3NC00NWQ5LTlkOTctNjQ3ZDYyZGE5ZWNlXkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "movie|the undertone": null,
+ "movie|black phone 2": {
+  "id": "tt29644189",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTVjMzNmZGYtOWU5NS00NDYzLThhZTktZGNlODIwYWVhMDRmXkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "movie|the black phone": {
+  "id": "tt7144666",
+  "poster": "https://images.metahub.space/poster/medium/tt7144666/img"
+ },
+ "movie|the wolf of wall street": {
+  "id": "tt0993846",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjIxMjgxNTk0MF5BMl5BanBnXkFtZTgwNjIyOTg2MDE@._V1_SX250.jpg"
+ },
+ "movie|the great gatsby": {
+  "id": "tt1343092",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTkxNTk1ODcxNl5BMl5BanBnXkFtZTcwMDI1OTMzOQ@@._V1_SX250.jpg"
+ },
+ "movie|carrie": {
+  "id": "tt0074285",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjMwMDVlZjYtMWRlZS00OTU1LTlmYTQtOGViNTdmYTE0ZjRlXkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "movie|body of lies": {
+  "id": "tt0758774",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTgzOTY3MTM0OV5BMl5BanBnXkFtZTcwNjc5MTI5MQ@@._V1_SX250.jpg"
+ },
+ "movie|babil m s": null,
+ "movie|seni uzaktan sevmek": null,
+ "movie|kirmizi k pek": null,
+ "movie|vay anam vay babasinin o lu": null,
+ "series|taken natalee holloway": {
+  "id": "tt43681696",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDU1MjVkODMtOGJjYi00Y2IxLWFkOGYtOTc2ODA4OTZkMWUxXkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "series|znieczulenie": null,
+ "movie|the fix 2026": {
+  "id": "tt9601292",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjhiYzQ5YjQtZTlhZS00YTQ0LTk5YzMtNmRjY2EwYmFhYmIzXkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "series|the date of marriage": null,
+ "series|queen of darkness": {
+  "id": "tt38734821",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzkxZTEwZTMtMmExYi00MjE5LTg5YTItYWI1NDE1MGI1NGUwXkEyXkFqcGc@._V1_SX250.jpg"
  }
 }
