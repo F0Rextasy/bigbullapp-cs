@@ -1,5 +1,7 @@
 package com.minikacocuk
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -23,9 +25,6 @@ import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.jsoup.nodes.Element
 
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 private fun String.folded(): String = lowercase()
     .replace("\u0307", "")
     .replace('ı', 'i').replace('ş', 's').replace('ğ', 'g')
@@ -47,10 +46,7 @@ class MinikaCocukProvider : MainAPI() {
     override val hasQuickSearch = false
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
 
-    private val uaHeaders = mapOf(
-        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-            "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-        "Accept-Language" to "tr-TR,tr;q=0.9",
+    private val uaHeaders = browserHeaders + mapOf(
         "Accept" to "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "X-Requested-With" to "XMLHttpRequest",
     )

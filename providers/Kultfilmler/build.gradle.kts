@@ -1,4 +1,4 @@
-version = 6
+version = 7
 
 cloudstream {
     description = "Kült Filmler — kultfilmler.net"
@@ -7,4 +7,8 @@ cloudstream {
     tvTypes = listOf("Movie")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=kultfilmler.net&sz=%size%"
+}
+
+android {
+    sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
 }

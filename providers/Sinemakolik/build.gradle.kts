@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "Sinemakolik — Türkçe dublaj/altyazılı film arşivi"
@@ -7,4 +7,8 @@ cloudstream {
     tvTypes = listOf("Movie")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=sinemakolik.com&sz=%size%"
+}
+
+android {
+    sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
 }

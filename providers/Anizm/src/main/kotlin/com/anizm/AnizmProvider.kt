@@ -1,5 +1,7 @@
 package com.anizm
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -29,9 +31,6 @@ import java.net.URLEncoder
 import java.util.Collections
 
 /** Anizm (turkanime.info) — Türkçe altyazılı anime; anizm.net Cloudflare arkasında. */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 class AnizmProvider : MainAPI() {
     override var mainUrl = "https://turkanime.info"
     override var name = "Anizm"
@@ -40,10 +39,7 @@ class AnizmProvider : MainAPI() {
     override val hasQuickSearch = false
     override val supportedTypes = setOf(TvType.Anime)
 
-    private val uaHeaders = mapOf(
-        "User-Agent" to UA,
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
     private val ajaxHeaders = uaHeaders + mapOf("X-Requested-With" to "XMLHttpRequest")
 
     override val mainPage get() = ROWS.mapNotNull { name ->
@@ -281,8 +277,6 @@ class AnizmProvider : MainAPI() {
         private const val MAX_LINKS = 3
         private const val MAX_MIRRORS = 6
         private const val MAX_TRANSLATORS = 2
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

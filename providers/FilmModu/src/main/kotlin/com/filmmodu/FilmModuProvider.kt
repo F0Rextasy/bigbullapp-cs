@@ -1,5 +1,7 @@
 package com.filmmodu
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -34,8 +36,6 @@ import org.jsoup.nodes.Element
  * `<player>/assets/js/s.php?s=<slug>` → window.__PLAYER__ {stream, subs, audios}.
  * Oynatıcı host'u sayfadaki core.js kaynağından türetilir (pilavyerplay.top).
  */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
 
 class FilmModuProvider : MainAPI() {
     override var mainUrl = "https://filmmodu.news"
@@ -44,10 +44,7 @@ class FilmModuProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.Movie)
 
-    private val uaHeaders = mapOf(
-        "User-Agent" to UA,
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
 
     override val mainPage get() = ROWS.mapNotNull { name ->
         if (!Settings.rowEnabled(name)) return@mapNotNull null
@@ -195,8 +192,6 @@ class FilmModuProvider : MainAPI() {
             "Belgesel", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem", "Komedi", "Korku",
             "Romantik")
 
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val CARD = "a[class*=group][href*='/film/']"
         private const val PLAYER_HOST = "https://pilavyerplay.top"
         private const val REPORT_HINT =

@@ -19,3 +19,7 @@ cloudstream {
 
     iconUrl = "https://www.google.com/s2/favicons?domain=hdfilmcehennemi.nl&sz=%size%"
 }
+
+android {
+    sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
+}

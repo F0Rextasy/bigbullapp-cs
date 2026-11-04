@@ -1,5 +1,7 @@
 package com.dizibox
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
 import com.lagradost.cloudstream3.Episode
@@ -30,15 +32,10 @@ import com.lagradost.cloudstream3.utils.loadExtractor
 import org.jsoup.nodes.Element
 
 /** DiziBox — dizibox.live (mirrors: dizibox.com/.net/.vip) */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 class DiziboxProvider : MainAPI() {
     override var mainUrl = "https://www.dizibox.live"
-    private val uaHeaders = mapOf(
-        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
+    // posterHeaders MainAPI'de yok; SearchResponse/LoadResponse başına ayrı verilir.
     override var name = "DiziBox"
     override var lang = "tr"
     override val hasMainPage = true
@@ -85,6 +82,7 @@ class DiziboxProvider : MainAPI() {
             TvType.TvSeries,
         ) {
             this.posterUrl = fixUrlNull(img?.attr("data-src")?.takeIf { it.isNotBlank() } ?: img?.attr("src"))
+            this.posterHeaders = uaHeaders
         }
     }
 
@@ -102,6 +100,7 @@ class DiziboxProvider : MainAPI() {
             this.posterUrl = fixUrlNull(
                 img?.attr("data-src")?.takeIf { it.isNotBlank() } ?: img?.attr("src")
             )
+            this.posterHeaders = uaHeaders
         }
     }
 
@@ -118,6 +117,7 @@ class DiziboxProvider : MainAPI() {
             this.posterUrl = fixUrlNull(
                 img?.attr("data-src")?.takeIf { it.isNotBlank() } ?: img?.attr("src")
             )
+            this.posterHeaders = uaHeaders
         }
     }
 
@@ -152,6 +152,7 @@ class DiziboxProvider : MainAPI() {
             this.posterUrl = fixUrlNull(doc.selectFirst("div.tv-overview figure img")?.posterSrcLazy())
             this.plot = doc.selectFirst("div.tv-story p")?.text()?.trim()
             this.year = doc.selectFirst("a[href*='/yil/']")?.text()?.trim()?.toIntOrNull()
+            this.posterHeaders = uaHeaders
             this.tags = doc.select("a[href*='/tur/']").map { it.text() }
             this.score = Score.from10(doc.selectFirst("span.label-imdb b")?.text()?.trim())
             this.actors = doc.select("div.tv-overview a[href*='/oyuncu/']").map { ActorData(Actor(it.text())) }

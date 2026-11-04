@@ -1,5 +1,6 @@
 package com.belgeselx
 
+import com.bigbull.common.posterSrcLazy
 import org.jsoup.nodes.Element
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -30,9 +31,6 @@ import org.json.JSONArray
  * plus three source slot codes. Slot codes pick a `/video/data/<file>.php` endpoint that returns
  * either an embed iframe (Drive / ok.ru / Dailymotion / Yandex) or a jwplayer `file:` source.
  */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 class BelgeselXProvider : MainAPI() {
     override var mainUrl = "https://belgeselx.com"
     override var name = "BelgeselX"

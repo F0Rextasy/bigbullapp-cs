@@ -56,10 +56,9 @@ class DiziPalProvider : MainAPI() {
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
 
-    private val uaHeaders = mapOf(
-        "User-Agent" to UA,
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    // Oynatıcı CDN'i (aşağıdaki UA sabitinin yorumu) Chrome UA'ya 403 verdiği için tüm
+    // istekler Firefox UA ile gider; browserHeaders (Chrome/130) burada bilinçli kullanılmaz.
+    private val uaHeaders get() = mapOf("User-Agent" to UA, "Accept-Language" to "tr-TR,tr;q=0.9")
 
     /** Yalnız bu iki bölüm `?page=N` ile sayfalanıyor; diğerleri tek istekte tüm listeyi verir. */
     private val pagedSections = setOf("$mainUrl/yabanci-dizi-izle", "$mainUrl/film-izle")

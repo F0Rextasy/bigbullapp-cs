@@ -1,6 +1,7 @@
 package com.diziyou
 
-import org.jsoup.nodes.Element
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
 import com.lagradost.cloudstream3.ActorRole
@@ -28,11 +29,9 @@ import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
 
 /** DiziYou — diziyou.one (CSS: storage.diziyou.one, m3u8 + VTT) */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 class DiziYouProvider : MainAPI() {
     override var mainUrl = "https://www.diziyou.one"
+    private val uaHeaders get() = browserHeaders
     override var name = "DiziYou"
     override var lang = "tr"
     override val hasMainPage = true
@@ -65,7 +64,7 @@ class DiziYouProvider : MainAPI() {
             val path = request.data.substringBefore("?").trimEnd('/')
             if (query.isEmpty()) "$path/page/$page/" else "$path/page/$page/?$query"
         }
-        val doc = app.get(url).document
+        val doc = app.get(url, headers = uaHeaders).document
         val items = doc.select("#list-series, .single-item").mapNotNull { card ->
             val anchor = card.selectFirst("#categorytitle a") ?: card.selectFirst(".cat-img a") ?: return@mapNotNull null
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
@@ -81,7 +80,7 @@ class DiziYouProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val doc = app.get("$mainUrl/?s=$query").document
+        val doc = app.get("$mainUrl/?s=$query", headers = uaHeaders).document
         return doc.select("#list-series").mapNotNull { card ->
             val anchor = card.selectFirst("#categorytitle a") ?: return@mapNotNull null
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
@@ -98,6 +97,7 @@ class DiziYouProvider : MainAPI() {
         app.post(
             "$mainUrl/wp-admin/admin-ajax.php",
             data = mapOf("action" to "data_fetch", "keyword" to query),
+            headers = uaHeaders,
         ).document.select("#searchelement").mapNotNull { block ->
             val anchor = block.select("a[href]").lastOrNull() ?: return@mapNotNull null
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
@@ -107,7 +107,7 @@ class DiziYouProvider : MainAPI() {
         }.distinctBy { it.url }
 
     override suspend fun load(url: String): LoadResponse? {
-        val doc = runCatching { app.get(url).document }
+        val doc = runCatching { app.get(url, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
         val ld = doc.selectFirst("script[type=application/ld+json]")?.data().orEmpty()
         val title = doc.selectFirst("h1.title-border")?.text()?.trim()?.takeIf { it.isNotBlank() }
@@ -156,12 +156,12 @@ class DiziYouProvider : MainAPI() {
         val subtitleFilter: (SubtitleFile) -> Unit = {
             if (seenSubs.add(it.url) && Settings.subtitleAllowed(it.lang)) subtitleCallback(it)
         }
-        val doc = runCatching { app.get(data).document }
+        val doc = runCatching { app.get(data, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
         val playerUrl = fixUrlNull(doc.selectFirst("iframe#diziyouPlayer")?.attr("src"))
             ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
 
-        val player = runCatching { app.get(playerUrl, referer = data).text }
+        val player = runCatching { app.get(playerUrl, referer = data, headers = uaHeaders).text }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
         val stream = Regex("""<source[^>]+src="([^"]+\.m3u8[^"]*)"""").find(player)?.groupValues?.get(1)
             ?: throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")

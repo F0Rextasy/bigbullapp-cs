@@ -9,3 +9,7 @@ cloudstream {
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=ddizimom.net&sz=%size%"
 }
+
+android {
+    sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
+}

@@ -1,4 +1,4 @@
-version = 5
+version = 6
 
 cloudstream {
     description = "SetFilmIzle — Türkçe dublaj & altyazılı film ve dizi arşivi (setfilmizle.ltd)"
@@ -7,4 +7,8 @@ cloudstream {
     tvTypes = listOf("Movie", "TvSeries")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=setfilmizle.ltd&sz=%size%"
+}
+
+android {
+    sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
 }

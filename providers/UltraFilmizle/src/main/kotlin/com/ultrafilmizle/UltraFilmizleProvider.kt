@@ -1,5 +1,7 @@
 package com.ultrafilmizle
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -38,8 +40,6 @@ import org.jsoup.nodes.Element
  * Arama `/?s=<sorgu>`; filmler `/filmler9/<slug>/`. Sayfadaki `ilkpartkod`
  * base64 iframe'i çözülür; bepeak `bePlayer` AES yapılandırması çözülüp HLS verilir.
  */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
 
 class UltraFilmizleProvider : MainAPI() {
     override var mainUrl = "https://ufilmizle.com"
@@ -49,10 +49,7 @@ class UltraFilmizleProvider : MainAPI() {
     override val hasQuickSearch = false
     override val supportedTypes = setOf(TvType.Movie)
 
-    private val headers = mapOf(
-        "User-Agent" to UA,
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val headers get() = browserHeaders
 
     override val mainPage get() = mainPageOf(
         "$mainUrl/" to "Ana Sayfa",
@@ -203,8 +200,6 @@ class UltraFilmizleProvider : MainAPI() {
 
     companion object {
         val ROWS = listOf("Ana Sayfa", "Filmler")
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
         private val YEAR = Regex("""\b((?:19|20)\d{2})\b""")

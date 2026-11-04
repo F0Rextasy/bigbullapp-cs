@@ -1,5 +1,7 @@
 package com.dizipod
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -43,9 +45,6 @@ import java.net.URLEncoder
  * `/wp/wp-admin/admin-ajax.php?action=get_episode_player` bir iframe döner, iframe'in
  * Dean Edwards packer ile paketlenmiş jwplayer kurulumu `sources[].file` m3u8 adresini verir.
  */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 class DiziPodProvider : MainAPI() {
     override var mainUrl = "https://dizipod.com"
     override var name = "DiziPod"
@@ -53,10 +52,7 @@ class DiziPodProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
 
-    private val uaHeaders = mapOf(
-        "User-Agent" to UA,
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
 
     override val mainPage get() = mainPageOf(
         "$mainUrl/diziler/page/SAYFA/" to "Son Eklenen Diziler",

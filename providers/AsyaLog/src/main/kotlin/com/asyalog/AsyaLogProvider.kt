@@ -1,5 +1,7 @@
 package com.asyalog
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -29,10 +31,8 @@ import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.jsoup.nodes.Element
 
 /** AsyaLog — asyalog.co (Asya dizileri/filmleri, Odnoklassniki player) */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 class AsyaLogProvider : MainAPI() {
+    private val uaHeaders get() = browserHeaders
     override var mainUrl = "https://asyalog.co"
     override var name = "AsyaLog"
     override var lang = "tr"
@@ -58,7 +58,7 @@ class AsyaLogProvider : MainAPI() {
         } else {
             request.data.trimEnd('/') + "/page/$page/"
         }
-        val doc = app.get(url).document
+        val doc = app.get(url, headers = uaHeaders).document
         val items = doc.select("a.resim[href]").mapNotNull { it.toSearchResult() }.distinctBy { it.url }
         return newHomePageResponse(request.name, items)
     }
@@ -77,20 +77,20 @@ class AsyaLogProvider : MainAPI() {
         search(query, 1)?.items ?: emptyList()
 
     override suspend fun search(query: String, page: Int): SearchResponseList? {
-        val doc = app.get("$mainUrl/", params = mapOf("s" to query, "paged" to "$page")).document
+        val doc = app.get("$mainUrl/", params = mapOf("s" to query, "paged" to "$page"), headers = uaHeaders).document
         val items = doc.select("a.resim[href]").mapNotNull { it.toSearchResult() }.distinctBy { it.url }
         return newSearchResponseList(items, doc.selectFirst(".sayfalama a[href*='/page/${page + 1}/']") != null)
     }
 
     /** Header live search (ajax_suggest.js) — POST answers an HTML fragment, no full page. */
     override suspend fun quickSearch(query: String): List<SearchResponse> =
-        app.post("$mainUrl/index.php?ajax_inc=1&aislem=suggest", data = mapOf("aramakelime" to query))
+        app.post("$mainUrl/index.php?ajax_inc=1&aislem=suggest", data = mapOf("aramakelime" to query), headers = uaHeaders)
             .document.select("a[href*='/dizi/']")
             .mapNotNull { it.toSearchResult() }
             .distinctBy { it.url }
 
     override suspend fun load(url: String): LoadResponse? {
-        val doc = runCatching { app.get(url).document }
+        val doc = runCatching { app.get(url, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
         val title = doc.selectFirst("meta[property=og:title]")?.attr("content")?.trim()
             ?.takeIf { it.isNotBlank() }
@@ -143,14 +143,14 @@ class AsyaLogProvider : MainAPI() {
         val linkCallback: (ExtractorLink) -> Unit = {
             if (seen.add(it.url) && Settings.qualityAllowed(it.quality)) callback(it)
         }
-        val doc = runCatching { app.get(data).document }
+        val doc = runCatching { app.get(data, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
         // Split episodes list their parts as separate pages (`.../bolum/x/2/`), each with its
         // own ok.ru video; only the page being opened carries one iframe.
         val partPages = doc.select("ul#f_part a.partsec[href]")
             .mapNotNull { fixUrlNull(it.attr("href")) }
         val iframes = (listOf(data) + partPages).distinct().flatMap { page ->
-            val pageDoc = if (page == data) doc else runCatching { app.get(page).document }.getOrNull()
+            val pageDoc = if (page == data) doc else runCatching { app.get(page, headers = uaHeaders).document }.getOrNull()
             pageDoc?.select("iframe[src]")?.map { fixEmbed(it.attr("src")) } ?: emptyList()
         }.distinct()
         var found = false
@@ -180,7 +180,7 @@ class AsyaLogProvider : MainAPI() {
         embed: String,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val body = app.get(embed, referer = "$mainUrl/").text
+        val body = app.get(embed, referer = "$mainUrl/", headers = uaHeaders).text
             .replace("&quot;", "\"")
             .replace("\\\\", "\\")
         val videos = Regex(""""videos"\s*:\s*(\[.*?])""", RegexOption.DOT_MATCHES_ALL)

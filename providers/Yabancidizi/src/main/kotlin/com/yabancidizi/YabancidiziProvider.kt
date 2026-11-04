@@ -1,5 +1,6 @@
 package com.yabancidizi
 
+import com.bigbull.common.browserHeaders
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -35,6 +36,7 @@ import javax.crypto.spec.SecretKeySpec
 /** Yabancıdizi — yabancidizi.live */
 class YabancidiziProvider : MainAPI() {
     override var mainUrl = "https://yabancidizi.live"
+    private val uaHeaders get() = browserHeaders
     override var name = "Yabancıdizi"
     override var lang = "tr"
     override val hasMainPage = true
@@ -53,7 +55,7 @@ class YabancidiziProvider : MainAPI() {
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val doc = app.get("${request.data}&page=$page").document
+        val doc = app.get("${request.data}&page=$page", headers = uaHeaders).document
         // Beyond the last page the site repeats the last one, so bound the count with nav.mpg.
         val lastPage = doc.select("nav.mpg a[href]").mapNotNull { a ->
             Regex("""[?&]page=(\d+)""").find(a.attr("href"))?.groupValues?.get(1)?.toIntOrNull()
@@ -62,7 +64,7 @@ class YabancidiziProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> =
-        app.get("$mainUrl/arama?q=${java.net.URLEncoder.encode(query, "UTF-8")}").document.cards()
+        app.get("$mainUrl/arama?q=${java.net.URLEncoder.encode(query, "UTF-8")}", headers = uaHeaders).document.cards()
 
     /** Card anchors are shared by home, listings and search results. */
     private fun Document.cards(): List<SearchResponse> =
@@ -92,7 +94,7 @@ class YabancidiziProvider : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val doc = runCatching { app.get(url).document }
+        val doc = runCatching { app.get(url, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
         val ld = doc.jsonLdNode()
         val title = ld?.optString("name")?.takeIf { it.isNotBlank() }
@@ -160,7 +162,7 @@ class YabancidiziProvider : MainAPI() {
     ): Boolean {
         val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
         val subtitleFilter: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
-        val doc = runCatching { app.get(data).document }
+        val doc = runCatching { app.get(data, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
         val players = doc.select("iframe#player-iframe, [data-frame]").mapNotNull { el ->
             val url = el.attr("data-frame")
@@ -200,7 +202,7 @@ class YabancidiziProvider : MainAPI() {
         seenLinks: MutableSet<String>,
         seenSubtitles: MutableSet<String>,
     ): Boolean {
-        val html = app.get(playerUrl, referer = referer).text
+        val html = app.get(playerUrl, referer = referer, headers = uaHeaders).text
         val decoder = Regex("""var\s+(_\w+)\s*=\s*function\s*\(\s*s\s*\)\s*\{\s*return\s+atob\(\s*s\.split\(\s*''\s*\)\.reverse\(\)\.join\(\s*''\s*\)\s*\)\s*\}""")
             .find(html)?.groupValues?.get(1) ?: return false
         val parts = Regex(Regex.escape(decoder) + """\("([^"]*)"\)""")
@@ -222,7 +224,7 @@ class YabancidiziProvider : MainAPI() {
         val base = java.net.URI(stream)
 
         // The master playlist carries every quality variant and both subtitle tracks; emit them all.
-        val playlist = runCatching { app.get(stream, referer = playerUrl).text }.getOrNull()
+        val playlist = runCatching { app.get(stream, referer = playerUrl, headers = uaHeaders).text }.getOrNull()
         var found = false
         val variants = playlist?.lines()?.zipWithNext()?.mapNotNull { (line, next) ->
             if (!line.startsWith("#EXT-X-STREAM-INF") || next.startsWith("#")) return@mapNotNull null
@@ -261,7 +263,7 @@ class YabancidiziProvider : MainAPI() {
         for ((subPlaylist, language) in subtitleTracks) {
             // Each sub playlist holds one VTT file; point the subtitle at it directly.
             val vtt = runCatching {
-                app.get(subPlaylist, referer = playerUrl).text.lines()
+                app.get(subPlaylist, referer = playerUrl, headers = uaHeaders).text.lines()
                     .firstOrNull { it.isNotBlank() && !it.startsWith("#") }
             }.getOrNull() ?: continue
             val subUrl = runCatching { java.net.URI(subPlaylist).resolve(vtt.trim()).toString() }.getOrNull()

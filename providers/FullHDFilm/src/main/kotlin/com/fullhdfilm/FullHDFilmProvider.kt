@@ -1,6 +1,8 @@
 package com.fullhdfilm
 
 import android.util.Base64
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -29,8 +31,6 @@ import org.jsoup.nodes.Element
  * Search is JSON (`/api/search?q=`), players come from the base64 template in the
  * `data-video-player` Alpine attribute and resolve to an hdload.top JW Player embed.
  */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
 
 class FullHDFilmProvider : MainAPI() {
     override var mainUrl = "https://fullhdfilmizlebox.vip"
@@ -40,10 +40,7 @@ class FullHDFilmProvider : MainAPI() {
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.Movie)
 
-    private val uaHeaders = mapOf(
-        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
 
     override val mainPage get() = ROWS.mapNotNull { name ->
         if (!Settings.rowEnabled(name)) return@mapNotNull null

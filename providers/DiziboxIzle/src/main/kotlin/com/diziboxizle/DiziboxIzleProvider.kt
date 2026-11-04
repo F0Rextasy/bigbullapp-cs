@@ -1,5 +1,6 @@
 package com.diziboxizle
 
+import com.bigbull.common.posterSrcLazy
 import org.jsoup.nodes.Element
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
@@ -37,9 +38,6 @@ import org.json.JSONObject
  * Search hits are episode posts, so results are folded back to their series page
  * (`<slug>-<n>-sezon-<m>-bolum` -> `<slug>`). The player is a plain ok.ru iframe.
  */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 class DiziboxIzleProvider : MainAPI() {
     override var mainUrl = "https://diziboxizle.com"
     override var name = "DiziboxIzle"

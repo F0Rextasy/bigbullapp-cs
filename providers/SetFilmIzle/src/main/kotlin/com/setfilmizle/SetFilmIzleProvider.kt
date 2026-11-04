@@ -1,6 +1,8 @@
 package com.setfilmizle
 
 import android.util.Base64
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
 import com.lagradost.cloudstream3.Episode
@@ -47,8 +49,6 @@ import java.net.URLEncoder
  * aranmıyor; bu yüzden link mobil bir UA ile veriliyor. Segmentler yalnızca izinli origin'den
  * gelen `Referer` istiyor.
  */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
 
 class SetFilmIzleProvider : MainAPI() {
     override var mainUrl = "https://www.setfilmizle.ltd"
@@ -69,8 +69,6 @@ class SetFilmIzleProvider : MainAPI() {
             "Bilim Kurgu",
             "Animasyon",
         )
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         /** Manifest kapısı masaüstü tarayıcı kimliğinde imza istediği için oynatma mobil kimlikle yapılır. */
         private const val MOBILE_UA =
             "Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36"
@@ -78,10 +76,7 @@ class SetFilmIzleProvider : MainAPI() {
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }
 
-    private val uaHeaders = mapOf(
-        "User-Agent" to UA,
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
 
     override val mainPage get() = ROWS.mapNotNull { name ->
         if (!Settings.rowEnabled(name)) return@mapNotNull null

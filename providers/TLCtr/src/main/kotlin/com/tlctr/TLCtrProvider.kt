@@ -1,5 +1,6 @@
 package com.tlctr
 
+import com.bigbull.common.browserHeaders
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.HomePageResponse
@@ -43,10 +44,7 @@ class TLCtrProvider : MainAPI() {
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Live)
 
-    private val uaHeaders = mapOf(
-        "User-Agent" to UA,
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
     private val ajaxHeaders = uaHeaders + mapOf("X-Requested-With" to "XMLHttpRequest")
 
     // Rows are the /kesfet categories; the empty slug is the featured grid.

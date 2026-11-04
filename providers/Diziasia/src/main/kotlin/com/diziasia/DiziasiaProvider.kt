@@ -1,5 +1,6 @@
 package com.diziasia
 
+import com.bigbull.common.browserHeaders
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -33,6 +34,7 @@ import org.json.JSONArray
 /** DiziAsia — diziasia.com (Asya dizileri/filmleri, ok.ru + vidmoly player) */
 class DiziasiaProvider : MainAPI() {
     override var mainUrl = "https://diziasia.com"
+    private val uaHeaders get() = browserHeaders
     override var name = "DiziAsia"
     override var lang = "tr"
     override val hasMainPage = true
@@ -54,7 +56,7 @@ class DiziasiaProvider : MainAPI() {
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val doc = app.get(request.data + page).document
+        val doc = app.get(request.data + page, headers = uaHeaders).document
         val items = doc.select("a.card[href]").mapNotNull { it.toSearchResult() }.distinctBy { it.url }
         // The site serves 24 cards per page and always renders pagination, so the count is the reliable stop sign.
         return newHomePageResponse(request.name, items, items.size >= 24)
@@ -86,7 +88,7 @@ class DiziasiaProvider : MainAPI() {
 
     override suspend fun search(query: String, page: Int): SearchResponseList? {
         val encoded = java.net.URLEncoder.encode(query, "UTF-8")
-        val doc = app.get("$mainUrl/arama/$encoded?page=$page").document
+        val doc = app.get("$mainUrl/arama/$encoded?page=$page", headers = uaHeaders).document
         val items = doc.select("a.card[href]").mapNotNull { it.toSearchResult() }.distinctBy { it.url }
         // The results page prints 24 cards; a shorter page is the last one.
         return newSearchResponseList(items, items.size >= 24)
@@ -95,7 +97,7 @@ class DiziasiaProvider : MainAPI() {
     /** Header live search (`data-suggest` on the search form), capped server-side at 7 instant hits. */
     override suspend fun quickSearch(query: String): List<SearchResponse>? {
         val encoded = java.net.URLEncoder.encode(query, "UTF-8")
-        val doc = app.get("$mainUrl/ajax/search?q=$encoded").document
+        val doc = app.get("$mainUrl/ajax/search?q=$encoded", headers = uaHeaders).document
         return doc.select("a.ss-item[href]").mapNotNull { item ->
             val href = fixUrlNull(item.attr("href")) ?: return@mapNotNull null
             val title = item.selectFirst(".ss-title")?.text()?.trim().orEmpty()
@@ -111,7 +113,7 @@ class DiziasiaProvider : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val doc = runCatching { app.get(url).document }
+        val doc = runCatching { app.get(url, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
         val title = doc.selectFirst("h1")?.text()?.trim()?.takeIf { it.isNotBlank() }
             ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
@@ -180,7 +182,7 @@ class DiziasiaProvider : MainAPI() {
         val subtitleFilter: (SubtitleFile) -> Unit = {
             if (seenSubs.add(it.url) && Settings.subtitleAllowed(it.lang)) subtitleCallback(it)
         }
-        val doc = runCatching { app.get(data).document }
+        val doc = runCatching { app.get(data, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
         val ids = doc.select(".btn-stream[data-id]").map { it.attr("data-id") }
             .filter { it.isNotBlank() }.distinct()
@@ -217,7 +219,7 @@ class DiziasiaProvider : MainAPI() {
 
     /** ok.ru/odnoklassniki videoembed HTML-escapes its player JSON; unescape, then read the videos array. */
     private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
-        val body = app.get(embed, referer = "$mainUrl/").text.replace("&quot;", "\"")
+        val body = app.get(embed, referer = "$mainUrl/", headers = uaHeaders).text.replace("&quot;", "\"")
         val array = Regex(""""videos"\s*:\s*(\[.*?])""", RegexOption.DOT_MATCHES_ALL)
             .find(body)?.groupValues?.get(1) ?: return false
         val videos = runCatching { JSONArray(array) }.getOrNull() ?: return false
@@ -240,7 +242,7 @@ class DiziasiaProvider : MainAPI() {
 
     /** vkvideo.ru demands a cookie chain; the same embed on vk.com answers directly. */
     private suspend fun loadVk(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
-        val page = app.get(embed.replace("vkvideo.ru", "vk.com"), referer = "$mainUrl/").text
+        val page = app.get(embed.replace("vkvideo.ru", "vk.com"), referer = "$mainUrl/", headers = uaHeaders).text
         var found = false
         Regex("\"(mp4_\\d+|hls)\":\"(https:[^\"]+)\"").findAll(page).forEach { match ->
             val label = match.groupValues[1]

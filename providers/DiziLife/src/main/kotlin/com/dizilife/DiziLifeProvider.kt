@@ -1,6 +1,7 @@
 package com.dizilife
 
 import android.util.Base64
+import com.bigbull.common.browserHeaders
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
 import com.lagradost.cloudstream3.Episode
@@ -44,6 +45,7 @@ import java.net.URLEncoder
  */
 class DiziLifeProvider : MainAPI() {
     override var mainUrl = "https://dizi83.life"
+    private val uaHeaders get() = browserHeaders
     override var name = "DiziLife"
     override var lang = "tr"
     override val hasMainPage = true
@@ -63,7 +65,7 @@ class DiziLifeProvider : MainAPI() {
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val doc = app.get(request.data + page).document
+        val doc = app.get(request.data + page, headers = uaHeaders).document
         val items = doc.cardAnchors().mapNotNull { it.toSearchResult() }.distinctBy { it.url }
         return newHomePageResponse(request.name, items, hasNext = doc.selectFirst("a[rel=next]") != null)
     }
@@ -74,7 +76,7 @@ class DiziLifeProvider : MainAPI() {
     override suspend fun search(query: String, page: Int): SearchResponseList? {
         val encoded = URLEncoder.encode(query, "UTF-8")
         // Only the "Diziler" block paginates (series_page); the movie block repeats on every page.
-        val doc = app.get("$mainUrl/ara?q=$encoded&series_page=$page").document
+        val doc = app.get("$mainUrl/ara?q=$encoded&series_page=$page", headers = uaHeaders).document
         val items = doc.cardAnchors().mapNotNull { it.toSearchResult() }
             .filter { page == 1 || !it.url.contains("/film/") }
             .distinctBy { it.url }
@@ -99,7 +101,7 @@ class DiziLifeProvider : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val doc = runCatching { app.get(url).document }
+        val doc = runCatching { app.get(url, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
         val schema = doc.select("script[type=application/ld+json]")
             .mapNotNull { runCatching { JSONObject(it.data().trim()) }.getOrNull() }
@@ -191,7 +193,7 @@ class DiziLifeProvider : MainAPI() {
     ): Boolean {
         val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
         val subtitleFilter: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
-        val doc = runCatching { app.get(data).document }
+        val doc = runCatching { app.get(data, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
         val frames = doc.select("iframe[src]").mapNotNull { fixUrlNull(it.attr("src")) }.distinct()
         var found = false
@@ -213,7 +215,7 @@ class DiziLifeProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val html = app.get(playerUrl, referer = refererUrl).text
+        val html = app.get(playerUrl, referer = refererUrl, headers = uaHeaders).text
         val plain = runCatching { decryptShell(html) }.getOrNull() ?: return false
         val stream = Regex("""file\s*:\s*["']([^"']+)["']""").find(plain)?.groupValues?.get(1)
             // The shell appends a cache-buster that its own JS strips before playback.
@@ -232,11 +234,11 @@ class DiziLifeProvider : MainAPI() {
         runCatching {
             val mediaBase = stream.substringBefore('?').substringBeforeLast('/') + "/"
             Regex("""#EXT-X-MEDIA:TYPE=SUBTITLES[^\n]*LANGUAGE="([^"]+)"[^\n]*NAME="([^"]+)"[^\n]*URI="([^"]+)"""")
-                .findAll(app.get(stream, referer = playerUrl).text)
+                .findAll(app.get(stream, referer = playerUrl, headers = uaHeaders).text)
                 .forEach { match ->
                     runCatching {
                         val playlist = URI(mediaBase).resolve(match.groupValues[3].replace(" ", "%20")).toString()
-                        val vtt = app.get(playlist, referer = playerUrl).text.lineSequence()
+                        val vtt = app.get(playlist, referer = playerUrl, headers = uaHeaders).text.lineSequence()
                             .firstOrNull { it.isNotBlank() && !it.startsWith("#") } ?: return@runCatching
                         subtitleCallback(
                             SubtitleFile(match.groupValues[2], URI(playlist).resolve(vtt.trim()).toString())

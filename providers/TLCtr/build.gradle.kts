@@ -1,4 +1,4 @@
-version = 4
+version = 5
 
 cloudstream {
     description = "TLCtr — TLC Türkiye: gerçek hikayeler, belgesel ve dizi bölümleri + canlı yayın (tlctv.com.tr)"
@@ -7,4 +7,8 @@ cloudstream {
     tvTypes = listOf("TvSeries", "Live")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=tlctv.com.tr&sz=%size%"
+}
+
+android {
+    sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
 }

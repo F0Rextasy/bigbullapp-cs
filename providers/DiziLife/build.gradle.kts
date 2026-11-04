@@ -1,5 +1,5 @@
 // Use an integer for version numbers
-version = 6
+version = 7
 
 cloudstream {
     description = "DiziLife — dizi83.life dizi ve film arşivi"
@@ -18,4 +18,8 @@ cloudstream {
     language = "tr"
 
     iconUrl = "https://www.google.com/s2/favicons?domain=dizi83.life&sz=%size%"
+}
+
+android {
+    sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
 }

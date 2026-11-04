@@ -1,5 +1,7 @@
 package com.dizifilmizle
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -34,9 +36,6 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import org.jsoup.nodes.Document
 
-private fun org.jsoup.nodes.Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 private fun asciiFold(value: String): String = value
     .replace('ı', 'i').replace('İ', 'I')
     .replace('ş', 's').replace('Ş', 'S')
@@ -54,11 +53,7 @@ private fun cleanTitle(raw: String?): String = (raw ?: "")
     .trim().trim('-', '–', '|', ',')
 
 class DiziFilmIzleProvider : MainAPI() {
-    private val uaHeaders = mapOf(
-        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-            "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
 
     override var mainUrl = "https://dizifilmizle.to"
     override var name = "DiziFilmIzle"

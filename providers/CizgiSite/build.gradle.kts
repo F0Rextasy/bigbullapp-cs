@@ -12,3 +12,7 @@ cloudstream {
 dependencies {
     implementation("org.brotli:dec:0.1.2")
 }
+
+android {
+    sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
+}

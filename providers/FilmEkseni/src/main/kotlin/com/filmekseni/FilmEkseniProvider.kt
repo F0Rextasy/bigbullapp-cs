@@ -1,6 +1,8 @@
 package com.filmekseni
 
 import android.util.Base64
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -44,8 +46,6 @@ import java.net.URLEncoder
  * alanı `{url}` yer tutuculu iframe'i verir: VIP (eksenload.top) jwplayer
  * `setup(JSON.parse('…'))` içinde m3u8 basar, Moly (vidmoly.net) `sources[{file: '…m3u8'}]`.
  */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
 
 class FilmEkseniProvider : MainAPI() {
     override var mainUrl = "https://filmekseni.vip"
@@ -54,10 +54,7 @@ class FilmEkseniProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.Movie)
 
-    private val uaHeaders = mapOf(
-        "User-Agent" to UA,
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
 
     override val mainPage get() = ROWS.mapNotNull { name ->
         if (!Settings.rowEnabled(name)) return@mapNotNull null

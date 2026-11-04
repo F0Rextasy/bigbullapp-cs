@@ -1,5 +1,6 @@
 package com.onepacetr
 
+import com.bigbull.common.browserHeaders
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -31,6 +32,7 @@ import java.net.URLEncoder
  */
 class OnepacetrProvider : MainAPI() {
     override var mainUrl = "https://onepacetr.net"
+    private val uaHeaders get() = browserHeaders
     override var name = "One Pace TR"
     override var lang = "tr"
     override val hasMainPage = true
@@ -55,7 +57,7 @@ class OnepacetrProvider : MainAPI() {
     private val hiddenPlayers = listOf("gettsu", "vidguard")
 
     private suspend fun getJson(url: String): JSONObject =
-        JSONObject(app.get(url, headers = auth).text)
+        JSONObject(app.get(url, headers = auth + uaHeaders).text)
 
     private fun seasonUrl(slug: String) = "$api/seasons?filters[slug][\$eq]=$slug&populate=*"
 

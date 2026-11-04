@@ -1,5 +1,7 @@
 package com.dramadizilerim
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -40,9 +42,6 @@ import java.net.URLDecoder
  * Oynatıcı `/izle/` sayfasındaki `data-episode-id` ile `/api/playback` çağırır; yanıt
  * HLS/MP4 adresini `/api/media?ticket=` olarak verir.
  */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 class DramaDizilerimProvider : MainAPI() {
     override var mainUrl = "https://dramadizilerim.com"
     override var name = "DramaDizilerim"
@@ -50,10 +49,7 @@ class DramaDizilerimProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
 
-    private val uaHeaders = mapOf(
-        "User-Agent" to UA,
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
 
     override val mainPage get() = ROWS.mapNotNull { name ->
         if (!Settings.rowEnabled(name)) return@mapNotNull null
@@ -243,8 +239,6 @@ class DramaDizilerimProvider : MainAPI() {
             "GoodShort",
         )
 
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
 

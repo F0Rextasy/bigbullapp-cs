@@ -1,5 +1,7 @@
 package com.jetfilmizle
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -28,15 +30,10 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 /** JetFilmizle — jetfilmizle.app (jetfilmizle.tv/.com/.now aynı yayına yönlenir) */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
 
 class JetFilmizleProvider : MainAPI() {
     override var mainUrl = "https://jetfilmizle.app"
-    private val uaHeaders = mapOf(
-        "User-Agent" to BROWSER_UA,
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
     override var name = "JetFilmizle"
     override var lang = "tr"
     override val hasMainPage = true
@@ -396,8 +393,6 @@ class JetFilmizleProvider : MainAPI() {
         private const val MOVIESAPI_KEY =
             "3a67e8866ae1d2bb9e81fe7f73315a56eb3bdf5e3e755c7554c8be6910aa6b13"
         private val WORKERS_DEV = Regex("""^https://[^/]+\.workers\.dev/""")
-        private const val BROWSER_UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

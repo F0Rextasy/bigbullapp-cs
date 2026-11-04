@@ -1,5 +1,6 @@
 package com.dizikorea3
 
+import com.bigbull.common.browserHeaders
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -44,6 +45,7 @@ import java.net.URLEncoder
  */
 class Dizikorea3Provider : MainAPI() {
     override var mainUrl = "https://dizikorea3.com"
+    private val uaHeaders get() = browserHeaders
     override var name = "Dizikorea3"
     override var lang = "tr"
     override val hasMainPage = true
@@ -63,7 +65,7 @@ class Dizikorea3Provider : MainAPI() {
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val doc = app.get(request.data.replace("SAYFA", page.toString())).document
+        val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = uaHeaders).document
         val items = doc.select("section.listing-page a.poster-card[href]")
             .mapNotNull { it.toSearchResult() }
             .distinctBy { it.url }
@@ -97,7 +99,7 @@ class Dizikorea3Provider : MainAPI() {
 
     override suspend fun search(query: String, page: Int): SearchResponseList? {
         // `?s=<q>&paged=N` is ignored by the site; paging is the `/sayfa/N` path.
-        val doc = app.get("$mainUrl/sayfa/$page?s=${URLEncoder.encode(query, "UTF-8")}").document
+        val doc = app.get("$mainUrl/sayfa/$page?s=${URLEncoder.encode(query, "UTF-8")}", headers = uaHeaders).document
         val items = doc.select("section.listing-page a.poster-card[href]")
             .mapNotNull { it.toSearchResult() }
             .distinctBy { it.url }
@@ -105,7 +107,7 @@ class Dizikorea3Provider : MainAPI() {
     }
 
     override suspend fun quickSearch(query: String): List<SearchResponse>? {
-        val items = JSONObject(app.get("$mainUrl/ara?q=${URLEncoder.encode(query, "UTF-8")}").text)
+        val items = JSONObject(app.get("$mainUrl/ara?q=${URLEncoder.encode(query, "UTF-8")}", headers = uaHeaders).text)
             .optJSONArray("items") ?: return null
         return (0 until items.length()).mapNotNull { index ->
             val item = items.optJSONObject(index) ?: return@mapNotNull null
@@ -121,7 +123,7 @@ class Dizikorea3Provider : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val doc = runCatching { app.get(url).document }
+        val doc = runCatching { app.get(url, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
         val title = doc.selectFirst("h1.series-title, h1.watch-title")?.text()?.trim()?.takeIf { it.isNotBlank() }
             ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
@@ -201,7 +203,7 @@ class Dizikorea3Provider : MainAPI() {
         val subtitleFilter: (SubtitleFile) -> Unit = {
             if (seenSubs.add(it.url) && Settings.subtitleAllowed(it.lang)) subtitleCallback(it)
         }
-        val doc = runCatching { app.get(data).document }
+        val doc = runCatching { app.get(data, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
         // The player iframes are lazy-loaded, so the real URL sits in data-src.
         // playerdkorea's anti-leech CDN stalls ~10s before refusing a dead token, so it goes last.
@@ -251,7 +253,7 @@ class Dizikorea3Provider : MainAPI() {
         val stream = body.optString("securedLink").ifBlank { body.optString("videoSource") }
         if (!stream.startsWith("http")) return false
         val live = runCatching {
-            app.get(stream, referer = "https://playerdkorea.xyz/").text.startsWith("#EXTM3U")
+            app.get(stream, referer = "https://playerdkorea.xyz/", headers = uaHeaders).text.startsWith("#EXTM3U")
         }.getOrDefault(false)
         if (!live) return false
         callback.invoke(

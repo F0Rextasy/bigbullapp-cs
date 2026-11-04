@@ -1,5 +1,7 @@
 package com.dizimom
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -32,14 +34,8 @@ import org.jsoup.nodes.Element
  * Bölüm sayfasındaki `data-pv` slug'ı → play2.pilavyerplay.top s.php →
  * `window.__PLAYER__` (master HLS + ses/altyazı) → stream.php.
  */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 class DiziMomProvider : MainAPI() {
-    private val uaHeaders = mapOf(
-        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
     override var mainUrl = "https://ddizimom.net"
     override var name = "DiziMom"
     override var lang = "tr"

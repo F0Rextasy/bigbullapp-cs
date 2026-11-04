@@ -18,3 +18,7 @@ cloudstream {
 
     iconUrl = "https://www.google.com/s2/favicons?domain=cizgimax.online&sz=%size%"
 }
+
+android {
+    sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
+}

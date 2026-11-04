@@ -1,6 +1,7 @@
 package com.asyaanimeleri
 
 import android.util.Base64
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -38,9 +39,6 @@ import java.net.URLEncoder
  * The watch page keeps every mirror as a base64-encoded iframe in `select.mirror`,
  * one of them being `rumble.com/embed/<id>`.
  */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 class AsyaAnimeleriProvider : MainAPI() {
     override var mainUrl = "https://asyaanimeleri.top"
     override var name = "AsyaAnimeleri"

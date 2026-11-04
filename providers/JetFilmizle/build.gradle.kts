@@ -1,5 +1,5 @@
 // Use an integer for version numbers
-version = 5
+version = 6
 
 cloudstream {
     description = "JetFilmizle — Türkçe dublaj/altyazılı film izle (jetfilmizle.app)"
@@ -18,4 +18,8 @@ cloudstream {
     language = "tr"
 
     iconUrl = "https://www.google.com/s2/favicons?domain=jetfilmizle.app&sz=%size%"
+}
+
+android {
+    sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
 }

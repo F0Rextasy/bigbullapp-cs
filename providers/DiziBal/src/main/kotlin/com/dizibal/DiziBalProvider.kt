@@ -1,5 +1,7 @@
 package com.dizibal
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -49,9 +51,6 @@ import org.jsoup.nodes.Element
  * (pilavyerplay.top / play2.pilavyerplay.top), taban sayfadaki `core.js` script adresinden
  * türetilir. s.php origin kilidi ister: Referer bölüm sayfasıdır.
  */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 class DiziBalProvider : MainAPI() {
     override var mainUrl = "https://dizibal.org"
     override var name = "DiziBal"
@@ -59,10 +58,7 @@ class DiziBalProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
 
-    private val uaHeaders = mapOf(
-        "User-Agent" to UA,
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
 
     override val mainPage get() = mainPageOf(
         "$mainUrl/diziler?page=SAYFA" to "Popüler Diziler",

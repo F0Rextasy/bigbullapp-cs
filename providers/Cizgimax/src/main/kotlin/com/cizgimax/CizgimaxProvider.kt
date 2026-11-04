@@ -1,6 +1,8 @@
 package com.cizgimax
 
 import android.util.Base64
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -43,15 +45,9 @@ import java.util.concurrent.CancellationException
  *    uqload, …), which the core extractors understand.
  *  - `resolveUrl` — `dzen` rows; the site itself resolves these to a tau-video key.
  */
-private fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 class CizgimaxProvider : MainAPI() {
     override var mainUrl = "https://cizgimax.online"
-    private val uaHeaders = mapOf(
-        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
     override var name = "ÇizgiMax"
     override var lang = "tr"
     override val hasMainPage = true
