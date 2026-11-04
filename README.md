@@ -135,7 +135,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Dizikorea3` | dizikorea3.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | film | ✓ |
 | `Dizilla` | dizilla.la | Dizi | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `DiziMom` | ddizimom.net | Dizi | — | — | — | — | — | — |
-| `DiziPal` | dizipal1593.com | Dizi/Film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
+| `DiziPal` | dizipal1594.com | Dizi/Film | — | ✓ | — | ✓ | ✓ | ✓ |
 | `DiziPod` | dizipod.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `DMAX` | dmax.com.tr | Dizi | — | — | — | — | — | — |
 | `DramaDizilerim` | dramadizilerim.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
