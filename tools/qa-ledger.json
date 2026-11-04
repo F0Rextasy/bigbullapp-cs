@@ -167,7 +167,7 @@
     {
       "module": "DiziCaN",
       "result": "pass",
-      "evidence": "runner 2026-11-04 filtreli koşu: search=40 load=true links=2 (vidmoly+Dzen); Nuvio zinciri canlı. AGENTS notu: makesomthing.click CANLI CDN",
+      "evidence": "fix 2026-11-04: arama ucu /arama/?s= düzeltildi + tek-kelime fallback (Nuvio zinciriyle aynı); runner PASS search sonrası links=1 (runner 2026-11-03 links=0, sorunun arama katmanı olduğu görüldü); Nuvio canlı doğrulama paralel ajan turunda beklemede",
       "runner": "jvm-runner 2026-11-04"
     },
     {
@@ -281,7 +281,7 @@
     {
       "module": "Filmizyon",
       "result": "pass",
-      "evidence": "runner 2026-11-04 filtreli koşu: search=24 load=true; extractorsüz runner links=0 (vidmoly stub sınıfı); Nuvio canlı PASS",
+      "evidence": "runner 2026-11-04 tam sweep: search=14 load=true links=2 PASS (vidmoly stub sınıfı değil; erken rapordaki \"Nuvio canlı PASS\" iddiası kanıtsızdı, runner kanıtına çevrildi)",
       "runner": "jvm-runner 2026-11-04"
     },
     {

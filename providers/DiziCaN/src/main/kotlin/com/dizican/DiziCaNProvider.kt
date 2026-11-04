@@ -93,9 +93,13 @@ class DiziCaNProvider : MainAPI() {
     private val pathPrefixes = listOf("/", "/bolum/")
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val q = if (false) asciiFold(query) else query
-        val url = "https://dizican.cc/arama/{q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
-        return cards(app.get(url, headers = uaHeaders).document, q)
+        // Site araması WordPress ?s= şeklinde; /arama/<q> uç noktası boş dönüyor.
+        val url = "$mainUrl/?s=" + java.net.URLEncoder.encode(query, "UTF-8")
+        val first = cards(app.get(url, headers = uaHeaders).document, query)
+        if (first.isNotEmpty() || !query.contains(' ')) return first
+        // Çok kelimeli sorguda boş dönüyorsa tek kelimeyle bir kez daha dene (Nuvio zinciriyle aynı).
+        val token = query.trim().split(Regex("\\s+")).first()
+        return cards(app.get("$mainUrl/?s=" + java.net.URLEncoder.encode(token, "UTF-8"), headers = uaHeaders).document, token)
     }
 
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->

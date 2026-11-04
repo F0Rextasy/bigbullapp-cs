@@ -14,6 +14,7 @@ sayı arttığında güncelleme sunar.
 - **TurkceDizi v3**: oynatıcı zinciri Nuvio'dan Kotlin'e portlandı (iframeUrl → ters-base64 + OpenSSL AES → HLS master, varyant kaliteleri ve tr/en altyazılar).
 
 - **DiziBoxTv v3**: bölüm sayacı "Bölüm/Sezon" etiketlerinden sentezleniyor; oynatıcı kimliği doğrudan HLS master'a çözülüyor (varyant kaliteler + altyazılar).
+- **DiziCaN v4**: arama uç noktası siteye göre düzeltildi (`?s=`); çok kelimeli sorgularda tek-kelime ikinci deneme eklendi; runner'da links=1 PASS.
 - **SonAnime v3**: api.sonanime.com sezon/bölüm listesi ile gerçek seri yapısına geçti; 1080/720/480/360 MP4 kademeleri göreceli yollarla da çalışıyor.
 
 ### Eklendi
