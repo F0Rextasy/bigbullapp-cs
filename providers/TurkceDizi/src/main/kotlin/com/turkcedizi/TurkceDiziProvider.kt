@@ -1,5 +1,7 @@
 package com.turkcedizi
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -29,9 +31,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.nodes.Document
 
-private fun org.jsoup.nodes.Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
-
 private fun asciiFold(value: String): String = value
     .replace('ı', 'i').replace('İ', 'I')
     .replace('ş', 's').replace('Ş', 'S')
@@ -49,11 +48,7 @@ private fun cleanTitle(raw: String?): String = (raw ?: "")
     .trim().trim('-', '–', '|', ',')
 
 class TurkceDiziProvider : MainAPI() {
-    private val uaHeaders = mapOf(
-        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-            "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-        "Accept-Language" to "tr-TR,tr;q=0.9",
-    )
+    private val uaHeaders get() = browserHeaders
 
     override var mainUrl = "https://turkcedizi.com"
     override var name = "TurkceDizi"
@@ -209,8 +204,6 @@ class TurkceDiziProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>("https://one.makesomthingup.click/dDj_y6qtXEcEnaS_zzqXNcR0/master.m3u8", "https://one.makesomthingup.click/dDj_y6qtXEcEnaS_zzqXNcR0/720p/playlist.m3u8", "https://one.makesomthingup.click/dDj_y6qtXEcEnaS_zzqXNcR0/sub_english/subtitles.m3u8", "https://one.makesomthingup.click/dDj_y6qtXEcEnaS_zzqXNcR0/turkish/playlist.m3u8")
-        for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
