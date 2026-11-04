@@ -13,6 +13,9 @@ sayı arttığında güncelleme sunar.
 - **UA rulajı**: modül altyapısı ortak `browserHeaders` kaynağına taşındı; **Anizm v9, Ddizi v4, DiziBal v5, DiziBol v2, DramaDizilerim v6, FilmModu v6, HDFilmizle v6, JetFilmizle v6, LoveFilm v5, NetFilmizle v3, SetFilmIzle v6, ShowTV v2, Sinezy v3, Sinemakolik v2, SinemaCX v4, TLCtr v6, UltraFilmizle v3** güncel Chrome/130 UA'sına geçti; **Dizibaba v3, Dizigecesi v7, Dizilab v4, MinikaGO v5** haritaları da 130'a oturttu; **AsyaLog v7** isteklerine UA eklendi.
 - **TurkceDizi v3**: oynatıcı zinciri Nuvio'dan Kotlin'e portlandı (iframeUrl → ters-base64 + OpenSSL AES → HLS master, varyant kaliteleri ve tr/en altyazılar).
 
+- **DiziBoxTv v3**: bölüm sayacı "Bölüm/Sezon" etiketlerinden sentezleniyor; oynatıcı kimliği doğrudan HLS master'a çözülüyor (varyant kaliteler + altyazılar).
+- **SonAnime v3**: api.sonanime.com sezon/bölüm listesi ile gerçek seri yapısına geçti; 1080/720/480/360 MP4 kademeleri göreceli yollarla da çalışıyor.
+
 ### Eklendi
 - **Nuvio sağlayıcı sürümleri**: manifest sürümleri artık CHANGELOG'daki `vN` numaralarından üretiliyor; kod cache'i davranış değişikliklerini yakalar.
 - **Nuvio kataloğu**: addon listeleri yeniden üretildi, manifest 1.6.7 tabanına güncellendi.

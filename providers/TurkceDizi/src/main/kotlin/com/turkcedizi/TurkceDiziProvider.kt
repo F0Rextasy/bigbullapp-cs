@@ -248,8 +248,17 @@ class TurkceDiziProvider : MainAPI() {
         if (playerUrl != null) {
             val url = if (playerUrl.startsWith("//")) "https:$playerUrl" else fixUrl(playerUrl)
             val playerHtml = runCatching { app.get(url, headers = uaHeaders, referer = data).text }.getOrNull()
-            val plain = playerHtml?.let { runCatching { decodeTurkceDiziPlayer(it) }.getOrNull() }
-            val master = plain?.let { p -> Regex("""file\s*:\s*"([^"]+)""").find(p)?.groupValues?.get(1) }
+            val dbg = System.getenv("TD_DEBUG") != null
+            if (dbg) runCatching {
+                java.io.File("C:/Users/Extasy/Desktop/cloudstream/research/_td_player_sample.html")
+                    .apply { parentFile.mkdirs() }.writeText("#url=$url#ref=$data\n$playerHtml")
+            }
+            val plain = playerHtml?.let { runCatching { decodeTurkceDiziPlayer(it) }.fold({ it }, { if (dbg) "EX:" + it.message else null }) }
+            if (dbg) runCatching {
+                java.io.File("C:/Users/Extasy/Desktop/cloudstream/research/_td_decode_state.txt").writeText("htmlLen=${playerHtml?.length}\nplain=${plain?.take(360)}")
+            }
+            val master = plain?.takeIf { !it.startsWith("EX:") }
+                ?.let { p -> Regex("""file\s*:\s*"([^"]+)""").find(p)?.groupValues?.get(1) }
             if (master != null) {
                 emit(master, "master", url)
                 val playlist = runCatching { app.get(master, headers = uaHeaders, referer = url).text }.getOrNull() ?: ""
@@ -307,7 +316,7 @@ class TurkceDiziProvider : MainAPI() {
         val parts = Regex("$decoder\\(\"([^\"]*)\"\\)").findAll(html)
             .mapNotNull { it.groupValues?.get(1) }.toList()
         if (parts.size < 2) return null
-        val payload = String(jstr(String(jstr(parts[0].reversed()), Charsets.UTF_8)), Charsets.UTF_8)
+        val payload = String(jstr(parts[0].reversed()), Charsets.UTF_8)
         val blob = jstr(payload)
         if (blob.size < 17 || String(blob, 0, 8, Charsets.UTF_8) != "Salted__") return null
         val passphrase = jstr(parts[1].reversed())

@@ -161,14 +161,14 @@
     {
       "module": "DiziBoxTv",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=5, ep=0",
-      "runner": "autopilot.py 2026-10-30"
+      "evidence": "port 2026-11-04: sentezlenen sezon/bölüm + iframe→makesomthing CDN master; runner PASS search=58 load=true links=2 subs=2; runner 2026-11-02 links=0 temkin geri alındı",
+      "runner": "jvm-runner 2026-11-04"
     },
     {
       "module": "DiziCaN",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=2, ep=0",
-      "runner": "autopilot.py 2026-10-30"
+      "evidence": "runner 2026-11-04 filtreli koşu: search=40 load=true links=2 (vidmoly+Dzen); Nuvio zinciri canlı. AGENTS notu: makesomthing.click CANLI CDN",
+      "runner": "jvm-runner 2026-11-04"
     },
     {
       "module": "DiziFilmIzle",
@@ -281,8 +281,8 @@
     {
       "module": "Filmizyon",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=4, ep=0",
-      "runner": "autopilot.py 2026-10-30"
+      "evidence": "runner 2026-11-04 filtreli koşu: search=24 load=true; extractorsüz runner links=0 (vidmoly stub sınıfı); Nuvio canlı PASS",
+      "runner": "jvm-runner 2026-11-04"
     },
     {
       "module": "FilmModu",
@@ -425,8 +425,8 @@
     {
       "module": "SonAnime",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=2, ep=38",
-      "runner": "autopilot.py 2026-10-30"
+      "evidence": "port 2026-11-04: api.sonanime.com link zinciri; runner PASS search=15 load=TvSeries eps=39 links=3 (1080/720/480 imzalı MP4). DVD: 360 kademesi API boş dönüyorsa atlanıyor",
+      "runner": "jvm-runner 2026-11-04"
     },
     {
       "module": "TLCtr",

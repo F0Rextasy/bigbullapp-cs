@@ -51,6 +51,7 @@ class SonAnimeProvider : MainAPI() {
     private val uaHeaders get() = browserHeaders
 
     override var mainUrl = "https://sonanime.com"
+    private val animeApi = "https://api.sonanime.com/api/anime"
     override var name = "SonAnime"
     override var lang = "tr"
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
@@ -154,6 +155,33 @@ class SonAnimeProvider : MainAPI() {
     }.distinctBy { it.url }
 
     override suspend fun load(url: String): LoadResponse? {
+        // api.sonanime.com anime_link → /link/<slug>: gerçek sezon/bölüm listesi buradan gelir.
+        val slug = url.substringAfter("/anime/", "").trimEnd('/').substringBefore('?')
+        if (slug.isNotBlank()) {
+            val apiRaw = runCatching {
+                app.get("$animeApi/link/" + java.net.URLEncoder.encode(slug, "UTF-8"), headers = uaHeaders).text
+            }.getOrNull()
+            val apiEpisodes = apiRaw?.let { runCatching { org.json.JSONObject(it).optJSONArray("episodes") }.getOrNull() }
+            if (apiEpisodes != null && apiEpisodes.length() > 0) {
+                val webTitle = runCatching {
+                    val raw = app.get(url, headers = uaHeaders).text
+                    Regex("<meta property=\"og:title\" content=\"([^\"]+)\"").find(raw)?.groupValues?.get(1)
+                }.getOrNull() ?: slug
+                val rows = (0 until apiEpisodes.length()).mapNotNull { i ->
+                    val e = apiEpisodes.optJSONObject(i) ?: return@mapNotNull null
+                    val season = e.optInt("anime_season", 1)
+                    val number = e.optInt("episode_number", i + 1)
+                    newEpisode("$slug|$season|$number") {
+                        this.name = "Bölüm $number"
+                        this.episode = number
+                        this.season = season
+                    }
+                }.sortedBy { it.episode ?: 0 }
+                if (rows.isNotEmpty()) {
+                    return newTvSeriesLoadResponse(cleanTitle(webTitle), url, TvType.TvSeries, rows) {}
+                }
+            }
+        }
         val resp = app.get(url, headers = uaHeaders)
         val doc = resp.document
         val raw = resp.text
@@ -171,13 +199,13 @@ class SonAnimeProvider : MainAPI() {
                 ?: Regex(""""(?:imdbPuani|ratingValue|imdb)"\s*:\s*"?([0-9.]+)""").find(raw)?.groupValues?.get(1)
         )
         val basePath = url.substringAfter(mainUrl).substringBefore('?').trimEnd('/')
-        val slug = basePath.trim('/').split('/').lastOrNull().orEmpty()
-        val slugBase = slug.removeSuffix("-izle").removeSuffix("-film-izle")
+        val slugHtml = basePath.trim('/').split('/').lastOrNull().orEmpty()
+        val slugBase = slugHtml.removeSuffix("-izle").removeSuffix("-film-izle")
         val episodes = doc.select("a[href]").mapNotNull { anchor ->
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
             val path = href.substringAfter(mainUrl).substringBefore('?')
             if (basePath.isNotBlank() && !path.startsWith(basePath) &&
-                !path.contains(slug) && !path.contains(slugBase)) return@mapNotNull null
+                !path.contains(slugHtml) && !path.contains(slugBase)) return@mapNotNull null
             if (!Regex("""(?:bolum|episode|sezon|season)""", RegexOption.IGNORE_CASE).containsMatchIn(path)) return@mapNotNull null
             val number = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
                 .find(path)?.groupValues?.getOrNull(2)?.toIntOrNull()
@@ -210,8 +238,6 @@ class SonAnimeProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val resp = app.get(data, headers = uaHeaders)
-        val text = resp.text.replace("\\/", "/").replace("\\\"", "\"")
         var found = false
         val seen = mutableSetOf<String>()
         suspend fun emit(stream: String, label: String, referer: String) {
@@ -225,8 +251,33 @@ class SonAnimeProvider : MainAPI() {
             })
             found = true
         }
-        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
-        for (m in media) emit(m.value, "Direct", data)
+        // "slug|sezon|bolum" biçimi → API episode_link_* MP4 kademeleri (data gerçek URL değil)
+        if (data.count { it == '|' } == 2) {
+            val (sSlug, sSeason, sEp) = data.split('|')
+            val apiRaw = runCatching {
+                app.get("$animeApi/link/" + java.net.URLEncoder.encode(sSlug, "UTF-8"), headers = uaHeaders).text
+            }.getOrNull() ?: return false
+            val eps = runCatching { org.json.JSONObject(apiRaw).optJSONArray("episodes") }.getOrNull()
+                ?: return false
+            var hit: org.json.JSONObject? = null
+            for (i in 0 until eps.length()) {
+                val e = eps.optJSONObject(i) ?: continue
+                if (e.optInt("anime_season", 1) == (sSeason.toIntOrNull() ?: 1) &&
+                    e.optInt("episode_number", -1) == (sEp.toIntOrNull() ?: -1)) { hit = e; break }
+            }
+            hit ?: return false
+            for (pair in listOf("1080" to "1080p", "720" to "720p", "480" to "480p", "360" to "360p")) {
+                val rawLink = hit.optString("episode_link_" + pair.first)
+                if (rawLink.isBlank()) continue
+                val link = if (rawLink.startsWith("http")) rawLink
+                    else mainUrl + (if (rawLink.startsWith("/")) "" else "/") + rawLink
+                emit(link, pair.second, mainUrl + "/")
+            }
+            return found
+        }
+        val resp = app.get(data, headers = uaHeaders)
+        val text = resp.text.replace("\\/", "/").replace("\\\"", "\"")
+        for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
             .findAll(text).map { it.groupValues[1] }.toList()
         for (embed in embeds) {
@@ -267,7 +318,8 @@ class SonAnimeProvider : MainAPI() {
         for (m in subs) {
             if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))
         }
-        if (!found && frames.isEmpty() && embeds.isEmpty() && media.none()) {
+        if (!found && frames.isEmpty() && embeds.isEmpty() &&
+            Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text).none()) {
             throw ErrorLoadingException("$name: oynatılabilir akış yok")
         }
         return found
