@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -8,7 +8,7 @@
       "id": "aniarsiv",
       "name": "AniArsiv",
       "description": "AniArsiv anime arsivi (Turkce altyazili MP4 akislari).",
-      "version": "1.0.1",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -27,7 +27,7 @@
       "id": "animecix",
       "name": "AnimeciX",
       "description": "AnimeciX Turkce altyazili anime arsivi (MP4 akislari).",
-      "version": "1.0.1",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -46,7 +46,7 @@
       "id": "animeler",
       "name": "Animeler",
       "description": "Animeler.live Turkce altyazili anime arsivi (ok.ru / mail.ru MP4 akislari).",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -65,7 +65,7 @@
       "id": "anizium",
       "name": "Anizium",
       "description": "Anizium anime arsivi (Turkce altyazili MP4 akislari).",
-      "version": "1.0.1",
+      "version": "1.0.5",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -84,7 +84,7 @@
       "id": "anizm",
       "name": "Anizm",
       "description": "Anizm (turkanime.info) Turkce altyazili anime; kendi oynatcisindan HLS master.",
-      "version": "1.0.1",
+      "version": "1.0.8",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -103,7 +103,7 @@
       "id": "asyaanimeleri",
       "name": "AsyaAnimeleri",
       "description": "AsyaAnimeleri anime kaynaklari (rumble, vidmoly HLS).",
-      "version": "1.0.1",
+      "version": "1.0.9",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -181,7 +181,7 @@
       "id": "asyalog",
       "name": "AsyaLog",
       "description": "AsyaLog dizi kaynaklari (ok.ru imzali MP4 ladder).",
-      "version": "1.0.1",
+      "version": "1.0.7",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -200,7 +200,7 @@
       "id": "asyaluna",
       "name": "AsyaLuna",
       "description": "AsyaLuna (asyaluna.com) Asya dizileri; bölüm sayfasındaki ok.ru ve doğrudan akışlar.",
-      "version": "1.0.1",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -220,7 +220,7 @@
       "id": "asyawatch",
       "name": "AsyaWatch",
       "description": "AsyaWatch (asyawatch.com) Kore/Asya dizileri ve filmleri; pichive oynatcisindan HLS master + altyazi.",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "author": "bigbull",
       "supportedTypes": [
         "tv",
@@ -259,7 +259,7 @@
       "id": "belgeselx",
       "name": "BelgeselX",
       "description": "BelgeselX Türkçe belgesel dizileri; ok.ru ve CDN MP4 kaynakları.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -278,7 +278,7 @@
       "id": "birasyadizi",
       "name": "BirAsyaDizi",
       "description": "BirAsyaDizi Asya dizileri; ok.ru MP4 oynatıcı.",
-      "version": "1.0.1",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -317,7 +317,7 @@
       "id": "cizgisite",
       "name": "CizgiSite",
       "description": "CizgiSite çizgi film arşivi; vk HLS/MP4 ve ok.ru oynatıcıları.",
-      "version": "1.0.2",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -337,7 +337,7 @@
       "id": "ddizi",
       "name": "Ddizi",
       "description": "Ddizi yerli dizi arşivi; bölümler jwplayer HLS (tabii) olarak açılır.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -357,7 +357,7 @@
       "id": "ddizimag",
       "name": "DDizimag",
       "description": "DDizimag yabancı dizi arşivi; HLS akışları pilavyer oynatıcısından gelir.",
-      "version": "1.0.1",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -416,7 +416,7 @@
       "id": "diziasia",
       "name": "DiziAsia",
       "description": "DiziAsia (diziasia.com) Asya dizi ve filmleri; ok.ru / VK oynaticilari.",
-      "version": "1.0.1",
+      "version": "1.0.5",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -456,7 +456,7 @@
       "id": "dizibal",
       "name": "DiziBal",
       "description": "DiziBal altyazili yabanci dizi/film arsivi; pilavyer HLS akisi ve altyazilar.",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "author": "bigbull",
       "supportedTypes": [
         "tv",
@@ -496,7 +496,7 @@
       "id": "dizibox",
       "name": "Dizibox",
       "description": "Dizibox dizi kaynaklari (king.php -> sheila HLS).",
-      "version": "1.0.1",
+      "version": "1.0.10",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -515,7 +515,7 @@
       "id": "diziboxizle",
       "name": "DiziboxIzle",
       "description": "DiziboxIzle dizi kaynaklari (wp-json arama + ok.ru MP4).",
-      "version": "1.0.1",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -574,7 +574,7 @@
       "id": "dizifilmizle",
       "name": "DiziFilmIzle",
       "description": "DiziFilmIzle - Turkce dizi/film arsivi (bePlayer AES sifreli HLS).",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -632,7 +632,7 @@
       "id": "dizikorea3",
       "name": "Dizikorea3",
       "description": "Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).",
-      "version": "1.0.1",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -651,7 +651,7 @@
       "id": "dizilab",
       "name": "Dizilab",
       "description": "Dizilab yabanci dizi arsivi (HLS + Turkce dublaj/altyazi).",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -670,7 +670,7 @@
       "id": "dizilife",
       "name": "DiziLife",
       "description": "DiziLife - yabanci dizi ve filmler, Turkce altyazi/dublaj (korumali HLS).",
-      "version": "1.0.2",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -690,7 +690,7 @@
       "id": "dizilla",
       "name": "Dizilla",
       "description": "Dizilla yabanci dizi arsivi (HLS + Turkce altyazi).",
-      "version": "1.0.2",
+      "version": "1.0.10",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -709,7 +709,7 @@
       "id": "dizimom",
       "name": "DiziMom",
       "description": "DiziMom - yabanci diziler Turkce altyazili/dublaj (pilavyer HLS).",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -728,7 +728,7 @@
       "id": "dizipal",
       "name": "DiziPal",
       "description": "DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.",
-      "version": "1.0.1",
+      "version": "1.0.5",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -787,7 +787,7 @@
       "id": "diziyou",
       "name": "DiziYou",
       "description": "DiziYou dizi/film kaynaklari (HLS + altyazi).",
-      "version": "1.0.1",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -807,7 +807,7 @@
       "id": "dmax",
       "name": "DMAX",
       "description": "DMAX Türkiye program arşivi; bölümler player/info HLS adresiyle açılır.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -826,7 +826,7 @@
       "id": "dramadizilerim",
       "name": "DramaDizilerim",
       "description": "DramaDizilerim dikey kisa drama arsivi (Turkce dublaj, MP4).",
-      "version": "1.0.1",
+      "version": "1.0.5",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -845,7 +845,7 @@
       "id": "filmekseni",
       "name": "FilmEkseni",
       "description": "FilmEkseni Türkçe dublaj/altyazılı film arşivi (VIP + Moly oynatıcıları).",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -883,7 +883,7 @@
       "id": "filmmodu",
       "name": "FilmModu",
       "description": "FilmModu Türkçe dublaj/altyazılı film arşivi (pilavyerplay oynatıcısı).",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -902,7 +902,7 @@
       "id": "fullhdfilm",
       "name": "FullHDFilm",
       "description": "FullHDFilm Türkçe dublaj/altyazılı film arşivi (hdload oynatıcısı).",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -921,7 +921,7 @@
       "id": "fullhdfilmizlesene",
       "name": "FullHDFilmizlesene",
       "description": "FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -959,7 +959,7 @@
       "id": "hdfilmcehennemi2",
       "name": "HDFilmCehennemi2",
       "description": "HDFilmCehennemi2 - Turkce dublaj/altyazili filmler; Alpine tabanli oynataci (HLS + altyazi).",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -997,7 +997,7 @@
       "id": "hdfilmdiziizle",
       "name": "HDFilmDiziIzle",
       "description": "HDFilmDiziIzle - Turkce dublaj/altyazili film arsivi; AES korumali playhd kaynak cozucu (HLS).",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -1016,7 +1016,7 @@
       "id": "hdfilmizle",
       "name": "HDFilmizle",
       "description": "HDFilmizle - Full HD film arsivi; SetPlay/FastPlay oynataci zinciri (HLS + Turkce altyazi).",
-      "version": "1.0.1",
+      "version": "1.0.5",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -1489,7 +1489,7 @@
       "id": "jetfilmizle",
       "name": "JetFilmizle",
       "description": "JetFilmizle.app Turkce dublaj/altyazili film arsivi; videopark apollo ve godrive oynaticilari.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -1509,7 +1509,7 @@
       "id": "kanald",
       "name": "KanalD",
       "description": "Kanal D resmi arsivi; diziler ve programlar, bolum sayfasindaki kanaldvod HLS akisi.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -1528,7 +1528,7 @@
       "id": "koreanturk",
       "name": "KoreanTurk",
       "description": "KoreanTurk.tv Kore dizileri arsivi; bolumler hintdizi player uzerinden HLS akis.",
-      "version": "1.0.1",
+      "version": "1.0.5",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -1547,7 +1547,7 @@
       "id": "kultfilmler",
       "name": "Kultfilmler",
       "description": "Kultfilmler film kaynaklari (vidpapi getVideo -> HLS).",
-      "version": "1.0.1",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -1566,7 +1566,7 @@
       "id": "lovefilm",
       "name": "LoveFilm",
       "description": "LoveFilmIzle.net Turkce dublaj/altyazili film arsivi; bemoly sarmalayici + vidmoly HLS.",
-      "version": "1.0.1",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -1586,7 +1586,7 @@
       "id": "minikacocuk",
       "name": "MinikaCocuk",
       "description": "MinikaÇOCUK Web TV çocuk bölümleri (doğrudan MP4 akışı).",
-      "version": "1.0.2",
+      "version": "1.0.4",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -1624,7 +1624,7 @@
       "id": "netfilmizle",
       "name": "NetFilmizle",
       "description": "NetFilmizle film arşivi: vidmixi oynatıcısı çözülüp HLS akışı ve Türkçe altyazılar verilir.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -1662,7 +1662,7 @@
       "id": "selcukflix",
       "name": "SelcukFlix",
       "description": "SelcukFlix - Turkce dublaj/altyazili film ve diziler; AES secureData + pichive HLS master.",
-      "version": "1.0.1",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -1682,7 +1682,7 @@
       "id": "setfilmizle",
       "name": "SetFilmIzle",
       "description": "SetFilmIzle Türkçe dublaj/altyazılı film ve dizi arşivi (HLS + altyazı).",
-      "version": "1.0.1",
+      "version": "1.0.5",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -1702,7 +1702,7 @@
       "id": "sezonlukdizi",
       "name": "Sezonlukdizi",
       "description": "SezonlukDizi yabancı dizi arşivi (altyazı/dublaj, Filemoon korumalı HLS).",
-      "version": "1.0.1",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -1741,7 +1741,7 @@
       "id": "sinemacx",
       "name": "SinemaCX",
       "description": "SinemaCX Türkçe dublaj ve altyazılı film arşivi (HLS + altyazı).",
-      "version": "1.0.1",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -1818,7 +1818,7 @@
       "id": "startv",
       "name": "StarTV",
       "description": "Star TV dizi arşivi; bölümler DYG altyapısından HLS olarak gelir.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -1914,7 +1914,7 @@
       "id": "webdramaturkey2",
       "name": "WebdramaTurkey2",
       "description": "WebdramaTurkey2 Kore/Cin/Japon dizileri, filmleri ve animeleri (Turkce altyazili).",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -1953,7 +1953,7 @@
       "id": "yabancidizi",
       "name": "Yabancidizi",
       "description": "Yabancidizi yabanci dizi/film arsivi (HLS + altyazi).",
-      "version": "1.0.1",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "movie",

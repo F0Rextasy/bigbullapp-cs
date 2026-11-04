@@ -915,5 +915,8 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }
   return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
     return __origGetStreams(imdb || raw, mediaType, season, episode);
-  }).catch(function () { return []; });
+  }).catch(function (e) {
+    console.log("[bb-nuvio][inatyabancidiziler] okuma akışı hata verdi: " + (e && e.message ? e.message : e));
+    return [];
+  });
 };

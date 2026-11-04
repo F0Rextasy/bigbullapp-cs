@@ -25,7 +25,7 @@ function check(ok, label) {
 }
 
 // "X-Requested-With: XMLHttpRequest" is a plain HTTP header, so only the API itself is banned.
-const BANNED = [/setTimeout\s*\(/, /setInterval\s*\(/, /\bBuffer\b/, /require\(\s*["'](?:fs|path|http|https|node:)/, /\bnew\s+XMLHttpRequest\b/];
+const BANNED = [/setTimeout\s*\(/, /setInterval\s*\(/, /\bBuffer\b/, /require\(\s*["'](?:fs|path|http|https|node:)/, /\bnew\s+XMLHttpRequest\b/, /\bprocess\b/, /require\s*\(/];
 
 for (const scraper of manifest.scrapers) {
   const file = path.join(root, scraper.filename);

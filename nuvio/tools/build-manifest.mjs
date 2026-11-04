@@ -18,6 +18,32 @@ function repoVersion() {
   return m ? m[1] : current.version || "1.0.0";
 }
 
+// CHANGELOG'daki "**<Ad> v<N>**: ..." satırlarından sağlayıcı başına sürüm; ilk eşleşme en güncel.
+function changelogVersions() {
+  const log = fs.readFileSync(path.join(root, "..", "CHANGELOG.md"), "utf8");
+  const map = new Map();
+  for (const m of log.matchAll(/\*\*([^*]+?) v(\d+)\*\*/g)) {
+    const key = m[1].toLocaleLowerCase("tr").trim();
+    if (!map.has(key)) map.set(key, Number(m[2]));
+  }
+  return map;
+}
+
+// Sürüm yalnız ileri gider: aday, saklanan değerden düşükse saklanan kalır.
+function bumpVersion(cand, base) {
+  if (!cand) return base;
+  if (!base) return cand;
+  const c = cand.split(".").map(Number);
+  const b = base.split(".").map(Number);
+  for (let i = 0; i < Math.max(c.length, b.length); i++) {
+    if ((c[i] || 0) > (b[i] || 0)) return cand;
+    if ((c[i] || 0) < (b[i] || 0)) return base;
+  }
+  return base;
+}
+
+const changelogVer = changelogVersions();
+
 const current = fs.existsSync(manifestPath)
   ? JSON.parse(fs.readFileSync(manifestPath, "utf8"))
   : { name: "BB Nuvio", version: "1.0.0", description: "Bigbull Turkish streaming providers for Nuvio, running on-device.", author: "bigbull", scrapers: [] };
@@ -45,11 +71,14 @@ for (const file of fs.readdirSync(providersDir).sort()) {
     if (!meta[key]) problems.push(`${file}: header missing "${key}"`);
   }
   const id = meta.id || path.basename(file, ".js");
+  const base = previous.get(id)?.version || "1.0.0";
+  const cv = changelogVer.get(String(meta.name || id).toLocaleLowerCase("tr").trim());
+  const candidate = meta.version !== undefined ? String(meta.version) : cv !== undefined ? `1.0.${cv}` : null;
   scrapers.push({
     id,
     name: meta.name || id,
     description: meta.description || `${meta.name || id} kaynaklari.`,
-    version: previous.get(id)?.version || "1.0.0",
+    version: bumpVersion(candidate, base),
     author: "bigbull",
     supportedTypes: meta.types,
     filename: `providers/${file}`,

@@ -904,7 +904,8 @@ function getStreams(tmdbId, mediaType, season, episode) {
       });
     };
     return step(0);
-  }).catch(function () {
+  }).catch(function (e) {
+    console.log("[bb-nuvio][inattod] okuma akışı hata verdi: " + (e && e.message ? e.message : e));
     return [];
   });
 }

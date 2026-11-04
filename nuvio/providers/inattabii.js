@@ -902,7 +902,8 @@ function getStreams(tmdbId, mediaType, season, episode) {
         });
       });
     });
-  }).catch(function () {
+  }).catch(function (e) {
+    console.log("[bb-nuvio][inattabii] okuma akışı hata verdi: " + (e && e.message ? e.message : e));
     return [];
   });
 }
