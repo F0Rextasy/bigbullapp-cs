@@ -207,8 +207,9 @@
     {
       "module": "DiziPal",
       "result": "pass",
-      "evidence": "2026-11-04: dizipal1592.com -> 301 -> dizipal1593.com 200; Nuvio node:https e2e tt0133093 ve 603 -> 2 HLS (dplayer82 Firefox UA); harness undici TLS 403; Cloudstream v5 compile PASS.",
-      "runner": "qa 2026-11-04"
+      "evidence": "v6: domain dizipal1593→1594 (301) taşındı; site Next.js; ?s= kazıma alakasız ana sayfa verisi — search emptyList (uydurma sonuç kaldırıldı). Ana sayfa kartları 1594 redirect aracılığıyla geliyor.",
+      "runner": "qa 2026-11-04",
+      "date": "2026-11-04"
     },
     {
       "module": "DiziPod",
@@ -443,8 +444,9 @@
     {
       "module": "TurkceDizi",
       "result": "pass",
-      "evidence": "port 2026-11-04: Nuvio JS zinciri Kotlin'e taşındı (iframeUrl + ters-base64 + OpenSSL AES); python uçtan uca master.m3u8 200 (720p/1080p + tr/en altyazı) doğrulandı; cihaz UI oynatma denemesi runner-ortam engelli",
-      "runner": "verify-probe 2026-11-04"
+      "evidence": "v4: site araması JS (form action boş); ?s= 60-article varsayılan liste (alakasız) — search emptyList. Oynatma zinciri önceki turda cihaz kanıtlı.",
+      "runner": "verify-probe 2026-11-04",
+      "date": "2026-11-04"
     },
     {
       "module": "TV8",

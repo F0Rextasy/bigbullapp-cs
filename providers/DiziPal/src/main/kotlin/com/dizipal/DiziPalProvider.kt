@@ -49,7 +49,7 @@ import org.jsoup.nodes.Element
  * Her iki CDN de isteklerde oynatıcı sayfasını `Referer` olarak şart koşar.
  */
 class DiziPalProvider : MainAPI() {
-    override var mainUrl = "https://dizipal1593.com"
+    override var mainUrl = "https://dizipal1594.com"
     override var name = "DiziPal"
     override var lang = "tr"
     override val hasMainPage = true
@@ -82,14 +82,8 @@ class DiziPalProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val term = query.trim()
-        if (term.length < 3) return emptyList()
-        val doc = app.get(
-            "$mainUrl/arama-yap",
-            headers = uaHeaders,
-            params = mapOf("q" to term),
-        ).document
-        return doc.select("a.tc[href]").mapNotNull { it.toCard() }.distinctBy { it.url }
+        // site Next.js js-aramaya geçti; ?s= kazıması ana sayfa verisi (ilgisiz sonuç) döndürüyor — sahte sonuç yerine boş dön
+        return emptyList()
     }
 
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)

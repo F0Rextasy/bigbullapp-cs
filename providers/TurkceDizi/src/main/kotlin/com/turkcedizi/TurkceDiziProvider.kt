@@ -81,28 +81,8 @@ class TurkceDiziProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val q = if (false) asciiFold(query) else query
-        val url = "https://turkcedizi.com/api/search?q={q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
-        val raw = app.get(url, headers = uaHeaders).text
-        val root = if (raw.trimStart().startsWith("[")) JSONObject() else JSONObject(raw)
-        val out = mutableListOf<SearchResponse>()
-
-        run {
-            val arr = if ("".isEmpty()) JSONArray(raw) else root.optJSONArray("") ?: return@run
-            for (i in 0 until arr.length()) {
-                val o = arr.optJSONObject(i) ?: continue
-                val title = o.optString("title").trim()
-                val slug = o.optString("slug").trim()
-                if (title.isBlank() || slug.isBlank()) continue
-                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
-                out += newMovieSearchResponse(title, href, TvType.Movie) {
-                    posterUrl = fixUrlNull(o.optString("").takeIf { it.startsWith("http") })
-                    year = o.optInt("year").takeIf { it > 1900 }
-                    score = Score.from10(o.optString("rating"))
-                }
-            }
-        }
-        return out.distinctBy { it.url }
+        // site araması js ile; ?s= kazıması varsayılan liste döndürüyor — sahte sonuç yerine boş dön
+        return emptyList()
     }
 
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->

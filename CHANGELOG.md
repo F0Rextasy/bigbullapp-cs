@@ -8,6 +8,9 @@ sayı arttığında güncelleme sunar.
 ## [1.6.8] - 2026-11-04
 
 ### Düzeltildi
+- **DiziPal v6**: yeni domain (dizipal1594) ve arama sonuçları sahte liste döndürdüğü için arama boşa alındı (site JS aramaya geçti).
+- **TurkceDizi v4**: site araması JS tabanlı olup kazıma alakasız liste döndürüyordu; arama boşa alındı (ana sayfa ve oynatma çalışıyor).
+
 - **Dizifon v4**: site araması sorguyu yok sayıp sabit liste döndürüyordu; eşleşme olmayan sorgularda artık boş sonuç dönüyor (cihazda oynatma doğrulandı).
 - **UltraFilmizle v5**: arama temanın "son eklenenler" sızıntısından wp-json gerçek aramaya taşındı (cihazda Ponette 1080p oynatıldı).
 - **DiziCaN v6**: bölüm listesi düzeltildi (site bölüm kalıpları okunamıyordu) ve ok.ru oynatıcısı özel çözücüyle cihazda oynatılır hale geldi (Snowdrop 720p).
