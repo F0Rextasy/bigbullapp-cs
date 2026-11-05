@@ -241,6 +241,31 @@ def candidates(domain: str) -> list[str]:
     return deduped
 
 
+def external_redirect_candidates(domain: str) -> list[str]:
+    """BTK/SNI engelli eski domainin yurt dışından (r.jina.ai) yönlendiği yeni hostları çıkarır."""
+    clean = strip_sub(domain)
+    b = brand(clean)
+    out: list[str] = []
+    try:
+        req = urllib.request.Request(
+            f"https://r.jina.ai/https://{clean}",
+            headers={"User-Agent": UA, "Accept": "text/plain"},
+        )
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            txt = resp.read(16384).decode("utf-8", "ignore")
+        for m in re.finditer(r"URL Source:\s*https?://([^/\s\)]+)", txt, re.I):
+            h = strip_sub(m.group(1))
+            if h and h != clean and h not in out:
+                out.append(h)
+        for m in re.finditer(r"https?://([a-z0-9-]+(?:\.[a-z0-9-]+)+)", txt, re.I):
+            h = strip_sub(m.group(1))
+            if h and h != clean and b in h and h not in out:
+                out.append(h)
+    except Exception:
+        pass
+    return out[:6]
+
+
 def find_mirror(
     domain: str,
     module: str = "",
@@ -249,7 +274,8 @@ def find_mirror(
 ) -> tuple[str | None, list[dict]]:
     """Probe candidates in parallel and return the best live mirror (score >= 5)."""
     brand_name = brand(domain)
-    cand_list = candidates(domain)
+    ext_cands = external_redirect_candidates(domain)
+    cand_list = list(dict.fromkeys(ext_cands + candidates(domain)))
 
     def _work(cand: str) -> dict:
         found, status, title, body = probe(cand)
