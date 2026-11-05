@@ -31,14 +31,14 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 /**
- * DDizimag — ddizimag.com. Arama `/ara?q=`, detay `/dizi|film/<slug>`.
+ * DDizimag — ddizimag.icu. Arama `/ara?q=`, detay `/dizi|film/<slug>`.
  * Bölümler `?sezon=N` altında (sezon başına bir istek); oynatıcı sayfadaki
  * `data-pv` slug'ı → pilavyer `s.php` → `window.__PLAYER__` → HLS + altyazı.
  */
 class DDizimagProvider : MainAPI() {
     private val uaHeaders get() = browserHeaders
 
-    override var mainUrl = "https://ddizimag.com"
+    override var mainUrl = "https://ddizimag.icu"
     override var name = "DDizimag"
     override var lang = "tr"
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)

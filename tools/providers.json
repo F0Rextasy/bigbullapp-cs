@@ -890,26 +890,6 @@
       "latencyMs": 0,
       "module": "DiziBoxTv"
     },
-    "ddizimag.com": {
-      "id": "ddizimag-com",
-      "name": "DDizimag",
-      "mainUrl": "https://ddizimag.com",
-      "status": "implemented",
-      "http": 200,
-      "title": "Breaking Bad",
-      "language": "tr",
-      "tvTypes": [
-        "TvSeries"
-      ],
-      "poolNames": [
-        "DDizimag"
-      ],
-      "source": "provider-source",
-      "health": "ok",
-      "checked": "2026-10-30T03:37:24Z",
-      "latencyMs": 0,
-      "module": "DDizimag"
-    },
     "turkcedizi.com": {
       "id": "turkcedizi-com",
       "name": "TurkceDizi",
@@ -1727,6 +1707,26 @@
       "checked": "2026-11-03T21:16:05Z",
       "latencyMs": 321,
       "module": "DiziPal"
+    },
+    "ddizimag.icu": {
+      "id": "ddizimag-icu",
+      "name": "DDizimag",
+      "mainUrl": "https://ddizimag.icu",
+      "status": "implemented",
+      "http": 200,
+      "title": "DDizimag",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries"
+      ],
+      "poolNames": [
+        "DDizimag"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-11-05T07:53:27Z",
+      "latencyMs": 0,
+      "module": "DDizimag"
     }
   }
 }

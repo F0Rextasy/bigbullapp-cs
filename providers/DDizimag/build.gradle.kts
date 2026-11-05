@@ -1,4 +1,4 @@
-version = 3
+version = 4
 
 cloudstream {
     description = "DDizimag — Türkçe içerik (autopilot)"
@@ -6,7 +6,7 @@ cloudstream {
     status = 1
     tvTypes = listOf("Movie", "TvSeries")
     language = "tr"
-    iconUrl = "https://www.google.com/s2/favicons?domain=ddizimag.com&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=ddizimag.icu&sz=%size%"
 }
 
 android {

@@ -1,4 +1,4 @@
-// @provider {"id":"ddizimag","name":"DDizimag","types":["tv"],"domain":"ddizimag.com","formats":["m3u8"],"sample":"tt0903747:tv:1:1","description":"DDizimag yabancı dizi arşivi; HLS akışları pilavyer oynatıcısından gelir."}
+// @provider {"id":"ddizimag","name":"DDizimag","types":["tv"],"domain":"ddizimag.icu","formats":["m3u8"],"sample":"tt0903747:tv:1:1","description":"DDizimag yabancı dizi arşivi; HLS akışları pilavyer oynatıcısından gelir."}
 /**
  * ddizimag — Nuvio provider (bb-nuvio).
  * Flow: TMDB id -> Wikidata -> IMDb -> Cinemeta title -> /ara?q= -> /dizi/<slug>/sezon-S/bolum-E
@@ -6,7 +6,7 @@
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
-var BASE = "https://ddizimag.com";
+var BASE = "https://ddizimag.icu";
 var PLAYER = "https://pilavyerplay.top";
 
 function text(url, opts) {

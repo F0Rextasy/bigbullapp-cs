@@ -113,7 +113,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
 | `CizgiSite` | www.cizgi.site | Dizi | — | — | — | — | — | — |
 | `Ddizi` | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
-| `DDizimag` | ddizimag.com | Dizi | — | — | — | — | — | — |
+| `DDizimag` | ddizimag.icu | Dizi | — | — | — | — | — | — |
 | `Deokwave` | deokwave.com | Dizi | — | — | — | — | — | — |
 | `DiziAbi` | diziabi.net | Film | — | — | — | — | — | — |
 | `Dizibaba` | dizibaba.net | Film | — | — | — | — | — | — |
