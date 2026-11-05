@@ -191,8 +191,13 @@ function getStreams(tmdbId, mediaType, season, episode) {
         var mailRe = /(?:my\.)?mail\.ru\/(?:[^"'\s]*?)video\/embed\/(\d+)/g;
         var mailIds = [];
         while ((m = mailRe.exec(page)) !== null) mailIds.push(m[1]);
-        if (!mailIds.length) return rows;
-        return mailRu(mailIds[0]).catch(function () { return []; });
+        if (mailIds.length) return mailRu(mailIds[0]).catch(function () { return []; });
+        var vapi = /https?:\/\/videoapi\.my\.mail\.ru\/videos\/embed\/[^"'\s<>]+/.exec(page);
+        if (!vapi) return rows;
+        return text(vapi[0], { headers: { "User-Agent": "Mozilla/5.0" } }).then(function (ebody) {
+          var mm = /\/video\/meta\/(\d+)/.exec(ebody);
+          return mm ? mailRu(mm[1]).catch(function () { return []; }) : [];
+        }).catch(function () { return []; });
       });
     })
     .catch(function (e) {

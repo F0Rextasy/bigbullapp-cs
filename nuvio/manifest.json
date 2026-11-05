@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.10",
+  "version": "1.6.12",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -46,7 +46,7 @@
       "id": "animeler",
       "name": "Animeler",
       "description": "Animeler.live Turkce altyazili anime arsivi (ok.ru / mail.ru MP4 akislari).",
-      "version": "1.0.4",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -978,7 +978,7 @@
       "id": "hdfilmdelisi",
       "name": "HDFilmDelisi",
       "description": "HDFilmDelisi - Turkce dublaj ve altyazili Full HD film arsivi (dogrudan MP4).",
-      "version": "1.0.1",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "movie"

@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.12] - 2026-11-05
+
+### Düzeltildi
+- **Animeler v6**: `videoapi.my.mail.ru` gömülü oynatıcı sayfalarından `/video/meta/<id>` kimliği çıkarılarak MailRu akış çözümü düzeltildi.
+
 ## [1.6.11] - 2026-11-05
 
 ### Değişti
