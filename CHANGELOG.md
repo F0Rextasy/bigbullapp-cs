@@ -5,6 +5,13 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.14] - 2026-11-06
+
+### Düzeltildi
+- **UltraFilmizle v6**: `hotstream.club` gömülü oynatıcısının yeni `id="be-player-config" data-config="..."` JSON yapılandırma biçimi (Cloudstream + Nuvio) eklendi.
+- **ATV v4**: güncel (`/diziler`) ve klasik (`/klasik-diziler`) dizi katalogları, `/arama?query=` araması ve `/<slug>/<bölüm>-bolum/izle` doğrudan VOD MP4/HLS akış çözümü yenilenerek modül yeniden aktif edildi.
+- **MinikaCocuk v8**: `/webtv` ve `/programlar` dizi/bölüm akışları doğrulanarak modül yeniden aktif edildi.
+
 ## [1.6.13] - 2026-11-05
 
 ### Değişti

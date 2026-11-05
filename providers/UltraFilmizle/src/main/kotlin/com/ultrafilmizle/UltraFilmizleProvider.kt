@@ -142,6 +142,17 @@ class UltraFilmizleProvider : MainAPI() {
         }.getOrNull() ?: throw ErrorLoadingException("$name: oynatıcı yanıt vermedi. $REPORT_HINT")
         val player = BE_PLAYER.find(embedHtml)?.let { match ->
             decrypt(match.groupValues[1], JSONObject(match.groupValues[2]))
+        } ?: BE_CONFIG.find(embedHtml)?.let { match ->
+            val rawConfig = match.groupValues[1]
+                .replace("&quot;", "\"")
+                .replace("&#34;", "\"")
+                .replace("&amp;", "&")
+            val cfg = JSONObject(rawConfig)
+            val videoId = cfg.optString("videoId")
+            val settingsRaw = cfg.optString("settings")
+            if (videoId.isNotEmpty() && settingsRaw.isNotEmpty()) {
+                decrypt(videoId, JSONObject(settingsRaw))
+            } else null
         } ?: throw ErrorLoadingException("$name: oynatıcı yapılandırması okunamadı. $REPORT_HINT")
         val stream = player.optString("video_location").trim()
         if (!stream.startsWith("http")) {
@@ -221,6 +232,7 @@ class UltraFilmizleProvider : MainAPI() {
         private val IFRAME_SRC = Regex("""src="([^"]+)"""")
         private val IFRAME_ANY = Regex("""<iframe[^>]+src="([^"]+)"""", RegexOption.IGNORE_CASE)
         private val BE_PLAYER = Regex("""bePlayer\('([^']+)'\s*,\s*'(\{.*?\})'""", RegexOption.DOT_MATCHES_ALL)
+        private val BE_CONFIG = Regex("""id="be-player-config"[^>]*data-config="([^"]+)"""")
         private val MASTER_HEIGHT = Regex("""RESOLUTION=\d+x(\d+)""")
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.12",
+  "version": "1.6.14",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -240,7 +240,7 @@
       "id": "atv",
       "name": "ATV",
       "description": "ATV dizi bolumleri (atv.com.tr VOD MP4 akislari).",
-      "version": "1.0.2",
+      "version": "1.0.4",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -670,7 +670,7 @@
       "id": "dizilife",
       "name": "DiziLife",
       "description": "DiziLife - yabanci dizi ve filmler, Turkce altyazi/dublaj (korumali HLS).",
-      "version": "1.0.6",
+      "version": "1.0.8",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -1586,7 +1586,7 @@
       "id": "minikacocuk",
       "name": "MinikaCocuk",
       "description": "MinikaÇOCUK Web TV çocuk bölümleri (doğrudan MP4 akışı).",
-      "version": "1.0.4",
+      "version": "1.0.8",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -1895,7 +1895,7 @@
       "id": "ultrafilmizle",
       "name": "UltraFilmizle",
       "description": "UltraFilmizle film arsivi (bePlayer AES + HLS).",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "movie"

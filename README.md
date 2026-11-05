@@ -11,7 +11,7 @@ canlı TV kaynakları. Her site Cloudstream'de ayrı bir Gradle modülü/`.cs3` 
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-93-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-95-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -104,7 +104,7 @@ Tek modül derleme ve cihaza kurulum:
 | `AsyaLog` | asyalog.co | Asya dizi/film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
 | `AsyaLuna` | asyaluna.com | Dizi | — | — | — | — | — | — |
 | `AsyaWatch` | asyawatch.com | Asya dizi/film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `ATV` **(pasif)** | atv.com.tr | Dizi | — | — | — | — | — | — |
+| `ATV` | atv.com.tr | Dizi | — | — | — | — | — | — |
 | `BelgeselX` | belgeselx.com | Belgesel | — | — | — | — | — | — |
 | `BirAsyaDizi` | birasyadizi.cx | Dizi | — | — | — | — | — | — |
 | `CanliDizi` | canlidizi.sbs | Dizi | — | — | — | — | — | — |
@@ -190,7 +190,7 @@ Tek modül derleme ve cihaza kurulum:
 | `KoreanTurk` | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
 | `Kultfilmler` | kultfilmler.net | Film | ✓ | — | — | ✓ | ✓ | ✓ |
 | `LoveFilm` | lovefilmizle.net | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `MinikaCocuk` **(pasif)** | minikacocuk.com.tr | Dizi | — | — | — | — | — | — |
+| `MinikaCocuk` | minikacocuk.com.tr | Çocuk/Dizi | — | — | — | — | — | — |
 | `MinikaGO` | minikago.com.tr | Çocuk | — | — | — | — | — | — |
 | `NetFilmizle` | netfilmizle.com | Film | — | — | — | — | — | — |
 | `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
@@ -212,7 +212,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**Inat notu:** Inat'ın **35 platformu ayrı modül** olarak tutulur; runner’da pass olan **11 platform aktif**, pass olmayan **24 platform pasif**. Aktif platformlar: Liste 4K 03 Exo/Web, 4K 06 Exo, Exxen, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii ve Yerli Filmler. Depoda toplam **93 aktif modül** var; `ATV` ve `MinikaCocuk` upstream oynatıcı endpoint'leri timeout verdiği için pasif, kaynakları korunuyor. Pasif platformlar `settings.gradle.kts` `disabled` listesinde; kaynak dosyaları korunuyor.
+**Inat notu:** Inat'ın **35 platformu ayrı modül** olarak tutulur; runner’da pass olan **11 platform aktif**, pass olmayan **24 platform pasif**. Aktif platformlar: Liste 4K 03 Exo/Web, 4K 06 Exo, Exxen, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii ve Yerli Filmler. Depoda toplam **95 aktif modül** var. Pasif platformlar `settings.gradle.kts` `disabled` listesinde; kaynak dosyaları korunuyor.
 
 Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
 `README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.
@@ -233,8 +233,7 @@ Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Reposito
 90'ı canlı doğrulanmış; manifest'te `"enabled": true` ile gelir. Kalan 12'si (`AsyaWatch`,
 `SelcukFlix`, `DiziPal`, `FullHDFilmizlesene`, `Inat 4K 01/02/04/07`, `Inat Mubi`, `MinikaCocuk`)
 Cloudflare/İnat CDN engeli veya upstream 502/404 nedeniyle doğrulanamadı; `"enabled": false` ile
-yayınlanır. **ATV** Nuvio'da iki ardışık canlı testte geçtiği için açıktır; Cloudstream ATV modülü
-`/izle` VOD endpoint'i timeout verdiği için ayrıca pasiftir.
+yayınlanır. **ATV** ve **MinikaCocuk** hem Cloudstream hem Nuvio tarafında canlı doğrulanarak aktif edilmiştir.
 Repo eklemek sağlayıcıları çalıştırmaz: Plugins ekranında **Enable plugin providers globally** ve
 istediğin sağlayıcıların anahtarı ayrıca açılır.
 
@@ -286,7 +285,7 @@ tek başına bu testle garanti edilmez.
 
 ## Doğrulama (2026-11-03)
 
-- Cloudstream host runner: **82/82 PASS**, 93 aktif modül.
+- Cloudstream host runner: **84/84 PASS**, 95 aktif modül.
 - Emülatör smoke: DiziPal, AsyaWatch ve MinikaGO arama → detay → oynatma PASS.
 - Nuvio host: 102 sağlayıcı tarandı; **90/90 aktif** tek tek doğrulandı. HDFilmCehennemi iki
   ardışık canlı testte PASS; MinikaGO, Dizikorea3 ve Inat 4K 03 Exo/Web düzeltildi/doğrulandı;

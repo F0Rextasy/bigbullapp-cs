@@ -304,8 +304,17 @@ function getStreams(tmdbId, mediaType, season, episode) {
     .then(function (embed) {
       if (!embed) return [];
       var m = /bePlayer\('([^']+)'\s*,\s*'(\{[\s\S]*?\})'/.exec(embed);
-      if (!m) return [];
-      var player = JSON.parse(decryptBePlayer(m[1], JSON.parse(m[2])));
+      var player = null;
+      if (m) {
+        player = JSON.parse(decryptBePlayer(m[1], JSON.parse(m[2])));
+      } else {
+        var cm = /id="be-player-config"[^>]*data-config="([^"]+)"/.exec(embed);
+        if (!cm) return [];
+        var cfg = JSON.parse(cm[1].replace(/&quot;/g, '"').replace(/&#34;/g, '"').replace(/&amp;/g, '&'));
+        if (!cfg.videoId || !cfg.settings) return [];
+        var settingsObj = typeof cfg.settings === "string" ? JSON.parse(cfg.settings) : cfg.settings;
+        player = JSON.parse(decryptBePlayer(cfg.videoId, settingsObj));
+      }
       var stream = String(player.video_location || "").trim();
       if (!/^https?:/.test(stream)) return [];
 

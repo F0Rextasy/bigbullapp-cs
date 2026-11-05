@@ -10,10 +10,6 @@ val disabled = listOf(
     "InatDerbiler", "InatEbaTv", "InatHaber", "InatListe1Tr", "InatListe2Glb",
     "InatListe3Tr", "InatMubi", "InatSinema", "InatPremium", "InatSpor",
     "InatTod", "InatUlusal", "InatYabanciDiziler", "InatYerliDiziler",
-    // Düzeltildi (dizi sayfaları + arama); cihaz/runner doğrulaması bekliyor, geçici pasif.
-    "MinikaCocuk",
-    // atv.com.tr /izle endpoint'i 2026-11-02'den beri timeout; oynatılabilir VOD yok.
-    "ATV",
     // Nuvio tarafinda enabled:true birakilanlar: inat4k06web, inattod,
     // inatyabancidiziler, inatyerlidiziler (nuvio/manifest.json); canli dogrulama
     // Nuvio'dan akiyor, CS tarafi runner'i bekliyor.
