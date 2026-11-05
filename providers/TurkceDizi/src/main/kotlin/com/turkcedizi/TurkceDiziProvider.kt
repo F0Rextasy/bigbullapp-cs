@@ -88,7 +88,7 @@ class TurkceDiziProvider : MainAPI() {
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
-        if (listOf("/", "/film/").none { path.startsWith(it) }) return@mapNotNull null
+        if (listOf("/", "/film/").none { path.startsWith(it) } || path.trim('/').length < 4) return@mapNotNull null
         
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
@@ -133,15 +133,16 @@ class TurkceDiziProvider : MainAPI() {
         val slug = basePath.trim('/').split('/').lastOrNull().orEmpty()
         val slugBase = slug.removeSuffix("-izle").removeSuffix("-film-izle")
         val episodes = doc.select("a[href]").mapNotNull { anchor ->
-            val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
+            val href = (fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null).substringBefore('#')
+            val pathAndQuery = href.substringAfter(mainUrl)
             val path = href.substringAfter(mainUrl).substringBefore('?')
             if (basePath.isNotBlank() && !path.startsWith(basePath) &&
                 !path.contains(slug) && !path.contains(slugBase)) return@mapNotNull null
-            if (!Regex("""(?:bolum|episode|sezon|season)""", RegexOption.IGNORE_CASE).containsMatchIn(path)) return@mapNotNull null
-            val number = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
-                .find(path)?.groupValues?.getOrNull(2)?.toIntOrNull()
-                ?: Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
-                ?: Regex("""(\d+)[-_]bolum""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
+            if (!Regex("""(?:bolum|episode)""", RegexOption.IGNORE_CASE).containsMatchIn(pathAndQuery)) return@mapNotNull null
+            val number = Regex("""(?:sezon|season)[-_ /=]?(\d+).*?(?:bolum|episode)[-_ /=]?(\d+)""", RegexOption.IGNORE_CASE)
+                .find(pathAndQuery)?.groupValues?.getOrNull(2)?.toIntOrNull()
+                ?: Regex("""(?:bolum|episode)[-_ /=]?(\d+)""", RegexOption.IGNORE_CASE).find(pathAndQuery)?.groupValues?.getOrNull(1)?.toIntOrNull()
+                ?: Regex("""(\d+)[-_]bolum""", RegexOption.IGNORE_CASE).find(pathAndQuery)?.groupValues?.getOrNull(1)?.toIntOrNull() ?: return@mapNotNull null
             newEpisode(href) {
                 this.name = anchor.text().trim().ifBlank { "Bölüm $number" }
                 this.episode = number

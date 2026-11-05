@@ -184,7 +184,7 @@ class YesilCamTvProvider : MainAPI() {
             })
             found = true
         }
-        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
+        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
             .findAll(text).map { it.groupValues[1] }.toList()
@@ -197,7 +197,7 @@ class YesilCamTvProvider : MainAPI() {
                 continue
             }
             val inner = runCatching { app.get(absolute, headers = uaHeaders, referer = data).text }.getOrNull() ?: continue
-            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(inner)
+            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(inner)
             for (m in innerMedia) emit(m.value, "Embed", absolute)
         }
         val frames = resp.document.select("iframe[src]").mapNotNull { fixUrlNull(it.attr("src")) }.distinct()
@@ -208,6 +208,11 @@ class YesilCamTvProvider : MainAPI() {
             Regex("""rumble\.com/embed/[^/?#"'\s<>]+""").findAll(text).map { "https://${it.value}" })
             .mapNotNull { Regex("""rumble\.com/embed/([^/?#"']+)""").find(it)?.groupValues?.get(1) }.distinct()
         for (id in rumble) if (loadRumble(id, callback)) found = true
+        for (watchUrl in Regex("""https?://(?:www\.)?rumble\.com/v[0-9a-zA-Z]+-[^/?#"'\s<>]+""").findAll(text).map { it.value }.distinct()) {
+            val oembed = runCatching { app.get("https://rumble.com/api/Media/oembed.json?url=${java.net.URLEncoder.encode(watchUrl, "UTF-8")}", headers = uaHeaders).text.replace("\\/", "/") }.getOrNull() ?: continue
+            val id = Regex("""rumble\.com/embed/([^/?#"']+)""").find(oembed)?.groupValues?.get(1) ?: continue
+            if (loadRumble(id, callback)) found = true
+        }
         val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in subs) {
             if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))

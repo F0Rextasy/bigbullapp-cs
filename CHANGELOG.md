@@ -5,6 +5,15 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.9] - 2026-11-05
+
+### Düzeltildi
+- **AsyaWatch v5**: pichive gömülü oynatıcısında `openPlayer` → `source2.php` akışı eklendi.
+- **DiziCaN v7**: bölüm şablonundaki bozuk `<iframe<div` etiketi nedeniyle yutulan oynatıcı çerçeveleri ham HTML regex ile birleştirildi; sorgu parametresi olmayan HLS/MP4 kalıbı ve kök logo kartı filtresi düzeltildi.
+- **YesilCamTv v5**: gömülü çerçeve yerine doğrudan Rumble izleme bağlantısı verilen sayfalarda oEmbed üzerinden HLS çözümü eklendi.
+- **TurkceDizi v5**: bölüm bağlantılarındaki `?sezon=S&bolum=E` sorgu parametrelerinin ayrıştırılması ve ana sayfa logo kartı filtresi düzeltildi.
+- **HDFilmCehennemi v8**: arama sorgusunda Türkçe karakterlerin URL kodlaması (`URLEncoder`) düzeltildi.
+
 ## [1.6.8] - 2026-11-04
 
 ### Düzeltildi

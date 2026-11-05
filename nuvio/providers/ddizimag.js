@@ -78,7 +78,7 @@ function fold(value) {
 
 /* Best card for the Cinemeta title: exact slug, then series over film, then most shared words. */
 function pickCard(html, title) {
-  var re = /<a href="https:\/\/ddizimag\.com\/(dizi|film)\/([^"?#]+)"/g;
+  var re = /<a href="https?:\/\/[^\/"']+\/(dizi|film)\/([^"?#]+)"/g;
   var want = fold(title);
   var wanted = want.split(" ").filter(function (w) {
     return w.length > 2;
@@ -149,7 +149,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
       if (!page) return [];
       if (playerSlug(page)) return page;
       return text(card).then(function (series) {
-        var re = /href="(https:\/\/ddizimag\.com\/dizi\/[^"]*\/sezon-(\d+)\/bolum-(\d+))"/g;
+        var re = /href="(https?:\/\/[^\/"']+\/dizi\/[^"]*\/sezon-(\d+)\/bolum-(\d+))"/g;
         var exact = null;
         var any = null;
         var m;

@@ -98,7 +98,7 @@ class DDizimagProvider : MainAPI() {
                 this.year = year
             }
         }
-    }.distinctBy { it.url }
+    }.distinctBy { it.url }.sortedBy { if (it.type == TvType.TvSeries) 0 else 1 }
 
     override suspend fun load(url: String): LoadResponse? {
         val doc = app.get(url, headers = uaHeaders).document

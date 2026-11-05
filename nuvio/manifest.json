@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.8",
+  "version": "1.6.9",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -220,7 +220,7 @@
       "id": "asyawatch",
       "name": "AsyaWatch",
       "description": "AsyaWatch (asyawatch.com) Kore/Asya dizileri ve filmleri; pichive oynatcisindan HLS master + altyazi.",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "author": "bigbull",
       "supportedTypes": [
         "tv",
@@ -357,7 +357,7 @@
       "id": "ddizimag",
       "name": "DDizimag",
       "description": "DDizimag yabancı dizi arşivi; HLS akışları pilavyer oynatıcısından gelir.",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -534,7 +534,7 @@
       "id": "diziboxtv",
       "name": "DiziBoxTv",
       "description": "DiziBoxTv dizi/film arsivi; oynatici kimliginden dogrudan HLS master akisi.",
-      "version": "1.0.1",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "tv",
@@ -554,7 +554,7 @@
       "id": "dizican",
       "name": "DiziCaN",
       "description": "DiziCaN asya dizileri; vidmoly HLS ve ok.ru mp4 kaynaklari.",
-      "version": "1.0.1",
+      "version": "1.0.7",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -594,7 +594,7 @@
       "id": "dizifon",
       "name": "Dizifon",
       "description": "Dizifon (dizifon.cc) Asya dizileri; ok.ru oynaticisi.",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -728,7 +728,7 @@
       "id": "dizipal",
       "name": "DiziPal",
       "description": "DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -940,7 +940,7 @@
       "id": "hdfilmcehennemi",
       "name": "HDFilmCehennemi",
       "description": "HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.",
-      "version": "1.0.2",
+      "version": "1.0.8",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -997,7 +997,7 @@
       "id": "hdfilmdiziizle",
       "name": "HDFilmDiziIzle",
       "description": "HDFilmDiziIzle - Turkce dublaj/altyazili film arsivi; AES korumali playhd kaynak cozucu (HLS).",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -1798,7 +1798,7 @@
       "id": "sonanime",
       "name": "SonAnime",
       "description": "SonAnime Türkçe altyazılı anime arşivi; API'den doğrudan MP4 kademeleri.",
-      "version": "1.0.1",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -1856,7 +1856,7 @@
       "id": "turkcedizi",
       "name": "TurkceDizi",
       "description": "TurkceDizi dizi/film arsivi (HLS + altyazi).",
-      "version": "1.0.1",
+      "version": "1.0.5",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -1895,7 +1895,7 @@
       "id": "ultrafilmizle",
       "name": "UltraFilmizle",
       "description": "UltraFilmizle film arsivi (bePlayer AES + HLS).",
-      "version": "1.0.1",
+      "version": "1.0.5",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -1973,7 +1973,7 @@
       "id": "yesilcamtv",
       "name": "YesilCamTv",
       "description": "Yeşilçam TV: klasik Türk filmleri; Rumble HLS kaliteleri ve doğrudan MP4 akışları.",
-      "version": "1.0.1",
+      "version": "1.0.5",
       "author": "bigbull",
       "supportedTypes": [
         "movie"

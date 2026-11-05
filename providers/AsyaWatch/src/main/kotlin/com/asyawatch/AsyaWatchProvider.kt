@@ -158,11 +158,40 @@ class AsyaWatchProvider : MainAPI() {
             }
             val embed = runCatching { app.get(candidate, headers = uaHeaders, referer = "$mainUrl/").text }
                 .getOrNull() ?: continue
+            val origin = Regex("""^https?://[^/]+""").find(candidate)?.value
+            val token = Regex("""openPlayer\s*\(\s*['"]([^'"]+)""").find(embed)?.groupValues?.get(1)
+            if (origin != null && !token.isNullOrBlank()) {
+                val srcJson = runCatching {
+                    app.get(
+                        "$origin/source2.php?v=$token",
+                        headers = uaHeaders + mapOf("Accept" to "application/json"),
+                        referer = candidate,
+                    ).text
+                }.getOrNull()
+                val playlistArr = srcJson?.let { runCatching { JSONObject(it).optJSONArray("playlist") }.getOrNull() }
+                if (playlistArr != null) {
+                    for (i in 0 until playlistArr.length()) {
+                        val item = playlistArr.optJSONObject(i) ?: continue
+                        val label = item.optString("title").trim().ifBlank { "AsyaWatch" }
+                        val sources = item.optJSONArray("sources") ?: continue
+                        for (j in 0 until sources.length()) {
+                            val file = sources.optJSONObject(j)?.optString("file")
+                                ?.takeIf { it.startsWith("http") } ?: continue
+                            val master = if ("m.php" in file) file.replace("m.php", "master.m3u8") else file
+                            callback(newExtractorLink(name, label, master, ExtractorLinkType.M3U8) {
+                                this.referer = candidate
+                                this.quality = 0
+                            })
+                            found = true
+                        }
+                    }
+                }
+            }
             for (master in Regex(""""(?:master|file)"\s*:\s*"(https?://[^"]+)"""")
                 .findAll(embed).map { it.groupValues[1] }.distinct()) {
                 val playlist = runCatching { app.get(master, headers = uaHeaders, referer = candidate).text }
-                    .getOrNull() ?: continue
-                if (!playlist.startsWith("#EXTM3U")) continue
+                    .getOrNull().orEmpty()
+                if (!playlist.startsWith("#EXTM3U") && !master.contains("pichive.online")) continue
                 callback(newExtractorLink(name, "AsyaWatch", master, ExtractorLinkType.M3U8) {
                     this.referer = candidate
                     this.quality = 0

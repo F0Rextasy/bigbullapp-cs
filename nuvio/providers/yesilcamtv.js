@@ -81,17 +81,23 @@ function rumbleRows(page, add) {
   var re = /rumble\.com\/embed\/([^\/"'?#]+)/g;
   var m;
   while ((m = re.exec(page)) !== null) if (ids.indexOf(m[1]) === -1) ids.push(m[1]);
-  if (!ids.length) return Promise.resolve();
-  /* shortcut: yalnızca ilk rumble gömülüsü okunur; çok parçalı sayfa çıkarsa tüm id'ler dolaşılmalı */
-  return text("https://rumble.com/embed/" + ids[0] + "/", "https://rumble.com/").then(function (embed) {
-    var media = /"(\d+|tar|mp4)":\{"url":"(https:[^"]+?)","meta":\{"bitrate":\d+,"size":\d+,"w":\d+,"h":(\d+)/g;
-    var hit;
-    while ((hit = media.exec(embed)) !== null) {
-      /* yalnızca gerçek video varyantları: mp4 girdisi 180p önizleme şeridi, ses .aac */
-      if (hit[2].indexOf("r_file=chunklist.m3u8") === -1) continue;
-      var height = parseInt(hit[3], 10) || 0;
-      add(hit[2].replace(/\\\//g, "/"), height ? height + "p" : "auto", "https://rumble.com/");
-    }
+  var watchM = /https?:\/\/(?:www\.)?rumble\.com\/v[0-9a-zA-Z]+-[^\/"'?#\s<>]+/.exec(page);
+  var resolveId = ids.length ? Promise.resolve(ids[0]) : (watchM ? text("https://rumble.com/api/Media/oembed.json?url=" + encodeURIComponent(watchM[0])).then(function (j) {
+    var em = /rumble\.com\\?\/embed\\?\/([^\\\/"'?#]+)/.exec(j);
+    return em ? em[1] : null;
+  }).catch(function () { return null; }) : Promise.resolve(null));
+  return resolveId.then(function (id) {
+    if (!id) return;
+    return text("https://rumble.com/embed/" + id + "/", "https://rumble.com/").then(function (embed) {
+      var media = /"(\d+|tar|mp4)":\{"url":"(https:[^"]+?)","meta":\{"bitrate":\d+,"size":\d+,"w":\d+,"h":(\d+)/g;
+      var hit;
+      while ((hit = media.exec(embed)) !== null) {
+        /* yalnızca gerçek video varyantları: mp4 girdisi 180p önizleme şeridi, ses .aac */
+        if (hit[2].indexOf("r_file=chunklist.m3u8") === -1) continue;
+        var height = parseInt(hit[3], 10) || 0;
+        add(hit[2].replace(/\\\//g, "/"), height ? height + "p" : "auto", "https://rumble.com/");
+      }
+    });
   });
 }
 

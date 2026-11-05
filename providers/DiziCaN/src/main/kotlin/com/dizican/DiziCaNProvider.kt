@@ -105,7 +105,7 @@ class DiziCaNProvider : MainAPI() {
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
-        if (listOf("/", "/bolum/").none { path.startsWith(it) }) return@mapNotNull null
+        if (listOf("/", "/bolum/").none { path.startsWith(it) } || path.trim('/').length < 4) return@mapNotNull null
         
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
@@ -204,7 +204,7 @@ class DiziCaNProvider : MainAPI() {
             })
             found = true
         }
-        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
+        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
             .findAll(text).map { it.groupValues[1] }.toList()
@@ -217,13 +217,14 @@ class DiziCaNProvider : MainAPI() {
                 continue
             }
             val inner = runCatching { app.get(absolute, headers = uaHeaders, referer = data).text }.getOrNull() ?: continue
-            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(inner)
+            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(inner)
             for (m in innerMedia) emit(m.value, "Embed", absolute)
         }
-        val frames = resp.document.select("iframe").mapNotNull {
+        val regexFrames = Regex("""<iframe\b[^>]*?\b(?:src|data-src|vdo-src)\s*=\s*["']([^"']+)["']""", RegexOption.IGNORE_CASE).findAll(text).mapNotNull { fixUrlNull(it.groupValues[1]) }.toList()
+        val frames = (resp.document.select("iframe").mapNotNull {
             val raw = it.attr("src").ifBlank { it.attr("data-src") }.ifBlank { it.attr("vdo-src") }
             fixUrlNull(raw)
-        }.distinct()
+        } + regexFrames).distinct()
         for (frame in frames) {
             if (frame.contains(".mp4") || frame.contains(".m3u8")) {
                 emit(frame, "Embed", data)
@@ -237,7 +238,7 @@ class DiziCaNProvider : MainAPI() {
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
                 val innerText = inner.replace("\\/", "/")
-                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(innerText)) {
+                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(innerText)) {
                     emit(m.value, "Embed", frame)
                 }
                 for (sub in Regex("""<iframe[^>]+(?:src|data-src)="([^"]+)""").findAll(innerText)) {

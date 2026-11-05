@@ -70,7 +70,7 @@ class HDFilmCehennemiProvider : MainAPI() {
     /** Site's live-search JSON: results are ready-made HTML fragments. */
     override suspend fun search(query: String): List<SearchResponse> {
         val json = app.get(
-            "$mainUrl/search?q=${query.trim().replace(" ", "+")}",
+            "$mainUrl/search?q=${java.net.URLEncoder.encode(query.trim(), "UTF-8")}",
             headers = uaHeaders + mapOf(
                 "X-Requested-With" to "fetch",
                 "Accept" to "application/json",
