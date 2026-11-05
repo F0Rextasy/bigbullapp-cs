@@ -146,7 +146,7 @@ Tek modül derleme ve cihaza kurulum:
 | `FullHDFilmizlesene` | fullhdfilmizlesene.now | Film | — | — | ✓ | — | — | ✓ |
 | `HDFilmCehennemi` | hdfilmcehennemi.nl | Film | — | — | — | — | — | — |
 | `HDFilmCehennemi2` | hdfilmcehennemi2.biz | Film | — | — | — | — | — | — |
-| `HDFilmDelisi` | hdfilmdelisi.one | Film | ✓ | — | — | — | ✓ | ✓ |
+| `HDFilmDelisi` | hdfilmdelisi1.com | Film | ✓ | — | — | — | ✓ | ✓ |
 | `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `HDFilmizleBest` | hdfilmizle.best | Dizi | — | — | — | — | — | — |

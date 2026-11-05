@@ -730,26 +730,6 @@
       "source": "provider-source",
       "module": "Animeler"
     },
-    "hdfilmdelisi.one": {
-      "id": "hdfilmdelisi-one",
-      "name": "HDFilmDelisi",
-      "mainUrl": "https://hdfilmdelisi.one",
-      "status": "implemented",
-      "http": 200,
-      "title": "Matrix",
-      "language": "tr",
-      "tvTypes": [
-        "Movie"
-      ],
-      "poolNames": [
-        "HDFilmDelisi"
-      ],
-      "source": "provider-source",
-      "health": "ok",
-      "checked": "2026-10-30T02:40:42Z",
-      "latencyMs": 0,
-      "module": "HDFilmDelisi"
-    },
     "yesilcamtv.com.tr": {
       "id": "yesilcamtv-com-tr",
       "name": "YesilCamTv",
@@ -1727,6 +1707,26 @@
       "checked": "2026-11-05T07:53:27Z",
       "latencyMs": 0,
       "module": "DDizimag"
+    },
+    "hdfilmdelisi1.com": {
+      "id": "hdfilmdelisi1-com",
+      "name": "HDFilmDelisi",
+      "mainUrl": "https://hdfilmdelisi1.com",
+      "status": "implemented",
+      "http": 200,
+      "title": "HDFilmDelisi",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "HDFilmDelisi"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-11-05T08:01:28Z",
+      "latencyMs": 0,
+      "module": "HDFilmDelisi"
     }
   }
 }

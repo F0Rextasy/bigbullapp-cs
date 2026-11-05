@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "HDFilmDelisi — Türkçe içerik (autopilot)"
@@ -6,7 +6,7 @@ cloudstream {
     status = 1
     tvTypes = listOf("Movie", "TvSeries")
     language = "tr"
-    iconUrl = "https://www.google.com/s2/favicons?domain=hdfilmdelisi.one&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=hdfilmdelisi1.com&sz=%size%"
 }
 
 android {

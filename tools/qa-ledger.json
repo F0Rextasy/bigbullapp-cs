@@ -264,6 +264,12 @@
       "runner": "autopilot.py 2026-11-05"
     },
     {
+      "module": "HDFilmDelisi",
+      "result": "pass",
+      "evidence": "runner 2026-11-05: pass, links=1, ep=0",
+      "runner": "autopilot.py 2026-11-05"
+    },
+    {
       "module": "MinikaGO",
       "result": "pass",
       "evidence": "probe 2026-11-04: /arama?q=aslan 200, 63 bölüm bağlantısı (runner yok; minikago.com.tr)",
@@ -316,12 +322,6 @@
       "result": "pass",
       "evidence": "runner 2026-11-02: /api/search 24 sonuç; pass, links=1",
       "runner": "qa 2026-11-02"
-    },
-    {
-      "module": "HDFilmDelisi",
-      "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=0",
-      "runner": "autopilot.py 2026-10-30"
     },
     {
       "module": "HDFilmDiziIzle",

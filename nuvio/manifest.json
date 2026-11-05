@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.9",
+  "version": "1.6.10",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -988,7 +988,7 @@
       "formats": [
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=hdfilmdelisi.one&sz=128",
+      "logo": "https://www.google.com/s2/favicons?domain=hdfilmdelisi1.com&sz=128",
       "contentLanguage": [
         "tr"
       ]

@@ -50,7 +50,7 @@ private fun cleanTitle(raw: String?): String = (raw ?: "")
 class HDFilmDelisiProvider : MainAPI() {
     private val uaHeaders get() = browserHeaders
 
-    override var mainUrl = "https://hdfilmdelisi.one"
+    override var mainUrl = "https://hdfilmdelisi1.com"
     override var name = "HDFilmDelisi"
     override var lang = "tr"
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
@@ -59,28 +59,28 @@ class HDFilmDelisiProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Aile" -> "https://hdfilmdelisi.one/api/films/category/aile?page={page}"
-            "Aksiyon" -> "https://hdfilmdelisi.one/api/films/category/aksiyon?page={page}"
-            "Animasyon" -> "https://hdfilmdelisi.one/api/films/category/animasyon?page={page}"
-            "Belgeseller" -> "https://hdfilmdelisi.one/api/films/category/belgeseller?page={page}"
-            "Bilim Kurgu" -> "https://hdfilmdelisi.one/api/films/category/bilim-kurgu?page={page}"
-            "Dram" -> "https://hdfilmdelisi.one/api/films/category/dram?page={page}"
-            "Fantastik" -> "https://hdfilmdelisi.one/api/films/category/fantastik?page={page}"
-            "Gerilim" -> "https://hdfilmdelisi.one/api/films/category/gerilim?page={page}"
-            "Gizem" -> "https://hdfilmdelisi.one/api/films/category/gizem?page={page}"
-            "Hint" -> "https://hdfilmdelisi.one/api/films/category/hint?page={page}"
-            "Komedi" -> "https://hdfilmdelisi.one/api/films/category/komedi?page={page}"
-            "Korku" -> "https://hdfilmdelisi.one/api/films/category/korku?page={page}"
-            "Macera" -> "https://hdfilmdelisi.one/api/films/category/macera?page={page}"
-            "Müzikal" -> "https://hdfilmdelisi.one/api/films/category/muzikal?page={page}"
-            "Psikolojik" -> "https://hdfilmdelisi.one/api/films/category/psikolojik?page={page}"
-            "Romantik" -> "https://hdfilmdelisi.one/api/films/category/romantik?page={page}"
-            "Savaş" -> "https://hdfilmdelisi.one/api/films/category/savas?page={page}"
-            "Suç" -> "https://hdfilmdelisi.one/api/films/category/suc?page={page}"
-            "Tarih" -> "https://hdfilmdelisi.one/api/films/category/tarih?page={page}"
-            "Western" -> "https://hdfilmdelisi.one/api/films/category/western?page={page}"
-            "Yerli" -> "https://hdfilmdelisi.one/api/films/category/yerli?page={page}"
-            "Çizgi" -> "https://hdfilmdelisi.one/api/films/category/cizgi?page={page}"
+            "Aile" -> "https://hdfilmdelisi1.com/api/films/category/aile?page={page}"
+            "Aksiyon" -> "https://hdfilmdelisi1.com/api/films/category/aksiyon?page={page}"
+            "Animasyon" -> "https://hdfilmdelisi1.com/api/films/category/animasyon?page={page}"
+            "Belgeseller" -> "https://hdfilmdelisi1.com/api/films/category/belgeseller?page={page}"
+            "Bilim Kurgu" -> "https://hdfilmdelisi1.com/api/films/category/bilim-kurgu?page={page}"
+            "Dram" -> "https://hdfilmdelisi1.com/api/films/category/dram?page={page}"
+            "Fantastik" -> "https://hdfilmdelisi1.com/api/films/category/fantastik?page={page}"
+            "Gerilim" -> "https://hdfilmdelisi1.com/api/films/category/gerilim?page={page}"
+            "Gizem" -> "https://hdfilmdelisi1.com/api/films/category/gizem?page={page}"
+            "Hint" -> "https://hdfilmdelisi1.com/api/films/category/hint?page={page}"
+            "Komedi" -> "https://hdfilmdelisi1.com/api/films/category/komedi?page={page}"
+            "Korku" -> "https://hdfilmdelisi1.com/api/films/category/korku?page={page}"
+            "Macera" -> "https://hdfilmdelisi1.com/api/films/category/macera?page={page}"
+            "Müzikal" -> "https://hdfilmdelisi1.com/api/films/category/muzikal?page={page}"
+            "Psikolojik" -> "https://hdfilmdelisi1.com/api/films/category/psikolojik?page={page}"
+            "Romantik" -> "https://hdfilmdelisi1.com/api/films/category/romantik?page={page}"
+            "Savaş" -> "https://hdfilmdelisi1.com/api/films/category/savas?page={page}"
+            "Suç" -> "https://hdfilmdelisi1.com/api/films/category/suc?page={page}"
+            "Tarih" -> "https://hdfilmdelisi1.com/api/films/category/tarih?page={page}"
+            "Western" -> "https://hdfilmdelisi1.com/api/films/category/western?page={page}"
+            "Yerli" -> "https://hdfilmdelisi1.com/api/films/category/yerli?page={page}"
+            "Çizgi" -> "https://hdfilmdelisi1.com/api/films/category/cizgi?page={page}"
             else -> mainUrl
         })
     }
@@ -607,7 +607,7 @@ class HDFilmDelisiProvider : MainAPI() {
 
     override suspend fun search(query: String): List<SearchResponse> {
         val q = if (false) asciiFold(query) else query
-        val url = "https://hdfilmdelisi.one/api/search?q={q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
+        val url = "https://hdfilmdelisi1.com/api/search?q={q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
         val raw = app.get(url, headers = uaHeaders).text
         val root = if (raw.trimStart().startsWith("[")) JSONObject() else JSONObject(raw)
         val out = mutableListOf<SearchResponse>()
@@ -729,7 +729,7 @@ class HDFilmDelisiProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>("https://hdfilmdelisi.one/vids/matrix_136.mp4")
+        val known = listOf<String>("https://hdfilmdelisi1.com/vids/matrix_136.mp4")
         for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)

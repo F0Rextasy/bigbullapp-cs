@@ -1,11 +1,11 @@
-// @provider {"id":"hdfilmdelisi","name":"HDFilmDelisi","types":["movie"],"domain":"hdfilmdelisi.one","formats":["mp4"],"description":"HDFilmDelisi - Turkce dublaj ve altyazili Full HD film arsivi (dogrudan MP4).","sample":"tt0133093:movie:0:0"}
+// @provider {"id":"hdfilmdelisi","name":"HDFilmDelisi","types":["movie"],"domain":"hdfilmdelisi1.com","formats":["mp4"],"description":"HDFilmDelisi - Turkce dublaj ve altyazili Full HD film arsivi (dogrudan MP4).","sample":"tt0133093:movie:0:0"}
 /**
  * hdfilmdelisi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /api/search JSON -> /film/<slug> JSON-LD VideoObject -> mp4/m3u8.
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
-var BASE = "https://hdfilmdelisi.one";
+var BASE = "https://hdfilmdelisi1.com";
 
 function text(url, opts) {
   var o = opts || {};
