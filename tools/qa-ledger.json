@@ -193,8 +193,8 @@
     {
       "module": "DiziLife",
       "result": "pass",
-      "evidence": "verify.py 2026-11-04: /ara?q=gibi -> detay -> bölüm -> player -> decrypt -> #EXTM3U (tam geçit, domain dizi83.life)",
-      "runner": "verify.py 2026-11-04"
+      "evidence": "runner 2026-11-05: pass, links=1, ep=9",
+      "runner": "autopilot.py 2026-11-05"
     },
     {
       "module": "DiziMom",

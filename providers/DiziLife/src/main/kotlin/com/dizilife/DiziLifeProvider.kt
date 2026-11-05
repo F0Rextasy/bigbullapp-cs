@@ -38,13 +38,13 @@ import java.net.URI
 import java.net.URLEncoder
 
 /**
- * DiziLife — dizi74.life → dizi82.life → dizi83.life (Laravel/Livewire, server-rendered cards).
+ * DiziLife — dizi74.life → dizi82.life → dizi84.life (Laravel/Livewire, server-rendered cards).
  * Episode pages embed a player that serves an obfuscated HTML shell: two reversed base64 strings,
  * the passphrase and an OpenSSL "Salted__" blob, both decrypted with CryptoJS (AES-256-CBC).
  * The decrypted shell holds the HLS master URL.
  */
 class DiziLifeProvider : MainAPI() {
-    override var mainUrl = "https://dizi83.life"
+    override var mainUrl = "https://dizi84.life"
     private val uaHeaders get() = browserHeaders
     override var name = "DiziLife"
     override var lang = "tr"

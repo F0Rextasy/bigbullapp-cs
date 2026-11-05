@@ -1,11 +1,11 @@
-// @provider {"id":"dizilife","name":"DiziLife","types":["movie","tv"],"domain":"dizi83.life","formats":["m3u8"],"sample":"tt0903747:tv:1:1","description":"DiziLife - yabanci dizi ve filmler, Turkce altyazi/dublaj (korumali HLS)."}
+// @provider {"id":"dizilife","name":"DiziLife","types":["movie","tv"],"domain":"dizi84.life","formats":["m3u8"],"sample":"tt0903747:tv:1:1","description":"DiziLife - yabanci dizi ve filmler, Turkce altyazi/dublaj (korumali HLS)."}
 /**
  * dizilife — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /ara?q= -> /dizi/<slug>/sezon/S/bolum/E -> /player/<token> shell ->
  *       reversed-base64 twice -> OpenSSL "Salted__" blob -> EVP_BytesToKey(MD5) + AES-256-CBC -> master.m3u8.
  */
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
-var BASE = "https://dizi83.life";
+var BASE = "https://dizi84.life";
 
 function text(url, opts) {
   var o = opts || {};

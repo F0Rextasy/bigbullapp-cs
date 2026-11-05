@@ -141,25 +141,6 @@
       "latencyMs": 1168,
       "title": "Yabancı Dizi İzle, Film İzle, Anime İzle | Türkçe Dublaj &amp; Altyazılı | Yabancıdizi - Yabancı Dizi, İzle, Film İzle, "
     },
-    "dizi83.life": {
-      "id": "dizi82-life",
-      "name": "DiziLife",
-      "mainUrl": "https://dizi83.life",
-      "status": "implemented",
-      "health": "ok",
-      "language": "tr",
-      "tvTypes": [
-        "TvSeries",
-        "Movie"
-      ],
-      "module": "DiziLife",
-      "pipeline": "planned",
-      "source": "other-repos",
-      "http": 200,
-      "checked": "2026-10-29T19:23:07Z",
-      "latencyMs": 546,
-      "title": "dizi.life — Diziler ve Filmler"
-    },
     "diziasia.com": {
       "id": "diziasia-com",
       "name": "DiziAsia",
@@ -1727,6 +1708,27 @@
       "checked": "2026-11-05T08:01:28Z",
       "latencyMs": 0,
       "module": "HDFilmDelisi"
+    },
+    "dizi84.life": {
+      "id": "dizi84-life",
+      "name": "DiziLife",
+      "mainUrl": "https://dizi84.life",
+      "status": "implemented",
+      "http": 200,
+      "title": "DiziLife",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "poolNames": [
+        "DiziLife"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-11-05T13:21:38Z",
+      "latencyMs": 0,
+      "module": "DiziLife"
     }
   }
 }
