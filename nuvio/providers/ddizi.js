@@ -1,4 +1,4 @@
-// @provider {"id":"ddizi","name":"Ddizi","types":["tv"],"domain":"www.ddizi.tel","formats":["mp4","m3u8"],"sample":"tt21764074:tv:1:145","description":"Ddizi yerli dizi arşivi; bölümler jwplayer HLS (tabii) olarak açılır."}
+// @provider {"id":"ddizi", "name":"Ddizi", "types":["tv"], "domain":"www.ddizi.tel", "formats":["mp4", "m3u8"], "sample":"tt21764074:tv:1:145", "description":"Ddizi yerli dizi arşivi; bölümler jwplayer HLS (tabii) olarak açılır.", "version":"1.0.3"}
 /**
  * ddizi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> POST /arama/ -> series -> /izle/ episode -> /player/oynat/<hash> -> jwplayer sources.
@@ -241,4 +241,18 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
     return __origGetStreams(imdb || raw, mediaType, season, episode);
   }).catch(function () { return []; });
+};
+
+/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
+   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
+   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+var __langLabeled = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  return __langLabeled.apply(this, arguments).then(function (streams) {
+    return (streams || []).map(function (s) {
+      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
+      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      return s;
+    });
+  });
 };

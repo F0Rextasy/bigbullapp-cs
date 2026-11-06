@@ -1,4 +1,4 @@
-// @provider {"id":"dizikorea3","name":"Dizikorea3","types":["tv"],"domain":"dizikorea3.com","formats":["m3u8"],"sample":"tt43088191:tv:1:1","description":"Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi)."}
+// @provider {"id":"dizikorea3", "name":"Dizikorea3", "types":["tv"], "domain":"dizikorea3.com", "formats":["m3u8"], "sample":"tt43088191:tv:1:1", "description":"Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).", "version":"1.0.7"}
 /**
  * dizikorea3 — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /sayfa/1?s= -> /dizi/<slug> -> /sezon-N/bolum-M -> player iframes.
@@ -283,3 +283,18 @@ function getStreams(tmdbId, mediaType, season, episode) {
 }
 
 module.exports = { getStreams };
+
+
+/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
+   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
+   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+var __langLabeled = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  return __langLabeled.apply(this, arguments).then(function (streams) {
+    return (streams || []).map(function (s) {
+      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
+      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      return s;
+    });
+  });
+};

@@ -1,4 +1,4 @@
-// @provider {"id":"asyaanimeleri","name":"AsyaAnimeleri","types":["tv"],"domain":"asyaanimeleri.top","formats":["m3u8"],"description":"AsyaAnimeleri anime kaynaklari (rumble, vidmoly HLS).","sample":"tt33501934:tv:1:1"}
+// @provider {"id":"asyaanimeleri", "name":"AsyaAnimeleri", "types":["tv"], "domain":"asyaanimeleri.top", "formats":["m3u8"], "description":"AsyaAnimeleri anime kaynaklari (rumble, vidmoly HLS).", "sample":"tt33501934:tv:1:1", "version":"1.0.10"}
 /**
  * asyaanimeleri — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> site search -> series -> episode -> mirror iframes -> rumble/vidmoly HLS.
@@ -275,4 +275,18 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
     return __origGetStreams(imdb || raw, mediaType, season, episode);
   }).catch(function () { return []; });
+};
+
+/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
+   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
+   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+var __langLabeled = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  return __langLabeled.apply(this, arguments).then(function (streams) {
+    return (streams || []).map(function (s) {
+      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
+      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      return s;
+    });
+  });
 };

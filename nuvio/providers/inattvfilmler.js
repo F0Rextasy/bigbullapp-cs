@@ -1,4 +1,4 @@
-// @provider {"id":"inattvfilmler","name":"İnatTV Filmler","types":["movie"],"domain":"inatbox","formats":["m3u8","mp4"],"sample":"tt1790885:movie:1:1","description":"İnatTV yerli ve yabancı 4K film kataloğu (imzalı liste + AES çözümleyici, MP4/HLS).","verified":true}
+// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt1790885:movie:1:1", "description":"İnatTV yerli ve yabancı 4K film kataloğu (imzalı liste + AES çözümleyici, MP4/HLS).", "verified":true, "version":"1.0.1"}
 /**
  * inattvfilmler — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.
@@ -842,3 +842,18 @@ function getStreams(tmdbId, mediaType, season, episode) {
 }
 
 module.exports = { getStreams };
+
+
+/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
+   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
+   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+var __langLabeled = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  return __langLabeled.apply(this, arguments).then(function (streams) {
+    return (streams || []).map(function (s) {
+      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
+      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      return s;
+    });
+  });
+};

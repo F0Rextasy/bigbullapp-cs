@@ -1,4 +1,4 @@
-// @provider {"id":"tlctr","name":"TLC T\u00fcrkiye","types":["tv"],"domain":"tlctv.com.tr","formats":["m3u8"],"sample":"tt15334452:tv:1:1","description":"TLC T\u00fcrkiye program ar\u015fivi; b\u00f6l\u00fcmler DYG imzal\u0131 HLS olarak a\u00e7\u0131l\u0131r."}
+// @provider {"id":"tlctr", "name":"TLC Türkiye", "types":["tv"], "domain":"tlctv.com.tr", "formats":["m3u8"], "sample":"tt15334452:tv:1:1", "description":"TLC Türkiye program arşivi; bölümler DYG imzalı HLS olarak açılır.", "version":"1.0.2"}
 /**
  * tlctr — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /arama -> program -> ajax episodes -> data-video-code -> DYG redirect -> HLS.
@@ -232,4 +232,18 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
     return __origGetStreams(imdb || raw, mediaType, season, episode);
   }).catch(function () { return []; });
+};
+
+/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
+   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
+   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+var __langLabeled = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  return __langLabeled.apply(this, arguments).then(function (streams) {
+    return (streams || []).map(function (s) {
+      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
+      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      return s;
+    });
+  });
 };

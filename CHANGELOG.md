@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.16] - 2026-11-06
+
+### Değişti
+- **Nuvio dil etiketleri**: seçilmiş 22 ana sağlayıcının tümünde akış başlığının kalitesinin yanına sunucunun desteklediği dil (`Altyazılı` / `TR Dublaj`) yazılır; etiket kanıt yoksa yazılmaz.
+
 ## [1.6.15] - 2026-11-06
 
 ### Değişti

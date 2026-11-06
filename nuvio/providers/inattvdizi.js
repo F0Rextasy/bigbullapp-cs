@@ -1,4 +1,4 @@
-// @provider {"id":"inattvdizi","name":"İnatTV Dizi","types":["tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt0944947:tv:1:1","description":"İnatTV yabancı, yerli ve platform dizileri kataloğu (imzalı liste + AES çözümleyici, HLS).","verified":true}
+// @provider {"id":"inattvdizi", "name":"İnatTV Dizi", "types":["tv"], "domain":"inatbox", "formats":["m3u8"], "sample":"tt0944947:tv:1:1", "description":"İnatTV yabancı, yerli ve platform dizileri kataloğu (imzalı liste + AES çözümleyici, HLS).", "verified":true, "version":"1.0.1"}
 var CFG = {
   id: "inattvdizi",
   name: "İnatTV Dizi",
@@ -931,5 +931,19 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }).catch(function (e) {
     console.log("[bb-nuvio][inattvdizi] okuma akışı hata verdi: " + (e && e.message ? e.message : e));
     return [];
+  });
+};
+
+/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
+   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
+   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+var __langLabeled = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  return __langLabeled.apply(this, arguments).then(function (streams) {
+    return (streams || []).map(function (s) {
+      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
+      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      return s;
+    });
   });
 };

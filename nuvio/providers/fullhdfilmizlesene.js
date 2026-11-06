@@ -1,4 +1,4 @@
-// @provider {"id":"fullhdfilmizlesene","name":"FullHDFilmizlesene","types":["movie"],"domain":"fullhdfilmizlesene.now","formats":["m3u8"],"sample":"tt0133093:movie:1:1","description":"FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.","verified":true}
+// @provider {"id":"fullhdfilmizlesene", "name":"FullHDFilmizlesene", "types":["movie"], "domain":"fullhdfilmizlesene.now", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.", "verified":true, "version":"1.0.5"}
 /**
  * fullhdfilmizlesene — Nuvio provider (bb-nuvio).
  * Flow: TMDB id -> Wikidata -> IMDb -> Cinemeta title -> /arama/<q> -> film page
@@ -339,3 +339,18 @@ function getStreams(tmdbId, mediaType) {
 }
 
 module.exports = { getStreams };
+
+
+/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
+   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
+   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+var __langLabeled = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  return __langLabeled.apply(this, arguments).then(function (streams) {
+    return (streams || []).map(function (s) {
+      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
+      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      return s;
+    });
+  });
+};

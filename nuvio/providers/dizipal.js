@@ -1,4 +1,4 @@
-// @provider {"id":"dizipal","name":"DiziPal","types":["movie","tv"],"domain":"dizipal1594.com","formats":["m3u8"],"sample":"tt0133093:movie:1:1","description":"DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.","verified":true}
+// @provider {"id":"dizipal", "name":"DiziPal", "types":["movie", "tv"], "domain":"dizipal1594.com", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.", "verified":true, "version":"1.0.7"}
 /**
  * dizipal — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> POST /api/mj {action:searchContent} -> content/episode page
@@ -650,3 +650,18 @@ function getStreams(tmdbId, mediaType, season, episode) {
 }
 
 module.exports = { getStreams };
+
+
+/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
+   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
+   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+var __langLabeled = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  return __langLabeled.apply(this, arguments).then(function (streams) {
+    return (streams || []).map(function (s) {
+      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
+      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      return s;
+    });
+  });
+};

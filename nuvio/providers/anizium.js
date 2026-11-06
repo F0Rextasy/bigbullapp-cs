@@ -1,4 +1,4 @@
-// @provider {"id":"anizium","name":"Anizium","types":["tv"],"domain":"anizium.co","formats":["mp4"],"sample":"tt0988824:tv:1:1","description":"Anizium anime arsivi (Turkce altyazili MP4 akislari)."}
+// @provider {"id":"anizium", "name":"Anizium", "types":["tv"], "domain":"anizium.co", "formats":["mp4"], "sample":"tt0988824:tv:1:1", "description":"Anizium anime arsivi (Turkce altyazili MP4 akislari).", "version":"1.0.6"}
 /**
  * anizium — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> api.anizium.co/page/search -> /anime/source -> group item mp4 links.
@@ -205,4 +205,18 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
     return __origGetStreams(imdb || raw, mediaType, season, episode);
   }).catch(function () { return []; });
+};
+
+/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
+   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
+   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+var __langLabeled = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  return __langLabeled.apply(this, arguments).then(function (streams) {
+    return (streams || []).map(function (s) {
+      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
+      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      return s;
+    });
+  });
 };

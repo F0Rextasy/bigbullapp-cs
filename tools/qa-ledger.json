@@ -730,6 +730,12 @@
       "result": "pass",
       "evidence": "runner 2026-11-05: pass, links=3, ep=0",
       "runner": "autopilot.py 2026-11-05"
+    },
+    {
+      "module": "Nuvio-DilEtiketi",
+      "result": "pass",
+      "evidence": "2026-11-06: 22 Nuvio saglayici basliklarina '__langLabeled' sarmalayicisi (Altyazili etiketi) eklendi; 242 statik check + dizibox LIVE (tt0903747 tv 2 5, 1 stream) + sentetik sarmalayici testi (X - 720p • Altyazılı / etiketli baslik korundu). manifest 1.6.16, tum sürümler 1.0.x+1.",
+      "runner": "qa 2026-11-06"
     }
   ]
 }

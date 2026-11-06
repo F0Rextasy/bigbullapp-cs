@@ -1,4 +1,4 @@
-// @provider {"id":"selcukflix","name":"SelcukFlix","types":["movie","tv"],"domain":"selcukflix.app","formats":["m3u8"],"sample":"tt0133093:movie:1:1","description":"SelcukFlix - Turkce dublaj/altyazili film ve diziler; AES secureData + pichive HLS master.","verified":true}
+// @provider {"id":"selcukflix", "name":"SelcukFlix", "types":["movie", "tv"], "domain":"selcukflix.app", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"SelcukFlix - Turkce dublaj/altyazili film ve diziler; AES secureData + pichive HLS master.", "verified":true, "version":"1.0.4"}
 /**
  * selcukflix — Nuvio provider (bb-nuvio).
  * Flow: numeric TMDB -> Wikidata -> IMDb; Cinemeta title -> POST /api/bg/searchcontent
@@ -522,3 +522,18 @@ function getStreams(tmdbId, mediaType, season, episode) {
 }
 
 module.exports = { getStreams };
+
+
+/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
+   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
+   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+var __langLabeled = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  return __langLabeled.apply(this, arguments).then(function (streams) {
+    return (streams || []).map(function (s) {
+      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
+      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      return s;
+    });
+  });
+};

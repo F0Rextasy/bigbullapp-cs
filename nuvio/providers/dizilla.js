@@ -1,4 +1,4 @@
-// @provider {"id":"dizilla","name":"Dizilla","types":["tv"],"domain":"dizilla.la","formats":["m3u8"],"sample":"tt27497448:tv:1:1","description":"Dizilla yabanci dizi arsivi (HLS + Turkce altyazi)."}
+// @provider {"id":"dizilla", "name":"Dizilla", "types":["tv"], "domain":"dizilla.la", "formats":["m3u8"], "sample":"tt27497448:tv:1:1", "description":"Dizilla yabanci dizi arsivi (HLS + Turkce altyazi).", "version":"1.0.11"}
 /**
  * dizilla — Nuvio provider (bb-nuvio).
  * Next.js site: series metadata + episode list live in the JSON-LD blocks, the
@@ -326,4 +326,18 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
     return __origGetStreams(imdb || raw, mediaType, season, episode);
   }).catch(function () { return []; });
+};
+
+/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
+   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
+   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+var __langLabeled = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  return __langLabeled.apply(this, arguments).then(function (streams) {
+    return (streams || []).map(function (s) {
+      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
+      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      return s;
+    });
+  });
 };

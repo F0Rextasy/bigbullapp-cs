@@ -1,4 +1,4 @@
-// @provider {"id":"sezonlukdizi","name":"Sezonlukdizi","types":["tv"],"domain":"sezonlukdizi.cc","formats":["m3u8"],"sample":"tt0903747:tv:1:1","description":"SezonlukDizi yabancı dizi arşivi (altyazı/dublaj, Filemoon korumalı HLS)."}
+// @provider {"id":"sezonlukdizi", "name":"Sezonlukdizi", "types":["tv"], "domain":"sezonlukdizi.cc", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"SezonlukDizi yabancı dizi arşivi (altyazı/dublaj, Filemoon korumalı HLS).", "version":"1.0.7"}
 /**
  * sezonlukdizi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /ajax/arama.asp -> /bolumler/<slug>.html -> episode page
@@ -939,4 +939,18 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
     return __origGetStreams(imdb || raw, mediaType, season, episode);
   }).catch(function () { return []; });
+};
+
+/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
+   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
+   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+var __langLabeled = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  return __langLabeled.apply(this, arguments).then(function (streams) {
+    return (streams || []).map(function (s) {
+      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
+      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      return s;
+    });
+  });
 };
