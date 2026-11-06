@@ -140,6 +140,7 @@ Tek modül derleme ve cihaza kurulum:
 | `DMAX` | dmax.com.tr | Dizi | — | — | — | — | — | — |
 | `DramaDizilerim` | dramadizilerim.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
 | `FilmEkseni` | filmekseni.vip | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `FilmMakinesi` | filmmakinesi.co | Film | ✓ | — | — | — | ✓ | ✓ |
 | `Filmizyon` | filmizyon.net | Film | — | — | — | — | — | — |
 | `FilmModu` | filmmodu.news | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `FullHDFilm` | fullhdfilmizlebox.vip | Film | — | — | — | — | — | ✓ |
@@ -209,6 +210,7 @@ Tek modül derleme ve cihaza kurulum:
 | `UltraFilmizle` | ufilmizle.com | Film | — | — | — | — | — | — |
 | `WebdramaTurkey2` | webdramaturkey2.com | Asya dizi/film | ✓ | — | — | ✓ | ✓ | — |
 | `Weboo` | weboo.com.tr | Dizi | — | — | — | — | — | — |
+| `WebteIzle` | webteizle.info | Film | ✓ | — | ✓ | ✓ | ✓ | — |
 | `Yabancidizi` | yabancidizi.live | Dizi/Film | — | — | — | — | film | ✓ |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
@@ -229,10 +231,10 @@ Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Reposito
 `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json` →
 **Refresh** → sağlayıcıları tek tek aç. Tam liste: [`nuvio/manifest.json`](nuvio/manifest.json).
 
-**Kapsam**: Uygulama performansını korumak ve kasmayı önlemek amacıyla Nuvio tarafında yalnızca seçilmiş **22 ana sağlayıcı** yayınlanır:
+**Kapsam**: Uygulama performansını korumak ve kasmayı önlemek amacıyla Nuvio tarafında yalnızca seçilmiş **24 ana sağlayıcı** yayınlanır:
 - **Anime (3):** `Anizium`, `AnimeciX`, `AsyaAnimeleri`
 - **Dizi (11):** `Dizibox`, `Dizilla`, `DiziPal`, `SelcukFlix`, `Ddizi`, `WebdramaTurkey2`, `Dizikorea3`, `Sezonlukdizi`, `DiziYou`, `DiziBal`, `İnatTV Dizi`
-- **Film (5):** `HDFilmCehennemi`, `FullHDFilmizlesene`, `SetFilmIzle`, `YesilCamTv`, `İnatTV Filmler`
+- **Film (7):** `HDFilmCehennemi`, `FullHDFilmizlesene`, `SetFilmIzle`, `YesilCamTv`, `İnatTV Filmler`, `FilmMakinesi`, `WebteIzle` **(pasif)**
 - **Belgesel & TV (3):** `BelgeselX`, `DMAX`, `TLCtr`
 
 Repo eklemek sağlayıcıları çalıştırmaz: Plugins ekranında **Enable plugin providers globally** ve

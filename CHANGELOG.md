@@ -5,6 +5,12 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.17] - 2026-11-06
+
+### Eklendi
+- **FilmMakinesi v1**: `filmmakinesi.co` eklendi (film); oynatloload secure-hls zinciri runner'da doğrulandı (1080p/480p + Türkçe VTT).
+- **WebteIzle v1**: `webteizle.info` eklendi (film); dil seçimli alternatifler (dublaj/altyazı) + vidmoly/ok.ru/filemoon yolları; Cloudflare sandığı nedeniyle pass kanıtı cihazda doğrulanacak.
+
 ## [1.6.16] - 2026-11-06
 
 ### Değişti

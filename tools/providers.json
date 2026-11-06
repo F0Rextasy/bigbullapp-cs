@@ -1729,6 +1729,46 @@
       "checked": "2026-11-05T13:21:38Z",
       "latencyMs": 0,
       "module": "DiziLife"
+    },
+    "filmmakinesi.co": {
+      "id": "filmmakinesi-co",
+      "name": "FilmMakinesi",
+      "mainUrl": "https://filmmakinesi.co",
+      "status": "implemented",
+      "http": 200,
+      "title": "FilmMakinesi | En iyi 1080p Full HD film sitesi",
+      "language": "tr",
+      "tvTypes": [
+        "Movie"
+      ],
+      "poolNames": [
+        "FilmMakinesi"
+      ],
+      "source": "provider-source",
+      "health": "ok",
+      "checked": "2026-11-06T00:00:00Z",
+      "latencyMs": 250,
+      "module": "FilmMakinesi"
+    },
+    "webteizle.info": {
+      "id": "webteizle-info",
+      "name": "WebteIzle",
+      "mainUrl": "https://webteizle.info",
+      "status": "implemented",
+      "http": 403,
+      "language": "tr",
+      "tvTypes": [
+        "Movie",
+        "TvSeries"
+      ],
+      "poolNames": [
+        "WebteIzle"
+      ],
+      "source": "provider-source",
+      "health": "retryable",
+      "checked": "2026-11-06T00:00:00Z",
+      "latencyMs": 0,
+      "module": "WebteIzle"
     }
   }
 }

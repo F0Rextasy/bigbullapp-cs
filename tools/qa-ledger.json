@@ -736,6 +736,18 @@
       "result": "pass",
       "evidence": "2026-11-06: 22 Nuvio saglayici basliklarina '__langLabeled' sarmalayicisi (Altyazili etiketi) eklendi; 242 statik check + dizibox LIVE (tt0903747 tv 2 5, 1 stream) + sentetik sarmalayici testi (X - 720p • Altyazılı / etiketli baslik korundu). manifest 1.6.16, tum sürümler 1.0.x+1.",
       "runner": "qa 2026-11-06"
+    },
+    {
+      "module": "FilmMakinesi",
+      "result": "pass",
+      "evidence": "2026-11-06: CS v1 derleme pass (:FilmMakinesi:make, cs3 27KB); Nuvio filmmakinesi.js host'ta canli: /?s= 200 -> oynatloload embed 200 -> video-bilgi 200 -> d1.verseneload m3u8 200 (132KB, 1080p/480p); sub tr vtt 200 (WEBVTT). Ornek tt13611778 (The Mongoose).",
+      "runner": "qa 2026-11-06"
+    },
+    {
+      "module": "WebteIzle",
+      "result": "pass",
+      "evidence": "2026-11-06: CS v1 derleme pass (:WebteIzle:make, cs3 29KB); zincir canli (CF Chrome uzerinden): the-mongoose wip=19227 -> dataAlternatif3 200 (VidMoly/OkRu/Filemoon/Pixel) -> dataEmbed 200 vidmoly('sgrkr71t8wtt') -> vidmoly.biz master m3u8 200 (900p); dizide /izle/dublaj/<slug>/1-sezon-2-bolum -> 720p. Host'tan site CF 403 (retryable); Nuvio webteizle.js verified:false -> manifest enabled:false.",
+      "runner": "qa 2026-11-06"
     }
   ]
 }
