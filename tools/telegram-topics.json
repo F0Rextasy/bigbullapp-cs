@@ -1,5 +1,5 @@
 {
-  "chat_id": "-1003994138025",
+  "chat_id": "@BigBull_App",
   "topics": {
     "duyuru": {
       "thread_id": 3,
@@ -16,6 +16,15 @@
     },
     "istek": {
       "thread_id": 10,
+      "welcomed": true
+    },
+    "genel_duyurular": {
+      "thread_id": 333,
+      "welcomed": true,
+      "closed": true
+    },
+    "gelistirici": {
+      "thread_id": 338,
       "welcomed": true
     }
   },
