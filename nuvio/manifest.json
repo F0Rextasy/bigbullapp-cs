@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.17",
+  "version": "1.6.18",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -178,6 +178,25 @@
       ]
     },
     {
+      "id": "dizimom",
+      "name": "DiziMom",
+      "description": "DiziMom yabancı diziler Türkçe dublaj/altyazılı arşivi (pilavyer HLS).",
+      "version": "1.1.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/dizimom.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=ddizimom.net&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "dizipal",
       "name": "DiziPal",
       "description": "DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.",
@@ -193,6 +212,25 @@
         "m3u8"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=dizipal1594.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "dizipod",
+      "name": "DiziPod",
+      "description": "DiziPod Türkçe altyazılı yabancı dizi arşivi (HLS).",
+      "version": "1.1.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/dizipod.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dizipod.com&sz=128",
       "contentLanguage": [
         "tr"
       ]
@@ -257,6 +295,25 @@
       ]
     },
     {
+      "id": "filmmodu",
+      "name": "FilmModu",
+      "description": "FilmModu Türkçe dublaj/altyazılı film arşivi (pilavyerplay HLS + altyazı).",
+      "version": "1.1.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/filmmodu.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=filmmodu.news&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "fullhdfilmizlesene",
       "name": "FullHDFilmizlesene",
       "description": "FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.",
@@ -279,7 +336,7 @@
       "id": "hdfilmcehennemi",
       "name": "HDFilmCehennemi",
       "description": "HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.",
-      "version": "1.0.10",
+      "version": "1.0.11",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -329,6 +386,26 @@
         "mp4"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=inatbox&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "jetfilmizle",
+      "name": "JetFilmizle",
+      "description": "JetFilmizle Türkçe dublaj/altyazılı film arşivi (godrive + videopark).",
+      "version": "1.1.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/jetfilmizle.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=jetfilmizle.app&sz=128",
       "contentLanguage": [
         "tr"
       ]

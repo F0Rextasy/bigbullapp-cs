@@ -12,7 +12,6 @@ import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
-import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.fixUrlNull
 import com.lagradost.cloudstream3.newHomePageResponse
@@ -24,8 +23,6 @@ import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONObject
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
 
 /** HDFilmCehennemi — hdfilmcehennemi.nl (movies only, self-hosted jwplayer embed) */
 
@@ -100,7 +97,6 @@ class HDFilmCehennemiProvider : MainAPI() {
 
         val h1 = doc.selectFirst("h1")
             ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
-        // "Finding Harry: The Craft Behind the Magic izle <small>(2026)</small>"
         val rawTitle = h1.ownText().trim().removeSuffix(" izle").trim()
         val title = rawTitle.ifBlank { h1.text().trim().removeSuffix(" izle").trim() }
             .ifBlank { url.substringAfterLast('/').trim('/', '-') }
@@ -144,24 +140,24 @@ class HDFilmCehennemiProvider : MainAPI() {
         return found
     }
 
-    /** Self-hosted embed (hdfilmcehennemi.mobi) with obfuscated h1lqa token -> jwplayer HLS. */
+    /** Self-hosted embed (hdfilmcehennemi.mobi) with rotating split-token / packed array -> jwplayer HLS. */
     private suspend fun resolveEmbed(
         embedUrl: String,
         callback: (ExtractorLink) -> Unit,
         subtitleCallback: (SubtitleFile) -> Unit,
     ): Boolean {
         val embed = app.get(embedUrl, referer = "$mainUrl/", headers = uaHeaders).text
-        val stream = runCatching {
-            val host = Regex("""https?://([^/]+)""").find(embedUrl)?.groupValues?.get(1) ?: return false
-            val legacy = Regex("""c6rbn\("((?:[^"\\]|\\.)*)"\.split\("\^"\)\)""").find(embed)
-            if (legacy != null) decodeC6rbn(legacy.groupValues[1].split("^"), host)
-            else decodeDynamic(embed)
-        }.getOrNull() ?: return false
-        if (!stream.startsWith("http")) return false
+        val host = Regex("""https?://([^/]+)""").find(embedUrl)?.groupValues?.get(1) ?: return false
+        val candidates = decodeEmbedCandidates(embed, host)
+        val stream = candidates.firstOrNull { url ->
+            url.startsWith("http") && runCatching {
+                app.get(url, referer = embedUrl, headers = uaHeaders).text.trimStart().startsWith("#EXTM3U")
+            }.getOrDefault(false)
+        } ?: candidates.firstOrNull { it.startsWith("http") } ?: return false
 
         // subtitle tracks from jwplayer setup
-        Regex("""tracks:\s*\[(.*?)\]\s*,\s*captions""", RegexOption.DOT_MATCHES_ALL).find(embed)?.let { t ->
-            Regex("""\{"file":"((?:[^"\\]|\\.)*)","kind":"captions","label":"((?:[^"\\]|\\.)*)"""").findAll(t.groupValues[1])
+        Regex("""tracks:\s*\[(.*?)\]\s*,\s*(?:captions|image)""", RegexOption.DOT_MATCHES_ALL).find(embed)?.let { t ->
+            Regex("""\{"file":"((?:[^"\\]++|\\.)*+)","kind":"captions","label":"((?:[^"\\]++|\\.)*+)"""").findAll(t.groupValues[1])
                 .forEach { s ->
                     val file = s.groupValues[1].replace("\\/", "/")
                     val label = s.groupValues[2].replace("\\/", "/")
@@ -186,6 +182,32 @@ class HDFilmCehennemiProvider : MainAPI() {
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
 
+        fun decodeEmbedCandidates(html: String, hostname: String): List<String> {
+            val out = mutableListOf<String>()
+            val fileVar = Regex("""sources\s*:\s*\[\s*\{\s*file\s*:\s*(\w+)""").find(html)?.groupValues?.get(1)
+            val splitRe = Regex("""(?:(\w+)\s*=\s*)?\w+\(\s*"((?:[^"\\]++|\\.)*+)"\s*\.\s*split\(\s*["']([^"'])["']\s*\)\s*\)""")
+            for (m in splitRe.findAll(html)) {
+                val token = m.groupValues[2].replace(Regex("""\\(.)"""), "$1")
+                val decoded = decodeC6rbn(token.split(m.groupValues[3]), hostname) ?: continue
+                if (decoded.startsWith("http", ignoreCase = true)) {
+                    if (fileVar != null && m.groupValues[1] == fileVar) out.add(0, decoded) else out.add(decoded)
+                }
+            }
+            val arrRe = Regex("""(?:(\w+)\s*=\s*)?(\w+)\(\[((?:"(?:[^"\\]++|\\.)*+"\s*,?\s*)+)\]\)""")
+            for (m in arrRe.findAll(html)) {
+                val block = functionBlock(html, m.groupValues[2]) ?: functionBlock(html) ?: continue
+                val consts = Regex("""var\s+\w+\s*=\s*"((?:[^"\\]++|\\.)*+)";\s*var\s+\w+\s*=\s*"((?:[^"\\]++|\\.)*+)";""")
+                    .find(block) ?: continue
+                val arr = runCatching { org.json.JSONArray("[" + m.groupValues[3] + "]") }.getOrNull() ?: continue
+                val parts = (0 until arr.length()).map { arr.getString(it) }
+                val decoded = decodeObfuscated(consts.groupValues[1], consts.groupValues[2], parts) ?: continue
+                if (decoded.startsWith("http", ignoreCase = true)) {
+                    if (fileVar != null && m.groupValues[1] == fileVar) out.add(0, decoded) else out.add(decoded)
+                }
+            }
+            return out.distinct()
+        }
+
         /**
          * Port of the site's c6rbn() token decoder (verified against a live page).
          * Reverse the interleave, apply per-char operations encoded by the key string,
@@ -193,8 +215,9 @@ class HDFilmCehennemiProvider : MainAPI() {
          */
         fun decodeC6rbn(parts: List<String>, hostname: String): String? {
             return runCatching {
-                var arr = parts.toMutableList()
+                val arr = parts.toMutableList()
                 val cc3 = arr.size - 2
+                if (cc3 < 8) return null
                 val pq2h = cc3 % 7
                 val r8b = 8 + (cc3 % 5)
                 val key = arr.removeAt(r8b)
@@ -255,27 +278,17 @@ class HDFilmCehennemiProvider : MainAPI() {
             }.getOrNull()
         }
 
-        /** Newer embeds rename the function per request; constants are read from its body. */
-        fun decodeDynamic(html: String): String? {
-            val block = functionBlock(html) ?: return null
-            val consts = Regex(
-                """var\s+\w+\s*=\s*"((?:[^"\\]|\\.)*)";\s*var\s+\w+\s*=\s*"((?:[^"\\]|\\.)*)";"""
-            ).find(block) ?: return null
-            val call = Regex("""\w+\(\[((?:"(?:[^"\\]|\\.)*"\s*,?\s*)+)\]\)""").find(html)
-                ?: return null
-            val arr = runCatching {
-                org.json.JSONArray("[" + call.groupValues[1] + "]")
-            }.getOrNull() ?: return null
-            val parts = (0 until arr.length()).map { arr.getString(it) }
-            return decodeObfuscated(consts.groupValues[1], consts.groupValues[2], parts)
-        }
+        fun decodeDynamic(html: String): String? = decodeEmbedCandidates(html, "").firstOrNull()
 
-        private fun functionBlock(html: String): String? {
-            val join = html.indexOf(".join('')")
-            if (join < 0) return null
-            val start = html.lastIndexOf("function ", join)
-            if (start < 0) return null
+        private fun functionBlock(html: String, fnName: String? = null): String? {
+            val start = if (!fnName.isNullOrBlank()) {
+                html.indexOf("function $fnName(").takeIf { it >= 0 }
+            } else {
+                val join = html.indexOf(".join('')")
+                if (join < 0) null else html.lastIndexOf("function ", join).takeIf { it >= 0 }
+            } ?: return null
             val open = html.indexOf('{', start)
+            if (open < 0) return null
             var depth = 0
             for (i in open until html.length) {
                 when (html[i]) {

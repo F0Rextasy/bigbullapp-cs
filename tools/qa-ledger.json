@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-05",
+  "generated": "2026-11-07",
   "note": "120 TR modül runner benchmark (2026-11-05)",
   "modules": [
     {
@@ -65,8 +65,8 @@
     {
       "module": "AsyaLuna",
       "result": "blocked",
-      "evidence": "Nuvio 2026-11-04: asyaluna.com her yol HTTP 500 (WordPress fatal); 23 mirror NXDOMAIN. Cloudstream v3 compile PASS; sahte akış yok.",
-      "runner": "qa 2026-11-04"
+      "evidence": "2026-11-07: sunucu silinmiş (<title>Index of /</title>), 45+ TLD denendi, 0 mirror; modül v4 status=0 ve disabled listesinde; sahte akış yok.",
+      "runner": "qa 2026-11-07"
     },
     {
       "module": "AsyaWatch",
@@ -212,8 +212,8 @@
     {
       "module": "DiziPod",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=24",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "runner 2026-11-07: v6 pass, search=2 ep=4 links=1; Nuvio dizipod 1.1.0 tt0903747 S1E1 1 stream; packed JS regex StackOverflow düzeltildi.",
+      "runner": "qa 2026-11-07"
     },
     {
       "module": "Dizirella",
@@ -260,8 +260,8 @@
     {
       "module": "HDFilmCehennemi",
       "result": "pass",
-      "evidence": "runner 2026-11-05: pass, links=1, ep=0",
-      "runner": "autopilot.py 2026-11-05"
+      "evidence": "Nuvio 1.0.11 2026-11-07: .split(\"#\") ayraç rotasyonu + sahte p9k decoy düzeltildi, 3/3 canlı PASS (tt0133093); Cloudstream v9.",
+      "runner": "qa 2026-11-07"
     },
     {
       "module": "HDFilmDelisi",
@@ -474,8 +474,8 @@
     {
       "module": "Yabancidizi",
       "result": "pass",
-      "evidence": "2026-11-04: WARP proxy ile tt0903747 2 stream (720/1080 HLS), tt8079248 ve 559969 da stream; Cloudstream v6 compile PASS.",
-      "runner": "qa 2026-11-04"
+      "evidence": "runner 2026-11-07: v8 yabancidizi.watch, dizi dexter search=4 ep=12 links=2 subs=4; film links=1 subs=2 (RSC + PBKDF2/AES + pichive).",
+      "runner": "qa 2026-11-07"
     },
     {
       "module": "StarTV",

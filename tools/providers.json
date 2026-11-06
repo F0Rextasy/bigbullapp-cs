@@ -122,25 +122,6 @@
       "latencyMs": 377,
       "title": "Kült Filmler - Seçkin Film İzleme Sitesi 2026"
     },
-    "yabancidizi.live": {
-      "id": "yabancidizi-live",
-      "name": "YabanciDizi",
-      "mainUrl": "https://yabancidizi.live",
-      "status": "implemented",
-      "health": "ok",
-      "language": "tr",
-      "tvTypes": [
-        "TvSeries",
-        "Movie"
-      ],
-      "module": "Yabancidizi",
-      "pipeline": "planned",
-      "source": "manual",
-      "http": 200,
-      "checked": "2026-10-29T19:23:07Z",
-      "latencyMs": 1168,
-      "title": "Yabancı Dizi İzle, Film İzle, Anime İzle | Türkçe Dublaj &amp; Altyazılı | Yabancıdizi - Yabancı Dizi, İzle, Film İzle, "
-    },
     "diziasia.com": {
       "id": "diziasia-com",
       "name": "DiziAsia",
@@ -382,7 +363,7 @@
       "language": "?",
       "tvTypes": [],
       "http": 403,
-      "health": "blocked",
+      "health": "ok",
       "checked": "2026-10-29T19:23:07Z",
       "latencyMs": 217,
       "title": ""
@@ -755,7 +736,7 @@
       "id": "asyaluna-com",
       "name": "AsyaLuna",
       "mainUrl": "https://asyaluna.com",
-      "status": "implemented",
+      "status": "disabled",
       "http": 200,
       "title": "Summer Vacation 2026 Kore",
       "language": "tr",
@@ -766,7 +747,7 @@
         "AsyaLuna"
       ],
       "source": "provider-source",
-      "health": "ok",
+      "health": "down",
       "checked": "2026-10-30T03:25:57Z",
       "latencyMs": 0,
       "module": "AsyaLuna"
@@ -1769,6 +1750,26 @@
       "checked": "2026-11-06T00:00:00Z",
       "latencyMs": 0,
       "module": "WebteIzle"
+    },
+    "yabancidizi.watch": {
+      "id": "yabancidizi-watch",
+      "name": "YabanciDizi",
+      "mainUrl": "https://yabancidizi.watch",
+      "status": "implemented",
+      "health": "ok",
+      "language": "tr",
+      "tvTypes": [
+        "TvSeries",
+        "Movie"
+      ],
+      "module": "Yabancidizi",
+      "pipeline": "planned",
+      "source": "manual",
+      "http": 200,
+      "checked": "2026-10-29T19:23:07Z",
+      "latencyMs": 1168,
+      "title": "Yabancı Dizi İzle, Film İzle, Anime İzle | Türkçe Dublaj &amp; Altyazılı | Yabancıdizi - Yabancı Dizi, İzle, Film İzle, ",
+      "revivedFrom": "yabancidizi.live"
     }
   }
 }

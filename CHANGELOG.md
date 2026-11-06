@@ -5,6 +5,18 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.19] - 2026-11-07
+
+### Eklendi
+- **Nuvio +4 sağlayıcı** (24 → 28): film `FilmModu`, `JetFilmizle`; dizi `DiziMom`, `DiziPod`. Hepsi sıkı başlık/sezon-bölüm eşleşmesi kullanır, kanıtsız `[]` döner.
+
+### Düzeltildi
+- **Yabancidizi v8**: ölü `yabancidizi.live` yerine `yabancidizi.watch` (Next.js RSC, PBKDF2/AES, pichive `NP_CONFIG`); dizi ve film canlı doğrulandı.
+- **DiziPod v6**: packed JS regex'i uzun yüklerde `StackOverflowError` veriyordu; yığın-güvenli hale getirildi.
+- **HDFilmCehennemi v9 / Nuvio 1.0.11**: embed `.split("#")` ayracına geçti ve başa sahte `p9k` (ölü `playmix.uno`) çağrısı koydu; ayraç artık tek karakterli herhangi biri, `sources:[{file: değişken}]` ile bağlanan çağrı önceliklidir.
+- **AsyaLuna v4 (pasif)**: sunucu silindi (`Index of /`), 0 mirror; `disabled` listesine alındı. Aktif modül sayısı 96.
+- **Nuvio verify-all**: Node/undici TLS parmak izine 403 veren siteler (`pichive`, `dplayer82`, `fullhdfilmizlesene`) için `curl` yedeği; sonuçlar cihaz gerçeğini yansıtır.
+
 ## [1.6.18] - 2026-11-07
 
 ### Düzeltildi

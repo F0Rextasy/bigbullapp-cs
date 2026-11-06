@@ -1,11 +1,8 @@
-// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.10"}
+// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.11"}
 /**
  * hdfilmcehennemi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /search/?q= JSON -> film page -> hdfilmcehennemi.mobi embed
  *       -> split-string / packed token decode -> HLS master + jwplayer caption tracks.
- * Cloudflare can intermittently challenge Node's TLS fingerprint (curl gets the real page
- * from the same IP). Two consecutive live runs passed on 2026-11-03; full scans may still
- * show a transient 0-stream.
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
@@ -26,14 +23,6 @@ function text(url, opts) {
 function first(pattern, body) {
   var m = pattern.exec(String(body || ""));
   return m ? m[1] : null;
-}
-
-function all(pattern, body) {
-  var out = [];
-  var text = String(body || "");
-  var m;
-  while ((m = pattern.exec(text)) !== null) out.push(m);
-  return out;
 }
 
 /** atob is absent in the Nuvio sandbox: base64 -> byte string by hand. */
@@ -88,6 +77,7 @@ function norm(value) {
 function decodeToken(parts, hostname) {
   var arr = parts.slice();
   var cc3 = arr.length - 2;
+  if (cc3 < 8) return "";
   var key = arr.splice(8 + (cc3 % 5), 1)[0];
   var seed = arr.splice(cc3 % 7, 1)[0] + hostname;
   var body = arr.join("");
@@ -140,19 +130,25 @@ function decodeToken(parts, hostname) {
   return out;
 }
 
-/** Packed variant: constants are read from the function body, parts from the call. */
-function decodePacked(html) {
-  var consts = /var\s+\w+\s*=\s*"((?:[^"\\]|\\.)*)";\s*var\s+\w+\s*=\s*"((?:[^"\\]|\\.)*)";/.exec(html);
-  var call = /\b[A-Za-z0-9_$]+\(\[((?:"(?:[^"\\]|\\.)*"\s*,?\s*)+)\]\)/.exec(html);
-  if (!consts || !call) return null;
-  var seed = consts[1];
-  var ops = consts[2];
-  var parts;
-  try {
-    parts = JSON.parse("[" + call[1] + "]");
-  } catch (e) {
-    return null;
+function functionBody(html, fnName) {
+  var start = html.indexOf("function " + fnName + "(");
+  if (start < 0) return null;
+  var open = html.indexOf("{", start);
+  if (open < 0) return null;
+  var depth = 0;
+  for (var i = open; i < html.length; i++) {
+    var ch = html.charAt(i);
+    if (ch === "{") depth++;
+    else if (ch === "}") {
+      depth--;
+      if (depth === 0) return html.slice(start, i + 1);
+    }
   }
+  return null;
+}
+
+/** Packed variant: constants are read from the matching function body, parts from the call. */
+function decodePackedParts(seed, ops, parts) {
   var body = parts.join("");
   var a = 0;
   var b = 0;
@@ -201,21 +197,37 @@ function decodePacked(html) {
   return out;
 }
 
-/** Every candidate the embed offers; the site rotates between the two encodings per request. */
+/** Every candidate the embed offers; the variable wired into `sources: [{file: <var>}]` goes first. */
 function candidates(html, hostname) {
   var out = [];
-  var re = /[A-Za-z0-9_$]+\(\s*"((?:[^"\\]|\\.)*)"\s*\.\s*split\(\s*["']([\^|])["']\s*\)\s*\)/g;
+  var fileVar = first(/sources\s*:\s*\[\s*\{\s*file\s*:\s*([A-Za-z0-9_$]+)/, html);
+  var re = /(?:([A-Za-z0-9_$]+)\s*=\s*)?[A-Za-z0-9_$]+\(\s*"((?:[^"\\]|\\.)*)"\s*\.\s*split\(\s*["']([^"'])["']\s*\)\s*\)/g;
   var m;
   while ((m = re.exec(html)) !== null) {
-    // The token is a JS string literal, so `\/` escapes must go before base64.
-    var token = m[1].replace(/\\(.)/g, "$1");
-    var url = decodeToken(token.split(m[2]), hostname);
-    if (/^https?:/i.test(url)) out.push(url);
+    try {
+      var token = m[2].replace(/\\(.)/g, "$1");
+      var url = decodeToken(token.split(m[3]), hostname);
+      if (/^https?:/i.test(url)) {
+        if (fileVar && m[1] === fileVar) out.unshift(url);
+        else out.push(url);
+      }
+    } catch (e) {}
   }
-  try {
-    var packed = decodePacked(html);
-    if (packed && /^https?:/i.test(packed)) out.push(packed);
-  } catch (e) {}
+  var reArr = /(?:([A-Za-z0-9_$]+)\s*=\s*)?([A-Za-z0-9_$]+)\(\[((?:"(?:[^"\\]|\\.)*"\s*,?\s*)+)\]\)/g;
+  var ma;
+  while ((ma = reArr.exec(html)) !== null) {
+    try {
+      var fnBody = functionBody(html, ma[2]) || html;
+      var consts = /var\s+\w+\s*=\s*"((?:[^"\\]|\\.)*)";\s*var\s+\w+\s*=\s*"((?:[^"\\]|\\.)*)";/.exec(fnBody);
+      if (!consts) continue;
+      var parts = JSON.parse("[" + ma[3] + "]");
+      var packed = decodePackedParts(consts[1], consts[2], parts);
+      if (packed && /^https?:/i.test(packed)) {
+        if (fileVar && ma[1] === fileVar) out.unshift(packed);
+        else out.push(packed);
+      }
+    } catch (e) {}
+  }
   return out;
 }
 
@@ -281,7 +293,7 @@ function pick(list, embed, playerUrl, index, subs) {
 }
 
 function readSubtitles(html) {
-  var block = /tracks\s*:\s*(\[[\s\S]*?\])\s*,\s*image/.exec(html) || /tracks\s*:\s*(\[[\s\S]*?\])\s*\}/.exec(html);
+  var block = /tracks\s*:\s*(\[[\s\S]*?\])\s*,\s*(?:captions|image)/.exec(html) || /tracks\s*:\s*(\[[\s\S]*?\])\s*\}/.exec(html);
   var out = [];
   if (!block) return out;
   var re = /"file"\s*:\s*"((?:[^"\\]|\\.)*)"[^}]*?"label"\s*:\s*"((?:[^"\\]|\\.)*)"/g;
@@ -295,7 +307,6 @@ function readSubtitles(html) {
   return out;
 }
 
-/** Some embed responses carry only the decoy token: refetch until a playable one appears. */
 function attempt(embed, html, tries) {
   return pick(candidates(html, host(embed)), embed, embed, 0, readSubtitles(html)).then(function (rows) {
     if ((rows && rows.length) || tries <= 1) return rows || [];
@@ -304,6 +315,7 @@ function attempt(embed, html, tries) {
     });
   });
 }
+
 function getStreams(tmdbId, mediaType) {
   var filmUrl = null;
   var embed = null;
@@ -371,7 +383,6 @@ function getStreams(tmdbId, mediaType) {
 }
 
 module.exports = { getStreams };
-
 
 /* NuvioMobile always calls getStreams with args.tmdbId (JsBindings.kt); the
    value is a numeric TMDB id after TmdbService.ensureTmdbId. Resolve it to

@@ -1,4 +1,4 @@
-version = 5
+version = 6
 
 cloudstream {
     description = "DiziPod — Türkçe altyazılı yabancı dizi & film arşivi (dizipod.com)"

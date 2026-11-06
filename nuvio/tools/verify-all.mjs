@@ -8,6 +8,7 @@
  *
  * Prints a PASS/FAIL table; exit code 1 if any provider returns no stream.
  */
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
@@ -15,6 +16,35 @@ import vm from "node:vm";
 const root = path.resolve(import.meta.dirname, "..");
 const providersDir = path.join(root, "providers");
 const only = process.argv[2];
+const curlBin = process.platform === "win32" ? "curl.exe" : "curl";
+
+/** Fallback when Cloudflare/CDN blocks Node/undici's TLS JA3 with 403 while curl/Android works (AGENTS.md). */
+function curlFallback(url, options = {}) {
+  try {
+    const args = ["-sL", "--max-time", "15", "-w", "\n__HTTP_STATUS__:%{http_code}"];
+    if (options.method && options.method !== "GET") args.push("-X", options.method);
+    const hdrs = options.headers || {};
+    for (const [k, v] of Object.entries(hdrs)) {
+      if (v != null) args.push("-H", `${k}: ${v}`);
+    }
+    if (options.body) args.push("--data-raw", String(options.body));
+    args.push(String(url));
+    const raw = execFileSync(curlBin, args, { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
+    const idx = raw.lastIndexOf("\n__HTTP_STATUS__:");
+    const status = idx >= 0 ? Number(raw.slice(idx + 17).trim()) || 0 : 200;
+    const body = idx >= 0 ? raw.slice(0, idx) : raw;
+    if (status < 200 || status >= 400) return null;
+    return {
+      ok: status >= 200 && status < 300,
+      status,
+      url: String(url),
+      text: async () => body,
+      json: async () => JSON.parse(body),
+    };
+  } catch {
+    return null;
+  }
+}
 
 const rows = [];
 for (const file of fs.readdirSync(providersDir).sort()) {
@@ -33,7 +63,14 @@ for (const file of fs.readdirSync(providersDir).sort()) {
   const controller = new AbortController();
   const timeoutMs = Number(process.env.NUVIO_VERIFY_TIMEOUT_MS || 20000);
   const timer = setTimeout(() => controller.abort(), timeoutMs);
-  const timedFetch = (url, options = {}) => fetch(url, { ...options, signal: controller.signal });
+  const timedFetch = async (url, options = {}) => {
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    if (res.status === 403) {
+      const viaCurl = curlFallback(url, options);
+      if (viaCurl) return viaCurl;
+    }
+    return res;
+  };
   const sandbox = { module, exports: module.exports, console: { log() {} }, fetch: timedFetch, URL, encodeURIComponent, decodeURIComponent, Promise };
   vm.createContext(sandbox);
   let note = "";

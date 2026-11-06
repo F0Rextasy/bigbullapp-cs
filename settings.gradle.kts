@@ -5,7 +5,7 @@ rootProject.name = "CloudstreamPlugins"
 
 val disabled = listOf(
     // Runner 2026-11-02: pass olmayan Inat platformları; kaynak korunuyor.
-    "Inat4k01Exo", "Inat4k01Web", "Inat4k02Web", "Inat4k04Exo", "Inat4k04Web",
+    "AsyaLuna", "Inat4k01Exo", "Inat4k01Web", "Inat4k02Web", "Inat4k04Exo", "Inat4k04Web",
     "Inat4k06Web", "Inat4k07Web", "InatBelgesel", "InatCocuk", "InatDini",
     "InatDerbiler", "InatEbaTv", "InatHaber", "InatListe1Tr", "InatListe2Glb",
     "InatListe3Tr", "InatMubi", "InatSinema", "InatPremium", "InatSpor",

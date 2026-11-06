@@ -353,7 +353,7 @@ class DiziPodProvider : MainAPI() {
         private val M3U8_ANY = Regex("""https?:[\\/]{2}[^\s"']+?\.m3u8""")
         private val WORD = Regex("""\b\w+\b""")
         private val PACKED = Regex(
-            """eval\(function\(p,a,c,k,e,[rd]\)\{.*?\}\('(.*?)',(\d+),(\d+),'(.*?)'\.split\('\|'\)""",
+            """eval\(function\(p,a,c,k,e,[rd]\)\{.*?\}\('((?:[^'\\]+|\\.)*)',(\d+),(\d+),'((?:[^'\\]+|\\.)*)'\.split\('\|'\)""",
             RegexOption.DOT_MATCHES_ALL,
         )
     }
