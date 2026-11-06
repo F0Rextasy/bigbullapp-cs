@@ -1,13 +1,13 @@
-// @provider {"id":"inattod","name":"Inat TOD","types":["tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt20603316:tv:1:1","description":"Inat Box TOD katalogu - imzali liste + dzen/okcdn cozumleyici, HLS.","verified":true}
+// @provider {"id":"inattvdizi","name":"İnatTV Dizi","types":["tv"],"domain":"inatbox","formats":["m3u8"],"sample":"tt0944947:tv:1:1","description":"İnatTV yabancı, yerli ve platform dizileri kataloğu (imzalı liste + AES çözümleyici, HLS).","verified":true}
 var CFG = {
-  id: "inattod",
-  name: "Inat TOD",
-  url: "https://sprboxs.bar/CDN/001/SPR/v2/ccc/a/index.php",
-  host: "sprboxs.bar",
-  sha: "sha256/JFjoNaa3b0S9jWfpaRtapv8CvczX+y7ibxXcVOdagUQ=",
+  id: "inattvdizi",
+  name: "İnatTV Dizi",
+  url: "https://diziboxen.help/CDN/001/002/dizibox/v2/yabanci-dizi/index.php",
+  host: "diziboxen.help",
+  sha: "sha256/LwJtYGEjL1fpZQHDsjX5Hb1G1cmszajwrB1Dv/BVGVU=",
   dataType: "tv_mode",
   kind: "tv",
-  home: "https://sprboxs.bar"
+  home: "https://diziboxen.help"
 };
 /**
  * Inat — Nuvio provider engine (shared by every Inat module).
@@ -812,32 +812,6 @@ function cinemetaTitle(id, mediaType) {
   });
 }
 
-/** Nuvio can pass a numeric TMDB id; Cinemeta only answers IMDb ids, so resolve via Wikidata. */
-var TMDB_STATEMENT = { tv: "P4983", movie: "P4947" };
-// Wikimedia rejects browser user agents on the query service.
-var WIKIDATA_UA = "InatNuvio/1.0 (cloudstream-nuvio-provider)";
-
-function imdbIds(id, mediaType) {
-  var value = text(id);
-  if (!/^\d+$/.test(value)) return Promise.resolve(value ? [value] : []);
-  var query = "SELECT ?imdb WHERE { ?s wdt:" + (TMDB_STATEMENT[mediaType] || TMDB_STATEMENT.tv) +
-    " \"" + value + "\" . ?s wdt:P345 ?imdb } LIMIT 3";
-  return fetch("https://query.wikidata.org/sparql?format=json&query=" + encodeURIComponent(query), {
-    headers: { "user-agent": WIKIDATA_UA, accept: "application/sparql-results+json" }
-  }).then(function (response) {
-    return response.ok ? response.json() : null;
-  }).then(function (payload) {
-    var rows = payload && payload.results && payload.results.bindings || [], out = [];
-    for (var i = 0; i < rows.length && out.length < 3; i++) {
-      var found = rows[i].imdb ? String(rows[i].imdb.value) : "";
-      if (/^tt\d+$/.test(found) && out.indexOf(found) < 0) out.push(found);
-    }
-    return out;
-  }).catch(function () {
-    return [];
-  });
-}
-
 // ---------------------------------------------------------------- entry point
 
 function mediaHeaders(headers) {
@@ -864,11 +838,26 @@ function chain(items, worker) {
   return promise;
 }
 
-function streamsOf(id, mediaType, wantedSeason, wantedEpisode) {
-  return cinemetaTitle(id, mediaType).then(function (title) {
+function getStreams(tmdbId, mediaType, season, episode) {
+  var wantedSeason = parseInt(season, 10) || 1;
+  var wantedEpisode = parseInt(episode, 10) || 1;
+  return cinemetaTitle(tmdbId, mediaType).then(function (title) {
     if (!title) return [];
-    return entries(CFG.url, CFG.host, CFG.sha, CFG.dataType).then(function (rows) {
-      var hits = rankHits(rows, title);
+    var DIZI_URLS = [
+      "https://diziboxen.help/CDN/001/002/dizibox/v2/yabanci-dizi/index.php",
+      "https://diziboxen.help/CDN/001/002/dizibox/v2/yerli-dizi/index.php",
+      "https://diziboxen.help/CDN/001/002/dizibox/v2/nf/index.php",
+      "https://diziboxen.help/CDN/001/002/dizibox/v2/dsny/index.php",
+      "https://diziboxen.help/CDN/001/002/dizibox/v2/hb/index.php",
+      "https://diziboxen.help/CDN/001/002/dizibox/v2/exxn/index.php",
+      "https://diziboxen.help/CDN/001/002/dizibox/v2/ga/index.php",
+      "https://diziboxen.help/CDN/001/002/dizibox/v2/tbi/index.php"
+    ];
+    return chain(DIZI_URLS, function (u) {
+      return entries(u, CFG.host, CFG.sha, CFG.dataType).then(function (rows) {
+        return rankHits(rows, title);
+      });
+    }).then(function (hits) {
       if (!hits.length) return [];
       return chain(hits, function (hit) {
         return collect(hit, wantedSeason, wantedEpisode, 0).then(function (leaves) {
@@ -893,21 +882,54 @@ function streamsOf(id, mediaType, wantedSeason, wantedEpisode) {
   });
 }
 
-function getStreams(tmdbId, mediaType, season, episode) {
-  var wantedSeason = parseInt(season, 10) || 1;
-  var wantedEpisode = parseInt(episode, 10) || 1;
-  return imdbIds(tmdbId, mediaType).then(function (ids) {
-    var step = function (index) {
-      if (index >= ids.length) return Promise.resolve([]);
-      return streamsOf(ids[index], mediaType, wantedSeason, wantedEpisode).then(function (streams) {
-        return streams.length ? streams : step(index + 1);
-      });
-    };
-    return step(0);
+module.exports = { getStreams };
+
+
+/* NuvioMobile always calls getStreams with args.tmdbId (JsBindings.kt); the
+   value is a numeric TMDB id after TmdbService.ensureTmdbId. Resolve it to
+   IMDb so the existing Cinemeta/title flow keeps working. */
+var __origGetStreams = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  var raw = String(id || "");
+  if (!/^\d+$/.test(raw)) return __origGetStreams(raw, mediaType, season, episode);
+  var tv = mediaType !== "movie";
+  var headers = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
+  var key = typeof TMDB_API_KEY !== "undefined" ? TMDB_API_KEY : "";
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  var prop = tv ? "P4983" : "P4947";
+  function fromTmdb() {
+    if (!key) return Promise.resolve("");
+    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "/external_ids?api_key=" + encodeURIComponent(key), { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) { return String((json && json.imdb_id) || ""); })
+      .catch(function () { return ""; });
+  }
+  function fromWikidata() {
+    return fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + prop + "=" + raw), { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        var hits = (json && json.query && json.query.search) || [];
+        if (!hits.length) return "";
+        return fetch(api + "&action=wbgetentities&props=claims&ids=" + hits[0].title, { headers: headers });
+      })
+      .then(function (r) { return r && r.ok ? r.json() : null; })
+      .then(function (json) {
+        var entities = (json && json.entities) || {};
+        for (var entity in entities) {
+          var rows = ((entities[entity] || {}).claims || {}).P345 || [];
+          for (var i = 0; i < rows.length; i++) {
+            var value = rows[i] && rows[i].mainsnak && rows[i].mainsnak.datavalue && rows[i].mainsnak.datavalue.value;
+            if (/^tt\d+$/.test(String(value || ""))) return value;
+          }
+        }
+        return "";
+      })
+      .catch(function () { return ""; });
+  }
+  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
+    return __origGetStreams(imdb || raw, mediaType, season, episode);
   }).catch(function (e) {
-    console.log("[bb-nuvio][inattod] okuma akışı hata verdi: " + (e && e.message ? e.message : e));
+    console.log("[bb-nuvio][inattvdizi] okuma akışı hata verdi: " + (e && e.message ? e.message : e));
     return [];
   });
-}
-
-module.exports = { getStreams };
+};

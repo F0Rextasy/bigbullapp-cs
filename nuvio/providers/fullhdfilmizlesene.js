@@ -1,4 +1,4 @@
-// @provider {"id":"fullhdfilmizlesene","name":"FullHDFilmizlesene","types":["movie"],"domain":"fullhdfilmizlesene.now","formats":["m3u8"],"sample":"tt0133093:movie:1:1","description":"FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.","verified":false}
+// @provider {"id":"fullhdfilmizlesene","name":"FullHDFilmizlesene","types":["movie"],"domain":"fullhdfilmizlesene.now","formats":["m3u8"],"sample":"tt0133093:movie:1:1","description":"FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.","verified":true}
 /**
  * fullhdfilmizlesene — Nuvio provider (bb-nuvio).
  * Flow: TMDB id -> Wikidata -> IMDb -> Cinemeta title -> /arama/<q> -> film page

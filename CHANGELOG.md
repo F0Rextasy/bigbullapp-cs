@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.15] - 2026-11-06
+
+### Değişti
+- **Nuvio Performans Optimizasyonu**: Nuvio istemcisindeki yükü azaltmak için sağlayıcı listesi seçilmiş **22 ana sağlayıcıya** (`Anizium`, `AnimeciX`, `AsyaAnimeleri`, `Dizibox`, `Dizilla`, `DiziPal`, `SelcukFlix`, `Ddizi`, `WebdramaTurkey2`, `Dizikorea3`, `Sezonlukdizi`, `DiziYou`, `DiziBal`, `İnatTV Dizi`, `HDFilmCehennemi`, `FullHDFilmizlesene`, `SetFilmIzle`, `YesilCamTv`, `İnatTV Filmler`, `BelgeselX`, `DMAX`, `TLCtr`) indirgendi; İnat dizi ve film katalogları `inattvdizi` ve `inattvfilmler` altında birleştirildi.
+
 ## [1.6.14] - 2026-11-06
 
 ### Düzeltildi

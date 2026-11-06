@@ -1,8 +1,0 @@
-{
-  "id": "aniarsiv",
-  "name": "AniArşiv",
-  "type": "series",
-  "url": "https://aniarsiv.com/api/animes?page=1&limit=40",
-  "item": "\\{\"slug\":\"[^\"]+\",\"baslik\":\"[^\"]+\",\"ingilizce\":\"[^\"]+\"",
-  "title": "\"ingilizce\":\"([^\"]+)\""
-}

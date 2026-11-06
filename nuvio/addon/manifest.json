@@ -1,6 +1,6 @@
 {
   "id": "org.bigbull.trcatalog",
-  "version": "1.6.13",
+  "version": "1.6.15",
   "name": "BigBull TR Katalog",
   "description": "Cloudstream sağlayıcılarının güncel listeleri. Katalog verir; meta ve akışı Cinemeta ile BigBull Nuvio eklentileri sağlar.",
   "resources": [
@@ -13,23 +13,8 @@
   "catalogs": [
     {
       "type": "series",
-      "id": "aniarsiv",
-      "name": "AniArşiv"
-    },
-    {
-      "type": "series",
       "id": "animecix",
       "name": "AnimeciX"
-    },
-    {
-      "type": "series",
-      "id": "animeler",
-      "name": "Animeler"
-    },
-    {
-      "type": "series",
-      "id": "anizm",
-      "name": "Anizm"
     },
     {
       "type": "series",
@@ -38,98 +23,13 @@
     },
     {
       "type": "series",
-      "id": "asyabox",
-      "name": "AsyaBox"
-    },
-    {
-      "type": "series",
-      "id": "asyadizi",
-      "name": "AsyaDizi"
-    },
-    {
-      "type": "series",
-      "id": "asyadizileriizle",
-      "name": "AsyaDizileriİzle"
-    },
-    {
-      "type": "series",
-      "id": "asyalog",
-      "name": "AsyaLog"
-    },
-    {
-      "type": "series",
-      "id": "asyaluna",
-      "name": "AsyaLuna"
-    },
-    {
-      "type": "series",
-      "id": "asyawatch",
-      "name": "AsyaWatch"
-    },
-    {
-      "type": "movie",
-      "id": "asyawatch-movie",
-      "name": "AsyaWatch Film"
-    },
-    {
-      "type": "series",
-      "id": "atv",
-      "name": "ATV"
-    },
-    {
-      "type": "series",
       "id": "belgeselx",
       "name": "BelgeselX"
     },
     {
       "type": "series",
-      "id": "birasyadizi",
-      "name": "BirAsyaDizi"
-    },
-    {
-      "type": "series",
-      "id": "cizgimax",
-      "name": "CizgiMax"
-    },
-    {
-      "type": "series",
-      "id": "cizgisite",
-      "name": "CizgiSite"
-    },
-    {
-      "type": "series",
       "id": "ddizi",
       "name": "Ddizi"
-    },
-    {
-      "type": "series",
-      "id": "ddizimag",
-      "name": "DDizimag"
-    },
-    {
-      "type": "series",
-      "id": "deokwave",
-      "name": "Deokwave"
-    },
-    {
-      "type": "series",
-      "id": "diziabi",
-      "name": "DiziAbi"
-    },
-    {
-      "type": "movie",
-      "id": "diziabi-movie",
-      "name": "DiziAbi Filmler"
-    },
-    {
-      "type": "series",
-      "id": "diziasia",
-      "name": "DiziAsia"
-    },
-    {
-      "type": "movie",
-      "id": "dizibaba",
-      "name": "Dizibaba"
     },
     {
       "type": "series",
@@ -143,53 +43,8 @@
     },
     {
       "type": "series",
-      "id": "dizibol",
-      "name": "DiziBol"
-    },
-    {
-      "type": "movie",
-      "id": "dizibol-movie",
-      "name": "DiziBol Filmler"
-    },
-    {
-      "type": "series",
       "id": "dizibox",
       "name": "Dizibox"
-    },
-    {
-      "type": "series",
-      "id": "diziboxizle",
-      "name": "DiziboxIzle"
-    },
-    {
-      "type": "series",
-      "id": "diziboxtv",
-      "name": "DiziBoxTv"
-    },
-    {
-      "type": "movie",
-      "id": "diziboxtv-movie",
-      "name": "DiziBoxTv Filmler"
-    },
-    {
-      "type": "series",
-      "id": "dizican",
-      "name": "DiziCaN"
-    },
-    {
-      "type": "movie",
-      "id": "dizifilmizle",
-      "name": "DiziFilmIzle"
-    },
-    {
-      "type": "series",
-      "id": "dizifon",
-      "name": "Dizifon"
-    },
-    {
-      "type": "movie",
-      "id": "dizigom",
-      "name": "Dizigom"
     },
     {
       "type": "series",
@@ -198,23 +53,8 @@
     },
     {
       "type": "series",
-      "id": "dizilab",
-      "name": "Dizilab"
-    },
-    {
-      "type": "series",
-      "id": "dizilife",
-      "name": "DiziLife"
-    },
-    {
-      "type": "series",
       "id": "dizilla",
       "name": "Dizilla"
-    },
-    {
-      "type": "series",
-      "id": "dizimom",
-      "name": "DiziMom"
     },
     {
       "type": "series",
@@ -223,108 +63,13 @@
     },
     {
       "type": "series",
-      "id": "dizipod",
-      "name": "DiziPod"
-    },
-    {
-      "type": "series",
-      "id": "dizirella",
-      "name": "Dizirella"
-    },
-    {
-      "type": "series",
       "id": "diziyou",
       "name": "DiziYou"
     },
     {
       "type": "movie",
-      "id": "filmekseni",
-      "name": "FilmEkseni"
-    },
-    {
-      "type": "movie",
-      "id": "filmizyon",
-      "name": "Filmizyon"
-    },
-    {
-      "type": "movie",
-      "id": "filmmodu",
-      "name": "FilmModu"
-    },
-    {
-      "type": "movie",
-      "id": "fullhdfilm",
-      "name": "FullHDFilm"
-    },
-    {
-      "type": "movie",
       "id": "hdfilmcehennemi",
       "name": "HDFilmCehennemi"
-    },
-    {
-      "type": "movie",
-      "id": "hdfilmcehennemi2",
-      "name": "HDFilmCehennemi2"
-    },
-    {
-      "type": "movie",
-      "id": "hdfilmdelisi",
-      "name": "HDFilmDelisi"
-    },
-    {
-      "type": "movie",
-      "id": "hdfilmdiziizle",
-      "name": "HDFilmDiziIzle"
-    },
-    {
-      "type": "movie",
-      "id": "hdfilmizle",
-      "name": "HDFilmizle"
-    },
-    {
-      "type": "movie",
-      "id": "hdfilmizlebest",
-      "name": "HDFilmizleBest"
-    },
-    {
-      "type": "movie",
-      "id": "jetfilmizle",
-      "name": "JetFilmizle"
-    },
-    {
-      "type": "series",
-      "id": "kanald",
-      "name": "Kanal D"
-    },
-    {
-      "type": "series",
-      "id": "koreanturk",
-      "name": "KoreanTürk"
-    },
-    {
-      "type": "movie",
-      "id": "kultfilmler",
-      "name": "Kült Filmler"
-    },
-    {
-      "type": "movie",
-      "id": "lovefilm",
-      "name": "LoveFilm"
-    },
-    {
-      "type": "series",
-      "id": "minikacocuk",
-      "name": "MinikaÇOCUK"
-    },
-    {
-      "type": "series",
-      "id": "minikago",
-      "name": "MinikaGO"
-    },
-    {
-      "type": "movie",
-      "id": "netfilmizle",
-      "name": "NetFilmizle"
     },
     {
       "type": "movie",
@@ -348,36 +93,6 @@
     },
     {
       "type": "series",
-      "id": "showtv",
-      "name": "Show TV"
-    },
-    {
-      "type": "movie",
-      "id": "sinemacx",
-      "name": "SinemaCX"
-    },
-    {
-      "type": "movie",
-      "id": "sinemakolik",
-      "name": "Sinemakolik"
-    },
-    {
-      "type": "movie",
-      "id": "sinezy",
-      "name": "Sinezy"
-    },
-    {
-      "type": "series",
-      "id": "sonanime",
-      "name": "SonAnime"
-    },
-    {
-      "type": "series",
-      "id": "startv",
-      "name": "Star TV"
-    },
-    {
-      "type": "series",
       "id": "all",
       "name": "Tümü - Diziler"
     },
@@ -388,28 +103,8 @@
     },
     {
       "type": "series",
-      "id": "turkcedizi",
-      "name": "Türkçe Dizi"
-    },
-    {
-      "type": "series",
-      "id": "tv8",
-      "name": "TV8"
-    },
-    {
-      "type": "movie",
-      "id": "ultrafilmizle",
-      "name": "Ultra Film İzle"
-    },
-    {
-      "type": "series",
       "id": "webdramaturkey2",
       "name": "Web Drama Turkey"
-    },
-    {
-      "type": "series",
-      "id": "yabancidizi",
-      "name": "Yabancı Dizi"
     },
     {
       "type": "movie",

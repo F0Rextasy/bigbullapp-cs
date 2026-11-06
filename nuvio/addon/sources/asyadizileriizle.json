@@ -1,8 +1,0 @@
-{
-  "id": "asyadizileriizle",
-  "name": "AsyaDizileriİzle",
-  "type": "series",
-  "url": "https://asyadizileriizle.com/dizi/",
-  "item": "<div[^>]*class=\"name\">[\\s\\S]*?</div>",
-  "title": "title=\"([^\"]+?)(?: \\d{4}[^\"]*)?\""
-}

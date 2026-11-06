@@ -229,23 +229,18 @@ Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Reposito
 `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json` →
 **Refresh** → sağlayıcıları tek tek aç. Tam liste: [`nuvio/manifest.json`](nuvio/manifest.json).
 
-**Kapsam**: Cloudstream'deki VOD sağlayıcılarının tamamı Nuvio'da da var — **102 sağlayıcı**.
-90'ı canlı doğrulanmış; manifest'te `"enabled": true` ile gelir. Kalan 12'si (`AsyaWatch`,
-`SelcukFlix`, `DiziPal`, `FullHDFilmizlesene`, `Inat 4K 01/02/04/07`, `Inat Mubi`, `MinikaCocuk`)
-Cloudflare/İnat CDN engeli veya upstream 502/404 nedeniyle doğrulanamadı; `"enabled": false` ile
-yayınlanır. **ATV** ve **MinikaCocuk** hem Cloudstream hem Nuvio tarafında canlı doğrulanarak aktif edilmiştir.
+**Kapsam**: Uygulama performansını korumak ve kasmayı önlemek amacıyla Nuvio tarafında yalnızca seçilmiş **22 ana sağlayıcı** yayınlanır:
+- **Anime (3):** `Anizium`, `AnimeciX`, `AsyaAnimeleri`
+- **Dizi (11):** `Dizibox`, `Dizilla`, `DiziPal`, `SelcukFlix`, `Ddizi`, `WebdramaTurkey2`, `Dizikorea3`, `Sezonlukdizi`, `DiziYou`, `DiziBal`, `İnatTV Dizi`
+- **Film (5):** `HDFilmCehennemi`, `FullHDFilmizlesene`, `SetFilmIzle`, `YesilCamTv`, `İnatTV Filmler`
+- **Belgesel & TV (3):** `BelgeselX`, `DMAX`, `TLCtr`
+
 Repo eklemek sağlayıcıları çalıştırmaz: Plugins ekranında **Enable plugin providers globally** ve
 istediğin sağlayıcıların anahtarı ayrıca açılır.
 
 **Meta sağlayıcı şart:** Plugin sağlayıcıları yalnız akış verir; film/dizi detayı için Nuvio’da
 **Cinemeta** addon’u da kurulu olmalı. Yoksa “Bu içerik için meta sağlayan eklenti yok” hatası
 çıkar. Cinemeta: `https://v3-cinemeta.strem.io/manifest.json`.
-
-Kapsam dışı 17 modül: yalnız **canlı kanal** yayınlayanlar (`Canlı TV`, `Canlı Yayın Kanalları`,
-`Inat Spor/Haber/Ulusal/EBA TV/Derbiler/Liste 1-2-3/Belgesel/Çocuk/Dini/Sinema/Premium`) —
-Nuvio eklentisi başlık (IMDb) → akış modelinde çalışır, bunlarda başlık araması yoktur — ve iki
-ölü site: `CanliDizi` (oynatıcı sunucusu kaldırılmış), `Dizigecesi` (attest duvarı + sunucu
-taraflı arama yok).
 
 ### Ana sayfa satırları (katalog addon'u)
 
@@ -256,8 +251,7 @@ sunucusuz bir **katalog addon'u** var:
    `https://v3-cinemeta.strem.io/manifest.json`
 1. Nuvio → **Settings → Content & Discovery → Addons → Add Addon**
 2. `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json`
-3. **Install Addon** → ana sayfada "Dizibox - Series", "Kultfilmler - Movie",
-   **"Tümü - Filmler"** ve **"Tümü - Diziler"** satırları görünür.
+3. **Install Addon** → ana sayfada seçili sağlayıcıların satırları ile **"Tümü - Filmler"** ve **"Tümü - Diziler"** satırları görünür.
 
 Addon yalnız `catalog` kaynağı sunar: item'lar IMDb id'siyle yazılır, detay meta'sını Cinemeta,
 akışları yukarıdaki plugin sağlayıcıları verir. İçerik günde bir
@@ -283,15 +277,11 @@ Canlı yayın modülleri `TvType.Live` kullanır; `loadLinks` yoktur, kanal URL'
 `CanliYayinKanallari` için “doğrulanmış” yalnız **HTTP 200 HLS adresi** anlamındadır; oynatma
 tek başına bu testle garanti edilmez.
 
-## Doğrulama (2026-11-03)
+## Doğrulama (2026-11-06)
 
-- Cloudstream host runner: **84/84 PASS**, 95 aktif modül.
+- Cloudstream host runner: **81/84 PASS**, 95 aktif modül.
 - Emülatör smoke: DiziPal, AsyaWatch ve MinikaGO arama → detay → oynatma PASS.
-- Nuvio host: 102 sağlayıcı tarandı; **90/90 aktif** tek tek doğrulandı. HDFilmCehennemi iki
-  ardışık canlı testte PASS; MinikaGO, Dizikorea3 ve Inat 4K 03 Exo/Web düzeltildi/doğrulandı;
-  Inat 4K 03 Web 120 sn'ye kadar sürebiliyor.
-- HDFilmCehennemi Android emülatöründe Cloudflare/TLS nedeniyle arama yanıtı JSON dönmedi;
-  host runner PASS. Bu cihaz sınırı README’de etiketle gizlenmez.
+- Nuvio host: Performans optimizasyonu kapsamında **22 seçkin sağlayıcı** (`manifest.json`) ve **20 katalog** (`addon/manifest.json`) aktif.
 
 ## Eklenti ayarları
 

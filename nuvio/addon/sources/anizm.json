@@ -1,8 +1,0 @@
-{
-  "id": "anizm",
-  "name": "Anizm",
-  "type": "series",
-  "url": "https://turkanime.info/yeniler",
-  "item": "<article[^>]*v3-episode-card[\\s\\S]*?</article>",
-  "title": "<h3>([^<]+)</h3>"
-}

@@ -1,9 +1,0 @@
-{
-  "id": "lovefilm",
-  "name": "LoveFilm",
-  "type": "movie",
-  "url": "https://lovefilmizle.net/",
-  "item": "poster-container moviebox-item[\\s\\S]*?(?=<div class=\"col-xs-6 col-sm-4 poster-container moviebox-item|</body>)",
-  "title": "title=\"([^\"]+?) izle\"",
-  "limit": 40
-}

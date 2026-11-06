@@ -1,9 +1,0 @@
-{
-  "id": "kanald",
-  "name": "Kanal D",
-  "type": "series",
-  "url": "https://www.kanald.com.tr/diziler/arsiv",
-  "item": "class=\"poster-card\"[\\s\\S]{0,1200}?alt=\"[^\"]+\"",
-  "title": "alt=\"([^\"]+)\"",
-  "limit": 40
-}

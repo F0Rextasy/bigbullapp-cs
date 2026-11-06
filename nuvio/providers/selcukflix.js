@@ -1,4 +1,4 @@
-// @provider {"id":"selcukflix","name":"SelcukFlix","types":["movie","tv"],"domain":"selcukflix.app","formats":["m3u8"],"sample":"tt0133093:movie:1:1","description":"SelcukFlix - Turkce dublaj/altyazili film ve diziler; AES secureData + pichive HLS master.","verified":false}
+// @provider {"id":"selcukflix","name":"SelcukFlix","types":["movie","tv"],"domain":"selcukflix.app","formats":["m3u8"],"sample":"tt0133093:movie:1:1","description":"SelcukFlix - Turkce dublaj/altyazili film ve diziler; AES secureData + pichive HLS master.","verified":true}
 /**
  * selcukflix — Nuvio provider (bb-nuvio).
  * Flow: numeric TMDB -> Wikidata -> IMDb; Cinemeta title -> POST /api/bg/searchcontent

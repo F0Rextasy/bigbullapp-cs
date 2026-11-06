@@ -1,16 +1,16 @@
-// @provider {"id":"inatexxen","name":"Inat Exxen","types":["movie","tv"],"domain":"inatbox","formats":["m3u8","mp4"],"sample":"tt1831164:tv:1:1","description":"Inat Exxen dizi/film arsivi (TR yapimlari).","verified":true}
+// @provider {"id":"inattvfilmler","name":"İnatTV Filmler","types":["movie"],"domain":"inatbox","formats":["m3u8","mp4"],"sample":"tt1790885:movie:1:1","description":"İnatTV yerli ve yabancı 4K film kataloğu (imzalı liste + AES çözümleyici, MP4/HLS).","verified":true}
 /**
- * inatexxen — Nuvio provider (bb-nuvio).
+ * inattvfilmler — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.
  */
 
 var CFG = {
-  "name": "EXXEN",
-  "url": "https://diziboxen.help/CDN/001/002/dizibox/v2/ex/index.php",
-  "fallbackUrl": "",
+  "name": "İnatTV Filmler",
+  "url": "https://4k.filmizleeeee.cfd/4k/03/public/catalog-exo.php",
+  "fallbackUrl": "https://4k.filmizleeeee.cfd/4k/03/public/catalog-web.php",
   "dataType": "tv_mode",
-  "movieList": false,
-  "q2160": false,
+  "movieList": true,
+  "q2160": true,
   "exoSwap": false
 };
 
@@ -88,22 +88,27 @@ function utf8s(a) {
   return s.replace(/^\uFEFF/, "");
 }
 var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+var B64VAL = [];
+(function () {
+  var i;
+  for (i = 0; i < 64; i++) B64VAL[B64.charCodeAt(i)] = i;
+})();
 function b64b(s) {
   var clean = String(s).replace(/-/g, "+").replace(/_/g, "/").replace(/[^A-Za-z0-9+/=]/g, "");
   var eq = clean.indexOf("=");
   if (eq >= 0) clean = clean.slice(0, eq);
-  var out = [], i, v, buf = 0, bits = 0;
+  var out = new Uint8Array((clean.length * 3) >> 2), n = 0, i, v, buf = 0, bits = 0;
   for (i = 0; i < clean.length; i++) {
-    v = B64.indexOf(clean.charAt(i));
-    if (v < 0) continue;
+    v = B64VAL[clean.charCodeAt(i)];
+    if (v === undefined) continue;
     buf = (buf << 6) | v;
     bits += 6;
     if (bits >= 8) {
       bits -= 8;
-      out.push((buf >> bits) & 255);
+      out[n++] = (buf >> bits) & 255;
     }
   }
-  return out;
+  return n === out.length ? out : out.subarray(0, n);
 }
 
 /* ---------- sha256 / hmac ---------- */
@@ -217,63 +222,73 @@ function expandKey(key) {
   }
   return rk;
 }
-function addRound(s, rk, round) {
-  var i;
-  for (i = 0; i < 16; i++) s[i] ^= rk[round * 16 + i];
-}
-function invShiftRows(s) {
-  var r, c, last, t;
-  for (r = 1; r < 4; r++) {
-    for (c = 0; c < r; c++) {
-      last = s[r + 12];
-      for (t = 3; t > 0; t--) s[r + t * 4] = s[r + (t - 1) * 4];
-      s[r] = last;
+// Inverse T-tables fold InvSubBytes + InvMixColumns + AddRoundKey into 4 lookups per word:
+// the byte-serial gmul cipher spent ~21s per catalog decrypt, this stays in the millisecond range.
+var TD0 = [], TD1 = [], TD2 = [], TD3 = [];
+(function () {
+  var x, s, a, b, c, d;
+  for (x = 0; x < 256; x++) {
+    s = ISBOX[x];
+    a = gmul(s, 9); b = gmul(s, 11); c = gmul(s, 13); d = gmul(s, 14);
+    TD0[x] = (d << 24) | (a << 16) | (c << 8) | b;
+    TD1[x] = (b << 24) | (d << 16) | (a << 8) | c;
+    TD2[x] = (c << 24) | (b << 16) | (d << 8) | a;
+    TD3[x] = (a << 24) | (c << 16) | (b << 8) | d;
+  }
+})();
+// Equivalent inverse cipher: rounds 1..9 take InvMixColumns'd round keys.
+function decKey(rk) {
+  var dk = rk.slice(), r, c, k0, k1, k2, k3;
+  for (r = 1; r < 10; r++) {
+    for (c = r * 16; c < r * 16 + 16; c += 4) {
+      k0 = rk[c]; k1 = rk[c + 1]; k2 = rk[c + 2]; k3 = rk[c + 3];
+      dk[c] = gmul(k0, 14) ^ gmul(k1, 11) ^ gmul(k2, 13) ^ gmul(k3, 9);
+      dk[c + 1] = gmul(k0, 9) ^ gmul(k1, 14) ^ gmul(k2, 11) ^ gmul(k3, 13);
+      dk[c + 2] = gmul(k0, 13) ^ gmul(k1, 9) ^ gmul(k2, 14) ^ gmul(k3, 11);
+      dk[c + 3] = gmul(k0, 11) ^ gmul(k1, 13) ^ gmul(k2, 9) ^ gmul(k3, 14);
     }
   }
-}
-function invMixColumns(s) {
-  var c, i0, i1, i2, i3, o;
-  for (c = 0; c < 4; c++) {
-    i0 = s[c * 4];
-    i1 = s[c * 4 + 1];
-    i2 = s[c * 4 + 2];
-    i3 = s[c * 4 + 3];
-    o = [
-      gmul(i0, 14) ^ gmul(i1, 11) ^ gmul(i2, 13) ^ gmul(i3, 9),
-      gmul(i0, 9) ^ gmul(i1, 14) ^ gmul(i2, 11) ^ gmul(i3, 13),
-      gmul(i0, 13) ^ gmul(i1, 9) ^ gmul(i2, 14) ^ gmul(i3, 11),
-      gmul(i0, 11) ^ gmul(i1, 13) ^ gmul(i2, 9) ^ gmul(i3, 14)
-    ];
-    for (var k = 0; k < 4; k++) s[c * 4 + k] = o[k];
-  }
-}
-function decBlock(block, rk) {
-  var s = block.slice(), r, i;
-  addRound(s, rk, 10);
-  for (r = 9; r >= 1; r--) {
-    invShiftRows(s);
-    for (i = 0; i < 16; i++) s[i] = ISBOX[s[i]];
-    addRound(s, rk, r);
-    invMixColumns(s);
-  }
-  invShiftRows(s);
-  for (i = 0; i < 16; i++) s[i] = ISBOX[s[i]];
-  addRound(s, rk, 0);
-  return s;
+  return dk;
 }
 function aesCbcDec(ct, iv, key) {
-  var rk = expandKey(key), out = [], prev = iv, i, j, blk, d;
-  if (!ct.length || ct.length % 16) throw new Error("cipher");
-  for (i = 0; i < ct.length; i += 16) {
-    blk = ct.slice(i, i + 16);
-    d = decBlock(blk, rk);
-    for (j = 0; j < 16; j++) out.push(d[j] ^ prev[j]);
-    prev = blk;
+  var len = ct.length;
+  if (!len || len % 16) throw new Error("cipher");
+  var rk = decKey(expandKey(key)), out = new Uint8Array(len);
+  var i, r, k, s0, s1, s2, s3, t0, t1, t2, t3, pad, q;
+  for (i = 0; i < len; i += 16) {
+    s0 = ((ct[i] << 24) | (ct[i + 1] << 16) | (ct[i + 2] << 8) | ct[i + 3]) ^ ((rk[160] << 24) | (rk[161] << 16) | (rk[162] << 8) | rk[163]);
+    s1 = ((ct[i + 4] << 24) | (ct[i + 5] << 16) | (ct[i + 6] << 8) | ct[i + 7]) ^ ((rk[164] << 24) | (rk[165] << 16) | (rk[166] << 8) | rk[167]);
+    s2 = ((ct[i + 8] << 24) | (ct[i + 9] << 16) | (ct[i + 10] << 8) | ct[i + 11]) ^ ((rk[168] << 24) | (rk[169] << 16) | (rk[170] << 8) | rk[171]);
+    s3 = ((ct[i + 12] << 24) | (ct[i + 13] << 16) | (ct[i + 14] << 8) | ct[i + 15]) ^ ((rk[172] << 24) | (rk[173] << 16) | (rk[174] << 8) | rk[175]);
+    for (r = 9; r >= 1; r--) {
+      k = r * 16;
+      t0 = TD0[s0 >>> 24] ^ TD1[(s3 >>> 16) & 255] ^ TD2[(s2 >>> 8) & 255] ^ TD3[s1 & 255] ^ ((rk[k] << 24) | (rk[k + 1] << 16) | (rk[k + 2] << 8) | rk[k + 3]);
+      t1 = TD0[s1 >>> 24] ^ TD1[(s0 >>> 16) & 255] ^ TD2[(s3 >>> 8) & 255] ^ TD3[s2 & 255] ^ ((rk[k + 4] << 24) | (rk[k + 5] << 16) | (rk[k + 6] << 8) | rk[k + 7]);
+      t2 = TD0[s2 >>> 24] ^ TD1[(s1 >>> 16) & 255] ^ TD2[(s0 >>> 8) & 255] ^ TD3[s3 & 255] ^ ((rk[k + 8] << 24) | (rk[k + 9] << 16) | (rk[k + 10] << 8) | rk[k + 11]);
+      t3 = TD0[s3 >>> 24] ^ TD1[(s2 >>> 16) & 255] ^ TD2[(s1 >>> 8) & 255] ^ TD3[s0 & 255] ^ ((rk[k + 12] << 24) | (rk[k + 13] << 16) | (rk[k + 14] << 8) | rk[k + 15]);
+      s0 = t0; s1 = t1; s2 = t2; s3 = t3;
+    }
+    out[i] = (ISBOX[s0 >>> 24] ^ rk[0]) ^ (i ? ct[i - 16] : iv[0]);
+    out[i + 1] = (ISBOX[(s3 >>> 16) & 255] ^ rk[1]) ^ (i ? ct[i - 15] : iv[1]);
+    out[i + 2] = (ISBOX[(s2 >>> 8) & 255] ^ rk[2]) ^ (i ? ct[i - 14] : iv[2]);
+    out[i + 3] = (ISBOX[s1 & 255] ^ rk[3]) ^ (i ? ct[i - 13] : iv[3]);
+    out[i + 4] = (ISBOX[s1 >>> 24] ^ rk[4]) ^ (i ? ct[i - 12] : iv[4]);
+    out[i + 5] = (ISBOX[(s0 >>> 16) & 255] ^ rk[5]) ^ (i ? ct[i - 11] : iv[5]);
+    out[i + 6] = (ISBOX[(s3 >>> 8) & 255] ^ rk[6]) ^ (i ? ct[i - 10] : iv[6]);
+    out[i + 7] = (ISBOX[s2 & 255] ^ rk[7]) ^ (i ? ct[i - 9] : iv[7]);
+    out[i + 8] = (ISBOX[s2 >>> 24] ^ rk[8]) ^ (i ? ct[i - 8] : iv[8]);
+    out[i + 9] = (ISBOX[(s1 >>> 16) & 255] ^ rk[9]) ^ (i ? ct[i - 7] : iv[9]);
+    out[i + 10] = (ISBOX[(s0 >>> 8) & 255] ^ rk[10]) ^ (i ? ct[i - 6] : iv[10]);
+    out[i + 11] = (ISBOX[s3 & 255] ^ rk[11]) ^ (i ? ct[i - 5] : iv[11]);
+    out[i + 12] = (ISBOX[s3 >>> 24] ^ rk[12]) ^ (i ? ct[i - 4] : iv[12]);
+    out[i + 13] = (ISBOX[(s2 >>> 16) & 255] ^ rk[13]) ^ (i ? ct[i - 3] : iv[13]);
+    out[i + 14] = (ISBOX[(s1 >>> 8) & 255] ^ rk[14]) ^ (i ? ct[i - 2] : iv[14]);
+    out[i + 15] = (ISBOX[s0 & 255] ^ rk[15]) ^ (i ? ct[i - 1] : iv[15]);
   }
-  var pad = out[out.length - 1], i2;
+  pad = out[len - 1];
   if (!pad || pad > 16) throw new Error("padding");
-  for (i2 = out.length - pad; i2 < out.length; i2++) if (out[i2] !== pad) throw new Error("padding");
-  return out.slice(0, out.length - pad);
+  for (q = len - pad; q < len; q++) if (out[q] !== pad) throw new Error("padding");
+  return out.subarray(0, len - pad);
 }
 var SIGN_KEY = (function () {
   var b = hex2b(ENC_HEX), out = [], i;
@@ -722,35 +737,35 @@ function mediaHeaders(headers) {
   if (out.referer === "https://speedrestapi.com/") delete out.referer;
   return out;
 }
-/* Nuvio home rows send a numeric TMDB id; Wikidata links it to a title (tr label first). */
+/* Nuvio's own rows send numeric TMDB ids; Wikidata links them to the title the site indexes. */
 function numericTitle(id, mediaType) {
-  var prop = mediaType === "movie" ? "P4947" : "P4983";
+  var prop = mediaType === "tv" ? "P4983" : "P4947";
   var api = "https://www.wikidata.org/w/api.php?format=json";
   return http(api + "&action=query&list=search&srlimit=1&srsearch=" +
       encodeURIComponent("haswbstatement:" + prop + "=" + id))
     .then(function (r) {
       if (r.code !== 200) return "";
-      var hits = ((parseJson(r.text) || {}).query || {}).search || [];
+      var query = (parseJson(r.text) || {}).query || {}, hits = query.search || [];
       if (!hits.length) return "";
-      return http(api + "&action=wbgetentities&props=labels&languages=tr|en&ids=" + hits[0].title)
-        .then(function (body) {
-          if (body.code !== 200) return "";
-          var entities = (parseJson(body.text) || {}).entities || {}, key, labels, label;
-          for (key in entities) {
-            labels = entities[key].labels || {};
-            label = (labels.tr || labels.en || {}).value;
-            if (label) return String(label).replace(/\s*\([^)]*\)\s*$/, "").trim();
-          }
-          return "";
-        });
+      return http(api + "&action=wbgetentities&props=labels&languages=tr|en&ids=" + hits[0].title);
+    })
+    .then(function (r) {
+      if (!r || typeof r !== "object" || r.code !== 200) return "";
+      var entities = (parseJson(r.text) || {}).entities || {}, key, labels, label;
+      for (key in entities) {
+        labels = entities[key].labels || {};
+        label = (labels.tr || labels.en || {}).value;
+        if (label) return String(label).replace(/\s*\([^)]*\)\s*$/, "").trim();
+      }
+      return "";
     })
     .catch(function () { return ""; });
 }
 function titleOf(id, mediaType) {
   var key = String(id || "").trim();
   if (/^\d+$/.test(key)) return numericTitle(key, mediaType);
-  var kind = mediaType === "movie" ? "movie" : "series";
-  return http("https://v3-cinemeta.strem.io/meta/" + kind + "/" + encodeURIComponent(key) + ".json")
+  var kind = mediaType === "tv" ? "series" : "movie";
+  return http("https://v3-cinemeta.strem.io/meta/" + kind + "/" + key + ".json")
     .then(function (r) {
       if (r.code !== 200) return "";
       var meta = parseJson(r.text);
@@ -768,8 +783,8 @@ function resolveAll(targets) {
           var headers = mediaHeaders(stream.headers);
           var isHls = /\.m3u8/i.test(stream.url);
           out.push({
-            name: "inatexxen",
-            title: "inatexxen - " + t.label + " [" + (isHls ? "HLS" : "MP4") + "]",
+            name: "inattvfilmler",
+            title: "inattvfilmler - " + t.label + " [" + (isHls ? "HLS" : "MP4") + "]",
             url: stream.url,
             quality: qualityOf(t.label),
             headers: headers,
@@ -777,7 +792,7 @@ function resolveAll(targets) {
           });
         })
         .catch(function (e) {
-          console.log("[bb-nuvio][inatexxen] " + t.label + ": " + (e && e.message));
+          console.log("[bb-nuvio][inattvfilmler] " + t.label + ": " + (e && e.message));
         });
     });
   });
@@ -788,22 +803,29 @@ function getStreams(tmdbId, mediaType, season, episode) {
   var wantEpisode = parseInt(episode, 10) || 1;
   return titleOf(tmdbId, mediaType)
     .then(function (title) {
-      if (!title) {
-        console.log("[bb-nuvio][inatexxen] no title for " + tmdbId);
-        return null;
-      }
-      return entries(CFG.url, CFG.dataType)
-        .catch(function (e) {
-          if (!CFG.fallbackUrl) throw e;
-          return entries(CFG.fallbackUrl, CFG.dataType);
-        })
+      if (!title) return null;
+      var FILM_URLS = [
+        "https://4k.filmizleeeee.cfd/4k/03/public/catalog-exo.php",
+        "https://4k.filmizleeeee.cfd/4k/06/public/catalog-exo.php",
+        "https://diziboxen.help/CDN/001/002/dizibox/v2/film/yerli-filmler.php"
+      ];
+      var filmChain = Promise.resolve([]);
+      FILM_URLS.forEach(function (u) {
+        filmChain = filmChain.then(function (acc) {
+          if (acc.length) return acc;
+          return entries(u, CFG.dataType).then(function (rows) {
+            return pickCandidates(rows, title).length ? rows : [];
+          }).catch(function () { return []; });
+        });
+      });
+      return filmChain
         .then(function (list) {
           var cands = pickCandidates(list, title), targets = [], chain = Promise.resolve();
           cands.forEach(function (entry) {
             chain = chain.then(function () {
               return expand(entry, wantSeason, wantEpisode)
                 .then(function (rows) { targets = targets.concat(rows); })
-                .catch(function (e) { console.log("[bb-nuvio][inatexxen] " + (e && e.message)); });
+                .catch(function (e) { console.log("[bb-nuvio][inattvfilmler] " + (e && e.message)); });
             });
           });
           return chain.then(function () { return targets.slice(0, 4); });
@@ -814,7 +836,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
       return resolveAll(targets);
     })
     .catch(function (e) {
-      console.log("[bb-nuvio][inatexxen] " + (e && e.message));
+      console.log("[bb-nuvio][inattvfilmler] " + (e && e.message));
       return [];
     });
 }

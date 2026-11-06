@@ -1,9 +1,0 @@
-{
-  "id": "showtv",
-  "name": "Show TV",
-  "type": "series",
-  "url": "https://www.showtv.com.tr/diziler/arsivdeki-diziler",
-  "item": "<a[^>]*href=\"/dizi/tanitim/[^\"]*\"[^>]*>[\\s\\S]{0,1500}?</a>",
-  "title": "title=\"([^\"]+)\"",
-  "href": "href=\"(/dizi/tanitim/[^\"]+)\""
-}

@@ -1,9 +1,0 @@
-{
-  "id": "atv",
-  "name": "ATV",
-  "type": "series",
-  "url": "https://www.atv.com.tr/eski-diziler",
-  "item": "<a href=\"/[a-z0-9-]+\"[^>]*class=\"blankpage\"[\\s\\S]*?</a>",
-  "title": "blankpage\"[^>]*>([^<]+)</a>",
-  "limit": 40
-}

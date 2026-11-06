@@ -1,9 +1,0 @@
-{
-  "id": "dizilab",
-  "name": "Dizilab",
-  "type": "series",
-  "url": "https://dizilab.cc/",
-  "item": "<article[^>]*class=\"card\"[^>]*>[\\s\\S]*?</article>",
-  "title": "<h3[^>]*>([\\s\\S]*?)</h3>",
-  "href": "href=\"([^\"]+)\""
-}

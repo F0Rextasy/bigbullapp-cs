@@ -1,8 +1,0 @@
-{
-  "id": "dizimom",
-  "name": "DiziMom",
-  "type": "series",
-  "url": "https://ddizimom.net/diziler",
-  "item": "<h3[^>]*truncate[^>]*>([\\s\\S]*?)</h3>",
-  "title": "<h3[^>]*truncate[^>]*>([\\s\\S]*?)</h3>"
-}

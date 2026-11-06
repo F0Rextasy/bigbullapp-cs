@@ -1,8 +1,0 @@
-{
-  "id": "dizilife",
-  "name": "DiziLife",
-  "type": "series",
-  "url": "https://dizi84.life/diziler",
-  "item": "<article[^>]*class=\"media-card\"[^>]*>[\\s\\S]*?</article>",
-  "title": "alt=\"([^\"]+)\""
-}

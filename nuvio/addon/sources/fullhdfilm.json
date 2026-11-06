@@ -1,1 +1,0 @@
-{"id":"fullhdfilm","name":"FullHDFilm","type":"movie","url":"https://fullhdfilmizlebox.vip/filmler/","item":"<a href=\"https://fullhdfilmizlebox\\.vip/film/[^\"]*\" class=\"group/poster block\"[\\s\\S]*?</a>","title":"alt=\"([^\"]+)\"","href":"href=\"([^\"]+)\"","limit":40}
