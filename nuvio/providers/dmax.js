@@ -1,4 +1,4 @@
-// @provider {"id":"dmax", "name":"DMAX", "types":["tv"], "domain":"dmax.com.tr", "formats":["m3u8"], "sample":"tt1800864:tv:15:1", "description":"DMAX Türkiye program arşivi; bölümler player/info HLS adresiyle açılır.", "version":"1.0.3"}
+// @provider {"id":"dmax", "name":"DMAX", "types":["tv"], "domain":"dmax.com.tr", "formats":["m3u8"], "sample":"tt1800864:tv:15:1", "description":"DMAX Türkiye program arşivi; bölümler player/info HLS adresiyle açılır.", "version":"1.0.4"}
 /**
  * dmax — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> program list -> program page -> /<slug>/<S>-sezon-<E>-bolum
@@ -102,7 +102,7 @@ function pickProgram(list, title) {
       best = list[i].url;
     }
   }
-  return best;
+  return wanted.length && bestScore >= wanted.length ? best : null;
 }
 
 function streamsFromInfo(body, referer) {
@@ -153,7 +153,8 @@ function getStreams(tmdbId, mediaType, season, episode) {
           break;
         }
       }
-      var target = exact || any || pageUrl;
+      var target = exact || (any ? null : pageUrl);
+      if (!target) return null;
       pageUrl = target;
       return text(target);
     })
@@ -224,15 +225,21 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }).catch(function () { return []; });
 };
 
-/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
-   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
-   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
+   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+var __subOnly = false;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   return __langLabeled.apply(this, arguments).then(function (streams) {
     return (streams || []).map(function (s) {
-      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
-      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      if (!s) return s;
+      var hay = String(s.title || "") + " " + String(s.name || "");
+      var tags = [];
+      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+      if (!tags.length) return s;
+      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
       return s;
     });
   });

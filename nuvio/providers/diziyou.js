@@ -1,4 +1,4 @@
-// @provider {"id":"diziyou", "name":"DiziYou", "types":["movie", "tv"], "domain":"diziyou.one", "formats":["m3u8"], "description":"DiziYou dizi/film kaynaklari (HLS + altyazi).", "sample":"tt0903747:tv:1:1", "version":"1.0.7"}
+// @provider {"id":"diziyou", "name":"DiziYou", "types":["movie", "tv"], "domain":"diziyou.one", "formats":["m3u8"], "description":"DiziYou dizi/film kaynaklari (HLS + altyazi).", "sample":"tt0903747:tv:1:1", "version":"1.0.8"}
 /**
  * diziyou — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> site search -> series -> episode -> player iframe -> m3u8 + VTT tracks.
@@ -44,23 +44,43 @@ function titleOf(id, mediaType) {
     });
 }
 
+function sameTitle(have, want) {
+  function f(v) {
+    return String(v || "").replace(/[\u0131\u0130I]/g, "i").replace(/[\u015f\u015e]/g, "s").replace(/[\u011f\u011e]/g, "g")
+      .replace(/[\u00e7\u00c7]/g, "c").replace(/[\u00f6\u00d6]/g, "o").replace(/[\u00fc\u00dc]/g, "u")
+      .toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  }
+  have = f(have);
+  want = f(want);
+  return !!want && (have === want || have.indexOf(want + " ") === 0);
+}
+
 function getStreams(tmdbId, mediaType, season, episode) {
   var want = parseInt(season, 10) || 1;
   var wantEp = parseInt(episode, 10) || 1;
   var series = null;
+  var wantTitle = "";
   var episodeUrl = null;
   var playerUrl = null;
   var origin = null;
 
   return titleOf(tmdbId, mediaType)
     .then(function (title) {
+      wantTitle = title;
       if (!title) return null;
       return text(BASE + "/?s=" + encodeURIComponent(title));
     })
     .then(function (search) {
       if (!search) return null;
-      var link = first(/<div id="list-series">[\s\S]*?<div class="cat-img"><a href="([^"]+)"/, search);
-      if (!link) link = first(/<a href="([^"]+)"[^>]*class="[^"]*cat-img[^"]*"/, search);
+      var link = null;
+      var cardRe = /<div class="cat-img"><a href="([^"]+)">[\s\S]*?<div id="categorytitle"><a href="[^"]*">([^<]*)<\/a>/g;
+      var card;
+      while ((card = cardRe.exec(search)) !== null) {
+        if (sameTitle(card[2], wantTitle)) {
+          link = card[1];
+          break;
+        }
+      }
       if (!link) return null;
       series = abs(BASE, link);
       origin = /^(https?:\/\/[^/]+)/.exec(series)[1];
@@ -81,7 +101,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
           break;
         }
       }
-      if (!episodeUrl) episodeUrl = links[0];
+      if (!episodeUrl) return null;
       return text(episodeUrl);
     })
     .then(function (page) {
@@ -170,15 +190,21 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }).catch(function () { return []; });
 };
 
-/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
-   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
-   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
+   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+var __subOnly = false;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   return __langLabeled.apply(this, arguments).then(function (streams) {
     return (streams || []).map(function (s) {
-      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
-      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      if (!s) return s;
+      var hay = String(s.title || "") + " " + String(s.name || "");
+      var tags = [];
+      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+      if (!tags.length) return s;
+      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
       return s;
     });
   });

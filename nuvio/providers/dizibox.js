@@ -1,4 +1,4 @@
-// @provider {"id":"dizibox", "name":"Dizibox", "types":["tv"], "domain":"dizibox.live", "formats":["m3u8"], "description":"Dizibox dizi kaynaklari (king.php -> sheila HLS).", "sample":"tt0903747:tv:2:5", "version":"1.0.11"}
+// @provider {"id":"dizibox", "name":"Dizibox", "types":["tv"], "domain":"dizibox.live", "formats":["m3u8"], "description":"Dizibox dizi kaynaklari (king.php -> sheila HLS).", "sample":"tt0903747:tv:2:5", "version":"1.0.12"}
 /**
  * dizibox — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> site search -> series -> episode -> king.php player -> embed -> sheila HLS.
@@ -44,6 +44,17 @@ function titleOf(id, mediaType) {
     });
 }
 
+function sameTitle(have, want) {
+  function f(v) {
+    return String(v || "").replace(/[\u0131\u0130I]/g, "i").replace(/[\u015f\u015e]/g, "s").replace(/[\u011f\u011e]/g, "g")
+      .replace(/[\u00e7\u00c7]/g, "c").replace(/[\u00f6\u00d6]/g, "o").replace(/[\u00fc\u00dc]/g, "u")
+      .toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  }
+  have = f(have);
+  want = f(want);
+  return !!want && (have === want || have.indexOf(want + " ") === 0);
+}
+
 function getStreams(tmdbId, mediaType, season, episode) {
   var want = parseInt(season, 10) || 1;
   var wantEp = parseInt(episode, 10) || 1;
@@ -73,6 +84,8 @@ function getStreams(tmdbId, mediaType, season, episode) {
     return m ? abs(BASE, m[1]) : null;
   }
 
+  var wantTitle = "";
+
   function fromSeries(i) {
     if (i >= candidates.length) return Promise.resolve(null);
     return text(candidates[i])
@@ -80,7 +93,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
         var list = links(detail);
         var hit = findEp(list);
         if (hit) return hit;
-        var first = list[0] || null;
+        var first = null;
         var tab = seasonPage(detail);
         if (!tab) return first || fromSeries(i + 1);
         return text(tab)
@@ -98,14 +111,17 @@ function getStreams(tmdbId, mediaType, season, episode) {
 
   return titleOf(tmdbId, mediaType)
     .then(function (title) {
+      wantTitle = title;
       if (!title) return null;
       return text(BASE + "/search/" + encodeURIComponent(title).replace(/%20/g, "+") + "/");
     })
     .then(function (search) {
       if (!search) return null;
-      var re = /<article class="detailed-article"[\s\S]*?<h3[^>]*><a href="([^"]+)"/g;
+      var re = /<article class="detailed-article"[\s\S]*?<h3[^>]*><a href="([^"]+)"[^>]*>([^<]*)/g;
       var m;
-      while ((m = re.exec(search)) !== null && candidates.length < 2) candidates.push(abs(BASE, m[1]));
+      while ((m = re.exec(search)) !== null && candidates.length < 2) {
+        if (sameTitle(m[2], wantTitle)) candidates.push(abs(BASE, m[1]));
+      }
       return fromSeries(0);
     })
     .then(function (ep) {
@@ -200,15 +216,21 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }).catch(function () { return []; });
 };
 
-/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
-   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
-   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
+   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+var __subOnly = false;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   return __langLabeled.apply(this, arguments).then(function (streams) {
     return (streams || []).map(function (s) {
-      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
-      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      if (!s) return s;
+      var hay = String(s.title || "") + " " + String(s.name || "");
+      var tags = [];
+      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+      if (!tags.length) return s;
+      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
       return s;
     });
   });

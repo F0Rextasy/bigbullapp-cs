@@ -1,4 +1,4 @@
-// @provider {"id":"ddizi", "name":"Ddizi", "types":["tv"], "domain":"www.ddizi.tel", "formats":["mp4", "m3u8"], "sample":"tt21764074:tv:1:145", "description":"Ddizi yerli dizi arşivi; bölümler jwplayer HLS (tabii) olarak açılır.", "version":"1.0.3"}
+// @provider {"id":"ddizi", "name":"Ddizi", "types":["tv"], "domain":"www.ddizi.tel", "formats":["mp4", "m3u8"], "sample":"tt21764074:tv:1:145", "description":"Ddizi yerli dizi arşivi; bölümler jwplayer HLS (tabii) olarak açılır.", "version":"1.0.4"}
 /**
  * ddizi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> POST /arama/ -> series -> /izle/ episode -> /player/oynat/<hash> -> jwplayer sources.
@@ -51,7 +51,7 @@ function pickSeries(html, title) {
     var hay = fold(m[2]);
     var score = 0;
     for (var i = 0; i < wanted.length; i++) if (hay.indexOf(wanted[i]) !== -1) score++;
-    if (score > bestScore) {
+    if (score === wanted.length && wanted.length && score > bestScore) {
       bestScore = score;
       best = m[1];
     }
@@ -123,7 +123,6 @@ function findEpisode(seriesUrl, slug, want, wantEp) {
         var eps = episodes(html, slug);
         for (var k = 0; k < eps.length; k++) {
           if (eps[k].season === want && eps[k].episode === wantEp) return eps[k].url;
-          if (!fallback) fallback = eps[k].url;
         }
         return walk(list, i + 1, fallback);
       });
@@ -134,7 +133,6 @@ function findEpisode(seriesUrl, slug, want, wantEp) {
     var fallback = "";
     for (var i = 0; i < eps.length; i++) {
       if (eps[i].season === want && eps[i].episode === wantEp) return eps[i].url;
-      if (!fallback) fallback = eps[i].url;
     }
     var pages = pageUrls(html);
     return pages.length ? walk(pages, 0, fallback) : fallback;
@@ -243,15 +241,21 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }).catch(function () { return []; });
 };
 
-/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
-   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
-   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
+   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+var __subOnly = false;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   return __langLabeled.apply(this, arguments).then(function (streams) {
     return (streams || []).map(function (s) {
-      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
-      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      if (!s) return s;
+      var hay = String(s.title || "") + " " + String(s.name || "");
+      var tags = [];
+      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+      if (!tags.length) return s;
+      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
       return s;
     });
   });

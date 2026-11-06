@@ -1,4 +1,4 @@
-// @provider {"id":"dizikorea3", "name":"Dizikorea3", "types":["tv"], "domain":"dizikorea3.com", "formats":["m3u8"], "sample":"tt43088191:tv:1:1", "description":"Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).", "version":"1.0.7"}
+// @provider {"id":"dizikorea3", "name":"Dizikorea3", "types":["tv"], "domain":"dizikorea3.com", "formats":["m3u8"], "sample":"tt43088191:tv:1:1", "description":"Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).", "version":"1.0.8"}
 /**
  * dizikorea3 — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /sayfa/1?s= -> /dizi/<slug> -> /sezon-N/bolum-M -> player iframes.
@@ -100,14 +100,14 @@ function pick(list, title) {
   var bestScore = 0;
   for (var i = 0; i < list.length; i++) {
     var have = norm(list[i].title);
-    var score = have === want ? 100 : have.indexOf(want) === 0 || want.indexOf(have) === 0 ? 80 : have.indexOf(want) !== -1 ? 60 : 0;
+    var score = have === want ? 100 : have.indexOf(want + " ") === 0 ? 80 : 0;
     if (score > bestScore) {
       bestScore = score;
       best = list[i];
     }
     if (bestScore === 100) break;
   }
-  return bestScore >= 60 ? best : null;
+  return bestScore >= 80 ? best : null;
 }
 
 /** `/dizi/<slug>/sezon-<n>/bolum-<m>`. */
@@ -219,7 +219,6 @@ function getStreams(tmdbId, mediaType, season, episode) {
             break;
           }
         }
-        if (!episodeUrl) episodeUrl = list.length ? list[0].url : null;
         return episodeUrl;
       });
     })
@@ -285,15 +284,21 @@ function getStreams(tmdbId, mediaType, season, episode) {
 module.exports = { getStreams };
 
 
-/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
-   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
-   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
+   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+var __subOnly = true;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   return __langLabeled.apply(this, arguments).then(function (streams) {
     return (streams || []).map(function (s) {
-      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
-      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      if (!s) return s;
+      var hay = String(s.title || "") + " " + String(s.name || "");
+      var tags = [];
+      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+      if (!tags.length) return s;
+      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
       return s;
     });
   });

@@ -1,4 +1,4 @@
-// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt1790885:movie:1:1", "description":"İnatTV yerli ve yabancı 4K film kataloğu (imzalı liste + AES çözümleyici, MP4/HLS).", "verified":true, "version":"1.0.1"}
+// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt1790885:movie:1:1", "description":"İnatTV yerli ve yabancı 4K film kataloğu (imzalı liste + AES çözümleyici, MP4/HLS).", "verified":true, "version":"1.0.2"}
 /**
  * inattvfilmler — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.
@@ -679,9 +679,7 @@ function pickCandidates(list, title) {
     for (var w = 0; w < words.length; w++) if (name.indexOf(words[w]) >= 0) hits++;
     score = 0;
     if (name === want) score = 3;
-    else if (name.indexOf(want) >= 0) score = 2;
-    else if (name.length >= 4 && want.indexOf(name) >= 0) score = 1;
-    else if (hits >= 2 && hits * 2 >= words.length) score = 1;
+    else if ((" " + name + " ").indexOf(" " + want + " ") >= 0) score = 2;
     if (score) scored.push({ e: entry, s: score, h: hits, n: name.length });
   }
   scored.sort(function (a, b) { return b.s - a.s || b.h - a.h || a.n - b.n; });
@@ -844,15 +842,21 @@ function getStreams(tmdbId, mediaType, season, episode) {
 module.exports = { getStreams };
 
 
-/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
-   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
-   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
+   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+var __subOnly = false;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   return __langLabeled.apply(this, arguments).then(function (streams) {
     return (streams || []).map(function (s) {
-      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
-      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      if (!s) return s;
+      var hay = String(s.title || "") + " " + String(s.name || "");
+      var tags = [];
+      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+      if (!tags.length) return s;
+      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
       return s;
     });
   });

@@ -1,4 +1,4 @@
-// @provider {"id":"setfilmizle", "name":"SetFilmIzle", "types":["movie", "tv"], "domain":"setfilmizle.ltd", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"SetFilmIzle Türkçe dublaj/altyazılı film ve dizi arşivi (HLS + altyazı).", "version":"1.0.6"}
+// @provider {"id":"setfilmizle", "name":"SetFilmIzle", "types":["movie", "tv"], "domain":"setfilmizle.ltd", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"SetFilmIzle Türkçe dublaj/altyazılı film ve dizi arşivi (HLS + altyazı).", "version":"1.0.7"}
 /**
  * setfilmizle — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /?s= -> film|dizi page -> admin-ajax get_video_url -> bridge page
@@ -72,15 +72,20 @@ function norm(value) {
     .replace(/[^a-z0-9]/g, "");
 }
 
+// norm() drops spaces; compare word-wise, and ignore a leading article (Cinemeta "The Matrix" vs site "Matrix").
+function spaced(v) {
+  return String(v || "").split(/[\s:\-]+/).map(norm).filter(Boolean).join(" ").replace(/^(?:the|an|a) /, "");
+}
+
 function pick(cards, wanted) {
-  var w = norm(wanted);
+  var w = spaced(wanted);
   if (!w) return null;
   var subset = null;
   for (var i = 0; i < cards.length; i++) {
-    var n = norm(cards[i].title);
+    var n = spaced(cards[i].title);
     if (!n) continue;
     if (n === w) return cards[i];
-    if (!subset && (w.indexOf(n) !== -1 || n.indexOf(w) !== -1)) subset = cards[i];
+    if (!subset && n.indexOf(w + " ") === 0) subset = cards[i];
   }
   return subset;
 }
@@ -167,7 +172,7 @@ function episodeUrl(seriesHtml, want, wantEp) {
     if (parseInt(m[2], 10) === want && parseInt(m[3], 10) === wantEp) return href;
     if (!fallback) fallback = href;
   }
-  return fallback;
+  return null;
 }
 
 /**
@@ -350,15 +355,21 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }).catch(function () { return []; });
 };
 
-/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
-   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
-   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
+   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+var __subOnly = false;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   return __langLabeled.apply(this, arguments).then(function (streams) {
     return (streams || []).map(function (s) {
-      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
-      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      if (!s) return s;
+      var hay = String(s.title || "") + " " + String(s.name || "");
+      var tags = [];
+      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+      if (!tags.length) return s;
+      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
       return s;
     });
   });

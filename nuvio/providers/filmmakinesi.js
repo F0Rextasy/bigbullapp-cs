@@ -173,9 +173,9 @@ function getStreams(tmdbId, mediaType, season, episode) {
       }
       for (i = 0; !hit && i < list.length; i++) {
         var n = norm(list[i].name);
-        if (n && (n.indexOf(want) === 0 || want.indexOf(n) === 0)) hit = list[i];
+        if (n && n.indexOf(want + " ") === 0) hit = list[i];
       }
-      return resolve((hit || list[0]).url);
+      return hit ? resolve(hit.url) : [];
     })
     .catch(function (e) {
       console.log("[bb-nuvio][filmmakinesi] " + (e && e.message));
@@ -232,13 +232,21 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }).catch(function () { return []; });
 };
 
-/* Dil etiketi: akis basligina sunucunun destekledigi dili yazar; kanit yoksa etiket yok. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
+   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+var __subOnly = false;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   return __langLabeled.apply(this, arguments).then(function (streams) {
     return (streams || []).map(function (s) {
-      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
-      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      if (!s) return s;
+      var hay = String(s.title || "") + " " + String(s.name || "");
+      var tags = [];
+      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+      if (!tags.length) return s;
+      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
       return s;
     });
   });

@@ -1,4 +1,4 @@
-// @provider {"id":"selcukflix", "name":"SelcukFlix", "types":["movie", "tv"], "domain":"selcukflix.app", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"SelcukFlix - Turkce dublaj/altyazili film ve diziler; AES secureData + pichive HLS master.", "verified":true, "version":"1.0.4"}
+// @provider {"id":"selcukflix", "name":"SelcukFlix", "types":["movie", "tv"], "domain":"selcukflix.app", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"SelcukFlix - Turkce dublaj/altyazili film ve diziler; AES secureData + pichive HLS master.", "verified":true, "version":"1.0.5"}
 /**
  * selcukflix — Nuvio provider (bb-nuvio).
  * Flow: numeric TMDB -> Wikidata -> IMDb; Cinemeta title -> POST /api/bg/searchcontent
@@ -243,7 +243,7 @@ function pick(rows, want, series) {
     if (series && slug.indexOf("dizi/") !== 0) continue;
     if (!series && slug.indexOf("film/") !== 0) continue;
     if (norm(displayTitle(rows[i])) === target) return slug;
-    if (!best && norm(displayTitle(rows[i])).indexOf(target) === 0) best = slug;
+    if (!best && norm(displayTitle(rows[i])).indexOf(target + " ") === 0) best = slug;
   }
   return best;
 }
@@ -280,7 +280,6 @@ function episodePath(path, want, wantEp) {
       for (var j = 0; j < episodes.length; j++) {
         if (parseInt(episodes[j].episode_no, 10) === wantEp && episodes[j].used_slug) return episodes[j].used_slug;
       }
-      if (episodes.length && episodes[0].used_slug) return episodes[0].used_slug;
     }
     return null;
   });
@@ -524,15 +523,21 @@ function getStreams(tmdbId, mediaType, season, episode) {
 module.exports = { getStreams };
 
 
-/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
-   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
-   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
+   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+var __subOnly = false;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   return __langLabeled.apply(this, arguments).then(function (streams) {
     return (streams || []).map(function (s) {
-      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
-      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      if (!s) return s;
+      var hay = String(s.title || "") + " " + String(s.name || "");
+      var tags = [];
+      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+      if (!tags.length) return s;
+      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
       return s;
     });
   });

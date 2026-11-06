@@ -1,4 +1,4 @@
-// @provider {"id":"webdramaturkey2", "name":"WebdramaTurkey2", "types":["movie", "tv"], "domain":"webdramaturkey2.com", "formats":["m3u8"], "sample":"tt29569035:tv:1:1", "description":"WebdramaTurkey2 Kore/Cin/Japon dizileri, filmleri ve animeleri (Turkce altyazili).", "version":"1.0.5"}
+// @provider {"id":"webdramaturkey2", "name":"WebdramaTurkey2", "types":["movie", "tv"], "domain":"webdramaturkey2.com", "formats":["m3u8"], "sample":"tt29569035:tv:1:1", "description":"WebdramaTurkey2 Kore/Cin/Japon dizileri, filmleri ve animeleri (Turkce altyazili).", "version":"1.0.6"}
 /**
  * webdramaturkey2 — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /arama/<q> -> dizi|film page -> episode -> /ajax/embed -> video.php
@@ -160,7 +160,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
         var href = abs(BASE, m[1]);
         var name = norm(m[2].replace(/<[^>]+>/g, " "));
         if (!href || !name || !/\/(?:dizi|film|anime)\//.test(href)) continue;
-        var score = name === key ? 3 : name.indexOf(key) === 0 || key.indexOf(name) === 0 ? 2 : name.indexOf(key) !== -1 ? 1 : 0;
+        var score = name === key ? 3 : name.indexOf(key + " ") === 0 ? 2 : 0;
         if (score && (!best || score > best.score)) best = { url: href, score: score };
       }
       if (!best) return null;
@@ -249,15 +249,21 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }).catch(function () { return []; });
 };
 
-/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
-   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
-   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
+   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+var __subOnly = true;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   return __langLabeled.apply(this, arguments).then(function (streams) {
     return (streams || []).map(function (s) {
-      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
-      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      if (!s) return s;
+      var hay = String(s.title || "") + " " + String(s.name || "");
+      var tags = [];
+      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+      if (!tags.length) return s;
+      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
       return s;
     });
   });

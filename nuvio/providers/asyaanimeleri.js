@@ -1,4 +1,4 @@
-// @provider {"id":"asyaanimeleri", "name":"AsyaAnimeleri", "types":["tv"], "domain":"asyaanimeleri.top", "formats":["m3u8"], "description":"AsyaAnimeleri anime kaynaklari (rumble, vidmoly HLS).", "sample":"tt33501934:tv:1:1", "version":"1.0.10"}
+// @provider {"id":"asyaanimeleri", "name":"AsyaAnimeleri", "types":["tv"], "domain":"asyaanimeleri.top", "formats":["m3u8"], "description":"AsyaAnimeleri anime kaynaklari (rumble, vidmoly HLS).", "sample":"tt33501934:tv:1:1", "version":"1.0.11"}
 /**
  * asyaanimeleri — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> site search -> series -> episode -> mirror iframes -> rumble/vidmoly HLS.
@@ -77,13 +77,11 @@ function norm(s) {
 function seriesLink(search, title) {
   var re = /href="([^"]*\/series\/[^"?]+)"[^>]*title="([^"]*)"/g;
   var want = norm(title);
-  var fallback = null;
   var m;
   while ((m = re.exec(search)) !== null) {
-    if (!fallback) fallback = m[1];
-    if (want && norm(m[2]) === want) return m[1];
+    if (want && (norm(m[2]) === want || norm(m[2]).indexOf(want + " ") === 0)) return m[1];
   }
-  return fallback || first(/href="([^"]*\/series\/[^"?]+)"/, search);
+  return null;
 }
 
 function episodes(detail, want, wantEp) {
@@ -104,10 +102,10 @@ function episodes(detail, want, wantEp) {
     if (parseInt(first(/-(\d+)-bolum/, links[i]), 10) !== wantEp) continue;
     if (!byNum) byNum = links[i];
     var sezon = parseInt(first(/-(\d+)-sezon-/, links[i]), 10) || 0;
-    if (!exact && (!sezon || sezon === want)) exact = links[i];
+    if (!exact && (sezon === want || (!sezon && want === 1))) exact = links[i];
   }
   var out = [];
-  var take = [exact, byNum].concat(links);
+  var take = [exact];
   for (var j = 0; j < take.length && out.length < 3; j++) {
     if (take[j] && out.indexOf(take[j]) === -1) out.push(take[j]);
   }
@@ -277,15 +275,21 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }).catch(function () { return []; });
 };
 
-/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
-   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
-   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
+   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+var __subOnly = true;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   return __langLabeled.apply(this, arguments).then(function (streams) {
     return (streams || []).map(function (s) {
-      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
-      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      if (!s) return s;
+      var hay = String(s.title || "") + " " + String(s.name || "");
+      var tags = [];
+      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+      if (!tags.length) return s;
+      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
       return s;
     });
   });

@@ -5,6 +5,13 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.18] - 2026-11-07
+
+### Düzeltildi
+- **Nuvio dil etiketi**: etiket artık kartta görünen `quality` alanına yazılıyor (`1080p • TR Dublaj`, `720p • Altyazılı`); önceden yalnız `title`'a ekleniyordu ve kartta hiç görünmüyordu. Yalnız altyazılı siteler (AnimeciX, AsyaAnimeleri, WebdramaTurkey2, Dizikorea3) `Altyazılı` taşır.
+- **Nuvio sahte eşleşme**: 24 sağlayıcıda kör fallback (ilk arama sonucu, ilk bölüm, tek kelime çakışması) kaldırıldı; başlık ya da sezon/bölüm bulunamazsa `[]` döner. Türk dizisi aranınca anime/yabancı sitelerin alakasız akışları artık listelenmez.
+- **SetFilmIzle / SezonlukDizi**: başlık eşleşmesi baştaki `The/A/An` makalesini yok sayar (Cinemeta `The Matrix` ↔ site `Matrix`).
+
 ## [1.6.17] - 2026-11-06
 
 ### Eklendi

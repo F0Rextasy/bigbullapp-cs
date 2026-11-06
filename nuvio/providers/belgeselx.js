@@ -1,4 +1,4 @@
-// @provider {"id":"belgeselx", "name":"BelgeselX", "types":["tv"], "domain":"belgeselx.com", "formats":["mp4"], "sample":"tt8481358:tv:2:1", "description":"BelgeselX Türkçe belgesel dizileri; ok.ru ve CDN MP4 kaynakları.", "version":"1.0.3"}
+// @provider {"id":"belgeselx", "name":"BelgeselX", "types":["tv"], "domain":"belgeselx.com", "formats":["mp4"], "sample":"tt8481358:tv:2:1", "description":"BelgeselX Türkçe belgesel dizileri; ok.ru ve CDN MP4 kaynakları.", "version":"1.0.4"}
 /**
  * belgeselx — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> sitemap slug -> /belgesel/<slug> episode rows ->
@@ -97,9 +97,9 @@ function choose(list, wantSe, wantEp) {
   for (i = 0; i < list.length; i++) {
     if ((parseInt(list[i][7], 10) || 0) === wantSe) same.push(list[i]);
   }
-  if (!same.length) same = list;
+  if (!same.length) same = list.length === 1 ? list : [];
   for (i = 0; i < same.length; i++) if ((parseInt(same[i][8], 10) || 0) === wantEp) return same[i];
-  return same[0] || null;
+  return same.length === 1 ? same[0] : null;
 }
 
 function okru(id) {
@@ -294,15 +294,21 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }).catch(function () { return []; });
 };
 
-/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
-   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
-   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
+   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+var __subOnly = false;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   return __langLabeled.apply(this, arguments).then(function (streams) {
     return (streams || []).map(function (s) {
-      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
-      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      if (!s) return s;
+      var hay = String(s.title || "") + " " + String(s.name || "");
+      var tags = [];
+      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+      if (!tags.length) return s;
+      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
       return s;
     });
   });

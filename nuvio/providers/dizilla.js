@@ -1,4 +1,4 @@
-// @provider {"id":"dizilla", "name":"Dizilla", "types":["tv"], "domain":"dizilla.la", "formats":["m3u8"], "sample":"tt27497448:tv:1:1", "description":"Dizilla yabanci dizi arsivi (HLS + Turkce altyazi).", "version":"1.0.11"}
+// @provider {"id":"dizilla", "name":"Dizilla", "types":["tv"], "domain":"dizilla.la", "formats":["m3u8"], "sample":"tt27497448:tv:1:1", "description":"Dizilla yabanci dizi arsivi (HLS + Turkce altyazi).", "version":"1.0.12"}
 /**
  * dizilla — Nuvio provider (bb-nuvio).
  * Next.js site: series metadata + episode list live in the JSON-LD blocks, the
@@ -110,14 +110,14 @@ function pick(list, title) {
   var bestScore = 0;
   for (var i = 0; i < list.length; i++) {
     var have = norm(list[i].title);
-    var score = have === want ? 100 : have.indexOf(want) === 0 || want.indexOf(have) === 0 ? 80 : have.indexOf(want) !== -1 ? 60 : 0;
+    var score = have === want ? 100 : have.indexOf(want + " ") === 0 ? 80 : 0;
     if (score > bestScore) {
       bestScore = score;
       best = list[i];
     }
     if (bestScore === 100) break;
   }
-  return bestScore >= 60 ? best : null;
+  return bestScore >= 80 ? best : null;
 }
 
 /** Every TVSeries JSON-LD block; episode lists only live in the richest one. */
@@ -193,7 +193,6 @@ function getStreams(tmdbId, mediaType, season, episode) {
             break;
           }
         }
-        if (!episodeUrl) episodeUrl = list.length ? list[0].url : null;
         return episodeUrl;
       });
     })
@@ -328,15 +327,21 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }).catch(function () { return []; });
 };
 
-/* Dil etiketi: akis basliginin kalitesinin yanina sunucunun destekledigi dili yazar.
-   Kanit yoksa etiket yazilmaz (uydurma yasak): baslikta dublaj/altyazi varsa dokunulmaz,
-   altyazi dosyasi eklenmis akisa "Altyazili" eklenir. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
+   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+var __subOnly = false;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   return __langLabeled.apply(this, arguments).then(function (streams) {
     return (streams || []).map(function (s) {
-      if (!s || !s.title || /dublaj|altyaz/i.test(String(s.title))) return s;
-      if (s.subtitles && s.subtitles.length) s.title = String(s.title) + " \u2022 Altyaz\u0131l\u0131";
+      if (!s) return s;
+      var hay = String(s.title || "") + " " + String(s.name || "");
+      var tags = [];
+      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+      if (!tags.length) return s;
+      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
       return s;
     });
   });
