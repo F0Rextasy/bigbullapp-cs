@@ -18,12 +18,18 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Konuları güncelle ve kur
+      - name: Konuları güncelle ve Webhook bağla
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           python3 tools/telegram_topics.py --chat-id "${TELEGRAM_CHAT_ID:--1003994138025}"
+          curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"https://bigbull-tg-bot.applio.workers.dev/","drop_pending_updates":true,"allowed_updates":["message","callback_query","chat_member","chat_join_request"]}'
+          echo ""
+          curl -sS "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getWebhookInfo"
+          echo ""
 
       - name: Durumu kaydet ve gönder
         run: |
