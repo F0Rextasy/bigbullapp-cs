@@ -6,6 +6,8 @@ on:
   workflow_dispatch:
   push:
     paths:
+      - "CHANGELOG.md"
+      - "nuvio/providers/**"
       - "nuvio/addon/sources/**"
       - "nuvio/addon/build.mjs"
 
@@ -20,14 +22,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Katalog listelerini üret
-        run: node nuvio/addon/build.mjs
+      - name: Manifest ve katalog listelerini üret
+        run: |
+          node nuvio/tools/build-manifest.mjs
+          node nuvio/addon/build.mjs
       - name: Değişiklik varsa commit
         run: |
-          if [ -n "$(git status --porcelain nuvio/addon)" ]; then
+          if [ -n "$(git status --porcelain nuvio/manifest.json nuvio/addon)" ]; then
             git config user.name "F0Rextasy"
             git config user.email "99847357+F0Rextasy@users.noreply.github.com"
-            git add nuvio/addon
+            git add nuvio/manifest.json nuvio/addon
             git commit -m "Nuvio katalog listeleri güncellendi"
             git push
           else

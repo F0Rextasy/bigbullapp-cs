@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.20",
+  "version": "1.6.21",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -512,7 +512,7 @@
       "id": "webteizle",
       "name": "WebteIzle",
       "description": "WebteIzle film/dizi kaynaklari (vidmoly, streamruby HLS; ok.ru/pixel yedek).",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
