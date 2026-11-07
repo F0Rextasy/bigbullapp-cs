@@ -1,4 +1,4 @@
-// @provider {"id":"webteizle", "name":"WebteIzle", "types":["movie", "tv"], "domain":"webteizle.info", "formats":["m3u8"], "description":"WebteIzle film/dizi kaynaklari (vidmoly, streamruby HLS; ok.ru/pixel yedek).", "sample":"tt13611778:movie:1:1", "verified":false}
+// @provider {"id":"webteizle", "name":"WebteIzle", "types":["movie", "tv"], "domain":"webteizle.info", "formats":["m3u8"], "description":"WebteIzle film/dizi kaynaklari (vidmoly, streamruby HLS; ok.ru/pixel yedek).", "sample":"tt0499549:movie:1:1", "verified":true, "version":"1.0.3"}
 /**
  * webteizle — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /hakkinda/<slug> (yoksa /filtre?a=) -> #wip data-id ->
@@ -94,6 +94,28 @@ function filmOf(page, slug) {
   return id ? { id: id, slug: slug } : null;
 }
 
+var WIN1254 = {
+  "\u00e7": "%E7", "\u00c7": "%C7", "\u011f": "%F0", "\u011e": "%D0",
+  "\u0131": "%FD", "\u0130": "%DD", "\u00f6": "%F6", "\u00d6": "%D6",
+  "\u015f": "%FE", "\u015e": "%DE", "\u00fc": "%FC", "\u00dc": "%DC"
+};
+
+function encodeWin1254(s) {
+  return encodeURIComponent(String(s || "")).replace(/(?:%[0-9A-F]{2})+/gi, function (m) {
+    try {
+      var dec = decodeURIComponent(m);
+      var out = "";
+      for (var i = 0; i < dec.length; i++) {
+        var ch = dec.charAt(i);
+        out += WIN1254[ch] || encodeURIComponent(ch);
+      }
+      return out;
+    } catch (e) {
+      return m;
+    }
+  });
+}
+
 // Slugs are the slugified original title, so the detail page is usually one hop.
 function detail(title) {
   var slug = slugify(title);
@@ -101,7 +123,7 @@ function detail(title) {
     .then(function (page) {
       var hit = filmOf(page, slug);
       if (hit) return hit;
-      return text(BASE + "/filtre?a=" + encodeURIComponent(title)).then(function (list) {
+      return text(BASE + "/filtre?a=" + encodeWin1254(title)).then(function (list) {
         var links = [];
         var re = /href="\/hakkinda\/([^"?]+)"/g;
         var m;
@@ -236,8 +258,20 @@ function row(url, quality, subs, dubbing, hls) {
   };
 }
 
+var PLAYER_PATHS = {
+  "vidmoly": "/player/vidmoly.asp?v=",
+  "ok.ru": "/player/ok.ru.asp?v=",
+  "okru": "/player/ok.ru.asp?v=",
+  "pixel": "/player/pixel.asp?v=",
+  "dzen": "/player/dzen.asp?v=",
+  "mail.ru": "/player/video-mail-ru.asp?v=",
+  "mailru": "/player/video-mail-ru.asp?v="
+};
+
 function jobOf(html, referer) {
   if (!html || /reCAPTCHADATA/i.test(html)) return null;
+  var direct = first(/vidUrl\s*=\s*"([^"]+)"/, html);
+  if (direct) return { kind: "mp4", url: abs(BASE + "/", direct), hls: /\.m3u8/i.test(direct) };
   var call = /<script[^>]*>\s*(\w+)\('([^']+)'/.exec(html);
   if (call) {
     var fn = call[1];
@@ -268,7 +302,7 @@ function play(job, dubbing) {
       return out;
     });
   }
-  if (job.kind === "mp4") return Promise.resolve([row(job.url, "auto", [], dubbing, false)]);
+  if (job.kind === "mp4") return Promise.resolve([row(job.url, "auto", [], dubbing, Boolean(job.hls))]);
   return text(job.url, { referer: job.referer }).then(function (page) {
     var hit = playable(page);
     if (!hit) return [];
@@ -285,11 +319,24 @@ function play(job, dubbing) {
   });
 }
 
+function resolveRow(item, referer) {
+  return form(BASE + "/ajax/dataEmbed.asp", "id=" + item.id, referer)
+    .then(function (html) { return jobOf(html, referer); })
+    .catch(function () { return null; })
+    .then(function (job) {
+      if (job) return job;
+      var path = PLAYER_PATHS[String(item.baslik || "").toLowerCase().trim()];
+      if (!path) return null;
+      return text(BASE + path + item.id, { referer: referer })
+        .then(function (html2) { return jobOf(html2, referer); })
+        .catch(function () { return null; });
+    });
+}
+
 function tryHosts(list, i, dubbing, referer) {
   if (i >= list.length || rank(list[i]) >= HOSTS.length) return Promise.resolve([]);
-  return form(BASE + "/ajax/dataEmbed.asp", "id=" + list[i].id, referer)
-    .then(function (html) {
-      var job = jobOf(html, referer);
+  return resolveRow(list[i], referer)
+    .then(function (job) {
       return job ? play(job, dubbing) : [];
     })
     .then(function (rows) {
