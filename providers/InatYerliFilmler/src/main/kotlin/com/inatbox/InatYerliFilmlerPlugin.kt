@@ -9,7 +9,7 @@ class InatYerliFilmlerPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_Q9tlKwxINorm6gHWwjkJigM9" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatYerliFilmlerProvider())
         openSettings = { Settings.showDialog(it, "InatBox Yerli Filmler", listOf(cfg.name)) }
     }
 }

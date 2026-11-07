@@ -1,5 +1,6 @@
 version = 2
 
+
 cloudstream {
     description = "DMAX — belgesel ve program bölümleri"
     authors = listOf("F0Rextasy")

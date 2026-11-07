@@ -1,5 +1,6 @@
 version = 1
 
+
 cloudstream {
     description = "Weboo — Türkçe içerik (autopilot)"
     authors = listOf("F0Rextasy")

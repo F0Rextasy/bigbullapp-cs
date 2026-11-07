@@ -1,4 +1,5 @@
-version = 4
+version = 5
+
 
 cloudstream {
     description = "FullHDFilm — fullhdfilmizlebox.vip (Türkçe dublaj & altyazı)"

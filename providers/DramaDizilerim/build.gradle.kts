@@ -1,5 +1,6 @@
 version = 6
 
+
 cloudstream {
     description = "DramaDizilerim — dikey mini dizi & kısa dizi arşivi, Türkçe dublaj/altyazılı (dramadizilerim.com)"
     authors = listOf("F0Rextasy")

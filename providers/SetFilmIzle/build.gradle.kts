@@ -1,5 +1,6 @@
 version = 6
 
+
 cloudstream {
     description = "SetFilmIzle — Türkçe dublaj & altyazılı film ve dizi arşivi (setfilmizle.ltd)"
     authors = listOf("F0Rextasy")

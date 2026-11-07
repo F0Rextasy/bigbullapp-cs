@@ -1,4 +1,5 @@
-version = 8
+version = 9
+
 
 cloudstream {
     description = "DiziYou — Türkçe dublaj & altyazılı yabancı dizi (diziyou.one)"

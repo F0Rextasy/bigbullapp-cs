@@ -1,5 +1,6 @@
 version = 6
 
+
 cloudstream {
     description = "Filmmodu — Türkçe dublaj & altyazılı film arşivi (filmmodu.news)"
     authors = listOf("F0Rextasy")

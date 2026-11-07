@@ -1,5 +1,6 @@
 version = 2
 
+
 cloudstream {
     description = "Kanal D — dizi ve program bölümleri"
     authors = listOf("F0Rextasy")

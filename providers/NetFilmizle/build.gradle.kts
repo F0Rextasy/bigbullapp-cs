@@ -1,5 +1,6 @@
 version = 3
 
+
 cloudstream {
     description = "NetFilmizle — Türkçe dublaj/altyazılı film arşivi"
     authors = listOf("F0Rextasy")

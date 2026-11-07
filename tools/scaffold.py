@@ -2,7 +2,7 @@
 """Scaffold a new provider module from the registry.
 
 Usage:
-    python tools/scaffold.py dizipal.com            # creates Dizipal/ skeleton
+    python tools/scaffold.py dizipal.com            # creates providers/Dizipal/ skeleton
     python tools/scaffold.py dizipal.com --dry-run
 """
 import argparse
@@ -39,8 +39,16 @@ import com.lagradost.cloudstream3.plugins.Plugin
 class {name}Plugin : Plugin() {{
     override fun load(context: Context) {{
         registerMainAPI({name}Provider())
+        openSettings = {{ ctx -> Settings.showDialog(ctx) }}
     }}
 }}
+"""
+
+SETTINGS = """package {package}
+
+import com.bigbull.common.BaseSettings
+
+object Settings : BaseSettings("bigbull_{slug}")
 """
 
 PROVIDER = """package {package}
@@ -56,7 +64,6 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 /**
  * {name} — {url}
  *
- * TODO(provider): fill search/load/loadLinks against the live site.
  * Verify with: python tools/check.py --domain {domain}
  * Build with:  ./gradlew {name}:make
  */
@@ -64,15 +71,14 @@ class {name}Provider : MainAPI() {{
     override var mainUrl = "{url}"
     override var name = "{name}"
     override var lang = "tr"
+    override val hasMainPage = true
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
 
-    override suspend fun search(query: String): List<SearchResponse> {
-        // TODO(provider): parse search results
+    override suspend fun search(query: String): List<SearchResponse> {{
         return emptyList()
     }}
 
-    override suspend fun load(url: String): LoadResponse? {
-        // TODO(provider): parse detail page and episodes
+    override suspend fun load(url: String): LoadResponse? {{
         return null
     }}
 
@@ -81,8 +87,7 @@ class {name}Provider : MainAPI() {{
         isCasting: Boolean,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
-    ): Boolean {
-        // TODO(provider): resolve player iframes to a stream
+    ): Boolean {{
         return false
     }}
 }}
@@ -107,9 +112,10 @@ def main() -> int:
         print(f"{args.domain} not in tools/providers.json")
         return 1
 
-    name = slug_to_class(args.domain)
-    package = "com.bigbull." + name.lower()
-    module = ROOT / name
+    name = entry.get("module") or slug_to_class(args.domain)
+    slug = name.lower()
+    package = f"com.{slug}"
+    module = ROOT / "providers" / name
     files = {
         module / "build.gradle.kts": BUILD.format(
             name=name, domain=args.domain, author=args.author, lang=entry.get("language", "tr")
@@ -117,6 +123,9 @@ def main() -> int:
         module / "src/main/AndroidManifest.xml": MANIFEST,
         module / f"src/main/kotlin/{package.replace('.', '/')}/{name}Plugin.kt": PLUGIN.format(
             package=package, name=name
+        ),
+        module / f"src/main/kotlin/{package.replace('.', '/')}/Settings.kt": SETTINGS.format(
+            package=package, slug=slug
         ),
         module / f"src/main/kotlin/{package.replace('.', '/')}/{name}Provider.kt": PROVIDER.format(
             package=package, name=name, url=entry["mainUrl"], domain=args.domain

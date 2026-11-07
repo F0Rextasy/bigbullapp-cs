@@ -9,7 +9,7 @@ class InatNetflixPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_b6c0fgN5DT1TlQLs3X4DFEUC" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatNetflixProvider())
         openSettings = { Settings.showDialog(it, "InatBox Netflix", listOf(cfg.name)) }
     }
 }

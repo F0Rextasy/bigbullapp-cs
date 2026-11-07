@@ -31,6 +31,9 @@ jobs:
       - name: Telegram'a gönder
         env:
           TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          CUR_RUN_ID: ${{ github.event.workflow_run.id || '' }}
           FORCE: ${{ github.event.inputs.force || 'false' }}
         run: |
           if [ -z "$TOKEN" ]; then
@@ -43,18 +46,30 @@ jobs:
             echo "tools/telegram-topics.json eksik; bildirim atlandı."
             exit 0
           fi
-          CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD -- \
-            providers nuvio/providers nuvio/manifest.json \
-            | cut -d/ -f2 | sort -u)
+
+          # workflow_run olaylarında github.event.before boştur; önceki başarılı Derleme çalışmasının head_sha değerini bul.
+          BEFORE=""
+          if [ -n "$GH_TOKEN" ] && [ -n "$REPO" ]; then
+            BEFORE=$(curl -sf -H "Authorization: Bearer $GH_TOKEN" \
+              "https://api.github.com/repos/${REPO}/actions/workflows/build.yml/runs?status=success&per_page=10" \
+              | python3 -c "import sys,json; d=json.load(sys.stdin); cur='${CUR_RUN_ID}'; head=sys.argv[1]; runs=[r['head_sha'] for r in d.get('workflow_runs',[]) if str(r.get('id'))!=cur and r.get('head_sha')!=head]; print(runs[0] if runs else '')" "$(git rev-parse HEAD)" 2>/dev/null || true)
+          fi
+
+          if [ -n "$BEFORE" ] && git cat-file -e "$BEFORE" 2>/dev/null; then
+            CHANGED=$(git diff --name-only "$BEFORE" HEAD -- \
+              providers nuvio/providers nuvio/manifest.json \
+              | cut -d/ -f2 | sort -u)
+          else
+            CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD -- \
+              providers nuvio/providers nuvio/manifest.json \
+              | cut -d/ -f2 | sort -u)
+          fi
           if [ -z "$CHANGED" ] && [ "$FORCE" != "true" ]; then
             echo "Sağlayıcı değişikliği yok; bildirim atlandı."
             exit 0
           fi
 
           CUR_VERSION=$(grep -m1 '^## \[' CHANGELOG.md | sed -nE 's/^## \[([^]]+)\].*/\1/p')
-          # Zincir push'ta "önceki sağlayıcı commit" hâlâ aynı sürümün içinde kalır;
-          # sürüm karşılaştırması PUSH-ÖNCESİ sınır (github.event.before) üzerinden yapılır.
-          BEFORE=${{ github.event.before }}
           PREV_VERSION=""
           if [ -n "$BEFORE" ] && git cat-file -e "$BEFORE" 2>/dev/null; then
             PREV_VERSION=$(git show "$BEFORE:CHANGELOG.md" 2>/dev/null \

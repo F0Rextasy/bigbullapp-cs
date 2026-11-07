@@ -9,7 +9,7 @@ class InatDisneyPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_nKFKpIsaKwC_hjUOBLcrYJrI" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatDisneyProvider())
         openSettings = { Settings.showDialog(it, "InatBox Disney+", listOf(cfg.name)) }
     }
 }

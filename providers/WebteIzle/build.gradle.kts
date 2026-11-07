@@ -1,6 +1,7 @@
 // Use an integer for version numbers
 version = 1
 
+
 cloudstream {
     description = "WebteIzle — Türkçe dublaj/altyazılı film izle (webteizle.info)"
     authors = listOf("F0Rextasy")
@@ -12,7 +13,7 @@ cloudstream {
      * 2: Slow
      * 3: Beta-only
      **/
-    status = 3
+    status = 1
 
     tvTypes = listOf("Movie")
     language = "tr"

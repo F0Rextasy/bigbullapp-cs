@@ -1,5 +1,6 @@
 version = 4
 
+
 cloudstream {
     description = "FilmEkseni — Türkçe dublaj film arşivi (filmekseni.vip)"
     authors = listOf("F0Rextasy")

@@ -1,4 +1,4 @@
-// @provider {"id":"filmmakinesi", "name":"FilmMakinesi", "types":["movie", "tv"], "domain":"filmmakinesi.co", "formats":["m3u8"], "description":"FilmMakinesi film kaynaklari (oynatloload secure-hls).", "sample":"tt13611778:movie:1:1", "verified":true}
+// @provider {"id":"filmmakinesi", "name":"FilmMakinesi", "types":["movie", "tv"], "domain":"filmmakinesi.co", "formats":["m3u8"], "description":"FilmMakinesi film kaynaklari (oynatloload secure-hls).", "sample":"tt13611778:movie:1:1", "verified":true, "version":"1.0.1"}
 /**
  * filmmakinesi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /?s= -> film sayfasi -> oynatloload embed -> __ULTRA_EAUTH ->
@@ -36,7 +36,7 @@ function abs(base, href) {
 }
 
 function norm(s) {
-  return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+  return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
 // Cinemeta istege bagli turu bos doner (film/dizi ayrimi 307 -> {}); diger turu dene.

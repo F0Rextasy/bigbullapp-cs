@@ -1,4 +1,4 @@
-// @provider {"id":"dizikorea3", "name":"Dizikorea3", "types":["tv"], "domain":"dizikorea3.com", "formats":["m3u8"], "sample":"tt43088191:tv:1:1", "description":"Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).", "version":"1.0.8"}
+// @provider {"id":"dizikorea3", "name":"Dizikorea3", "types":["tv"], "domain":"dizikorea3.com", "formats":["m3u8"], "sample":"tt43088191:tv:1:1", "description":"Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).", "version":"1.0.9"}
 /**
  * dizikorea3 — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /sayfa/1?s= -> /dizi/<slug> -> /sezon-N/bolum-M -> player iframes.
@@ -282,6 +282,39 @@ function getStreams(tmdbId, mediaType, season, episode) {
 }
 
 module.exports = { getStreams };
+
+var __origGetStreams = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  var raw = String(id || "");
+  if (!/^\d+$/.test(raw)) return __origGetStreams(raw, mediaType, season, episode);
+  var tv = mediaType !== "movie";
+  var headers = { "User-Agent": UA, "Accept": "application/json" };
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  var prop = tv ? "P4983" : "P4947";
+  return fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + prop + "=" + raw), { headers: headers })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (json) {
+      var hits = (json && json.query && json.query.search) || [];
+      if (!hits.length) return "";
+      return fetch(api + "&action=wbgetentities&props=claims&ids=" + hits[0].title, { headers: headers });
+    })
+    .then(function (r) { return r && r.ok ? r.json() : null; })
+    .then(function (json) {
+      var entities = (json && json.entities) || {};
+      for (var entity in entities) {
+        var rows = ((entities[entity] || {}).claims || {}).P345 || [];
+        for (var i = 0; i < rows.length; i++) {
+          var value = rows[i] && rows[i].mainsnak && rows[i].mainsnak.datavalue && rows[i].mainsnak.datavalue.value;
+          if (/^tt\d+$/.test(String(value || ""))) return value;
+        }
+      }
+      return "";
+    })
+    .catch(function () { return ""; })
+    .then(function (imdb) {
+      return __origGetStreams(imdb || raw, mediaType, season, episode);
+    });
+};
 
 
 /* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.

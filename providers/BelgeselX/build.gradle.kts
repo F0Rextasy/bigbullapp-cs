@@ -1,5 +1,6 @@
 version = 4
 
+
 cloudstream {
     description = "BelgeselX — Türkçe belgesel arşivi (belgeselx.com)"
     authors = listOf("F0Rextasy")

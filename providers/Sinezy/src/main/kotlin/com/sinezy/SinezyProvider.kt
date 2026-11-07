@@ -22,6 +22,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
+import java.net.URLEncoder
 import org.json.JSONObject
 import org.jsoup.nodes.Element
 
@@ -48,7 +49,7 @@ class SinezyProvider : MainAPI() {
         MainPageData("Macera", "$mainUrl/izle/macera-filmleri/"),
         MainPageData("Suç", "$mainUrl/izle/suc-filmleri/"),
         MainPageData("Film Arşivi", "$mainUrl/film-arsivi/"),
-    )
+    ).filter { Settings.rowEnabled(it.name) }
 
     private fun Element.toCard(): SearchResponse? {
         val anchor = selectFirst("a.image") ?: return null
@@ -69,7 +70,7 @@ class SinezyProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val doc = app.get("$mainUrl/arama/?s=${query.trim()}", headers = headers).document
+        val doc = app.get("$mainUrl/arama/?s=${URLEncoder.encode(query.trim(), "UTF-8")}", headers = headers).document
         return doc.select(".movie_box").mapNotNull { it.toCard() }
     }
 
@@ -155,7 +156,7 @@ class SinezyProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Yeni Filmler")
+        val ROWS = listOf("Yeni Filmler", "Bilim Kurgu", "Animasyon", "Macera", "Suç", "Film Arşivi")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

@@ -9,7 +9,7 @@ class InatPremiumPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_XbOO87izu6ge2wsD9dQda4gF" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatPremiumProvider())
         openSettings = { Settings.showDialog(it, "InatBox Premium", listOf(cfg.name)) }
     }
 }

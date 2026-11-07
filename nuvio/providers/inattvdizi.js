@@ -1,4 +1,4 @@
-// @provider {"id":"inattvdizi", "name":"İnatTV Dizi", "types":["tv"], "domain":"inatbox", "formats":["m3u8"], "sample":"tt0944947:tv:1:1", "description":"İnatTV yabancı, yerli ve platform dizileri kataloğu (imzalı liste + AES çözümleyici, HLS).", "verified":true, "version":"1.0.2"}
+// @provider {"id":"inattvdizi", "name":"İnatTV Dizi", "types":["tv"], "domain":"inatbox", "formats":["m3u8"], "sample":"tt0944947:tv:1:1", "description":"İnatTV yabancı, yerli ve platform dizileri kataloğu (imzalı liste + AES çözümleyici, HLS).", "verified":true, "version":"1.0.3"}
 var CFG = {
   id: "inattvdizi",
   name: "İnatTV Dizi",
@@ -55,22 +55,27 @@ function utf8Bytes(str) {
 }
 
 function utf8Text(bytes) {
-  var out = "";
-  for (var i = 0; i < bytes.length; i++) {
-    var b = bytes[i] & 0xff;
+  var chunks = [], chunk = [], i, b, cp;
+  for (i = 0; i < bytes.length; i++) {
+    b = bytes[i] & 0xff;
     if (b < 0x80) {
-      out += String.fromCharCode(b);
+      chunk.push(b);
     } else if (b < 0xe0) {
-      out += String.fromCharCode(((b & 0x1f) << 6) | (bytes[++i] & 0x3f));
+      chunk.push(((b & 0x1f) << 6) | (bytes[++i] & 0x3f));
     } else if (b < 0xf0) {
-      out += String.fromCharCode(((b & 0x0f) << 12) | ((bytes[++i] & 0x3f) << 6) | (bytes[++i] & 0x3f));
+      chunk.push(((b & 0x0f) << 12) | ((bytes[++i] & 0x3f) << 6) | (bytes[++i] & 0x3f));
     } else {
-      var cp = ((b & 0x07) << 18) | ((bytes[++i] & 0x3f) << 12) | ((bytes[++i] & 0x3f) << 6) | (bytes[++i] & 0x3f);
+      cp = ((b & 0x07) << 18) | ((bytes[++i] & 0x3f) << 12) | ((bytes[++i] & 0x3f) << 6) | (bytes[++i] & 0x3f);
       cp -= 0x10000;
-      out += String.fromCharCode(0xd800 + (cp >> 10), 0xdc00 + (cp & 0x3ff));
+      chunk.push(0xd800 + (cp >> 10), 0xdc00 + (cp & 0x3ff));
+    }
+    if (chunk.length >= 4096) {
+      chunks.push(String.fromCharCode.apply(null, chunk));
+      chunk.length = 0;
     }
   }
-  return out;
+  if (chunk.length) chunks.push(String.fromCharCode.apply(null, chunk));
+  return chunks.join("");
 }
 
 function hexBytes(hex) {
@@ -707,7 +712,7 @@ function pickSeason(rows, wanted) {
     usable.push({ row: rows[i], number: seasonNumber(rows[i].name) || i + 1 });
   }
   for (var a = 0; a < usable.length; a++) if (usable[a].number === wanted) return usable[a].row;
-  return usable[wanted - 1] ? usable[wanted - 1].row : usable[0].row;
+  return usable[wanted - 1] ? usable[wanted - 1].row : null;
 }
 
 function pickEpisode(rows, wanted) {
@@ -719,7 +724,7 @@ function pickEpisode(rows, wanted) {
   }
   if (numbered.length) return numbered;
   if (usable[wanted - 1]) return [usable[wanted - 1]];
-  return usable.length ? [usable[0]] : [];
+  return [];
 }
 
 /** Walks index -> series -> seasons -> episodes -> resolvable rows. */
@@ -731,6 +736,7 @@ function collect(entry, wantedSeason, wantedEpisode, depth) {
     var seasonRows = children.filter(function (row) { return row.season && row.url && !isResolvable(row); });
     if (seasonRows.length) {
       var season = pickSeason(seasonRows, wantedSeason);
+      if (!season) return [];
       return entries(season.url, season.host, season.pin, season.dataType).then(function (episodes) {
         return pickEpisode(episodes, wantedEpisode);
       });
@@ -783,7 +789,6 @@ function rankHits(rows, title) {
     var score;
     if (name === wanted) score = 0;
     else if (name.indexOf(wanted + " ") === 0) score = 1;
-    else if ((" " + name + " ").indexOf(" " + wanted + " ") >= 0) score = 2;
     else continue;
     scored.push({ row: row, score: score, length: name.length });
   }

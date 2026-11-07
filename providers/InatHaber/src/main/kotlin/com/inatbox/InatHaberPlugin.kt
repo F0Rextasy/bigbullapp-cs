@@ -9,7 +9,7 @@ class InatHaberPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_MZOJ3eZThBuLqmehbmefruZ4" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatHaberProvider())
         openSettings = { Settings.showDialog(it, "InatBox Haber", listOf(cfg.name)) }
     }
 }

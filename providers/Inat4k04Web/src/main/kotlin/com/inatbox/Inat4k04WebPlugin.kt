@@ -9,7 +9,7 @@ class Inat4k04WebPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_BLrJGGw4JpbX2e5aXlrYd57y" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(Inat4k04WebProvider())
         openSettings = { Settings.showDialog(it, "InatBox 4K Film 04 | Web", listOf(cfg.name)) }
     }
 }

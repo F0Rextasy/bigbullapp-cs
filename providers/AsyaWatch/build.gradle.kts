@@ -1,5 +1,6 @@
 version = 5
 
+
 cloudstream {
     description = "AsyaWatch — Kore ve Asya web dramaları, Türkçe altyazılı (asyawatch.com)"
     authors = listOf("F0Rextasy")

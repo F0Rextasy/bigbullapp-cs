@@ -5,6 +5,23 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.21] - 2026-11-07
+
+### Eklendi
+- **RecTV v1**: `a.psrectv80.xyz` imzalı resmî API (attest/nonce + HMAC-SHA256) eklendi; film/dizi ana sayfa satırları, sayfalama, istemci taraflı arama ve token'lı m3u8 kaynakları runner'da doğrulandı (30×2 sayfa + 1 link 200).
+
+## [1.6.20] - 2026-11-07
+
+### Düzeltildi
+- **FullHDFilm v5 & FullHDFilmizlesene v5**: tek HLS master playlist'in `1080p` etiketlenip kalite üst sınırı (`720p`/`480p`) seçildiğinde sıfır link bırakması düzeltildi (`Qualities.Unknown`).
+- **Animeler v7, Dizibaba v4, Dizigecesi v8, Dizilab v5, Sinezy v4, DiziYou v9**: `Settings.rowEnabled` ana sayfa kategori filtresi, `Settings.qualityAllowed`/`subtitleAllowed` akış filtreleri, eksik `ROWS` tanımları ve `URLEncoder` arama sorgusu kodlaması düzeltildi.
+- **Nuvio sağlayıcıları**: `filmmakinesi` (`1.0.1`) önek eşleşme hatası, `inattvdizi` (`1.0.3`) ve `inattvfilmler` (`1.0.3`) sahte sezon/bölüm fallback'i ve UTF-8/AES bellek darboğazı, `dizikorea3` (`1.0.9`) TMDB→IMDb çözümlemesi, `diziyou` (`1.0.9`) ve `dizipal.json` katalog adresi güncellendi.
+- **Nuvio katalog derleyicisi (`nuvio/addon/build.mjs`)**: `imdb-cache.json` içindeki negatif (`null`) önbellek kontrolü, kısa başlık çakışması ve tekil katalog derlemesinde `manifest.json` adlarının sıfırlanması düzeltildi.
+- **Telegram & CI otomasyonu**: `telegram-setup.yml` webhook `secret_token` eksikliği (`403 Unauthorized`), `bildirim.yml` `workflow_run` öncesi SHA tespiti, `worker.js` süreli/tek kullanımlık doğrulama imzası ile `verify.py`, `revive.py` ve `scaffold.py` araçları düzeltildi.
+
+### Değişti
+- **Ortak Ayarlar (`BaseSettings`)**: 85 modülde tekrarlanan ~7.600 satırlık `Settings.kt` UI kodu `Common` modülündeki `BaseSettings` sınıfında birleştirildi; `Inat*Plugin` sınıfları doğrudan kendi `Inat*Provider` sınıflarını kaydedecek şekilde güncellendi.
+
 ## [1.6.19] - 2026-11-07
 
 ### Eklendi

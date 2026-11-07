@@ -1,6 +1,7 @@
 // Use an integer for version numbers
 version = 7
 
+
 cloudstream {
     description = "SezonlukDizi — yabancı dizi izle (sezonlukdizi.cc)"
     authors = listOf("F0Rextasy")

@@ -298,9 +298,10 @@ def find_mirror(
     return best_url, checks_sorted
 
 
-def patch_module(module: str, new_url: str) -> bool:
-    """Rewrite `override var mainUrl = "..."` in the provider sources."""
+def patch_module(module: str, new_url: str, old_domain: str = "") -> bool:
+    """Rewrite `override var mainUrl = "..."` in Kotlin provider sources and sync Nuvio files."""
     changed = False
+    new_host = urllib.parse.urlparse(new_url).netloc.lower()
     for source in (ROOT / "providers" / module).rglob("*Provider.kt"):
         text = source.read_text(encoding="utf-8")
         updated = re.sub(
@@ -312,6 +313,24 @@ def patch_module(module: str, new_url: str) -> bool:
         if updated != text:
             source.write_text(updated, encoding="utf-8")
             changed = True
+
+    slug = module.lower()
+    nuvio_js = ROOT / "nuvio" / "providers" / f"{slug}.js"
+    if nuvio_js.exists():
+        js_text = nuvio_js.read_text(encoding="utf-8")
+        js_updated = re.sub(r'(var\s+BASE\s*=\s*)"https?://[^"]*"', lambda m: f'{m.group(1)}"{new_url}"', js_text, count=1)
+        if new_host:
+            js_updated = re.sub(r'("domain"\s*:\s*)"[^"]*"', lambda m: f'{m.group(1)}"{new_host}"', js_updated, count=1)
+        if js_updated != js_text:
+            nuvio_js.write_text(js_updated, encoding="utf-8")
+
+    addon_src = ROOT / "nuvio" / "addon" / "sources" / f"{slug}.json"
+    if addon_src.exists() and new_host:
+        src_text = addon_src.read_text(encoding="utf-8")
+        src_updated = re.sub(r'("url"\s*:\s*"https?://)[^/"]+', lambda m: f"{m.group(1)}{new_host}", src_text, count=1)
+        if src_updated != src_text:
+            addon_src.write_text(src_updated, encoding="utf-8")
+
     return changed
 
 
@@ -409,19 +428,21 @@ def main() -> int:
         confidence = "high" if points >= 5 else "low"
         lines.append(f"| {domain} | https://{best} | {confidence} | {title} |")
         if args.apply and points >= 5:
-            if domain not in VERIFIERS and not args.allow_unverified:
+            entry = providers[domain]
+            module = entry.get("module")
+            if domain not in VERIFIERS and module not in VERIFIERS and not args.allow_unverified:
                 lines[-1] = lines[-1].replace("| high |", "| skipped: no verifier |")
                 continue
-            entry = providers[domain]
             new_url = f"https://{best}"
-            module = entry.get("module")
-            if args.patch_code and module and not patch_module(module, new_url):
+            if args.patch_code and module and not patch_module(module, new_url, domain):
                 lines[-1] = lines[-1].replace("| high |", "| kod yaması başarısız |")
                 continue
             entry["mainUrl"] = new_url
             entry["mirrors"] = [f"https://{c}" for p, c, t in hits[1:6]]
             entry["health"] = "unknown"
             entry["revivedFrom"] = domain
+            if best != domain:
+                providers[best] = providers.pop(domain)
             applied += 1
             if args.patch_code and module:
                 version = bump_version(module) if args.bump_version else None

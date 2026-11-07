@@ -1,4 +1,5 @@
-version = 6
+version = 7
+
 
 cloudstream {
     description = "Animeler — Türkçe altyazılı anime arşivi (animeler.live)"

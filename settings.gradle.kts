@@ -10,9 +10,6 @@ val disabled = listOf(
     "InatDerbiler", "InatEbaTv", "InatHaber", "InatListe1Tr", "InatListe2Glb",
     "InatListe3Tr", "InatMubi", "InatSinema", "InatPremium", "InatSpor",
     "InatTod", "InatUlusal", "InatYabanciDiziler", "InatYerliDiziler",
-    // Nuvio tarafinda enabled:true birakilanlar: inat4k06web, inattod,
-    // inatyabancidiziler, inatyerlidiziler (nuvio/manifest.json); canli dogrulama
-    // Nuvio'dan akiyor, CS tarafi runner'i bekliyor.
 )
 
 File(rootDir, "providers").eachDir { dir ->

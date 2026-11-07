@@ -1,5 +1,6 @@
 version = 5
 
+
 cloudstream {
     description = "TurkceDizi — Türkçe içerik (autopilot)"
     authors = listOf("F0Rextasy")

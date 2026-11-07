@@ -9,7 +9,7 @@ class InatCocukPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_B03_bguqxzvRzyvPeiExd_xO" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatCocukProvider())
         openSettings = { Settings.showDialog(it, "InatBox Çocuk", listOf(cfg.name)) }
     }
 }

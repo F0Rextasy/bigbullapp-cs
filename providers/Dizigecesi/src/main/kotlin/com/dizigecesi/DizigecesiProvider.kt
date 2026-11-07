@@ -21,6 +21,7 @@ import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONArray
+import java.net.URLEncoder
 import org.json.JSONObject
 import org.jsoup.nodes.Element
 import java.net.URI
@@ -67,7 +68,7 @@ class DizigecesiProvider : MainAPI() {
         MainPageData("Korku", "$mainUrl/tur/korku"),
         MainPageData("Macera", "$mainUrl/tur/macera"),
         MainPageData("Romantik", "$mainUrl/tur/romantik"),
-    )
+    ).filter { Settings.rowEnabled(it.name) }
 
     private fun Element.toCard(): SearchResponse? {
         val href = fixUrlNull(attr("href")) ?: return null
@@ -87,7 +88,7 @@ class DizigecesiProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val doc = app.get("$mainUrl/arama/${query.trim()}", headers = headers).document
+        val doc = app.get("$mainUrl/arama/${URLEncoder.encode(query.trim(), "UTF-8")}", headers = headers).document
         return doc.select("a.card-series[href*=/film/]").mapNotNull { it.toCard() }.distinctBy { it.url }
     }
 
@@ -113,6 +114,8 @@ class DizigecesiProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
+        val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
+        val subCallback: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
         val pageUrl = fixUrl(data)
         val page = app.get(pageUrl, headers = headers).document
         val ids = page.select("[data-embed]").mapNotNull { it.attr("data-embed").takeIf(String::isNotBlank) }
@@ -134,8 +137,8 @@ class DizigecesiProvider : MainAPI() {
             val inner = Regex("""<iframe[^>]+src=["']([^"']+)""")
                 .find(wrapperHtml)?.groupValues?.get(1)?.let(::fixUrl) ?: wrapper
             var handled = inner.contains("filemoon") &&
-                resolveFilemoon(inner, pageUrl, subtitleCallback, callback)
-            if (!handled) handled = loadExtractor(inner, pageUrl, subtitleCallback, callback)
+                resolveFilemoon(inner, pageUrl, subCallback, linkCallback)
+            if (!handled) handled = loadExtractor(inner, pageUrl, subCallback, linkCallback)
             if (handled) found = true
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
@@ -432,7 +435,7 @@ class DizigecesiProvider : MainAPI() {
     private fun fmB64d(value: String): ByteArray =
         Base64.decode(value, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
     companion object {
-        val ROWS = listOf("Filmler")
+        val ROWS = listOf("Filmler", "Aile", "Aksiyon", "Animasyon", "Belgesel", "Bilim Kurgu", "Fantastik", "Gerilim", "Gizem", "Komedi", "Korku", "Macera", "Romantik")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

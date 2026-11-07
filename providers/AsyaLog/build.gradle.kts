@@ -1,5 +1,6 @@
 version = 7
 
+
 cloudstream {
     description = "AsyaLog — Asya dizileri ve filmleri (asyalog.co)"
     authors = listOf("F0Rextasy")

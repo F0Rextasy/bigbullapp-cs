@@ -1,11 +1,11 @@
-// @provider {"id":"diziyou", "name":"DiziYou", "types":["movie", "tv"], "domain":"diziyou.one", "formats":["m3u8"], "description":"DiziYou dizi/film kaynaklari (HLS + altyazi).", "sample":"tt0903747:tv:1:1", "version":"1.0.8"}
+// @provider {"id":"diziyou", "name":"DiziYou", "types":["movie", "tv"], "domain":"diziyou.one", "formats":["m3u8"], "description":"DiziYou dizi/film kaynaklari (HLS + altyazi).", "sample":"tt0903747:tv:1:1", "version":"1.0.9"}
 /**
  * diziyou — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> site search -> series -> episode -> player iframe -> m3u8 + VTT tracks.
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
-var BASE = "https://diziyou.one";
+var BASE = "https://www.diziyou.one";
 
 function text(url, opts) {
   var o = opts || {};

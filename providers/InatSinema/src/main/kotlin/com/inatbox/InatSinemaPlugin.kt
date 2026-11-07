@@ -9,7 +9,7 @@ class InatSinemaPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_5BtmCy7tc7RE19th4-8ZI645" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatSinemaProvider())
         openSettings = { Settings.showDialog(it, "InatBox Sinema", listOf(cfg.name)) }
     }
 }

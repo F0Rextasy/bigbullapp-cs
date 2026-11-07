@@ -9,7 +9,7 @@ class InatAmazonPrimePlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_htbHFdgXWa6QAiUxh2m_iFAc" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatAmazonPrimeProvider())
         openSettings = { Settings.showDialog(it, "InatBox Amazon Prime", listOf(cfg.name)) }
     }
 }

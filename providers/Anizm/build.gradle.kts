@@ -1,6 +1,7 @@
 // Use an integer for version numbers
 version = 9
 
+
 cloudstream {
     description = "Anizm — Türkçe altyazılı anime izle (turkanime.info)"
     authors = listOf("F0Rextasy")

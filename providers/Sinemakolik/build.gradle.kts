@@ -1,5 +1,6 @@
 version = 2
 
+
 cloudstream {
     description = "Sinemakolik — Türkçe dublaj/altyazılı film arşivi"
     authors = listOf("F0Rextasy")

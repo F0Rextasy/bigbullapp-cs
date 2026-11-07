@@ -1,5 +1,6 @@
 version = 9
 
+
 cloudstream {
     description = "ÇizgiMax — çizgi film, anime ve dizi izle (cizgimax.online)"
     authors = listOf("F0Rextasy")

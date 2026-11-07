@@ -1,4 +1,5 @@
-version = 4
+version = 5
+
 
 cloudstream {
     description = "Dizilab — Türkçe altyazılı/dublajlı yabancı diziler"

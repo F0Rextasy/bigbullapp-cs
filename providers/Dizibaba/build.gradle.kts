@@ -1,4 +1,5 @@
-version = 3
+version = 4
+
 
 cloudstream {
     description = "Dizibaba — Türkçe dublaj/altyazılı film arşivi"

@@ -1,5 +1,6 @@
 version = 5
 
+
 cloudstream {
     description = "WebdramaTurkey2 — Kore, Çin ve Japon dizileri, TR altyazılı (webdramaturkey2.com)"
     authors = listOf("F0Rextasy")

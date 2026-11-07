@@ -752,7 +752,7 @@ internal object InatClient {
     private fun randomHex(bytes: Int): String = ByteArray(bytes).also { random.nextBytes(it) }.toHex()
 }
 
-open class InatPlatformProvider(private val cfg: InatCfg) : MainAPI() {
+open class InatPlatformProvider(internal val cfg: InatCfg) : MainAPI() {
     override var mainUrl = originOf(cfg.url)
     override var name = cfg.displayName
     override var lang = "tr"

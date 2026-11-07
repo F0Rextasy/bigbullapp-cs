@@ -1,5 +1,6 @@
 version = 6
 
+
 cloudstream {
     description = "DiziPal — Türkçe dizi & film arşivi, platform bölümleri (dizipal1593.com)"
     authors = listOf("F0Rextasy")

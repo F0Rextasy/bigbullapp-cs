@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.18",
+  "version": "1.6.20",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -143,7 +143,7 @@
       "id": "dizikorea3",
       "name": "Dizikorea3",
       "description": "Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).",
-      "version": "1.0.8",
+      "version": "1.0.9",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -239,7 +239,7 @@
       "id": "diziyou",
       "name": "DiziYou",
       "description": "DiziYou dizi/film kaynaklari (HLS + altyazi).",
-      "version": "1.0.8",
+      "version": "1.0.9",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -355,7 +355,7 @@
       "id": "inattvdizi",
       "name": "İnatTV Dizi",
       "description": "İnatTV yabancı, yerli ve platform dizileri kataloğu (imzalı liste + AES çözümleyici, HLS).",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -374,7 +374,7 @@
       "id": "inattvfilmler",
       "name": "İnatTV Filmler",
       "description": "İnatTV yerli ve yabancı 4K film kataloğu (imzalı liste + AES çözümleyici, MP4/HLS).",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "author": "bigbull",
       "supportedTypes": [
         "movie"

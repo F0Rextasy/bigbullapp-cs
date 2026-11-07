@@ -160,7 +160,7 @@ class FullHDFilmProvider : MainAPI() {
                     JSONObject(jsUnescape(jsPayload(embedDoc, "setup(JSON.parse('")))
                 }.getOrNull() ?: continue
                 val stream = config.optString("file").takeIf { it.isNotBlank() } ?: continue
-                val quality = streamQuality(stream)
+                val quality = Qualities.Unknown.value
 
                 val linkName = listOf(name, label, item.optString("quality")).filter { it.isNotBlank() }.joinToString(" ")
                 found = true
@@ -224,22 +224,6 @@ class FullHDFilmProvider : MainAPI() {
         "tr" -> "Türkçe Dublaj"
         "en" -> "Türkçe Altyazı"
         else -> language.uppercase()
-    }
-
-    /** Highest variant height advertised by the master playlist, bucketed to a CS quality. */
-    private suspend fun streamQuality(stream: String): Int {
-        val playlist = runCatching { app.get(stream, headers = uaHeaders).text }.getOrNull()
-            ?: return Qualities.Unknown.value
-        val height = Regex("""RESOLUTION=\d+x(\d+)""").findAll(playlist)
-            .mapNotNull { it.groupValues[1].toIntOrNull() }
-            .maxOrNull() ?: return Qualities.Unknown.value
-        return when {
-            height >= 1000 -> Qualities.P1080.value
-            height >= 700 -> Qualities.P720.value
-            height >= 500 -> Qualities.P480.value
-            height >= 350 -> Qualities.P360.value
-            else -> Qualities.Unknown.value
-        }
     }
 
     companion object {

@@ -1,5 +1,6 @@
 // Use an integer for version numbers
-version = 4
+version = 5
+
 
 cloudstream {
     description = "FullHDFilmizlesene — fullhdfilmizlesene.now (Türkçe dublaj/altyazılı film arşivi)"

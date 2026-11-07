@@ -1,5 +1,6 @@
 version = 7
 
+
 cloudstream {
     description = "Kült Filmler — kultfilmler.net"
     authors = listOf("F0Rextasy")

@@ -1,5 +1,6 @@
 version = 4
 
+
 cloudstream {
     description = "Dizifon — Türkçe içerik (autopilot)"
     authors = listOf("F0Rextasy")

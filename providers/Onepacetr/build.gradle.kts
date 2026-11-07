@@ -1,5 +1,6 @@
 version = 6
 
+
 cloudstream {
     description = "One Pace TR — One Piece fan edit, Türkçe altyazılı (onepacetr.net)"
     authors = listOf("F0Rextasy")

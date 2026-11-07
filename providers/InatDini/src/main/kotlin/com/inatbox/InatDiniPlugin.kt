@@ -9,7 +9,7 @@ class InatDiniPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_1p78-p683RKRQmhQj_bhfaHO" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatDiniProvider())
         openSettings = { Settings.showDialog(it, "InatBox Dini", listOf(cfg.name)) }
     }
 }

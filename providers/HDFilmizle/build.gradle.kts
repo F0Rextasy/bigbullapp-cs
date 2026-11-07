@@ -1,5 +1,6 @@
 version = 6
 
+
 cloudstream {
     description = "HDFilmizle — Full HD film ve yabancı dizi arşivi (hdfilmizle.ink)"
     authors = listOf("F0Rextasy")

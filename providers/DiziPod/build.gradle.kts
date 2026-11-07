@@ -1,5 +1,6 @@
 version = 6
 
+
 cloudstream {
     description = "DiziPod — Türkçe altyazılı yabancı dizi & film arşivi (dizipod.com)"
     authors = listOf("F0Rextasy")

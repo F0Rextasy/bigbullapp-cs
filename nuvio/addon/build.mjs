@@ -78,7 +78,7 @@ function stripTags(html) {
 // Başlık -> IMDb id (Cinemeta'da anahtarsız arama).
 async function resolve(type, title) {
   const key = type + "|" + norm(title);
-  if (cache[key]) return cache[key];
+  if (Object.prototype.hasOwnProperty.call(cache, key)) return cache[key];
   const kind = type === "movie" ? "movie" : "series";
   const url = `https://v3-cinemeta.strem.io/catalog/${kind}/top/search=${encodeURIComponent(title)}.json`;
   let metas = [];
@@ -90,7 +90,10 @@ async function resolve(type, title) {
   const want = norm(title);
   const hit =
     metas.find((m) => norm(m.name) === want) ||
-    metas.find((m) => norm(m.name).startsWith(want) || want.startsWith(norm(m.name)));
+    metas.find((m) => {
+      const mn = norm(m.name);
+      return mn.length >= 3 && want.length >= 3 && (mn.startsWith(want + " ") || want.startsWith(mn + " "));
+    });
   const value = hit ? { id: hit.id, poster: String(hit.poster || hit.background || "").replace("/small/", "/medium/") } : null;
   cache[key] = value;
   if (!value) console.warn(`  ~ çözülemedi: ${title}`);
@@ -166,7 +169,7 @@ if (!check) {
     if (!existsSync(d)) continue;
     for (const f of readdirSync(d)) {
       const id = f.replace(/\.json$/, "");
-      const rc = recipes.find((r) => r.id === id && r.type === t);
+      const rc = allRecipes.find((r) => r.id === id && r.type === t);
       all.push({ type: t, id, name: (rc && rc.name) || id });
     }
   }

@@ -1,5 +1,6 @@
 version = 4
 
+
 cloudstream {
     description = "SinemaCX — Türkçe dublaj & altyazılı film arşivi (sinemacc.com)"
     authors = listOf("F0Rextasy")

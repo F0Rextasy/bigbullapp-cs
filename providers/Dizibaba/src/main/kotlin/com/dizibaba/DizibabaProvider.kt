@@ -19,6 +19,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
+import java.net.URLEncoder
 import org.json.JSONObject
 import org.jsoup.nodes.Element
 
@@ -58,7 +59,7 @@ class DizibabaProvider : MainAPI() {
         MainPageData("Macera", "$mainUrl/tur/macera"),
         MainPageData("Romantik", "$mainUrl/tur/romantik"),
         MainPageData("Suç", "$mainUrl/tur/suc"),
-    )
+    ).filter { Settings.rowEnabled(it.name) }
 
     private fun Element.toCard(): SearchResponse? {
         val href = fixUrlNull(attr("href")) ?: return null
@@ -79,7 +80,7 @@ class DizibabaProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val doc = app.get("$mainUrl/ara?q=${query.trim()}", headers = headers).document
+        val doc = app.get("$mainUrl/ara?q=${URLEncoder.encode(query.trim(), "UTF-8")}", headers = headers).document
         return doc.select("a[href*=/film/]").mapNotNull { it.toCard() }.distinctBy { it.url }
     }
 
@@ -142,7 +143,7 @@ class DizibabaProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Filmler")
+        val ROWS = listOf("Filmler", "Aile", "Aksiyon", "Animasyon", "Belgesel", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem", "Komedi", "Korku", "Macera", "Romantik", "Suç")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

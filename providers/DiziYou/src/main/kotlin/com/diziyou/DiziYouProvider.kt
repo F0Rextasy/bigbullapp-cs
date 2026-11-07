@@ -27,6 +27,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
+import java.net.URLEncoder
 
 /** DiziYou — diziyou.one (CSS: storage.diziyou.one, m3u8 + VTT) */
 class DiziYouProvider : MainAPI() {
@@ -80,7 +81,7 @@ class DiziYouProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val doc = app.get("$mainUrl/?s=$query", headers = uaHeaders).document
+        val doc = app.get("$mainUrl/?s=${URLEncoder.encode(query.trim(), "UTF-8")}", headers = uaHeaders).document
         return doc.select("#list-series").mapNotNull { card ->
             val anchor = card.selectFirst("#categorytitle a") ?: return@mapNotNull null
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null

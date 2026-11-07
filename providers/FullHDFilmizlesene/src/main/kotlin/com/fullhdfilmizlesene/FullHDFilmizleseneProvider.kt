@@ -163,9 +163,7 @@ class FullHDFilmizleseneProvider : MainAPI() {
             ?: return false
         // The master must reach the player whole (it owns the #EXT-X-MEDIA audio renditions);
         // its widest child variant only names the row and feeds the quality cap setting.
-        val quality = runCatching {
-            app.get(stream, headers = siteHeaders + mapOf("Referer" to embed)).text
-        }.getOrNull()?.let { bestQuality(it) } ?: Qualities.Unknown.value
+        val quality = Qualities.Unknown.value
         callback(
             newExtractorLink(name, label, stream, ExtractorLinkType.M3U8) {
                 this.referer = "$mainUrl/"
@@ -180,19 +178,6 @@ class FullHDFilmizleseneProvider : MainAPI() {
             subtitleCallback(SubtitleFile(subtitleLang(track.optString("label")), file))
         }
         return true
-    }
-
-    /** Widest variant of the master; label by width, since cinema masters are 1920x800. */
-    private fun bestQuality(playlist: String): Int {
-        val width = Regex("""RESOLUTION=(\d+)x\d+""").findAll(playlist)
-            .mapNotNull { it.groupValues[1].toIntOrNull() }.maxOrNull() ?: return Qualities.Unknown.value
-        return when {
-            width >= 3400 -> Qualities.P2160.value
-            width >= 1700 -> Qualities.P1080.value
-            width >= 1100 -> Qualities.P720.value
-            width >= 850 -> Qualities.P480.value
-            else -> Qualities.P360.value
-        }
     }
 
     private fun subtitleLang(label: String): String = when {

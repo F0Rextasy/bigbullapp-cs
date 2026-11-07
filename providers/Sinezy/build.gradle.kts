@@ -1,4 +1,5 @@
-version = 3
+version = 4
+
 
 cloudstream {
     description = "Sinezy — Türkçe dublaj/altyazılı film arşivi"

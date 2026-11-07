@@ -1,5 +1,6 @@
 version = 6
 
+
 cloudstream {
     description = "UltraFilmizle — Türkçe dublaj/altyazılı film arşivi"
     authors = listOf("F0Rextasy")

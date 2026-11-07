@@ -1,5 +1,6 @@
 version = 3
 
+
 cloudstream {
     description = "DiziBoxTv — Türkçe içerik (autopilot)"
     authors = listOf("F0Rextasy")

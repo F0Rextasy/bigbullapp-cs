@@ -9,7 +9,7 @@ class InatExxenPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_BSwGQS-pp65t7fK5csiC9l2g" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatExxenProvider())
         openSettings = { Settings.showDialog(it, "InatBox EXXEN", listOf(cfg.name)) }
     }
 }

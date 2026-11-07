@@ -1,5 +1,6 @@
 version = 5
 
+
 cloudstream {
     description = "LoveFilm — Türkçe dublaj & altyazılı film arşivi (lovefilmizle.net)"
     authors = listOf("F0Rextasy")

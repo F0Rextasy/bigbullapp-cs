@@ -9,7 +9,7 @@ class InatUlusalPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_QyP4YpaqWR_fPnSL3FXk1t3p" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatUlusalProvider())
         openSettings = { Settings.showDialog(it, "InatBox Ulusal", listOf(cfg.name)) }
     }
 }

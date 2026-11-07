@@ -9,7 +9,7 @@ class InatTabiiPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_W9cS1zuzIl3eLwopo6DWoRtH" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatTabiiProvider())
         openSettings = { Settings.showDialog(it, "InatBox Tabii", listOf(cfg.name)) }
     }
 }

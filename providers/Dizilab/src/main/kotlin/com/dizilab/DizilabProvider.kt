@@ -21,6 +21,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
+import java.net.URLEncoder
 import org.jsoup.nodes.Element
 
 /**
@@ -54,7 +55,7 @@ class DizilabProvider : MainAPI() {
         MainPageData("Romantik", "$mainUrl/tur/romantik/"),
         MainPageData("Komedi", "$mainUrl/tur/komedi/"),
         MainPageData("Gerilim", "$mainUrl/tur/gerilim/"),
-    )
+    ).filter { Settings.rowEnabled(it.name) }
 
     private fun Element.toCard(): SearchResponse? {
         val href = fixUrlNull(selectFirst("a[href*=/dizi/]")?.attr("href")) ?: return null
@@ -72,7 +73,7 @@ class DizilabProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val doc = app.get("$mainUrl/?s=${query.trim()}", headers = headers).document
+        val doc = app.get("$mainUrl/?s=${URLEncoder.encode(query.trim(), "UTF-8")}", headers = headers).document
         return doc.select("article.card").mapNotNull { it.toCard() }
     }
 
@@ -112,6 +113,8 @@ class DizilabProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
+        val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
+        val subCallback: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
         val pageUrl = fixUrl(data)
         val doc = app.get(pageUrl, headers = headers).document
         val frames = doc.select("iframe[src]").mapNotNull { fixUrlNull(it.attr("src")) }
@@ -127,7 +130,7 @@ class DizilabProvider : MainAPI() {
                 .map { it.value }
                 .distinct()
             for (stream in streams) {
-                callback.invoke(
+                linkCallback.invoke(
                     newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
                         this.referer = frame
                         this.headers = headers
@@ -136,7 +139,7 @@ class DizilabProvider : MainAPI() {
                 )
                 found = true
             }
-            if (!streams.any() && loadExtractor(frame, pageUrl, subtitleCallback, callback)) found = true
+            if (!streams.any() && loadExtractor(frame, pageUrl, subCallback, linkCallback)) found = true
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
         return true

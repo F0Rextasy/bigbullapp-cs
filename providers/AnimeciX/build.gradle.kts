@@ -1,5 +1,6 @@
 version = 3
 
+
 cloudstream {
     description = "AnimeciX — Türkçe altyazılı anime arşivi (animecix.tv)"
     authors = listOf("F0Rextasy")

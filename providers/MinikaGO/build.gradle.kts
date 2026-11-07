@@ -1,5 +1,6 @@
 version = 5
 
+
 cloudstream {
     description = "MinikaGO — çocuk dizileri ve bölümleri (MP4)"
     authors = listOf("F0Rextasy")

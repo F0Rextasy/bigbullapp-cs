@@ -1,5 +1,6 @@
 version = 2
 
+
 cloudstream {
     description = "DiziBol — altyazılı yabancı dizi ve film arşivi (dizibol.org)"
     authors = listOf("F0Rextasy")

@@ -9,7 +9,7 @@ class InatTodPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_QVYYoekBIvGw1KFR0wdQE8gu" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatTodProvider())
         openSettings = { Settings.showDialog(it, "InatBox TOD", listOf(cfg.name)) }
     }
 }

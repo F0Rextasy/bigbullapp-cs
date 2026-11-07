@@ -43,6 +43,7 @@ subprojects {
 
     android {
         namespace = "com.bigbull.${project.name.lowercase()}"
+        sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
 
         defaultConfig {
             minSdk = 21

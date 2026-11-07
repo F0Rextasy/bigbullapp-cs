@@ -1,5 +1,6 @@
 version = 1
 
+
 cloudstream {
     description = "HDFilmizleBest — Türkçe içerik (autopilot)"
     authors = listOf("F0Rextasy")

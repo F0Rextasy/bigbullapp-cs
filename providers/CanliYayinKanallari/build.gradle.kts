@@ -1,5 +1,6 @@
 version = 4
 
+
 cloudstream {
     description = "CanliYayinKanallari — Türkçe canlı TV (seçilmiş HLS)"
     authors = listOf("F0Rextasy")

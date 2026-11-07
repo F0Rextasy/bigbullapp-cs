@@ -1,4 +1,4 @@
-// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt1790885:movie:1:1", "description":"İnatTV yerli ve yabancı 4K film kataloğu (imzalı liste + AES çözümleyici, MP4/HLS).", "verified":true, "version":"1.0.2"}
+// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt1790885:movie:1:1", "description":"İnatTV yerli ve yabancı 4K film kataloğu (imzalı liste + AES çözümleyici, MP4/HLS).", "verified":true, "version":"1.0.3"}
 /**
  * inattvfilmler — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.
@@ -73,19 +73,24 @@ function utf8b(s) {
   return o;
 }
 function utf8s(a) {
-  var s = "", i, c;
+  var chunks = [], chunk = [], i, c;
   for (i = 0; i < a.length; i++) {
     c = a[i];
-    if (c < 0x80) s += String.fromCharCode(c);
-    else if (c < 0xe0) s += String.fromCharCode(((c & 31) << 6) | (a[++i] & 63));
-    else if (c < 0xf0) s += String.fromCharCode(((c & 15) << 12) | ((a[++i] & 63) << 6) | (a[++i] & 63));
+    if (c < 0x80) chunk.push(c);
+    else if (c < 0xe0) chunk.push(((c & 31) << 6) | (a[++i] & 63));
+    else if (c < 0xf0) chunk.push(((c & 15) << 12) | ((a[++i] & 63) << 6) | (a[++i] & 63));
     else {
       c = ((c & 7) << 18) | ((a[++i] & 63) << 12) | ((a[++i] & 63) << 6) | (a[++i] & 63);
       c -= 0x10000;
-      s += String.fromCharCode(0xd800 + (c >> 10), 0xdc00 + (c & 1023));
+      chunk.push(0xd800 + (c >> 10), 0xdc00 + (c & 1023));
+    }
+    if (chunk.length >= 4096) {
+      chunks.push(String.fromCharCode.apply(null, chunk));
+      chunk.length = 0;
     }
   }
-  return s.replace(/^\uFEFF/, "");
+  if (chunk.length) chunks.push(String.fromCharCode.apply(null, chunk));
+  return chunks.join("").replace(/^\uFEFF/, "");
 }
 var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 var B64VAL = [];
@@ -663,7 +668,7 @@ function pickEpisode(list, want) {
   var i, byNo = [];
   for (i = 0; i < list.length; i++) if (episodeNo(list[i].name) === want) byNo.push(list[i]);
   if (byNo.length) return byNo[0];
-  return list[want - 1] || list[0] || null;
+  return list[want - 1] || null;
 }
 function norm(v) {
   return String(v || "").toLowerCase().replace(/[^a-z0-9\u00e7\u011f\u0131\u00f6\u015f\u00fc ]+/g, " ").replace(/\s+/g, " ").trim();
@@ -679,7 +684,7 @@ function pickCandidates(list, title) {
     for (var w = 0; w < words.length; w++) if (name.indexOf(words[w]) >= 0) hits++;
     score = 0;
     if (name === want) score = 3;
-    else if ((" " + name + " ").indexOf(" " + want + " ") >= 0) score = 2;
+    else if (name.indexOf(want + " ") === 0) score = 2;
     if (score) scored.push({ e: entry, s: score, h: hits, n: name.length });
   }
   scored.sort(function (a, b) { return b.s - a.s || b.h - a.h || a.n - b.n; });
@@ -697,7 +702,8 @@ function expand(entry, wantSeason, wantEpisode) {
     if (seasons.length) {
       season = null;
       for (i = 0; i < seasons.length; i++) if (seasonNo(seasons[i].name) === wantSeason) season = seasons[i];
-      if (!season) season = seasons[Math.min(wantSeason - 1, seasons.length - 1)];
+      if (!season) season = seasons[wantSeason - 1] || null;
+      if (!season) return [];
       return entries(season.url, season.dataType).then(function (eps) {
         var ep = pickEpisode(eps, wantEpisode);
         return ep ? [{ label: ep.name, entry: ep }] : [];
@@ -840,6 +846,39 @@ function getStreams(tmdbId, mediaType, season, episode) {
 }
 
 module.exports = { getStreams };
+
+var __origGetStreams = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  var raw = String(id || "");
+  if (!/^\d+$/.test(raw)) return __origGetStreams(raw, mediaType, season, episode);
+  var tv = mediaType !== "movie";
+  var headers = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  var prop = tv ? "P4983" : "P4947";
+  return fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + prop + "=" + raw), { headers: headers })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (json) {
+      var hits = (json && json.query && json.query.search) || [];
+      if (!hits.length) return "";
+      return fetch(api + "&action=wbgetentities&props=claims&ids=" + hits[0].title, { headers: headers });
+    })
+    .then(function (r) { return r && r.ok ? r.json() : null; })
+    .then(function (json) {
+      var entities = (json && json.entities) || {};
+      for (var entity in entities) {
+        var rows = ((entities[entity] || {}).claims || {}).P345 || [];
+        for (var i = 0; i < rows.length; i++) {
+          var value = rows[i] && rows[i].mainsnak && rows[i].mainsnak.datavalue && rows[i].mainsnak.datavalue.value;
+          if (/^tt\d+$/.test(String(value || ""))) return value;
+        }
+      }
+      return "";
+    })
+    .catch(function () { return ""; })
+    .then(function (imdb) {
+      return __origGetStreams(imdb || raw, mediaType, season, episode);
+    });
+};
 
 
 /* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.

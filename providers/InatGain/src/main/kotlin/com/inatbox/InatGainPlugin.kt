@@ -9,7 +9,7 @@ class InatGainPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_jz59NDtYLsawgRseigIswAEf" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatGainProvider())
         openSettings = { Settings.showDialog(it, "InatBox Gain", listOf(cfg.name)) }
     }
 }

@@ -79,9 +79,7 @@ yasaktır. Her yeni alan canlı istekle (URL + çıkan değer) kanıtlanır; kan
 - Yeni sağlayıcı eklerken `verify.py` içindeki `VERIFIERS` sözlüğüne bir doğrulayıcı ekle; yoksa
   bot o domaini asla otomatik güncellemez.
 
-CI: `build.yml` `builds` dalını üretir; `domains.yml` doğrulanmış mirror güncellemesini doğrudan
-`master`'a yazar, sürümü artırır ve `CHANGELOG.md`'ye patch başlığı ekler; `bildirim.yml` commit'i
-Telegram'a gönderir.
+CI: `build.yml` `builds` dalını üretir; `health.yml` günlük sağlık raporunu oluşturur; `nuvio-catalog.yml` statik Nuvio kataloglarını yeniler; `bildirim.yml` sürüm artışlarını Telegram'a gönderir.
 
 ## Commit
 

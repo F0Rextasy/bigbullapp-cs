@@ -2,7 +2,7 @@
   "id": "dizipal",
   "name": "DiziPal",
   "type": "series",
-  "url": "https://dizipal1592.com/yabanci-dizi-izle",
+  "url": "https://dizipal1594.com/yabanci-dizi-izle",
   "item": "<a class=\"tc\"[\\s\\S]*?</a>",
   "title": "<span class=\"tt\"[^>]*>([^<]+)</span>",
   "href": "href=\"([^\"]+)\""

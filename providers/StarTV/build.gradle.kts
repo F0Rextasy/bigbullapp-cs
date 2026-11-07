@@ -1,5 +1,6 @@
 version = 2
 
+
 cloudstream {
     description = "StarTV — Yalı Çapkını ve diğer dizilerin bölümleri"
     authors = listOf("F0Rextasy")

@@ -74,7 +74,13 @@ def _registry() -> dict:
 
 
 def base(domain: str) -> str:
-    return _registry()[domain]["mainUrl"].rstrip("/")
+    reg = _registry()
+    if domain in reg:
+        return reg[domain]["mainUrl"].rstrip("/")
+    for entry in reg.values():
+        if entry.get("module") == domain:
+            return entry["mainUrl"].rstrip("/")
+    raise KeyError(domain)
 
 
 def absolute(b: str, pattern: str, text: str) -> str | None:
@@ -335,15 +341,25 @@ def verify_shared_player(b: str, search_path: str, series_pattern: str) -> dict:
 
 
 def verify_yabancidizi() -> dict:
-    return verify_shared_player(base("yabancidizi.live"), "/arama?q=game", r'href="([^"]*/dizi/[^"]+)"')
+    return verify_shared_player(base("Yabancidizi"), "/arama?q=game", r'href="([^"]*/dizi/[^"]+)"')
 
 
 def verify_dizilife() -> dict:
-    return verify_shared_player(base("dizi83.life"), "/ara?q=gibi", r'href="([^"]*/dizi/[^"]+)"')
+    return verify_shared_player(base("DiziLife"), "/ara?q=gibi", r'href="([^"]*/dizi/[^"]+)"')
 
 
 VERIFIERS = {
     "dizibox.live": verify_dizibox,
+    "Dizibox": verify_dizibox,
+    "DiziYou": verify_diziyou,
+    "AsyaLog": verify_asyalog,
+    "DiziBoxIzle": verify_diziboxizle,
+    "AsyaAnimeleri": verify_asyaanimeleri,
+    "Kultfilmler": verify_kultfilmler,
+    "yabancidizi.watch": verify_yabancidizi,
+    "Yabancidizi": verify_yabancidizi,
+    "dizi84.life": verify_dizilife,
+    "DiziLife": verify_dizilife,
     "diziyou.one": verify_diziyou,
     "asyalog.co": verify_asyalog,
     "diziboxizle.com": verify_diziboxizle,
@@ -374,7 +390,7 @@ def main() -> int:
     rows = []
     failures = 0
     for domain, entry in sorted(targets.items()):
-        verifier = VERIFIERS.get(domain)
+        verifier = VERIFIERS.get(domain) or VERIFIERS.get(entry.get("module", ""))
         if not verifier:
             rows.append((domain, entry.get("module", "?"), "skip", "no verifier implemented"))
             continue

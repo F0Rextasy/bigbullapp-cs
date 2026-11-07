@@ -1,4 +1,5 @@
-version = 7
+version = 8
+
 
 cloudstream {
     description = "Dizigecesi — Türkçe dublaj/altyazılı film arşivi"

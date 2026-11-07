@@ -1,5 +1,6 @@
 version = 4
 
+
 cloudstream {
     description = "AsyaLuna — Türkçe içerik (autopilot)"
     authors = listOf("F0Rextasy")

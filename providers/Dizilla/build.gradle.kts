@@ -1,5 +1,6 @@
 version = 10
 
+
 cloudstream {
     description = "Dizilla — yabancı dizi izle (dizilla.nl mirror'ı)"
     authors = listOf("F0Rextasy")

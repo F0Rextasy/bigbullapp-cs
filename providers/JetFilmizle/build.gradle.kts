@@ -1,6 +1,7 @@
 // Use an integer for version numbers
 version = 6
 
+
 cloudstream {
     description = "JetFilmizle — Türkçe dublaj/altyazılı film izle (jetfilmizle.app)"
     authors = listOf("F0Rextasy")

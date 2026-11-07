@@ -9,7 +9,7 @@ class InatYabanciDizilerPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_Eezq0PIaOgfuROrP97RMrve8" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatYabanciDizilerProvider())
         openSettings = { Settings.showDialog(it, "InatBox Yabancı Diziler", listOf(cfg.name)) }
     }
 }

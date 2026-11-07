@@ -1,5 +1,6 @@
 version = 6
 
+
 cloudstream {
     description = "DiziAsia — Asya dizileri ve filmleri (diziasia.com)"
     authors = listOf("F0Rextasy")

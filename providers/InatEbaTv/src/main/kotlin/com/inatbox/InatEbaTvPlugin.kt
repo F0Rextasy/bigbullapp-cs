@@ -9,7 +9,7 @@ class InatEbaTvPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_B159Mech2izHkFn7NQD6AlOE" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatEbaTvProvider())
         openSettings = { Settings.showDialog(it, "InatBox EBA TV", listOf(cfg.name)) }
     }
 }

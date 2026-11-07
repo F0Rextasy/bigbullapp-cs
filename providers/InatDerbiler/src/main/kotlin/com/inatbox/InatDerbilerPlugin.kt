@@ -9,7 +9,7 @@ class InatDerbilerPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_x1xrQpb1cnjXNQlhHJJh-d-7" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatDerbilerProvider())
         openSettings = { Settings.showDialog(it, "InatBox Derbiler", listOf(cfg.name)) }
     }
 }

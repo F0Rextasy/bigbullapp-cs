@@ -9,7 +9,7 @@ class InatListe1TrPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         val cfg = InatCfgRegistry.ALL.first { it.id == "plat_hklZHuRuuNFJu_hnQLNFtxDX" }
-        registerMainAPI(InatPlatformProvider(cfg))
+        registerMainAPI(InatListe1TrProvider())
         openSettings = { Settings.showDialog(it, "InatBox Liste 1 - TR", listOf(cfg.name)) }
     }
 }

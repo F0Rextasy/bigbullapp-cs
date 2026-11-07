@@ -1,5 +1,6 @@
 version = 7
 
+
 cloudstream {
     description = "CizgiSite — Türkçe çizgi film arşivi"
     authors = listOf("F0Rextasy")
