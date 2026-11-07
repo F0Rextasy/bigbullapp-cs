@@ -5,10 +5,22 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.22] - 2026-11-07
+
+### Eklendi
+- **Nuvio RecTV (1.0.1)**: 29. Nuvio sağlayıcısı; imzalı API'nin `/api/search` ve `/api/season/by/serie` uçlarıyla film **ve dizi** akışı (sezon/bölüm eşleşmeli).
+- **RecTV v3**: sunucu taraflı arama, dizi için gerçek sezon/bölüm listesi (dublaj/altyazı kaynakları bölüme bağlı), ek ana sayfa satırları.
+
+### Düzeltildi
+- **SelcukFlix v5 (+ Nuvio 1.1.0)**: site DiziPal platformuna taşındı (eski AES `secureData` ve `/api/bg/searchcontent` kalktı); `/api/mj` arama, `/film/<slug>/izle` + `/dizi/<slug>/sezon-S/bolum-E` sayfaları, PBKDF2-SHA512/AES `enc` çözümü ve dublaj/altyazı alternatif kaynakları yeniden uygulandı (runner: film + dizi PASS).
+- **DiziPal v7**: `search` boş liste döndüren taslaktı; `/api/mj` ile gerçek arama eklendi.
+- **WebteIzle (Nuvio 1.0.3)**: depoda `enabled:false` idi; Turnstile yedek oynatıcıları ve windows-1254 arama ile etkinleştirildi.
+- **Nuvio manifest**: `CHANGELOG` sürümü artınca `nuvio/manifest.json` otomatik güncellenir (workflow + bot).
+
 ## [1.6.21] - 2026-11-07
 
 ### Eklendi
-- **RecTV v2**: `a.psrectv80.xyz` imzalı resmî API (attest/nonce + HMAC-SHA256) eklendi; film/dizi ana sayfa satırları, sayfalama, önbellekli istemci taraflı arama, `fixUrl` uyumlu `https://` detay/kaynak adresleri ve token'lı m3u8 kaynakları runner'da doğrulandı.
+- **RecTV v2**: `a.psrectv80.xyz` imzalı resmî API (attest/nonce + HMAC-SHA256) eklendi; film/dizi ana sayfa satırları, sayfalama, önbellekli istemci taraflı arama, `fixUrl` uyumlu `https://` detay/kaynak adresleri ve token'lı m3u8 kaynakları runner'da doğrulandı. Nuvio'ya `rectv` (29. sağlayıcı) eklendi; canlı örnek bir akış döndü.
 
 ### Düzeltildi
 - **WebteIzle v2**: aramada tam başlık eşleşmelerinin henüz yayınlanmamış gelecek yıl yapımlarının önüne sıralanması sağlandı (`q=avatar` -> `Avatar` 2 link PASS).

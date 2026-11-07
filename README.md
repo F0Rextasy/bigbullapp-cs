@@ -232,10 +232,11 @@ Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Reposito
 `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json` →
 **Refresh** → sağlayıcıları tek tek aç. Tam liste: [`nuvio/manifest.json`](nuvio/manifest.json).
 
-**Kapsam**: Uygulama performansını korumak ve kasmayı önlemek amacıyla Nuvio tarafında yalnızca seçilmiş **28 ana sağlayıcı** yayınlanır:
+**Kapsam**: Uygulama performansını korumak ve kasmayı önlemek amacıyla Nuvio tarafında yalnızca seçilmiş **29 ana sağlayıcı** yayınlanır:
 - **Anime (3):** `Anizium`, `AnimeciX`, `AsyaAnimeleri`
 - **Dizi (13):** `Dizibox`, `Dizilla`, `DiziPal`, `SelcukFlix`, `Ddizi`, `WebdramaTurkey2`, `Dizikorea3`, `Sezonlukdizi`, `DiziYou`, `DiziBal`, `İnatTV Dizi`, `DiziMom`, `DiziPod`
-- **Film (9):** `HDFilmCehennemi`, `FullHDFilmizlesene`, `SetFilmIzle`, `YesilCamTv`, `İnatTV Filmler`, `FilmMakinesi`, `WebteIzle` **(pasif)**, `FilmModu`, `JetFilmizle`
+- **Film (9):** `HDFilmCehennemi`, `FullHDFilmizlesene`, `SetFilmIzle`, `YesilCamTv`, `İnatTV Filmler`, `FilmMakinesi`, `WebteIzle`, `FilmModu`, `JetFilmizle`
+- **Film & Dizi (1):** `RecTV`
 - **Belgesel & TV (3):** `BelgeselX`, `DMAX`, `TLCtr`
 
 Repo eklemek sağlayıcıları çalıştırmaz: Plugins ekranında **Enable plugin providers globally** ve
@@ -284,7 +285,7 @@ tek başına bu testle garanti edilmez.
 
 - Cloudstream host runner: 96 aktif modül; DiziPod v6, Yabancidizi v8 ve HDFilmCehennemi v9 canlı doğrulandı.
 - Emülatör smoke: DiziPal, AsyaWatch ve MinikaGO arama → detay → oynatma PASS.
-- Nuvio host: **28 sağlayıcı** (`manifest.json`) ve **20 katalog** (`addon/manifest.json`); otomatik güncelleme botu her turda Nuvio'yu da tarar (İnat CDN egress engeli ve `WebteIzle` pasifi ayrı sayılır).
+- Nuvio host: **29 sağlayıcı** (`manifest.json`) ve **20 katalog** (`addon/manifest.json`); otomatik güncelleme botu her turda Nuvio'yu da tarar (İnat CDN egress engeli ve Node TLS'ine kapalı `WebteIzle` ayrı sayılır).
 
 ## Eklenti ayarları
 
@@ -305,7 +306,7 @@ providers/
   Dizibox/
   ...
   Yabancidizi/          96 aktif modül
-nuvio/                  Nuvio eklenti deposu (28 sağlayıcı + 20 katalog kaynağı)
+nuvio/                  Nuvio eklenti deposu (29 sağlayıcı + 20 katalog kaynağı)
 ```
 
 ## Geliştirme

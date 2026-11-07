@@ -1,20 +1,29 @@
-// @provider {"id":"selcukflix", "name":"SelcukFlix", "types":["movie", "tv"], "domain":"selcukflix.app", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"SelcukFlix - Turkce dublaj/altyazili film ve diziler; AES secureData + pichive HLS master.", "verified":true, "version":"1.0.5"}
+// @provider {"id":"selcukflix", "name":"SelcukFlix", "types":["movie", "tv"], "domain":"selcukflix.app", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"SelcukFlix - Turkce dublaj/altyazili film ve diziler; PBKDF2+SHA512 player token -> HLS master.", "verified":true, "version":"1.1.0"}
 /**
  * selcukflix — Nuvio provider (bb-nuvio).
- * Flow: numeric TMDB -> Wikidata -> IMDb; Cinemeta title -> POST /api/bg/searchcontent
- *       (AES envelope) -> content page `#__NEXT_DATA__.pageProps.secureData` (same envelope)
- *       -> RelatedResults sources -> pichive iframe (NP_CONFIG master, or legacy
- *       openPlayer -> source2.php) -> HLS.
- * pichive.online answers 403 to Node's TLS fingerprint while curl from the same IP gets the
- * player, so the header is marked verified:false.
+ * Flow: IMDb id (TMDB -> Wikidata) -> POST /api/mj {action:searchContent} (exact object_related_imdb_id,
+ *       title fallback) -> /film/<slug>/izle or /dizi/<slug>/sezon-S/bolum-E
+ *       -> `enc` fields (ciphertext/iv/salt/k) -> PBKDF2-HMAC-SHA512(999) + AES-256-CBC
+ *       -> player page -> NP_CONFIG master (or legacy openPlayer) -> HLS variants.
+ * The site moved to the DiziPal platform (Next.js RSC); the old AES secureData flow is gone.
  */
 
-var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0";
 var BASE = "https://selcukflix.app";
-var AES_KEY = "9bYMCNQiWsXIYFWYAu7EkdsSbmGBTyUI";
 var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-/** Wikidata rejects a browser UA; this resolver needs a descriptive one. */
-var WIKI_UA = "bb-nuvio-selcukflix/1.0 (+https://github.com/F0Rextasy/bigbullapp-cs)";
+var K512HEX =
+  "428a2f98d728ae22 7137449123ef65cd b5c0fbcfec4d3b2f e9b5dba58189dbbc 3956c25bf348b538 59f111f1b605d019 923f82a4af194f9b ab1c5ed5da6d8118 " +
+  "d807aa98a3030242 12835b0145706fbe 243185be4ee4b28c 550c7dc3d5ffb4e2 72be5d74f27b896f 80deb1fe3b1696b1 9bdc06a725c71235 c19bf174cf692694 " +
+  "e49b69c19ef14ad2 efbe4786384f25e3 0fc19dc68b8cd5b5 240ca1cc77ac9c65 2de92c6f592b0275 4a7484aa6ea6e483 5cb0a9dcbd41fbd4 76f988da831153b5 " +
+  "983e5152ee66dfab a831c66d2db43210 b00327c898fb213f bf597fc7beef0ee4 c6e00bf33da88fc2 d5a79147930aa725 06ca6351e003826f 142929670a0e6e70 " +
+  "27b70a8546d22ffc 2e1b21385c26c926 4d2c6dfc5ac42aed 53380d139d95b3df 650a73548baf63de 766a0abb3c77b2a8 81c2c92e47edaee6 92722c851482353b " +
+  "a2bfe8a14cf10364 a81a664bbc423001 c24b8b70d0f89791 c76c51a30654be30 d192e819d6ef5218 d69906245565a910 f40e35855771202a 106aa07032bbd1b8 " +
+  "19a4c116b8d2d0c8 1e376c085141ab53 2748774cdf8eeb99 34b0bcb5e19b48a8 391c0cb3c5c95a63 4ed8aa4ae3418acb 5b9cca4f7763e373 682e6ff3d6b2b8a3 " +
+  "748f82ee5defb2fc 78a5636f43172f60 84c87814a1f0ab72 8cc702081a6439ec 90befffa23631e28 a4506cebde82bde9 bef9a3f7b2c67915 c67178f2e372532b " +
+  "ca273eceea26619c d186b8c721c0c207 eada7dd6cde0eb1e f57d4f7fee6ed178 06f067aa72176fba 0a637dc5a2c898a6 113f9804bef90dae 1b710b35131c471b " +
+  "28db77f523047d84 32caab7b40c72493 3c9ebe0a15c9bebc 431d67c49c100d4c 4cc5d4becb3e42b6 597f299cfc657e2a 5fcb6fab3ad6faec 6c44198c4a475817";
+var IV512HEX =
+  "6a09e667f3bcc908 bb67ae8584caa73b 3c6ef372fe94f82b a54ff53a5f1d36f1 510e527fade682d1 9b05688c2b3e6c1f 1f83d9abfb41bd6b 5be0cd19137e2179";
 
 function text(url, opts) {
   var o = opts || {};
@@ -37,8 +46,6 @@ function origin(url) {
   return m ? m[1] : null;
 }
 
-// ------------------------------------------------------------------ base64
-
 /** atob is absent in the Nuvio sandbox: base64 -> byte array by hand. */
 function bytes(value) {
   var s = String(value || "").replace(/[^A-Za-z0-9+/=]/g, "");
@@ -56,10 +63,11 @@ function bytes(value) {
   }
   return out;
 }
-/** The AES key is a literal string, so take its char codes — not base64. */
-function chars(value) {
+
+function hexBytes(value) {
+  var s = String(value || "");
   var out = [];
-  for (var i = 0; i < value.length; i++) out.push(value.charCodeAt(i) & 0xff);
+  for (var i = 0; i + 1 < s.length; i += 2) out.push(parseInt(s.substr(i, 2), 16));
   return out;
 }
 
@@ -78,6 +86,161 @@ function utf8(list) {
     }
   }
   return out;
+}
+
+function chars(value) {
+  var out = [];
+  for (var i = 0; i < value.length; i++) out.push(value.charCodeAt(i) & 0xff);
+  return out;
+}
+
+// ------------------------------------------------------------------ SHA-512
+
+function pairs(hex) {
+  var out = [];
+  var parts = hex.split(" ");
+  for (var i = 0; i < parts.length; i++) {
+    out.push([parseInt(parts[i].slice(0, 8), 16), parseInt(parts[i].slice(8), 16)]);
+  }
+  return out;
+}
+
+var K512 = pairs(K512HEX);
+var IV512 = pairs(IV512HEX);
+
+function add(a, b) {
+  var lo = a[1] + b[1];
+  var carry = (lo - (lo % 4294967296)) / 4294967296;
+  lo = lo % 4294967296;
+  var hi = (a[0] + b[0] + carry) % 4294967296;
+  return [hi, lo];
+}
+
+function or(a, b) {
+  return [(a[0] | b[0]) >>> 0, (a[1] | b[1]) >>> 0];
+}
+
+function xor(a, b) {
+  return [(a[0] ^ b[0]) >>> 0, (a[1] ^ b[1]) >>> 0];
+}
+
+function rotr(a, n) {
+  var hi = a[0];
+  var lo = a[1];
+  if (n === 32) return [lo, hi];
+  if (n < 32) return [((hi >>> n) | (lo << (32 - n))) >>> 0, ((lo >>> n) | (hi << (32 - n))) >>> 0];
+  var m = n - 32;
+  return [((lo >>> m) | (hi << (32 - m))) >>> 0, ((hi >>> m) | (lo << (32 - m))) >>> 0];
+}
+
+function shr(a, n) {
+  var hi = a[0];
+  var lo = a[1];
+  if (n >= 64) return [0, 0];
+  if (n === 32) return [0, hi];
+  if (n < 32) return [hi >>> n, ((lo >>> n) | (hi << (32 - n))) >>> 0];
+  return [0, hi >>> (n - 32)];
+}
+
+function sigma0(x) {
+  return xor(xor(rotr(x, 1), rotr(x, 8)), shr(x, 7));
+}
+
+function sigma1(x) {
+  return xor(xor(rotr(x, 19), rotr(x, 61)), shr(x, 6));
+}
+
+function bigSigma0(x) {
+  return xor(xor(rotr(x, 28), rotr(x, 34)), rotr(x, 39));
+}
+
+function bigSigma1(x) {
+  return xor(xor(rotr(x, 14), rotr(x, 18)), rotr(x, 41));
+}
+
+function sha512(list) {
+  var msg = list.slice();
+  var bitLenHi = Math.floor((msg.length * 8) / 4294967296);
+  var bitLenLo = (msg.length * 8) % 4294967296;
+  msg.push(0x80);
+  while (msg.length % 128 !== 112) msg.push(0);
+  msg.push(
+    0, 0, 0, 0, 0, 0, 0, 0,
+    (bitLenHi >>> 24) & 255, (bitLenHi >>> 16) & 255, (bitLenHi >>> 8) & 255, bitLenHi & 255,
+    (bitLenLo >>> 24) & 255, (bitLenLo >>> 16) & 255, (bitLenLo >>> 8) & 255, bitLenLo & 255
+  );
+
+  var h = IV512.slice();
+  var w = [];
+  for (var off = 0; off < msg.length; off += 128) {
+    var t;
+    for (t = 0; t < 16; t++) {
+      var p = off + t * 8;
+      w[t] = [
+        ((msg[p] << 24) | (msg[p + 1] << 16) | (msg[p + 2] << 8) | msg[p + 3]) >>> 0,
+        ((msg[p + 4] << 24) | (msg[p + 5] << 16) | (msg[p + 6] << 8) | msg[p + 7]) >>> 0
+      ];
+    }
+    for (t = 16; t < 80; t++) {
+      w[t] = add(add(sigma1(w[t - 2]), w[t - 7]), add(sigma0(w[t - 15]), w[t - 16]));
+    }
+    var a = h[0];
+    var b = h[1];
+    var c = h[2];
+    var d = h[3];
+    var e = h[4];
+    var f = h[5];
+    var g = h[6];
+    var hh = h[7];
+    for (t = 0; t < 80; t++) {
+      var ch = xor([e[0] & f[0], e[1] & f[1]], [~e[0] & g[0], ~e[1] & g[1]]);
+      var maj = xor(xor([a[0] & b[0], a[1] & b[1]], [a[0] & c[0], a[1] & c[1]]), [b[0] & c[0], b[1] & c[1]]);
+      var t1 = add(add(add(hh, bigSigma1(e)), add(ch, K512[t])), w[t]);
+      var t2 = add(bigSigma0(a), maj);
+      hh = g;
+      g = f;
+      f = e;
+      e = add(d, t1);
+      d = c;
+      c = b;
+      b = a;
+      a = add(t1, t2);
+    }
+    h = [add(h[0], a), add(h[1], b), add(h[2], c), add(h[3], d), add(h[4], e), add(h[5], f), add(h[6], g), add(h[7], hh)];
+  }
+
+  var out = [];
+  for (var i = 0; i < 8; i++) {
+    out.push((h[i][0] >>> 24) & 255, (h[i][0] >>> 16) & 255, (h[i][0] >>> 8) & 255, h[i][0] & 255);
+    out.push((h[i][1] >>> 24) & 255, (h[i][1] >>> 16) & 255, (h[i][1] >>> 8) & 255, h[i][1] & 255);
+  }
+  return out;
+}
+
+function hmac512(key, message) {
+  var block = key.length > 128 ? sha512(key) : key;
+  var pad = block.slice();
+  while (pad.length < 128) pad.push(0);
+  var inner = [];
+  var outer = [];
+  for (var i = 0; i < 128; i++) {
+    inner.push(pad[i] ^ 0x36);
+    outer.push(pad[i] ^ 0x5c);
+  }
+  return sha512(outer.concat(sha512(inner.concat(message))));
+}
+
+/** PBKDF2 with a 32-byte output is a single HMAC block: xor of the first 999 rounds. */
+function pbkdf2(password, salt, rounds, size) {
+  var seed = salt.slice();
+  seed.push(0, 0, 0, 1);
+  var u = hmac512(password, seed);
+  var out = u.slice();
+  for (var i = 1; i < rounds; i++) {
+    u = hmac512(password, u);
+    for (var j = 0; j < size; j++) out[j] ^= u[j];
+  }
+  return out.slice(0, size);
 }
 
 // ------------------------------------------------------------------ AES-256-CBC
@@ -157,48 +320,44 @@ function decryptBlock(rk, block) {
   return s;
 }
 
-/** `secureData` is either plain base64 JSON (`eyJ`) or an AES-CBC envelope with a zero IV. */
-function unseal(sealed) {
-  var value = String(sealed || "");
-  var raw = bytes(value);
-  if (value.slice(0, 3) === "eyJ") return utf8(raw);
-  var rk = expandKey(chars(AES_KEY));
+function decryptCbc(key, iv, data) {
+  var rk = expandKey(key);
   var out = [];
-  var prev = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  var prev = iv;
   var i;
-  for (var off = 0; off + 16 <= raw.length; off += 16) {
-    var block = raw.slice(off, off + 16);
+  for (var off = 0; off + 16 <= data.length; off += 16) {
+    var block = data.slice(off, off + 16);
     var plain = decryptBlock(rk, block);
     for (i = 0; i < 16; i++) out.push(plain[i] ^ prev[i]);
     prev = block;
   }
   var pad = out[out.length - 1];
   if (pad > 0 && pad <= 16) out = out.slice(0, out.length - pad);
-  return utf8(out);
-}
-
-function parse(sealed) {
-  try {
-    return JSON.parse(unseal(sealed));
-  } catch (e) {
-    return null;
-  }
+  return out;
 }
 
 // ------------------------------------------------------------------ site
 
-/** Nuvio may hand a numeric TMDB id; Wikidata links it to the IMDb id Cinemeta speaks. */
-function imdbId(id, mediaType) {
-  var value = String(id || "");
-  if (!/^\d+$/.test(value)) return Promise.resolve(value);
+/* Nuvio sends TMDB ids from its own rows; Wikidata bridges them to the IMDb id Cinemeta keys on. */
+function imdbOf(id, mediaType) {
+  if (!/^\d+$/.test(String(id || ""))) return Promise.resolve(String(id || ""));
   var prop = mediaType === "movie" ? "P4947" : "P4983";
-  var query = "SELECT ?imdb WHERE { ?f wdt:" + prop + ' "' + value + '". ?f wdt:P345 ?imdb. } LIMIT 1';
-  return text("https://query.wikidata.org/sparql?format=json&query=" + encodeURIComponent(query), {
-    headers: { "User-Agent": WIKI_UA, Accept: "application/sparql-results+json" }
-  })
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  return text(api + "&action=query&list=search&srlimit=1&srsearch=" +
+      encodeURIComponent("haswbstatement:" + prop + "=" + id))
     .then(function (body) {
-      var rows = (JSON.parse(body).results || {}).bindings || [];
-      return rows.length ? String(rows[0].imdb.value) : "";
+      var hits = (JSON.parse(body).query || {}).search || [];
+      if (!hits.length) return "";
+      return text(api + "&action=wbgetclaims&entity=" + hits[0].title + "&property=P345");
+    })
+    .then(function (body) {
+      if (!body) return "";
+      var claims = (JSON.parse(body).claims || {}).P345 || [];
+      for (var i = 0; i < claims.length; i++) {
+        var snak = claims[i].mainsnak || {};
+        if (snak.datavalue) return String(snak.datavalue.value || "");
+      }
+      return "";
     })
     .catch(function () {
       return "";
@@ -207,13 +366,18 @@ function imdbId(id, mediaType) {
 
 function titleOf(id, mediaType) {
   var kind = mediaType === "tv" ? "series" : "movie";
-  return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
+  return imdbOf(id, mediaType)
+    .then(function (imdb) {
+      if (!imdb) return "";
+      return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + imdb + ".json");
+    })
     .then(function (body) {
+      if (!body) return "";
       var meta = JSON.parse(body).meta || {};
-      return { name: String(meta.name || "").trim(), year: String(meta.year || "").slice(0, 4) };
+      return String(meta.name || "").trim();
     })
     .catch(function () {
-      return { name: "", year: "" };
+      return "";
     });
 }
 
@@ -224,111 +388,71 @@ function norm(value) {
     .trim();
 }
 
-function displayTitle(item) {
-  var keys = ["culture_title", "object_name", "original_title", "used_title"];
-  for (var i = 0; i < keys.length; i++) {
-    var v = item[keys[i]];
-    if (v && v !== "null") return String(v);
-  }
-  return "";
-}
-
-/** Exact title first, then the slug's own words; series slugs start with `dizi/`. */
-function pick(rows, want, series) {
-  var best = null;
-  var target = norm(want);
-  for (var i = 0; i < rows.length; i++) {
-    var slug = String(rows[i].used_slug || "");
-    if (!slug) continue;
-    if (series && slug.indexOf("dizi/") !== 0) continue;
-    if (!series && slug.indexOf("film/") !== 0) continue;
-    if (norm(displayTitle(rows[i])) === target) return slug;
-    if (!best && norm(displayTitle(rows[i])).indexOf(target + " ") === 0) best = slug;
-  }
-  return best;
-}
-
-function search(name, series) {
-  var term = encodeURIComponent(name);
-  return text(BASE + "/api/bg/searchcontent?searchterm=" + term, {
+/** The service rejects queries shorter than three characters. */
+function search(name, imdb, series) {
+  if (norm(name).length < 3) return Promise.resolve(null);
+  return text(BASE + "/api/mj", {
     method: "POST",
     referer: BASE + "/",
-    headers: { Accept: "application/json, text/plain, */*", "X-Requested-With": "XMLHttpRequest" }
+    headers: { "Content-Type": "application/json", Accept: "application/json, text/plain, */*", Origin: BASE },
+    body: JSON.stringify({ action: "searchContent", params: [name] })
   }).then(function (body) {
-    var sealed = (JSON.parse(body) || {}).response;
-    if (!sealed) return null;
-    var json = parse(sealed);
-    return json ? pick(json.result || [], name, series) : null;
-  });
-}
-
-function pageData(url) {
-  return text(url).then(function (html) {
-    var sealed = first(/"secureData"\s*:\s*"([^"]+)"/, html);
-    return sealed ? parse(sealed) : null;
-  });
-}
-
-/** Series page -> the episode slug the catalogue uses for this season/episode. */
-function episodePath(path, want, wantEp) {
-  return pageData(BASE + "/" + path).then(function (json) {
-    if (!json) return null;
-    var seasons = ((json.RelatedResults || {}).getSerieSeasonAndEpisodes || {}).result || [];
-    for (var i = 0; i < seasons.length; i++) {
-      if (parseInt(seasons[i].season_no, 10) !== want) continue;
-      var episodes = seasons[i].episodes || [];
-      for (var j = 0; j < episodes.length; j++) {
-        if (parseInt(episodes[j].episode_no, 10) === wantEp && episodes[j].used_slug) return episodes[j].used_slug;
-      }
-    }
-    return null;
-  });
-}
-
-/** RelatedResults holds getEpisodeSources (series) and getMoviePartSourcesById_* (films). */
-function embeds(json) {
-  var rel = (json || {}).RelatedResults || {};
-  var out = [];
-  var seen = {};
-  for (var key in rel) {
-    if (key !== "getEpisodeSources" && key.indexOf("getMoviePartSourcesById") !== 0) continue;
-    var rows = (rel[key] || {}).result || [];
+    var rows = [];
+    try {
+      rows = JSON.parse(body).result || [];
+    } catch (e) {}
+    var target = norm(name);
+    var best = null;
     for (var i = 0; i < rows.length; i++) {
-      var src = first(/<iframe[^>]*\bsrc\s*=\s*["']([^"']+)["']/i, rows[i].source_content);
-      if (!src || seen[src]) continue;
-      seen[src] = 1;
-      var url = src.slice(0, 2) === "//" ? "https:" + src : /^https?:/i.test(src) ? src : BASE + src;
-      out.push({ url: url, label: rows[i].language_name || "" });
+      var slug = String(rows[i].used_slug || "").replace(/^\//, "");
+      if (!slug) continue;
+      var isSeries = /^dizi\//.test(slug);
+      if (isSeries !== series) continue;
+      if (imdb && rows[i].object_related_imdb_id === imdb) return rows[i];
+      if (!imdb && norm(rows[i].object_name) === target) return rows[i];
     }
-  }
-  return out;
+    return best;
+  });
 }
 
-/** `window.NP_CONFIG = {...}` body (brace counted, strings skipped). */
-function objectAt(html, from) {
-  var depth = 0;
-  var inString = false;
-  var escaped = false;
-  for (var i = from; i < html.length; i++) {
-    var ch = html.charAt(i);
-    if (inString) {
-      if (escaped) escaped = false;
-      else if (ch === "\\") escaped = true;
-      else if (ch === '"') inString = false;
-      continue;
-    }
-    if (ch === '"') inString = true;
-    else if (ch === "{") depth++;
-    else if (ch === "}") {
-      depth--;
-      if (!depth) return html.slice(from, i + 1);
-    }
+/** The token lives in the RSC payload, so the regex tolerates `\"` escaping. */
+function encFields(html) {
+  var re = /\\{0,3}"(ciphertext|iv|salt|k)\\{0,3}":\\{0,3}"([^"\\]+)/g;
+  var found = {};
+  var m;
+  while ((m = re.exec(String(html || ""))) !== null) {
+    if (!found[m[1]]) found[m[1]] = [];
+    found[m[1]].push(m[2]);
   }
-  return null;
+  // `k` also carries the page slug ("dizi/x/sezon-1/bolum-1"); the password never contains a slash.
+  var pass = (found.k || []).filter(function (v) {
+    return v.indexOf("/") === -1;
+  }).sort(function (a, b) {
+    return b.length - a.length;
+  })[0];
+  return {
+    ciphertext: (found.ciphertext || [])[0],
+    iv: (found.iv || [])[0],
+    salt: (found.salt || [])[0],
+    pass: pass
+  };
+}
+
+/** PBKDF2-HMAC-SHA512(999) + AES-256-CBC -> player URL (tab/NUL-padded). */
+function decryptEmbed(html, pageUrl) {
+  var f = encFields(html);
+  if (!f.ciphertext || !f.iv || !f.salt || !f.pass) return null;
+  var key = pbkdf2(chars(f.pass), hexBytes(f.salt), 999, 32);
+  var clear = utf8(decryptCbc(key, hexBytes(f.iv), bytes(f.ciphertext)));
+  var url = clear.replace(/^[\t\r\n \u000f]+|[\t\r\n \u000f]+$/g, "");
+  if (url.slice(0, 2) === "//") return "https:" + url;
+  if (/^http:\/\//i.test(url)) return url.replace(/^http/i, "https");
+  return url || null;
 }
 
 function abs(base, href) {
   if (/^https?:/i.test(href)) return href;
+  if (href.slice(0, 2) === "//") return "https:" + href;
   if (href.charAt(0) === "/") {
     var root = origin(base);
     return root ? root + href : href;
@@ -362,18 +486,7 @@ function variants(master, playlist) {
   return list;
 }
 
-/** Highest ladder rung, used when the master itself is the link we hand over. */
-function top(rows) {
-  var best = 0;
-  for (var i = 0; i < rows.length; i++) {
-    var n = parseInt(rows[i].quality, 10);
-    if (n > best) best = n;
-  }
-  return best ? best + "p" : "1080p";
-}
-
-/** Master -> variants; a master with audio renditions stays whole, a lone variant is silent. */
-function plain(master, referer) {
+function plain(master) {
   var root = (origin(master) || "") + "/";
   return fetch(master, { headers: { "User-Agent": UA, Accept: "*/*", Referer: root } })
     .then(function (r) {
@@ -381,41 +494,61 @@ function plain(master, referer) {
     })
     .then(function (body) {
       var rows = body.indexOf("#EXTM3U") === 0 ? variants(master, body) : [];
-      if (body.indexOf("#EXT-X-MEDIA") !== -1) return [{ url: master, quality: top(rows) }];
-      if (!rows.length) return [{ url: master, quality: "1080p" }];
-      return rows;
+      return rows.length ? rows : [{ url: master, quality: "1080p" }];
     })
     .catch(function () {
       return [{ url: master, quality: "1080p" }];
     });
 }
 
-/** pichive player page -> master playlist URL(s). */
-function masters(iframe) {
-  return text(iframe.url, { referer: BASE + "/" }).then(function (html) {
+/** `window.NP_CONFIG = {...}` body (brace counted, strings skipped). */
+function objectAt(html, from) {
+  var depth = 0;
+  var inString = false;
+  var escaped = false;
+  for (var i = from; i < html.length; i++) {
+    var ch = html.charAt(i);
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (ch === "\\") escaped = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+    if (ch === '"') inString = true;
+    else if (ch === "{") depth++;
+    else if (ch === "}") {
+      depth--;
+      if (!depth) return html.slice(from, i + 1);
+    }
+  }
+  return null;
+}
+
+/** dplayer82 player page -> master playlist URLs. */
+function masters(playerUrl) {
+  return text(playerUrl, { referer: BASE + "/" }).then(function (html) {
     var out = [];
     var at = html.indexOf("NP_CONFIG");
     if (at >= 0) {
       var open = html.indexOf("{", at);
       var config = open >= 0 ? objectAt(html, open) : null;
+      var parsed = null;
       if (config) {
-        var parsed = null;
         try {
           parsed = JSON.parse(config);
         } catch (e) {}
-        var sources = (parsed && parsed.sources) || [];
-        for (var i = 0; i < sources.length; i++) {
-          if (sources[i] && /^http/.test(sources[i].master || "")) out.push(sources[i].master);
-        }
+      }
+      var sources = (parsed && parsed.sources) || [];
+      for (var i = 0; i < sources.length; i++) {
+        if (sources[i] && /^http/.test(sources[i].master || "")) out.push(sources[i].master);
       }
       if (out.length) return out;
     }
     // Legacy player: openPlayer('<token>') -> source2.php -> playlist[].sources[].file.
     var token = first(/openPlayer\s*\(\s*['"]([^'"]+)/, html);
     if (!token) return out;
-    var root = origin(iframe.url);
-    return text(root + "/source2.php?v=" + encodeURIComponent(token), {
-      referer: iframe.url,
+    return text(origin(playerUrl) + "/source2.php?v=" + encodeURIComponent(token), {
+      referer: playerUrl,
       headers: { "X-Requested-With": "XMLHttpRequest" }
     }).then(function (body) {
       var json = null;
@@ -436,81 +569,92 @@ function masters(iframe) {
   });
 }
 
-/** One player iframe -> its master playlists -> one row per variant. */
-function expand(player) {
-  return masters(player)
-    .then(function (urls) {
-      var jobs = [];
-      for (var i = 0; i < urls.length; i++) jobs.push(expandMaster(player.label, urls[i]));
-      return Promise.all(jobs);
-    })
-    .then(function (lists) {
-      var out = [];
-      for (var i = 0; i < lists.length; i++) out = out.concat(lists[i]);
-      return out;
-    })
-    .catch(function () {
-      return [];
-    });
+/** Player payload lists the alternative sources (dub/sub) of the same page as {label, href}. */
+function sourcePages(html) {
+  var re = /\\{0,3}"label\\{0,3}":\\{0,3}"([^"\\]+)\\{0,3}",(?:\\{0,3}"quality\\{0,3}":\\{0,3}"[^"\\]*\\{0,3}",)?\\{0,3}"href\\{0,3}":\\{0,3}"([^"\\]+)/g;
+  var out = [];
+  var m;
+  while ((m = re.exec(String(html || ""))) !== null) out.push({ label: m[1], href: m[2] });
+  return out;
 }
 
-function expandMaster(tag, master) {
-  return plain(master).then(function (rows) {
-    var out = [];
-    for (var i = 0; i < rows.length; i++) out.push({ url: rows[i].url, quality: rows[i].quality, label: tag, master: master });
-    return out;
+function playRows(html, pageUrl, label) {
+  var player = decryptEmbed(html, pageUrl);
+  if (!player) return Promise.resolve([]);
+  return masters(player).then(function (urls) {
+    var jobs = [];
+    for (var i = 0; i < urls.length; i++) jobs.push(plain(urls[i]));
+    return Promise.all(jobs).then(function (lists) {
+      var rows = [];
+      for (var j = 0; j < lists.length; j++) {
+        for (var k = 0; k < lists[j].length; k++) {
+          rows.push({ url: lists[j][k].url, quality: lists[j][k].quality, player: player, label: label });
+        }
+      }
+      return rows;
+    });
   });
 }
+
 function getStreams(tmdbId, mediaType, season, episode) {
+  var series = mediaType === "tv" || mediaType === "series";
   var want = parseInt(season, 10) || 1;
   var wantEp = parseInt(episode, 10) || 1;
   var pageUrl = null;
 
-  return imdbId(tmdbId, mediaType)
-    .then(function (id) {
-      return id ? titleOf(id, mediaType) : null;
-    })
-    .then(function (meta) {
-      if (!meta || !meta.name) return null;
-      return search(meta.name, mediaType === "tv").then(function (slug) {
-        if (!slug) return null;
-        if (mediaType !== "tv") return { path: slug, label: "" };
-        return episodePath(slug, want, wantEp).then(function (path) {
-          return path ? { path: path, label: "" } : null;
-        });
+  return imdbOf(tmdbId, mediaType)
+    .then(function (imdb) {
+      return titleOf(imdb || tmdbId, mediaType).then(function (name) {
+        if (!name) return null;
+        return search(name, imdb, series);
       });
     })
     .then(function (hit) {
       if (!hit) return null;
-      pageUrl = BASE + "/" + hit.path;
-      return pageData(pageUrl).then(function (json) {
-        return json ? embeds(json) : [];
+      var slug = String(hit.used_slug).replace(/^\//, "");
+      pageUrl = BASE + "/" + (series ? slug.replace(/\/+$/, "") + "/sezon-" + want + "/bolum-" + wantEp : slug);
+      return text(pageUrl, { referer: BASE + "/" });
+    })
+    .then(function (html) {
+      if (!html) return [];
+      var pages = sourcePages(html);
+      var jobs = [playRows(html, pageUrl, "")];
+      var here = pageUrl.replace(BASE, "");
+      for (var i = 0; i < pages.length; i++) {
+        if (pages[i].href === here || pages[i].href.indexOf("/") !== 0 || pages[i].href.indexOf("?") === -1 || jobs.length > 3) continue;
+        jobs.push(
+          (function (src) {
+            var url = BASE + src.href;
+            return text(url, { referer: BASE + "/" })
+              .then(function (h) { return playRows(h, url, src.label); })
+              .catch(function () { return []; });
+          })(pages[i])
+        );
+      }
+      return Promise.all(jobs).then(function (lists) {
+        var rows = [];
+        for (var j = 0; j < lists.length; j++) rows = rows.concat(lists[j]);
+        // the first job is the page's own (active) source; give it its label from the payload
+        var own = "";
+        for (var n = 0; n < pages.length; n++) if (pages[n].href === here) own = pages[n].label;
+        for (var q = 0; q < lists[0].length; q++) lists[0][q].label = own;
+        return rows;
       });
     })
-    .then(function (list) {
-      if (!list || !list.length) return [];
-      var jobs = [];
-      for (var i = 0; i < list.length; i++) jobs.push(expand(list[i]));
-      return Promise.all(jobs);
-    })
-    .then(function (groups) {
+    .then(function (rows) {
       var out = [];
       var seen = {};
-      for (var i = 0; i < (groups || []).length; i++) {
-        var group = groups[i] || [];
-        for (var j = 0; j < group.length; j++) {
-          var row = group[j];
-          if (!row || seen[row.url]) continue;
-          seen[row.url] = 1;
-          var tag = row.label ? " " + row.label : "";
-          out.push({
-            name: "SelcukFlix",
-            title: "SelcukFlix - " + row.quality + tag + " [HLS]",
-            url: row.url,
-            quality: row.quality,
-            headers: { "User-Agent": UA, Referer: (origin(row.master) || "") + "/" }
-          });
-        }
+      for (var i = 0; i < (rows || []).length; i++) {
+        var row = rows[i];
+        if (!row || seen[row.url]) continue;
+        seen[row.url] = 1;
+        out.push({
+          name: "SelcukFlix",
+          title: "SelcukFlix - " + (row.label ? row.label + " - " : "") + row.quality + " [HLS]",
+          url: row.url,
+          quality: row.quality,
+          headers: { "User-Agent": UA, Referer: (origin(row.player) || "") + "/" }
+        });
       }
       return out;
     })

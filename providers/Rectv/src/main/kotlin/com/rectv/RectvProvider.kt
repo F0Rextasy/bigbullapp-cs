@@ -3,6 +3,7 @@ package com.rectv
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
+import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
 import com.lagradost.cloudstream3.MainAPI
 import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
@@ -22,6 +23,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONArray
 import org.json.JSONObject
+import java.net.URLEncoder
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -29,7 +31,10 @@ import javax.crypto.spec.SecretKeySpec
  * RecTV — resmî uygulamanın imzalı REST API'sini konuşur.
  * İmza: X-Signature = HMAC-SHA256(key, "METHOD\nPATH\nTS\nNONCE\nsha256(\"\")hex")
  * NONCE = GET /api/attest/nonce (tek kullanımlık; nonce_replay alırsan taze nonce ile bir kez tekrar et).
- * Kanıtlı uçlar: /api/{movie,serie}/by/filtres/{genre}/{order}/{page}/{K1}/{K2}/ (item içinde sources[] m3u8 var).
+ * Kanıtlı uçlar:
+ * - Liste: /api/{movie,serie}/by/filtres/{genre}/{order}/{page}/{K1}/{K2}/
+ * - Arama: /api/search/{query}/{K1}/{K2}/ -> posters[]
+ * - Dizi sezon/bölüm: /api/season/by/serie/{id}/{K1}/{K2}/ -> seasons[].episodes[].sources[]
  */
 class RectvProvider : MainAPI() {
     override var mainUrl = "https://a.psrectv80.xyz"
@@ -37,6 +42,7 @@ class RectvProvider : MainAPI() {
     override var lang = "tr"
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
     override val hasMainPage = true
+    override val hasQuickSearch = true
 
     data class Row(val title: String, val kind: String, val genre: Int, val order: String) {
         fun data() = "rectvrow|$kind|$genre|$order"
@@ -46,9 +52,8 @@ class RectvProvider : MainAPI() {
         get() = ROWS.filter { Settings.rowEnabled(it.title) }.map { MainPageData(it.title, it.data()) }
 
     companion object {
-        // Değerler resmî APK'dan çıkarıldı (NativeVault XOR) — repack edilirse değişir.
         private const val HMAC_KEY = "3508611138826751fdf77beaa6f93eb93fd27e6a5acb910e7aad22665513dd6e"
-        private const val F5 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" // sha256(b"")
+        private const val F5 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
         private const val K1 = "4F5A9C3D9A86FA54EACEDDD635185"
         private const val K2 = "c3c5bd17-e37b-4b94-a944-8a3688a30452"
         private const val CLIENT_ID = "rectv-android"
@@ -56,18 +61,31 @@ class RectvProvider : MainAPI() {
         private const val UA = "app okhttp/4.12.0"
 
         val ROWS = listOf(
-            Row("RecTV Filmler", "movie", 0, "created"),
-            Row("RecTV Diziler", "serie", 0, "created"),
+            Row("Filmler", "movie", 0, "created"),
+            Row("Diziler", "serie", 0, "created"),
+            Row("En Yüksek Puanlı Filmler", "movie", 0, "rating"),
+            Row("En Yüksek Puanlı Diziler", "serie", 0, "rating"),
             Row("Film: Türkçe Dublaj", "movie", 26, "created"),
             Row("Film: Türkçe Altyazı", "movie", 27, "created"),
             Row("Film: Aksiyon", "movie", 1, "created"),
-            Row("Film: Bilim Kurgu", "movie", 28, "created"),
+            Row("Film: Komedi", "movie", 3, "created"),
+            Row("Film: Korku", "movie", 8, "created"),
+            Row("Film: Gerilim", "movie", 9, "created"),
+            Row("Film: Romantik", "movie", 5, "created"),
+            Row("Film: Animasyon", "movie", 13, "created"),
+            Row("Film: Netflix", "movie", 57, "created"),
+            Row("Film: Disney+", "movie", 67, "created"),
             Row("Dizi: Aksiyon", "serie", 1, "created"),
+            Row("Dizi: Yerli", "serie", 23, "created"),
+            Row("Dizi: Çocuk", "serie", 34, "created"),
+            Row("Dizi: Netflix", "serie", 57, "created"),
         )
 
         private val CACHE = java.util.concurrent.ConcurrentHashMap<String, JSONObject>()
+        private val EP_CACHE = java.util.concurrent.ConcurrentHashMap<String, List<JSONObject>>()
         private val PAGE_CACHE = java.util.concurrent.ConcurrentHashMap<String, Pair<Long, List<JSONObject>>>()
         private const val PAGE_TTL_MS = 5 * 60 * 1000L
+        private val DIGITS = Regex("(\\d+)")
 
         private fun qualityOf(raw: String?): Int = when ((raw ?: "").uppercase()) {
             "4K", "UHD" -> 2160
@@ -85,20 +103,16 @@ class RectvProvider : MainAPI() {
         return mac.doFinal(msg.toByteArray()).joinToString("") { "%02x".format(it) }
     }
 
-    private suspend fun nonceGet(): String? {
-        return try {
-            val r = app.get("$mainUrl/api/attest/nonce", headers = mapOf("User-Agent" to UA))
-            JSONObject(r.text).optString("nonce", "").takeIf { it.isNotEmpty() }
-        } catch (_: Exception) {
-            null
-        }
+    private suspend fun nonceGet(): String? = try {
+        val r = app.get("$mainUrl/api/attest/nonce", headers = mapOf("User-Agent" to UA))
+        JSONObject(r.text).optString("nonce", "").takeIf { it.isNotEmpty() }
+    } catch (_: Exception) {
+        null
     }
 
-    private suspend fun apiText(kind: String, genre: Int, order: String, page: Int): String? {
-        // kind = movie|serie; dönen path imza için kullanılan path'tir (query yok).
-        val path = "/api/$kind/by/filtres/$genre/$order/$page/$K1/$K2/"
+    private suspend fun signedGet(path: String): String? {
         var nonce = nonceGet() ?: return null
-        repeat(3) { attempt ->
+        repeat(3) {
             val ts = (System.currentTimeMillis() / 1000).toString()
             val headers = mapOf(
                 "X-Signature" to sign("GET", path, ts, nonce),
@@ -108,24 +122,29 @@ class RectvProvider : MainAPI() {
                 "X-App-Version" to APP_VERSION,
                 "User-Agent" to UA,
             )
-            val r = app.get("$mainUrl$path", headers = headers)
-            val text = r.text
-            if (r.isSuccessful) {
-                val arr = JSONArray(text)
-                val items = (0 until arr.length()).map { arr.getJSONObject(it) }
-                items.forEach { item ->
-                    val id = item.optString("id", "")
-                    if (id.isNotEmpty()) CACHE[id] = item
-                }
-                return text
-            }
-            if (text.contains("nonce_replay")) {
+            val r = runCatching { app.get("$mainUrl$path", headers = headers) }.getOrNull() ?: return null
+            if (r.isSuccessful) return r.text
+            if (r.text.contains("nonce_replay")) {
                 nonce = nonceGet() ?: return null
                 return@repeat
             }
             return null
         }
         return null
+    }
+
+    private suspend fun apiText(kind: String, genre: Int, order: String, page: Int): String? {
+        val path = "/api/$kind/by/filtres/$genre/$order/$page/$K1/$K2/"
+        val text = signedGet(path) ?: return null
+        runCatching {
+            val arr = JSONArray(text)
+            for (i in 0 until arr.length()) {
+                val item = arr.optJSONObject(i) ?: continue
+                val id = item.optString("id", "")
+                if (id.isNotEmpty()) CACHE[id] = item
+            }
+        }
+        return text
     }
 
     private suspend fun fetchList(kind: String, genre: Int, order: String, page: Int): List<JSONObject> {
@@ -168,22 +187,34 @@ class RectvProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        // Sunucu search ucu yok (route denemeleri 403/404); istemci tarafı tarama.
-        // shortcut: sadece ilk 6 sayfa taranır; sunucu search ucu öğrenilirse buraya bağlanır
-        val needle = query.trim().lowercase()
-        if (needle.isEmpty()) return emptyList()
+        val q = query.trim()
+        if (q.isEmpty()) return emptyList()
         val out = ArrayList<SearchResponse>()
         val seen = HashSet<String>()
+        val encoded = URLEncoder.encode(q, "UTF-8").replace("+", "%20")
+        signedGet("/api/search/$encoded/$K1/$K2/")?.let { raw ->
+            val posters = runCatching { JSONObject(raw).optJSONArray("posters") }.getOrNull()
+            if (posters != null) {
+                for (i in 0 until posters.length()) {
+                    val item = posters.optJSONObject(i) ?: continue
+                    val id = item.optString("id", "")
+                    if (id.isNotEmpty()) CACHE[id] = item
+                    val sr = itemToSearch(item) ?: continue
+                    if (seen.add(sr.url)) out.add(sr)
+                }
+            }
+        }
+        if (out.isNotEmpty()) return out
+
+        val needle = q.lowercase()
         for (kind in listOf("movie", "serie")) {
-            for (page in 1..6) {
+            for (page in 1..4) {
                 val items = fetchList(kind, 0, "created", page)
                 if (items.isEmpty()) break
                 for (item in items) {
-                    val title = item.optString("title", "")
-                    if (title.lowercase().contains(needle)) {
+                    if (item.optString("title", "").lowercase().contains(needle)) {
                         val sr = itemToSearch(item) ?: continue
-                        val url = sr.url
-                        if (seen.add(url)) out.add(sr)
+                        if (seen.add(sr.url)) out.add(sr)
                     }
                 }
                 if (out.isNotEmpty() && page >= 2) break
@@ -192,16 +223,68 @@ class RectvProvider : MainAPI() {
         return out
     }
 
+    private suspend fun loadSerieEpisodes(serieId: String, fallbackTitle: String, fallbackPlot: String): List<Episode> {
+        val raw = signedGet("/api/season/by/serie/$serieId/$K1/$K2/")
+        val seasons = runCatching { if (raw != null) JSONArray(raw) else null }.getOrNull()
+        if (seasons == null || seasons.length() == 0) {
+            return listOf(newEpisode("$mainUrl/src/serie/$serieId") {
+                this.name = fallbackTitle
+                this.season = 1
+                this.episode = 1
+                this.description = fallbackPlot
+            })
+        }
+        val grouped = LinkedHashMap<Pair<Int, Int>, Triple<String, String?, MutableList<JSONObject>>>()
+        for (sIdx in 0 until seasons.length()) {
+            val sObj = seasons.optJSONObject(sIdx) ?: continue
+            val sTitle = sObj.optString("title", "")
+            val sNum = DIGITS.find(sTitle)?.groupValues?.get(1)?.toIntOrNull() ?: (sIdx + 1)
+            val langTag = when {
+                sTitle.contains("Dublaj", ignoreCase = true) -> "Türkçe Dublaj"
+                sTitle.contains("Altyaz", ignoreCase = true) -> "Türkçe Altyazı"
+                else -> sTitle
+            }
+            val eps = sObj.optJSONArray("episodes") ?: continue
+            for (eIdx in 0 until eps.length()) {
+                val epObj = eps.optJSONObject(eIdx) ?: continue
+                val epTitle = epObj.optString("title", "").trim()
+                val epNum = DIGITS.find(epTitle)?.groupValues?.get(1)?.toIntOrNull() ?: (eIdx + 1)
+                val desc = epObj.optString("description", "").takeIf { it.isNotBlank() && it != "null" }
+                val key = sNum to epNum
+                val bucket = grouped.getOrPut(key) {
+                    Triple(epTitle.ifBlank { "Bölüm $epNum" }, desc, mutableListOf())
+                }
+                val srcs = epObj.optJSONArray("sources") ?: JSONArray()
+                for (k in 0 until srcs.length()) {
+                    val src = srcs.optJSONObject(k) ?: continue
+                    val tagged = JSONObject(src.toString())
+                    val origTitle = tagged.optString("title", "RecTV")
+                    tagged.put("title", if (langTag.isNotBlank()) "$langTag · $origTitle" else origTitle)
+                    bucket.third.add(tagged)
+                }
+            }
+        }
+        return grouped.map { (key, info) ->
+            val (sNum, epNum) = key
+            val cacheKey = "$serieId:$sNum:$epNum"
+            EP_CACHE[cacheKey] = info.third
+            newEpisode("$mainUrl/src/ep/$serieId/$sNum/$epNum") {
+                this.name = info.first
+                this.season = sNum
+                this.episode = epNum
+                this.description = info.second
+            }
+        }
+    }
+
     override suspend fun load(url: String): LoadResponse? {
-        // url biçimi: rectv://movie/11593 | rectv://serie/11479
         val clean = if (url.contains("/item/")) url.substringAfter("/item/") else url.substringAfter("rectv://")
         val parts = clean.trim('/').split("/")
         if (parts.size < 2) return null
         val kind = parts[0]
         val id = parts[1]
         var item = CACHE[id]
-        if (item == null || item.optString("sources").isNullOrEmpty()) {
-            // önbellek soğuksa ilk sayfalarda ara (10 sayfa tavan)
+        if (item == null || (kind == "movie" && item.optString("sources").isNullOrEmpty())) {
             outer@ for (page in 1..10) {
                 val items = fetchList(kind, 0, "created", page)
                 for (it2 in items) {
@@ -214,7 +297,8 @@ class RectvProvider : MainAPI() {
         val title = item.optString("title", id)
         val poster = item.optString("cover", "").ifBlank { item.optString("image", "") }
         val plot = item.optString("description", "")
-        val year = item.optString("sublabel", "").filter { it.isDigit() }.take(4).toIntOrNull()
+        val year = item.optInt("year", 0).takeIf { it > 1900 }
+            ?: item.optString("sublabel", "").filter { it.isDigit() }.take(4).toIntOrNull()
         val genres = try {
             val g = item.optJSONArray("genres") ?: JSONArray()
             (0 until g.length()).mapNotNull { g.optJSONObject(it)?.optString("title") }
@@ -225,41 +309,48 @@ class RectvProvider : MainAPI() {
             (h * 60 + m).takeIf { it > 0 }
         }
         val score = Score.from10(item.optString("imdb", "").takeIf { it != "0" && it.isNotBlank() })
+        val trailerUrl = item.optJSONObject("trailer")?.optString("url", "")?.takeIf { it.startsWith("http") }
+
         if (kind == "serie") {
-            val tvType = TvType.TvSeries
-            val data = "$mainUrl/src/serie/$id"
-            val searchResponse = newTvSeriesLoadResponse(
-                title,
-                url,
-                tvType,
-                episodes = listOf(newEpisode(data) {
-                    this.name = title
-                    this.season = 1
-                    this.episode = 1
-                    this.description = plot
-                }),
-            ) {
+            val episodes = loadSerieEpisodes(id, title, plot)
+            return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
                 this.plot = plot
                 this.year = year
                 this.tags = genres
                 this.score = score
                 this.duration = duration
+                if (trailerUrl != null) addTrailer(trailerUrl)
             }
-            return searchResponse
         }
-        return newMovieLoadResponse(
-            title,
-            url,
-            TvType.Movie,
-            data = "$mainUrl/src/movie/$id",
-        ) {
+        return newMovieLoadResponse(title, url, TvType.Movie, "$mainUrl/src/movie/$id") {
             this.posterUrl = poster
             this.plot = plot
             this.year = year
             this.tags = genres
             this.score = score
             this.duration = duration
+            if (trailerUrl != null) addTrailer(trailerUrl)
+        }
+    }
+
+    private suspend fun emitSources(
+        sources: List<JSONObject>,
+        watched: MutableSet<String>,
+        callback: (ExtractorLink) -> Unit,
+    ) {
+        sources.forEachIndexed { i, src ->
+            val streamUrl = src.optString("url", "")
+            if (streamUrl.isEmpty() || !streamUrl.startsWith("http") || !watched.add(streamUrl)) return@forEachIndexed
+            val srcTitle = src.optString("title", "RecTV")
+            val q = qualityOf(src.optString("quality"))
+            if (!Settings.qualityAllowed(q)) return@forEachIndexed
+            callback(newExtractorLink("RecTV", srcTitle.ifBlank { "RecTV ${i + 1}" }, streamUrl) {
+                this.referer = mainUrl
+                this.quality = q
+                this.type = ExtractorLinkType.M3U8
+                this.headers = mapOf("User-Agent" to UA)
+            })
         }
     }
 
@@ -269,15 +360,25 @@ class RectvProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        // data: rectv://src/{kind}/{id}
         val parts = data.substringAfter("/src/").trim('/').split("/")
         if (parts.size < 2) return false
+        val watched = HashSet<String>()
+        if (parts[0] == "ep" && parts.size >= 4) {
+            val serieId = parts[1]
+            val sNum = parts[2].toIntOrNull() ?: 1
+            val epNum = parts[3].toIntOrNull() ?: 1
+            val key = "$serieId:$sNum:$epNum"
+            if (!EP_CACHE.containsKey(key)) {
+                loadSerieEpisodes(serieId, "", "")
+            }
+            val list = EP_CACHE[key].orEmpty()
+            emitSources(list, watched, callback)
+            return watched.isNotEmpty()
+        }
         val kind = parts[0]
         val id = parts[1]
-        val watched = HashSet<String>()
         var item = CACHE[id]
         if (item == null || item.optString("sources").isNullOrEmpty()) {
-            // soğuk önbellek: filtres listelerinden id'yi bul (8 sayfa tavan)
             outer@ for (page in 1..8) {
                 val items = fetchList(kind, 0, "created", page)
                 for (cand in items) {
@@ -287,26 +388,9 @@ class RectvProvider : MainAPI() {
             }
         }
         item ?: return false
-        val sources = item.optJSONArray("sources") ?: JSONArray()
-        for (i in 0 until sources.length()) {
-            val src = sources.optJSONObject(i) ?: continue
-            val streamUrl = src.optString("url", "")
-            if (streamUrl.isEmpty() || streamUrl in watched || !streamUrl.startsWith("http")) continue
-            watched.add(streamUrl)
-            val srcTitle = src.optString("title", "RecTV")
-            val q = qualityOf(src.optString("quality"))
-            if (!Settings.qualityAllowed(q)) continue
-            callback(newExtractorLink(
-                "RecTV",
-                srcTitle.ifBlank { "RecTV ${i + 1}" },
-                streamUrl,
-            ) {
-                this.referer = mainUrl
-                this.quality = q
-                this.type = ExtractorLinkType.M3U8
-                this.headers = mapOf("User-Agent" to UA)
-            })
-        }
+        val arr = item.optJSONArray("sources") ?: JSONArray()
+        val list = (0 until arr.length()).mapNotNull { arr.optJSONObject(it) }
+        emitSources(list, watched, callback)
         return watched.isNotEmpty()
     }
 }

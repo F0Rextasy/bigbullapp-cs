@@ -82,8 +82,19 @@ class DiziPalProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        // site Next.js js-aramaya geçti; ?s= kazıması ana sayfa verisi (ilgisiz sonuç) döndürüyor — sahte sonuç yerine boş dön
-        return emptyList()
+        val q = query.trim()
+        if (q.length < 3) return emptyList()
+        val body = runCatching {
+            app.post(
+                "$mainUrl/api/mj",
+                json = JSONObject().put("action", "searchContent").put("params", JSONArray().put(q)),
+                headers = uaHeaders + mapOf("Origin" to mainUrl),
+                referer = "$mainUrl/",
+            ).text
+        }.getOrNull() ?: throw ErrorLoadingException("$name: arama isteği başarısız. $REPORT_HINT")
+        val rows = runCatching { JSONObject(body).optJSONArray("result") }.getOrNull()
+            ?: throw ErrorLoadingException("$name: arama yanıtı okunamadı. $REPORT_HINT")
+        return rows.objects().mapNotNull { it.toSearchResult() }.distinctBy { it.url }
     }
 
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
