@@ -152,7 +152,7 @@ class RectvProvider : MainAPI() {
         val tvType = if (type == "serie") TvType.TvSeries else TvType.Movie
         val title = item.optString("title", id)
         val poster = item.optString("cover", "").ifBlank { item.optString("image", "") }
-        val url = "rectv://$type/$id"
+        val url = "$mainUrl/item/$type/$id"
         return if (tvType == TvType.TvSeries) {
             newTvSeriesSearchResponse(title, url, tvType) { this.posterUrl = poster }
         } else {
@@ -194,7 +194,8 @@ class RectvProvider : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse? {
         // url biçimi: rectv://movie/11593 | rectv://serie/11479
-        val parts = url.removePrefix("rectv://").split("/")
+        val clean = if (url.contains("/item/")) url.substringAfter("/item/") else url.substringAfter("rectv://")
+        val parts = clean.trim('/').split("/")
         if (parts.size < 2) return null
         val kind = parts[0]
         val id = parts[1]
@@ -226,7 +227,7 @@ class RectvProvider : MainAPI() {
         val score = Score.from10(item.optString("imdb", "").takeIf { it != "0" && it.isNotBlank() })
         if (kind == "serie") {
             val tvType = TvType.TvSeries
-            val data = "rectv://src/serie/$id"
+            val data = "$mainUrl/src/serie/$id"
             val searchResponse = newTvSeriesLoadResponse(
                 title,
                 url,
@@ -251,7 +252,7 @@ class RectvProvider : MainAPI() {
             title,
             url,
             TvType.Movie,
-            data = "rectv://src/movie/$id",
+            data = "$mainUrl/src/movie/$id",
         ) {
             this.posterUrl = poster
             this.plot = plot
@@ -269,7 +270,7 @@ class RectvProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
         // data: rectv://src/{kind}/{id}
-        val parts = data.removePrefix("rectv://src/").split("/")
+        val parts = data.substringAfter("/src/").trim('/').split("/")
         if (parts.size < 2) return false
         val kind = parts[0]
         val id = parts[1]

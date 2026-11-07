@@ -8,7 +8,7 @@ sayı arttığında güncelleme sunar.
 ## [1.6.21] - 2026-11-07
 
 ### Eklendi
-- **RecTV v1**: `a.psrectv80.xyz` imzalı resmî API (attest/nonce + HMAC-SHA256) eklendi; film/dizi ana sayfa satırları, sayfalama, istemci taraflı arama ve token'lı m3u8 kaynakları runner'da doğrulandı (30×2 sayfa + 1 link 200).
+- **RecTV v2**: `a.psrectv80.xyz` imzalı resmî API (attest/nonce + HMAC-SHA256) eklendi; film/dizi ana sayfa satırları, sayfalama, önbellekli istemci taraflı arama, `fixUrl` uyumlu `https://` detay/kaynak adresleri ve token'lı m3u8 kaynakları runner'da doğrulandı.
 
 ### Düzeltildi
 - **WebteIzle v2**: aramada tam başlık eşleşmelerinin henüz yayınlanmamış gelecek yıl yapımlarının önüne sıralanması sağlandı (`q=avatar` -> `Avatar` 2 link PASS).
