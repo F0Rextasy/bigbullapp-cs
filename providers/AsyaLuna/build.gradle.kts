@@ -2,7 +2,7 @@ version = 4
 
 
 cloudstream {
-    description = "AsyaLuna — Türkçe içerik (autopilot)"
+    description = "AsyaLuna — Türkçe içerik"
     authors = listOf("F0Rextasy")
     status = 0
     tvTypes = listOf("Movie", "TvSeries")

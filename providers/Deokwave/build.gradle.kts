@@ -2,7 +2,7 @@ version = 1
 
 
 cloudstream {
-    description = "Deokwave — Türkçe içerik (autopilot)"
+    description = "Deokwave — Türkçe içerik"
     authors = listOf("F0Rextasy")
     status = 1
     tvTypes = listOf("Movie", "TvSeries")

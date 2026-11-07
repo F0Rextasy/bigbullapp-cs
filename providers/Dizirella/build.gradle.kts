@@ -2,7 +2,7 @@ version = 2
 
 
 cloudstream {
-    description = "Dizirella — Türkçe içerik (autopilot)"
+    description = "Dizirella — Türkçe içerik"
     authors = listOf("F0Rextasy")
     status = 1
     tvTypes = listOf("Movie", "TvSeries")

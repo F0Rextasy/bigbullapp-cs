@@ -2,7 +2,7 @@ version = 2
 
 
 cloudstream {
-    description = "HDFilmCehennemi2 — Türkçe içerik (autopilot)"
+    description = "HDFilmCehennemi2 — Türkçe içerik"
     authors = listOf("F0Rextasy")
     status = 1
     tvTypes = listOf("Movie", "TvSeries")

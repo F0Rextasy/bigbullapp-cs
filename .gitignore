@@ -73,6 +73,7 @@ AGENTS.md
 /tools/bot/
 /tools/bots/
 /tools/*-bot/
+!/tools/telegram-bot/
 /tools/bigbull-bot/
 /tools/apkcrack/
 /tools/blutter/

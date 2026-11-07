@@ -66,6 +66,8 @@ class RectvProvider : MainAPI() {
         )
 
         private val CACHE = java.util.concurrent.ConcurrentHashMap<String, JSONObject>()
+        private val PAGE_CACHE = java.util.concurrent.ConcurrentHashMap<String, Pair<Long, List<JSONObject>>>()
+        private const val PAGE_TTL_MS = 5 * 60 * 1000L
 
         private fun qualityOf(raw: String?): Int = when ((raw ?: "").uppercase()) {
             "4K", "UHD" -> 2160
@@ -127,10 +129,17 @@ class RectvProvider : MainAPI() {
     }
 
     private suspend fun fetchList(kind: String, genre: Int, order: String, page: Int): List<JSONObject> {
+        val key = "$kind|$genre|$order|$page"
+        val now = System.currentTimeMillis()
+        PAGE_CACHE[key]?.let { (ts, cached) ->
+            if (now - ts < PAGE_TTL_MS) return cached
+        }
         val text = apiText(kind, genre, order, page) ?: return emptyList()
         return try {
             val arr = JSONArray(text)
-            (0 until arr.length()).map { arr.getJSONObject(it) }
+            val list = (0 until arr.length()).map { arr.getJSONObject(it) }
+            if (list.isNotEmpty()) PAGE_CACHE[key] = now to list
+            list
         } catch (_: Exception) {
             emptyList()
         }
@@ -177,6 +186,7 @@ class RectvProvider : MainAPI() {
                         if (seen.add(url)) out.add(sr)
                     }
                 }
+                if (out.isNotEmpty() && page >= 2) break
             }
         }
         return out

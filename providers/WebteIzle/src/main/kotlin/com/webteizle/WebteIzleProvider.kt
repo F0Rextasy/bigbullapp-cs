@@ -81,8 +81,16 @@ class WebteIzleProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val doc = getDoc("$mainUrl/filtre?a=${encodeWin1254(query.trim())}") ?: return emptyList()
+        val q = query.trim()
+        val doc = getDoc("$mainUrl/filtre?a=${encodeWin1254(q)}") ?: return emptyList()
         return doc.select(CARD).mapNotNull { it.toSearchResult() }.distinctBy { it.url }
+            .sortedBy {
+                when {
+                    it.name.equals(q, ignoreCase = true) -> 0
+                    it.name.startsWith(q, ignoreCase = true) -> 1
+                    else -> 2
+                }
+            }
     }
 
     override suspend fun load(url: String): LoadResponse? {

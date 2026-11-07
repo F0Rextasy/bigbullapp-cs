@@ -2,7 +2,7 @@ version = 1
 
 
 cloudstream {
-    description = "HDFilmizleBest — Türkçe içerik (autopilot)"
+    description = "HDFilmizleBest — Türkçe içerik"
     authors = listOf("F0Rextasy")
     status = 1
     tvTypes = listOf("Movie", "TvSeries")

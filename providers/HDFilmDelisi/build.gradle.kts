@@ -2,7 +2,7 @@ version = 3
 
 
 cloudstream {
-    description = "HDFilmDelisi — Türkçe içerik (autopilot)"
+    description = "HDFilmDelisi — Türkçe içerik"
     authors = listOf("F0Rextasy")
     status = 1
     tvTypes = listOf("Movie", "TvSeries")

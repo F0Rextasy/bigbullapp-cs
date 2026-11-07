@@ -2,7 +2,7 @@ version = 3
 
 
 cloudstream {
-    description = "Filmizyon — Türkçe içerik (autopilot)"
+    description = "Filmizyon — Türkçe içerik"
     authors = listOf("F0Rextasy")
     status = 1
     tvTypes = listOf("Movie", "TvSeries")
