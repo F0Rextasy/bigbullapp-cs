@@ -11,7 +11,7 @@ canlı TV kaynakları. Her site Cloudstream'de ayrı bir Gradle modülü/`.cs3` 
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-97-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-94-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -88,7 +88,7 @@ Tek modül derleme ve cihaza kurulum:
 
 `✓` var · `—` sitede yok · `film` yalnız filmlerde
 
-`Inat*` platformlarından runner’da pass olmayan 24 tanesi pasif; kaynakları korunuyor.
+`Inat*` platformlarından runner’da pass olmayan 27 tanesi (`status = 0`) pasif; kaynakları korunuyor.
 
 | Eklenti | Kaynak | Tür | Sayfalama | Öneri | Fragman | Kadro | Süre | Puan |
 |---|---|---|---|---|---|---|---|---|
@@ -179,11 +179,11 @@ Tek modül derleme ve cihaza kurulum:
 | `Inat4k01Exo` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k01Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k02Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
-| `Inat4k03Exo` | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
-| `Inat4k03Web` | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k03Exo` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k03Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k04Exo` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k04Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
-| `Inat4k06Exo` | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
+| `Inat4k06Exo` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k06Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k07Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `JetFilmizle` | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
@@ -215,7 +215,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Yabancidizi` | yabancidizi.watch | Dizi/Film | — | ✓ | — | ✓ | film | ✓ |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**Inat notu:** Inat'ın **35 platformu ayrı modül** olarak tutulur; runner’da pass olan **11 platform aktif**, pass olmayan **24 platform pasif**. Aktif platformlar: Liste 4K 03 Exo/Web, 4K 06 Exo, Exxen, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii ve Yerli Filmler. Depoda toplam **96 aktif modül** var (`AsyaLuna` sunucusu silindiği için pasif). Pasif platformlar `settings.gradle.kts` `disabled` listesinde; kaynak dosyaları korunuyor.
+**Inat notu:** Inat'ın **35 platformu ayrı modül** olarak tutulur; runner’da pass olan **8 platform aktif**, pass olmayan **27 platform pasif** (`4k.filmizleeeee.cfd` 4K katalogları upstream'de kapatıldı). Aktif platformlar: Exxen, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii ve Yerli Filmler. Depoda toplam **94 aktif modül** var (`AsyaLuna` sunucusu silindiği için pasif). Pasif platformlar kendi `build.gradle.kts` dosyasında `status = 0` ile işaretlenir; kaynak dosyaları korunuyor.
 
 Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
 `README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.
@@ -283,7 +283,7 @@ tek başına bu testle garanti edilmez.
 
 ## Doğrulama (2026-11-07)
 
-- Cloudstream host runner: 96 aktif modül; DiziPod v6, Yabancidizi v8 ve HDFilmCehennemi v9 canlı doğrulandı.
+- Cloudstream host runner: 94 aktif modül; DiziPod v6, Yabancidizi v8 ve HDFilmCehennemi v9 canlı doğrulandı.
 - Emülatör smoke: DiziPal, AsyaWatch ve MinikaGO arama → detay → oynatma PASS.
 - Nuvio host: **29 sağlayıcı** (`manifest.json`) ve **20 katalog** (`addon/manifest.json`); otomatik güncelleme botu her turda Nuvio'yu da tarar (İnat CDN egress engeli ve Node TLS'ine kapalı `WebteIzle` ayrı sayılır).
 
@@ -305,7 +305,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          96 aktif modül
+  Yabancidizi/          94 aktif modül
 nuvio/                  Nuvio eklenti deposu (29 sağlayıcı + 20 katalog kaynağı)
 ```
 

@@ -1,6 +1,7 @@
 package com.dizifilmizle
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.evpMd5AesCbcDecrypt
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -29,11 +30,7 @@ import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONArray
 import org.json.JSONObject
-import java.security.MessageDigest
 import java.util.Base64
-import javax.crypto.Cipher
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
 import org.jsoup.nodes.Document
 
 private fun asciiFold(value: String): String = value
@@ -268,26 +265,10 @@ class DiziFilmIzleProvider : MainAPI() {
     private fun decryptBePlayer(html: String): String? {
         val match = BE_PLAYER.find(html) ?: return null
         val params = JSONObject(match.groupValues[2])
-        val password = match.groupValues[1].toByteArray(Charsets.UTF_8)
-        val salt = hex(params.optString("s"))
-        val iv = hex(params.optString("iv"))
         val cipherText = Base64.getDecoder().decode(params.optString("ct"))
-        val first = md5(password, salt)
-        val second = md5(first, password, salt)
-        val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-        cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec((first + second).copyOf(32), "AES"), IvParameterSpec(iv))
-        val json = JSONObject(String(cipher.doFinal(cipherText), Charsets.UTF_8))
-        return json.optString("video_location").trim().takeIf { it.startsWith("http") }
+        val clear = evpMd5AesCbcDecrypt(cipherText, match.groupValues[1], params.optString("s"), params.optString("iv"))
+        return JSONObject(clear).optString("video_location").trim().takeIf { it.startsWith("http") }
     }
-
-    private fun md5(vararg parts: ByteArray): ByteArray {
-        val digest = MessageDigest.getInstance("MD5")
-        parts.forEach { digest.update(it) }
-        return digest.digest()
-    }
-
-    private fun hex(value: String): ByteArray =
-        value.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
 
 
 }

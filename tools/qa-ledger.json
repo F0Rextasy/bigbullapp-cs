@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-07",
+ "generated": "2026-11-08",
  "note": "120 TR modül runner benchmark (2026-11-05)",
  "modules": [
   {
@@ -660,66 +660,6 @@
    "date": "2026-11-04"
   },
   {
-   "module": "Inat4k01Exo",
-   "result": "blocked",
-   "evidence": "runner 2026-11-01: ana sayfa/kategori upstream 502 veya InatDecodeException; runner parse-error",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "Inat4k01Web",
-   "result": "blocked",
-   "evidence": "runner 2026-11-01: ana sayfa/kategori upstream 502 veya InatDecodeException; runner parse-error",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "Inat4k02Web",
-   "result": "blocked",
-   "evidence": "runner 2026-11-01: ana sayfa/kategori upstream 502 veya InatDecodeException; runner parse-error",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "Inat4k03Exo",
-   "result": "pass",
-   "evidence": "runner 2026-11-01: kategori SİNEMA & FİLMLER, 1827 içerik, 2160p canlı HLS/MP4",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "Inat4k03Web",
-   "result": "pass",
-   "evidence": "runner 2026-11-01: 2 bağlantı, kategori dolu",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "Inat4k04Exo",
-   "result": "blocked",
-   "evidence": "runner 2026-11-01: kategori dolu, 1226 içerik; runner parse-error",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "Inat4k04Web",
-   "result": "blocked",
-   "evidence": "runner 2026-11-01: kategori dolu, 1226 içerik; runner parse-error",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "Inat4k06Exo",
-   "result": "pass",
-   "evidence": "runner 2026-11-01: 1 bağlantı, kategori dolu",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "Inat4k06Web",
-   "result": "blocked",
-   "evidence": "runner 2026-11-01: kategori dolu, 708 içerik; runner parse-error",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "Inat4k07Web",
-   "result": "blocked",
-   "evidence": "runner 2026-11-01: ana sayfa/kategori upstream 502 veya InatDecodeException; runner parse-error",
-   "runner": "qa 2026-11-01"
-  },
-  {
    "module": "NuvioAddon",
    "result": "pass",
    "evidence": "emülatör cs33 2026-11-02: addon kuruldu (\"BigBull TR Katalog was validated and added successfully\"); ana sayfada 79 katalog satırı posterlerle (Anizm/Asya Animeleri/AnimeciX); satır→detay (Cinemeta)→kaynak listesinde plugin sağlayıcı; 1219 IMDb item; build 79 ok / 0 fail",
@@ -754,6 +694,12 @@
    "result": "pass",
    "evidence": "runner 2026-11-07: search 200 (q=st), load 200 (rectv://movie/11551), links 200 ok=true 1x token'lı m3u8; host-side by/filtres 3 sayfa x2 tur + genre=10 -> 200, m3u8 200 #EXTM3U; detay ucu 404 (item icinde sources[] hazır); status=3 (emulator smoke yok)",
    "runner": "qa 2026-11-07"
+  },
+  {
+   "module": "Inat4k Film (10 modül)",
+   "result": "skip",
+   "evidence": "2026-11-08: 4k.filmizleeeee.cfd catalog-exo/web uçları 404; cf.php/ct.php resmî config'inde 4K bucket'ları çıkarılmış; status=0 pasif (v2)",
+   "runner": "probe 2026-11-08"
   }
  ]
 }

@@ -1,6 +1,7 @@
 package com.netfilmizle
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.evpMd5AesCbcDecrypt
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -25,11 +26,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
-import java.security.MessageDigest
 import java.util.Base64
-import javax.crypto.Cipher
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
 import org.json.JSONObject
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -153,26 +150,9 @@ class NetFilmizleProvider : MainAPI() {
     }
 
     private fun decrypt(hash: String, params: JSONObject): JSONObject {
-        val password = hash.toByteArray(Charsets.UTF_8)
-        val salt = hex(params.optString("s"))
-        val iv = hex(params.optString("iv"))
         val cipherText = Base64.getDecoder().decode(params.optString("ct"))
-        val first = md5(password, salt)
-        val second = md5(first, password, salt)
-        val key = (first + second).copyOf(32)
-        val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-        cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(iv))
-        return JSONObject(String(cipher.doFinal(cipherText), Charsets.UTF_8))
+        return JSONObject(evpMd5AesCbcDecrypt(cipherText, hash, params.optString("s"), params.optString("iv")))
     }
-
-    private fun md5(vararg parts: ByteArray): ByteArray {
-        val digest = MessageDigest.getInstance("MD5")
-        parts.forEach { digest.update(it) }
-        return digest.digest()
-    }
-
-    private fun hex(value: String): ByteArray =
-        value.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
 
     private fun Document.cards(): List<SearchResponse> =
         select("a[href]").mapNotNull { card ->

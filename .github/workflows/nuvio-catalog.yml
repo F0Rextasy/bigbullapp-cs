@@ -1,5 +1,9 @@
 name: nuvio-katalog
 
+concurrency:
+  group: nuvio-katalog
+  cancel-in-progress: true
+
 on:
   schedule:
     - cron: "23 5 * * *"
@@ -33,7 +37,9 @@ jobs:
             git config user.email "99847357+F0Rextasy@users.noreply.github.com"
             git add nuvio/manifest.json nuvio/addon
             git commit -m "Nuvio katalog listeleri güncellendi"
-            git push
+            BRANCH="${GITHUB_REF_NAME:-master}"
+            git pull --rebase origin "$BRANCH" && git push origin "HEAD:$BRANCH" \
+              || (git pull --rebase origin "$BRANCH" && git push origin "HEAD:$BRANCH")
           else
             echo "değişiklik yok"
           fi

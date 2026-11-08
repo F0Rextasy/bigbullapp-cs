@@ -281,7 +281,7 @@ class SetFilmIzleProvider : MainAPI() {
         playerName: String,
         partKey: String,
     ): JSONObject? {
-        val body = try {
+        val body = runCatching {
             app.post(
                 "$mainUrl/wp-admin/admin-ajax.php",
                 data = mapOf(
@@ -296,20 +296,16 @@ class SetFilmIzleProvider : MainAPI() {
                 headers = uaHeaders + mapOf("X-Requested-With" to "XMLHttpRequest"),
                 referer = pageUrl,
             ).text
-        } catch (e: Exception) {
-            null
-        } ?: return null
+        }.getOrNull() ?: return null
         val data = runCatching { JSONObject(body).optJSONObject("data") }.getOrNull() ?: return null
         return data.optJSONObject("stream")
     }
 
     /** Köprü sayfası gerçek oynatıcı adresini iki base64 metnin XOR'unda tutar. */
     private suspend fun resolveBridge(bridgeUrl: String, referer: String): String? {
-        val html = try {
+        val html = runCatching {
             app.get(bridgeUrl, headers = uaHeaders, referer = referer).text
-        } catch (e: Exception) {
-            null
-        } ?: return null
+        }.getOrNull() ?: return null
         val match = Regex("""cerceve\(\s*"b2"\s*,\s*"([^"]+)"\s*,\s*"([^"]+)"\s*\)""").find(html)
             ?: return null
         return xorDecode(match.groupValues[1], match.groupValues[2])
@@ -317,11 +313,9 @@ class SetFilmIzleProvider : MainAPI() {
     }
 
     private suspend fun readPlayerSource(playerUrl: String): PlayerSource? {
-        val html = try {
+        val html = runCatching {
             app.get(playerUrl, headers = uaHeaders, referer = "https://setplay.sbs/").text
-        } catch (e: Exception) {
-            null
-        } ?: return null
+        }.getOrNull() ?: return null
         val path = Regex("""src:\s*"([^"]+)"""").find(html)?.groupValues?.get(1)
             ?.replace("\\/", "/") ?: return null
         val origin = Regex("""^(https?://[^/]+)""").find(playerUrl)?.value ?: return null

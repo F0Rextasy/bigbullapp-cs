@@ -30,9 +30,7 @@ import java.security.Signature
 import java.security.interfaces.ECPublicKey
 import java.security.spec.ECGenParameterSpec
 import android.util.Base64
-import javax.crypto.Cipher
-import javax.crypto.spec.GCMParameterSpec
-import javax.crypto.spec.SecretKeySpec
+import com.bigbull.common.aesGcmDecrypt
 
 /**
  * Dizigecesi — dizigecesi.com film arşivi.
@@ -339,9 +337,7 @@ class DizigecesiProvider : MainAPI() {
         if (key.size != 32) return@runCatching null
         val iv = fmB64d(playback.optString("iv"))
         val payload = fmB64d(playback.optString("payload"))
-        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-        cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(key, "AES"), GCMParameterSpec(128, iv))
-        JSONObject(String(cipher.doFinal(payload), Charsets.UTF_8))
+        JSONObject(String(aesGcmDecrypt(payload, key, iv), Charsets.UTF_8))
     }.getOrNull()
 
     private fun fmSolvePow(nonce: String, difficulty: Int): String? {

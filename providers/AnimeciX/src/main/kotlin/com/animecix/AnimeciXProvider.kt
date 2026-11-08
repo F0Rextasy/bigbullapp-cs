@@ -27,9 +27,7 @@ import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONObject
 import java.net.URLEncoder
 import java.security.SecureRandom
-import javax.crypto.Cipher
-import javax.crypto.spec.GCMParameterSpec
-import javax.crypto.spec.SecretKeySpec
+import com.bigbull.common.aesGcmEncrypt
 
 /**
  * AnimeciX — animecix.tv
@@ -226,9 +224,7 @@ class AnimeciXProvider : MainAPI() {
     /** AES-256-GCM over `{version}<query>`; the site keeps the same static key in its bundle. */
     private fun edgeHeader(query: String): String {
         val iv = ByteArray(12).also { SecureRandom().nextBytes(it) }
-        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-        cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(EDGE_KEY.toByteArray(), "AES"), GCMParameterSpec(128, iv))
-        val sealed = cipher.doFinal((EDGE_TAG + query).toByteArray())
+        val sealed = aesGcmEncrypt((EDGE_TAG + query).toByteArray(), EDGE_KEY.toByteArray(), iv)
         return Base64.encodeToString(sealed, Base64.NO_WRAP) + "." + Base64.encodeToString(iv, Base64.NO_WRAP)
     }
 

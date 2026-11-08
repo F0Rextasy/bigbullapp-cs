@@ -25,11 +25,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
-import javax.crypto.Cipher
-import javax.crypto.SecretKeyFactory
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.PBEKeySpec
-import javax.crypto.spec.SecretKeySpec
+import com.bigbull.common.pbkdf2AesCbcDecrypt
 import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.nodes.Document
@@ -281,19 +277,8 @@ class SelcukFlixProvider : MainAPI() {
         val iv = fields["iv"]?.firstOrNull() ?: return null
         val salt = fields["salt"]?.firstOrNull() ?: return null
         val passphrase = fields["k"]?.filter { '/' !in it }?.maxByOrNull { it.length } ?: return null
-
-        val key = runCatching {
-            SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512")
-                .generateSecret(PBEKeySpec(passphrase.toCharArray(), salt.hex(), KDF_ROUNDS, KEY_BITS))
-                .encoded
-        }.getOrNull() ?: return null
-
-        val clear = runCatching {
-            val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-            cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(iv.hex()))
-            String(cipher.doFinal(Base64.decode(cipherText, Base64.DEFAULT)), Charsets.UTF_8)
-        }.getOrNull() ?: return null
-
+        val clear = pbkdf2AesCbcDecrypt(Base64.decode(cipherText, Base64.DEFAULT), passphrase, salt, iv)
+            ?: return null
         return httpsUrl(clear.trim('\t', '\r', '\n', ' ', '\u000f'))
     }
 
@@ -445,8 +430,6 @@ class SelcukFlixProvider : MainAPI() {
         }
     }
 
-    private fun String.hex(): ByteArray = chunked(2).map { it.toInt(16).toByte() }.toByteArray()
-
     private fun JSONArray?.objects(): List<JSONObject> =
         if (this == null) emptyList() else (0 until length()).mapNotNull { optJSONObject(it) }
 
@@ -469,8 +452,6 @@ class SelcukFlixProvider : MainAPI() {
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
         private const val IMAGE_PROXY = "/i/s/"
-        private const val KDF_ROUNDS = 999
-        private const val KEY_BITS = 256
 
         private val ISO_DURATION = Regex("""PT(?:(\d+)H)?(?:(\d+)M)?""")
         private val RESOLUTION = Regex("""RESOLUTION=\d+x(\d+)""")

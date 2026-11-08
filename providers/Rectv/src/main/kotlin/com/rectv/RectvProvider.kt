@@ -1,6 +1,7 @@
 package com.rectv
 
 import com.lagradost.cloudstream3.Episode
+import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
@@ -103,12 +104,10 @@ class RectvProvider : MainAPI() {
         return mac.doFinal(msg.toByteArray()).joinToString("") { "%02x".format(it) }
     }
 
-    private suspend fun nonceGet(): String? = try {
+    private suspend fun nonceGet(): String? = runCatching {
         val r = app.get("$mainUrl/api/attest/nonce", headers = mapOf("User-Agent" to UA))
         JSONObject(r.text).optString("nonce", "").takeIf { it.isNotEmpty() }
-    } catch (_: Exception) {
-        null
-    }
+    }.getOrNull()
 
     private suspend fun signedGet(path: String): String? {
         var nonce = nonceGet() ?: return null
@@ -154,14 +153,12 @@ class RectvProvider : MainAPI() {
             if (now - ts < PAGE_TTL_MS) return cached
         }
         val text = apiText(kind, genre, order, page) ?: return emptyList()
-        return try {
+        return runCatching {
             val arr = JSONArray(text)
             val list = (0 until arr.length()).map { arr.getJSONObject(it) }
             if (list.isNotEmpty()) PAGE_CACHE[key] = now to list
             list
-        } catch (_: Exception) {
-            emptyList()
-        }
+        }.getOrDefault(emptyList())
     }
 
     private fun itemToSearch(item: JSONObject): SearchResponse? {
@@ -183,6 +180,7 @@ class RectvProvider : MainAPI() {
         val row = ROWS.firstOrNull { it.data() == request.data } ?: ROWS.first()
         val items = fetchList(row.kind, row.genre, row.order, page)
         val results = items.mapNotNull { itemToSearch(it) }
+        if (page == 1 && results.isEmpty()) throw ErrorLoadingException("$name: içerik listesi alınamadı.")
         return newHomePageResponse(request.name, results, hasNext = results.isNotEmpty())
     }
 
@@ -293,16 +291,16 @@ class RectvProvider : MainAPI() {
                 if (items.isEmpty()) break
             }
         }
-        item ?: return null
+        item ?: throw ErrorLoadingException("$name: içerik yüklenemedi.")
         val title = item.optString("title", id)
         val poster = item.optString("cover", "").ifBlank { item.optString("image", "") }
         val plot = item.optString("description", "")
         val year = item.optInt("year", 0).takeIf { it > 1900 }
             ?: item.optString("sublabel", "").filter { it.isDigit() }.take(4).toIntOrNull()
-        val genres = try {
+        val genres = runCatching {
             val g = item.optJSONArray("genres") ?: JSONArray()
             (0 until g.length()).mapNotNull { g.optJSONObject(it)?.optString("title") }
-        } catch (_: Exception) { emptyList() }
+        }.getOrDefault(emptyList())
         val duration = item.optString("duration", "").let { d ->
             val h = Regex("(\\d+)\\s*h").find(d)?.groupValues?.get(1)?.toIntOrNull() ?: 0
             val m = Regex("(\\d+)\\s*min").find(d)?.groupValues?.get(1)?.toIntOrNull() ?: 0
@@ -373,7 +371,8 @@ class RectvProvider : MainAPI() {
             }
             val list = EP_CACHE[key].orEmpty()
             emitSources(list, watched, callback)
-            return watched.isNotEmpty()
+            if (watched.isEmpty()) throw ErrorLoadingException("$name: oynatılabilir akış bulunamadı.")
+            return true
         }
         val kind = parts[0]
         val id = parts[1]
@@ -387,10 +386,11 @@ class RectvProvider : MainAPI() {
                 if (items.isEmpty()) break
             }
         }
-        item ?: return false
+        item ?: throw ErrorLoadingException("$name: kaynak bulunamadı.")
         val arr = item.optJSONArray("sources") ?: JSONArray()
         val list = (0 until arr.length()).mapNotNull { arr.optJSONObject(it) }
         emitSources(list, watched, callback)
-        return watched.isNotEmpty()
+        if (watched.isEmpty()) throw ErrorLoadingException("$name: oynatılabilir akış bulunamadı.")
+        return true
     }
 }

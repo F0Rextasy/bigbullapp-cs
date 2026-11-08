@@ -10,6 +10,7 @@
  *   node nuvio/test/run.mjs diziyou        # + sandbox load of one provider
  *   LIVE=1 node nuvio/test/run.mjs diziyou tt0903747 tv 1 1
  */
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
@@ -38,6 +39,10 @@ for (const scraper of manifest.scrapers) {
   }
   check(/module\.exports\s*=\s*\{\s*getStreams\s*\}/.test(code), `${scraper.id}: exports getStreams`);
   check(!/\basync\s/.test(code) && !/\bawait\s/.test(code), `${scraper.id}: promise chains only`);
+  const norm = code.replace(/\r\n/g, "\n");
+  const langIdx = norm.indexOf("var __langLabeled = module.exports.getStreams;");
+  const langHash = langIdx < 0 ? "" : crypto.createHash("sha1").update(norm.slice(langIdx).trim()).digest("hex").slice(0, 10);
+  check(langHash === "87436170a4", `${scraper.id}: canonical __langLabeled wrapper`);
 }
 
 const declared = new Set(manifest.scrapers.map((s) => path.basename(s.filename)));

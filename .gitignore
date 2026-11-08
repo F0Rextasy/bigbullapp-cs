@@ -46,6 +46,7 @@ __pycache__/
 *.log
 # local agent notes only
 AGENTS.md
+/todo.md
 # local agent / device debug dumps (never publish)
 /.omp/
 /.upstream/

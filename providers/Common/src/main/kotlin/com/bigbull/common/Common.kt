@@ -1,5 +1,12 @@
 package com.bigbull.common
 
+import java.security.MessageDigest
+import javax.crypto.Cipher
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.GCMParameterSpec
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.PBEKeySpec
+import javax.crypto.spec.SecretKeySpec
 import org.jsoup.nodes.Element
 
 // Tüm modüllerin kopyaladığı tarayıcı kimliği; UA rulajı tek yerden yapılır.
@@ -10,3 +17,50 @@ val browserHeaders = mapOf(
 
 fun Element.posterSrcLazy(): String? =
     attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
+fun String.hexToBytes(): ByteArray =
+    chunked(2).map { it.toInt(16).toByte() }.toByteArray()
+
+fun aesCbcDecrypt(cipherBytes: ByteArray, key: ByteArray, iv: ByteArray): ByteArray =
+    Cipher.getInstance("AES/CBC/PKCS5Padding").run {
+        init(Cipher.DECRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(iv))
+        doFinal(cipherBytes)
+    }
+
+fun aesGcmDecrypt(cipherBytes: ByteArray, key: ByteArray, iv: ByteArray, tagBits: Int = 128): ByteArray =
+    Cipher.getInstance("AES/GCM/NoPadding").run {
+        init(Cipher.DECRYPT_MODE, SecretKeySpec(key, "AES"), GCMParameterSpec(tagBits, iv))
+        doFinal(cipherBytes)
+    }
+
+fun aesGcmEncrypt(plainBytes: ByteArray, key: ByteArray, iv: ByteArray, tagBits: Int = 128): ByteArray =
+    Cipher.getInstance("AES/GCM/NoPadding").run {
+        init(Cipher.ENCRYPT_MODE, SecretKeySpec(key, "AES"), GCMParameterSpec(tagBits, iv))
+        doFinal(plainBytes)
+    }
+
+/** DiziPal/SelcukFlix RSC `enc` bloğu: PBKDF2-HMAC-SHA512(999, 256) + AES-256-CBC. */
+fun pbkdf2AesCbcDecrypt(
+    cipherBytes: ByteArray,
+    passphrase: String,
+    saltHex: String,
+    ivHex: String,
+    rounds: Int = 999,
+    keyBits: Int = 256,
+): String? = runCatching {
+    val key = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512")
+        .generateSecret(PBEKeySpec(passphrase.toCharArray(), saltHex.hexToBytes(), rounds, keyBits))
+        .encoded
+    String(aesCbcDecrypt(cipherBytes, key, ivHex.hexToBytes()), Charsets.UTF_8)
+}.getOrNull()
+
+/** CryptoJS/OpenSSL EVP_BytesToKey (2x MD5 -> 32 bayt anahtar) + AES-256-CBC (bePlayer/vidmixi). */
+fun evpMd5AesCbcDecrypt(cipherBytes: ByteArray, password: String, saltHex: String, ivHex: String): String {
+    val pw = password.toByteArray(Charsets.UTF_8)
+    val salt = saltHex.hexToBytes()
+    fun md5(vararg parts: ByteArray): ByteArray =
+        MessageDigest.getInstance("MD5").apply { parts.forEach(::update) }.digest()
+    val first = md5(pw, salt)
+    val key = (first + md5(first, pw, salt)).copyOf(32)
+    return String(aesCbcDecrypt(cipherBytes, key, ivHex.hexToBytes()), Charsets.UTF_8)
+}

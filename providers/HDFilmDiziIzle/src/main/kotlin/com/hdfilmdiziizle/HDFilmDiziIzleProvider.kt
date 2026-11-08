@@ -1,5 +1,6 @@
 package com.hdfilmdiziizle
 
+import com.bigbull.common.aesCbcDecrypt
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -28,9 +29,6 @@ import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import java.util.Base64
-import javax.crypto.Cipher
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
 import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.nodes.Document
@@ -372,12 +370,13 @@ class HDFilmDiziIzleProvider : MainAPI() {
         Regex("""<base\s+href="([^"]+)"""", RegexOption.IGNORE_CASE).find(html)?.groupValues?.get(1)
             ?: "https://vidrame.pro/"
 
-    private fun decryptSource(value: String): String {
-        val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-        val key = "0123456789abcdef0123456789abcdef".toByteArray(Charsets.ISO_8859_1)
-        val iv = "abcdef9876543210".toByteArray(Charsets.ISO_8859_1)
-        cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(iv))
-        return String(cipher.doFinal(Base64.getDecoder().decode(value.trim())), Charsets.UTF_8)
-    }
+    private fun decryptSource(value: String): String = String(
+        aesCbcDecrypt(
+            Base64.getDecoder().decode(value.trim()),
+            "0123456789abcdef0123456789abcdef".toByteArray(Charsets.ISO_8859_1),
+            "abcdef9876543210".toByteArray(Charsets.ISO_8859_1),
+        ),
+        Charsets.UTF_8,
+    )
 
 }

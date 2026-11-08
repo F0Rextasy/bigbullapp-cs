@@ -4,6 +4,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 buildscript {
+    // JitPack commit sürümleri bozuk .module metadata üretir (expected='<sha>' found='master-SNAPSHOT');
+    // -SNAPSHOT çözümü 30 gün önbellekte tutulur, CI ise anahtarlı önbellekle sabitler (build.yml).
+    configurations.classpath.get().resolutionStrategy.cacheChangingModulesFor(30, "days")
+
     repositories {
         google()
         mavenCentral()
@@ -44,6 +48,9 @@ subprojects {
     android {
         namespace = "com.bigbull.${project.name.lowercase()}"
         sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
+        if (project.name == "Dizibox") {
+            sourceSets["test"].java.srcDir(rootProject.file("providers/Common/src/test/kotlin"))
+        }
 
         defaultConfig {
             minSdk = 21
@@ -71,8 +78,11 @@ subprojects {
     dependencies {
         val cloudstream by configurations
         val implementation by configurations
+        val testImplementation by configurations
 
-        // Stubs for all cloudstream classes
+        testImplementation("junit:junit:4.13.2")
+
+        // Stubs for all cloudstream classes. "pre-release" kayan etikettir; CI jar'ı anahtarlı önbellekle sabitler.
         cloudstream("com.lagradost:cloudstream3:pre-release")
 
         // These dependencies can include any of those which are added by the app,

@@ -1,4 +1,4 @@
-// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt1790885:movie:1:1", "description":"İnatTV yerli ve yabancı 4K film kataloğu (imzalı liste + AES çözümleyici, MP4/HLS).", "verified":true, "version":"1.0.3"}
+// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt42006709:movie:1:1", "description":"İnatTV yerli film kataloğu (imzalı liste + AES çözümleyici, HLS/MP4; 4K film katalogları upstream'de kapatıldı).", "verified":true, "version":"1.0.4"}
 /**
  * inattvfilmler — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.
@@ -671,7 +671,19 @@ function pickEpisode(list, want) {
   return list[want - 1] || null;
 }
 function norm(v) {
-  return String(v || "").toLowerCase().replace(/[^a-z0-9\u00e7\u011f\u0131\u00f6\u015f\u00fc ]+/g, " ").replace(/\s+/g, " ").trim();
+  return String(v || "").toLowerCase()
+    .replace(/[áàâäãå]/g, "a")
+    .replace(/[éèêë]/g, "e")
+    .replace(/[íìîï]/g, "i")
+    .replace(/[óòôöõ]/g, "o")
+    .replace(/[úùûü]/g, "u")
+    .replace(/ç/g, "c")
+    .replace(/ğ/g, "g")
+    .replace(/ı/g, "i")
+    .replace(/ş/g, "s")
+    .replace(/[^a-z0-9 ]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 function pickCandidates(list, title) {
   var want = norm(title), words = want.split(" ").filter(function (w) { return w.length > 1; });
@@ -809,8 +821,6 @@ function getStreams(tmdbId, mediaType, season, episode) {
     .then(function (title) {
       if (!title) return null;
       var FILM_URLS = [
-        "https://4k.filmizleeeee.cfd/4k/03/public/catalog-exo.php",
-        "https://4k.filmizleeeee.cfd/4k/06/public/catalog-exo.php",
         "https://diziboxen.help/CDN/001/002/dizibox/v2/film/yerli-filmler.php"
       ];
       var filmChain = Promise.resolve([]);

@@ -5,6 +5,24 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.23] - 2026-11-07
+
+### Eklendi
+- **CI kapısı (`kapi.yml` + `.github/scripts/kapi.py`)**: her push ve PR'da Nuvio statik/sandbox + `__langLabeled` sarmalayıcı özdeşlik testi, `manifest.json` senkron kontrolü, kaynak değişen modülde `version` artış denetimi ve derlemede `.cs3` sayısı doğrulaması çalışır.
+- **Ortak kripto + birim testleri (`Common.kt` + `CryptoTest.kt`)**: AES-CBC, AES-GCM, PBKDF2-HMAC-SHA512 ve EVP-MD5-AES yardımcıları `Common.kt`'de birleştirildi ve JUnit testleriyle (`:Dizibox:testDebugUnitTest`) güvenceye alındı.
+
+### Değişti
+- **Ortak kripto geçişi**: **DiziPal v8**, **SelcukFlix v6**, **DiziFilmIzle v3**, **NetFilmizle v4**, **HDFilmDiziIzle v4**, **Dizigecesi v9** ve **AnimeciX v4** şifre çözme/üretme akışları `Common.kt` yardımcılarına taşındı.
+- **Pasif modül tek kaynağı (`settings.gradle.kts`)**: sabit `disabled` listesi kaldırıldı; pasif 28 modül kendi (Inat4k03Exo/Web ve Inat4k06Exo 4K katalogları kapatıldığı için pasif; Nuvio İnatTV Filmler 1.0.4 güncellendi) — `build.gradle.kts` dosyasında `status = 0` ile işaretlendi.
+- **Derleme ve iş akışları**: Gradle paralel derleme + build cache açıldı, CI'da bağımlılık/stub önbelleği sabitlendi (`bagimlilar-v1`), Nuvio-only push'larda gereksiz Gradle derlemesi bildirim akışı korunarak atlandı, `nuvio-catalog.yml` push yarışı `pull --rebase` ile giderildi.
+
+### Kaldırıldı
+- **`health.yml`**: sağlık ve mirror taraması yerelde `AutoUpdater` tarafından yapıldığı için GitHub Actions üzerindeki atıl günlük sağlık workflow'u kaldırıldı.
+
+### Düzeltildi
+- **RecTV v4**: sessiz yutulan hatalar kaldırıldı; liste, detay ve akış hataları `ErrorLoadingException` ile kullanıcıya bildirilir.
+- **SetFilmIzle v7 & Cizgimax v10**: yedek oynatıcı denemelerindeki hata yakalama blokları sadeleştirildi.
+
 ## [1.6.22] - 2026-11-07
 
 ### Eklendi
@@ -12,6 +30,7 @@ sayı arttığında güncelleme sunar.
 - **RecTV v3**: sunucu taraflı arama, dizi için gerçek sezon/bölüm listesi (dublaj/altyazı kaynakları bölüme bağlı), ek ana sayfa satırları.
 
 ### Düzeltildi
+- **İnat 4K film modülleri (10 adet) pasif**: `4k.filmizleeeee.cfd` katalog uçları upstream config'inden çıkarıldı (404); resmî istemci config'i (cf/ct.php) değişmediği için Nuvio `inattvfilmler` canlı `yerli-filmler.php` kaynağına bağlandı (v1.0.4) ve `inattvdizi` imzalı akışı canlı doğrulandı.
 - **SelcukFlix v5 (+ Nuvio 1.1.0)**: site DiziPal platformuna taşındı (eski AES `secureData` ve `/api/bg/searchcontent` kalktı); `/api/mj` arama, `/film/<slug>/izle` + `/dizi/<slug>/sezon-S/bolum-E` sayfaları, PBKDF2-SHA512/AES `enc` çözümü ve dublaj/altyazı alternatif kaynakları yeniden uygulandı (runner: film + dizi PASS).
 - **DiziPal v7**: `search` boş liste döndüren taslaktı; `/api/mj` ile gerçek arama eklendi.
 - **WebteIzle (Nuvio 1.0.3)**: depoda `enabled:false` idi; Turnstile yedek oynatıcıları ve windows-1254 arama ile etkinleştirildi.

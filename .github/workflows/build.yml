@@ -28,23 +28,56 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: "src"
+          fetch-depth: 0
+
+      - name: Cloudstream değişikliği var mı
+        id: cs
+        run: |
+          cd "$GITHUB_WORKSPACE/src"
+          BEFORE="${{ github.event.before }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BEFORE" 2>/dev/null; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          elif [ -n "$(git diff --name-only "$BEFORE" HEAD -- providers build.gradle.kts settings.gradle.kts gradle.properties gradle)" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Yalnızca Nuvio/diğer değişiklik; Gradle derlemesi atlandı (bildirim akışı korunur)."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: builds dalını çek
+        if: steps.cs.outputs.run == 'true'
         uses: actions/checkout@v4
         with:
           ref: "builds"
           path: "builds"
 
       - name: Eski çıktıları temizle
+        if: steps.cs.outputs.run == 'true'
         run: rm -f "$GITHUB_WORKSPACE"/builds/*.cs3
 
       - name: JDK 17 kur
+        if: steps.cs.outputs.run == 'true'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
 
+      - name: Gradle ve Cloudstream bağımlılık önbelleği
+        if: steps.cs.outputs.run == 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/caches/cloudstream
+            ~/.gradle/caches/build-cache-1
+            ~/.gradle/wrapper
+          # Kayan -SNAPSHOT ve pre-release jar'larını sabitler; yükseltmek için v1 -> v2 yap.
+          key: bagimlilar-v1-${{ hashFiles('src/build.gradle.kts', 'src/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            bagimlilar-v1-
+
       - name: Android SDK paketleri
+        if: steps.cs.outputs.run == 'true'
         run: |
           SDK="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
           TOOL="$SDK/cmdline-tools/latest/bin/sdkmanager"
@@ -52,15 +85,18 @@ jobs:
           yes | "$TOOL" --licenses >/dev/null 2>&1 || true
           "$TOOL" "platforms;android-35" "build-tools;35.0.0" >/dev/null
 
-      - name: Eklentileri derle
+      - name: Eklentileri derle ve doğrula
+        if: steps.cs.outputs.run == 'true'
         run: |
           cd "$GITHUB_WORKSPACE/src"
           chmod +x gradlew
-          ./gradlew make makePluginsJson --console=plain
+          ./gradlew :Dizibox:testDebugUnitTest make makePluginsJson --console=plain
+          python3 .github/scripts/kapi.py sayi
           cp providers/*/build/*.cs3 "$GITHUB_WORKSPACE/builds" || { echo "cs3 üretilemedi"; exit 1; }
           cp build/plugins.json "$GITHUB_WORKSPACE/builds"
 
       - name: builds dalını yayınla
+        if: steps.cs.outputs.run == 'true'
         run: |
           cd "$GITHUB_WORKSPACE/builds"
           git config user.name "F0Rextasy"

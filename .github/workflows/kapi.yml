@@ -1,0 +1,33 @@
+name: Kapı
+
+# Bozuk Nuvio sağlayıcısı veya sürümü artmamış değişiklik master'a sessizce girmesin.
+on:
+  push:
+    branches: [master, main]
+    paths-ignore: ["**/*.md"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  kapi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Nuvio statik ve sandbox testi
+        run: node nuvio/test/run.mjs
+      - name: Manifest üretimi ve senkron kontrolü
+        run: |
+          node nuvio/tools/build-manifest.mjs --strict
+          git diff --exit-code nuvio/manifest.json
+      - name: Kapı betiği kendi testi
+        run: python3 .github/scripts/kapi.py test
+      - name: Kaynak değişen modülün sürümü arttı mı
+        run: python3 .github/scripts/kapi.py surum "${{ github.event.pull_request.base.sha || github.event.before }}"

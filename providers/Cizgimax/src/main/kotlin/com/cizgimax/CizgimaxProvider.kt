@@ -310,6 +310,7 @@ class CizgimaxProvider : MainAPI() {
             } catch (e: CancellationException) {
                 throw e
             } catch (ignored: Exception) {
+                // Tekil ayna hatası diğerlerini düşürmez; hiçbiri çıkmazsa altta ErrorLoadingException atılır.
             }
         }
         if (emitted == 0) throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
