@@ -59,32 +59,31 @@ class DeokwaveProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Animeler" -> "https://deokwave.com/animeler/"
-            "Rastgele Anime" -> "https://deokwave.com/kesfet/"
-            "İzlemeye Başla" -> "https://deokwave.com/anime/9A926A4/"
-            "2 #2 Trend - Bu Hafta Bleach Animasyon" -> "https://deokwave.com/anime/4F4589C/"
-            "Drama" -> "https://deokwave.com/kategoriler/?category=drama"
-            "Seriyi İzle" -> "https://deokwave.com/anime/12FA456/"
-            "Seri Sonbahar Firefly Wedding 0 2026" -> "https://deokwave.com/anime/F523D85/"
-            "Seri Sonbahar VERTEX FORCE 0 2026" -> "https://deokwave.com/anime/9B514A3/"
-            "Seri Sonbahar A Certain Dark Item 0 2026" -> "https://deokwave.com/anime/A242323/"
-            "Seri Sonbahar Magical Explorer 0 2026" -> "https://deokwave.com/anime/DEC572A/"
+            "Animeler" -> "$mainUrl/animeler/"
+            "Keşfet" -> "$mainUrl/kesfet/"
+            "Aksiyon" -> "$mainUrl/kategoriler/?category=action"
+            "Komedi" -> "$mainUrl/kategoriler/?category=komedi"
+            "Dram" -> "$mainUrl/kategoriler/?category=dram"
+            "Fantastik" -> "$mainUrl/kategoriler/?category=fantasy"
+            "Bilim Kurgu" -> "$mainUrl/kategoriler/?category=scifi__fantasy"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-
-            if (request.name in listOf("Animeler", "Rastgele Anime", "İzlemeye Başla", "2 #2 Trend - Bu Hafta Bleach Animasyon", "Drama", "Seriyi İzle", "Seri Sonbahar Firefly Wedding 0 2026", "Seri Sonbahar VERTEX FORCE 0 2026", "Seri Sonbahar A Certain Dark Item 0 2026", "Seri Sonbahar Magical Explorer 0 2026")) {
-                if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
-                val doc = app.get(request.data, headers = uaHeaders).document
-                return newHomePageResponse(request.name, cards(doc), hasNext = false)
-            }
-            return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        if (request.name in ROWS) {
+            if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
+            val doc = app.get(request.data, headers = uaHeaders).document
+            return newHomePageResponse(request.name, cards(doc), hasNext = false)
+        }
+        return newHomePageResponse(request.name, emptyList(), hasNext = false)
     }
 
     companion object {
-        val ROWS = listOf("Animeler", "Rastgele Anime", "İzlemeye Başla", "2 #2 Trend - Bu Hafta Bleach Animasyon", "Drama", "Seriyi İzle", "Seri Sonbahar Firefly Wedding 0 2026", "Seri Sonbahar VERTEX FORCE 0 2026", "Seri Sonbahar A Certain Dark Item 0 2026", "Seri Sonbahar Magical Explorer 0 2026")
+        val ROWS = listOf(
+            "Animeler", "Keşfet", "Aksiyon", "Komedi",
+            "Dram", "Fantastik", "Bilim Kurgu",
+        )
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
@@ -115,14 +114,11 @@ class DeokwaveProvider : MainAPI() {
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
-        if (listOf("/", "/anime/", "/watch/").none { path.startsWith(it) }) return@mapNotNull null
-        
-        if (path == "/" || path.contains("login") || path.contains("uye-ol") ||
-            path.contains("/giris") || href.contains("?ara=") || href.contains("sirala=")) return@mapNotNull null
-        val img = card.selectFirst("img")
+        if (!path.startsWith("/anime/")) return@mapNotNull null
+        val img = card.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()
             .ifBlank { card.text().trim() }
-            .ifBlank { img?.attr("alt")?.trim().orEmpty() }
+            .ifBlank { img.attr("alt").trim() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null
@@ -131,11 +127,11 @@ class DeokwaveProvider : MainAPI() {
             hrefLower.contains("/anime/") || hrefLower.contains("/series/")
         if (isSeries) {
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-                posterUrl = fixUrlNull(img?.posterSrcLazy())
+                posterUrl = fixUrlNull(img.posterSrcLazy())
             }
         } else {
             newMovieSearchResponse(title, href, TvType.Movie) {
-                posterUrl = fixUrlNull(img?.posterSrcLazy())
+                posterUrl = fixUrlNull(img.posterSrcLazy())
             }
         }
     }.distinctBy { it.url }

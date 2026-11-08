@@ -66,7 +66,7 @@ class DiziFilmIzleProvider : MainAPI() {
             "Türkçe Altyazı" -> "https://dizifilmizle.to/turkce-altyazili-filmler"
             "Yerli Filmler" -> "https://dizifilmizle.to/ulke/turkiye-hd"
             "Seri Filmler" -> "https://dizifilmizle.to/seriler"
-            "Tümünü Gör" -> "https://dizifilmizle.to/efsane-diziler"
+            "Efsane Diziler" -> "https://dizifilmizle.to/efsane-diziler"
             "Filmler" -> "https://dizifilmizle.to/"
             else -> mainUrl
         })
@@ -74,7 +74,7 @@ class DiziFilmIzleProvider : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Diziler", "Türkçe Dublaj", "Türkçe Altyazı", "Yerli Filmler", "Seri Filmler", "Tümünü Gör", "Filmler")) {
+            if (request.name in ROWS) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -83,7 +83,7 @@ class DiziFilmIzleProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Diziler", "Türkçe Dublaj", "Türkçe Altyazı", "Yerli Filmler", "Seri Filmler", "Tümünü Gör", "Filmler")
+        val ROWS = listOf("Diziler", "Türkçe Dublaj", "Türkçe Altyazı", "Yerli Filmler", "Seri Filmler", "Efsane Diziler", "Filmler")
         private val BE_PLAYER = Regex("""bePlayer\('([^']+)'\s*,\s*'(\{.*?\})'""", RegexOption.DOT_MATCHES_ALL)
         private val MEDIA = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""")
         private val SUBS = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""")
@@ -126,7 +126,7 @@ class DiziFilmIzleProvider : MainAPI() {
         
         if (path == "/" || path.contains("login") || path.contains("uye-ol") ||
             path.contains("/giris") || href.contains("?ara=") || href.contains("sirala=")) return@mapNotNull null
-        val img = card.selectFirst("img")
+        val img = card.selectFirst("img") ?: card.parent()?.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()
             .ifBlank { card.text().trim() }
             .ifBlank { img?.attr("alt")?.trim().orEmpty() }

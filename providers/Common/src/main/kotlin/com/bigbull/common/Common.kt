@@ -16,7 +16,24 @@ val browserHeaders = mapOf(
 )
 
 fun Element.posterSrcLazy(): String? =
-    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+    posterSrcLazyImpl()
+
+private val PLACEHOLDER_IMG = Regex(
+    """^(data:|about:|javascript:)|/(pixel|blank|lazy|placeholder|empty|spacer|transparent)\.(png|gif|jpg|jpeg|svg|webp)""",
+    RegexOption.IGNORE_CASE,
+)
+
+private fun Element.posterSrcLazyImpl(): String? {
+    for (attrName in listOf("data-src", "data-original", "data-lazy-src", "data-wpfc-original-src", "data-lazy", "src")) {
+        val v = attr(attrName).trim()
+        if (v.isNotEmpty() && !PLACEHOLDER_IMG.containsMatchIn(v)) return v
+    }
+    for (attrName in listOf("data-srcset", "srcset")) {
+        val v = attr(attrName).trim().substringBefore(',').trim().substringBefore(' ').trim()
+        if (v.isNotEmpty() && !PLACEHOLDER_IMG.containsMatchIn(v)) return v
+    }
+    return null
+}
 
 fun String.hexToBytes(): ByteArray =
     chunked(2).map { it.toInt(16).toByte() }.toByteArray()

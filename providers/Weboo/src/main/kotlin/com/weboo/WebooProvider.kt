@@ -59,26 +59,24 @@ class WebooProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Dublajlı Diziler" -> "https://weboo.com.tr/dublajli-diziler.php"
-            "Altyazılı Diziler" -> "https://weboo.com.tr/altyazili-diziler.php"
-            "İngilizce Diziler" -> "https://weboo.com.tr/ingilizce-diziler.php"
-            "Aslanlar ailesinin sırları" -> "https://weboo.com.tr/dizi-talep.php"
+            "Dublajlı Diziler" -> "$mainUrl/dublajli-diziler.php"
+            "Altyazılı Diziler" -> "$mainUrl/altyazili-diziler.php"
+            "İngilizce Diziler" -> "$mainUrl/ingilizce-diziler.php"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-
-            if (request.name in listOf("Dublajlı Diziler", "Altyazılı Diziler", "İngilizce Diziler", "Aslanlar ailesinin sırları")) {
-                if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
-                val doc = app.get(request.data, headers = uaHeaders).document
-                return newHomePageResponse(request.name, cards(doc), hasNext = false)
-            }
-            return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        if (request.name in ROWS) {
+            if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
+            val doc = app.get(request.data, headers = uaHeaders).document
+            return newHomePageResponse(request.name, cards(doc), hasNext = false)
+        }
+        return newHomePageResponse(request.name, emptyList(), hasNext = false)
     }
 
     companion object {
-        val ROWS = listOf("Dublajlı Diziler", "Altyazılı Diziler", "İngilizce Diziler", "Aslanlar ailesinin sırları")
+        val ROWS = listOf("Dublajlı Diziler", "Altyazılı Diziler", "İngilizce Diziler")
     }
 
     private val pathPrefixes = listOf("/dizi/")
@@ -93,12 +91,13 @@ class WebooProvider : MainAPI() {
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
         if (listOf("/dizi/").none { path.startsWith(it) }) return@mapNotNull null
-        
+
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()
-            .ifBlank { card.text().trim() }
+            .ifBlank { card.selectFirst(".dublaj-card-name, h2, h3, .title")?.text()?.trim().orEmpty() }
             .ifBlank { img.attr("alt").trim() }
+            .ifBlank { card.text().trim() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null
@@ -136,7 +135,7 @@ class WebooProvider : MainAPI() {
         val basePath = url.substringAfter(mainUrl).substringBefore('?').trimEnd('/')
         val slug = basePath.trim('/').split('/').lastOrNull().orEmpty()
         val slugBase = slug.removeSuffix("-izle").removeSuffix("-film-izle")
-        val episodes = doc.select("a[href]").mapNotNull { anchor ->
+        val linkEps = doc.select("a[href]").mapNotNull { anchor ->
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
             val path = href.substringAfter(mainUrl).substringBefore('?')
             if (basePath.isNotBlank() && !path.startsWith(basePath) &&
@@ -151,6 +150,14 @@ class WebooProvider : MainAPI() {
                 this.episode = number
             }
         }.distinctBy { it.data }.sortedBy { it.episode ?: 0 }
+        val epCards = doc.select("a.mosaic-ep-card[data-ep]").mapNotNull { a ->
+            val n = a.attr("data-ep").toIntOrNull() ?: return@mapNotNull null
+            newEpisode("$mainUrl/dizi/index.php" + a.attr("href")) {
+                this.name = "Bölüm $n"
+                this.episode = n
+            }
+        }.distinctBy { it.data }.sortedBy { it.episode ?: 0 }
+        val episodes = epCards.ifEmpty { linkEps }
         if (episodes.isNotEmpty()) {
             return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
@@ -188,7 +195,11 @@ class WebooProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>("https://weboo.com.tr/proxy.php?cdn=cdn.dramatr.com&file=%2Fdramabox%2Flevel-one-loser-maxxx-level-lover%2Fbolum-1.mp4")
+        for (s in resp.document.select("source[src]")) emit(fixUrl(s.attr("src")), "Weboo", data)
+        val vf = Regex("""videoFile\s*=\s*"([^"]+)"""").find(text)?.groupValues?.get(1)
+        val vc = Regex("""videoCdnHost\s*=\s*"([^"]+)"""").find(text)?.groupValues?.get(1)
+        if (vf != null && vc != null) emit("$mainUrl/proxy.php?cdn=$vc&file=" + java.net.URLEncoder.encode(vf, "UTF-8"), "Weboo", data)
+        val known = listOf<String>()
         for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)

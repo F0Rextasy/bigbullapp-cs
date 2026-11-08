@@ -60,19 +60,19 @@ class DiziAbiProvider : MainAPI() {
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
             "Aile" -> "$mainUrl/tur/aile"
-            "Aksiyon" -> "$mainUrl/tur/aksiyon"
-            "Aksiyon &amp; Macera" -> "$mainUrl/tur/aksiyon-macera"
+            "Aksiyon & Macera" -> "$mainUrl/tur/aksiyon-macera"
             "Animasyon" -> "$mainUrl/tur/animasyon"
             "Belgesel" -> "$mainUrl/tur/belgesel"
-            "Bilim Kurgu" -> "$mainUrl/tur/bilim-kurgu"
+            "Bilim Kurgu & Fantastik" -> "$mainUrl/tur/bilim-kurgu-fantastik"
+            "Çocuklar" -> "$mainUrl/tur/cocuklar"
             "Dram" -> "$mainUrl/tur/dram"
-            "Fantastik" -> "$mainUrl/tur/fantastik"
-            "Gerilim" -> "$mainUrl/tur/gerilim"
             "Gizem" -> "$mainUrl/tur/gizem"
             "Komedi" -> "$mainUrl/tur/komedi"
-            "Korku" -> "$mainUrl/tur/korku"
-            "Romantik" -> "$mainUrl/tur/romantik"
+            "Reality" -> "$mainUrl/tur/reality"
+            "Savaş & Politika" -> "$mainUrl/tur/savas-politika"
             "Suç" -> "$mainUrl/tur/suc"
+            "Talk Show" -> "$mainUrl/tur/talk"
+            "Western" -> "$mainUrl/tur/western"
             else -> mainUrl
         })
     }
@@ -89,9 +89,9 @@ class DiziAbiProvider : MainAPI() {
 
     companion object {
         val ROWS = listOf(
-            "Aile", "Aksiyon", "Aksiyon &amp; Macera", "Animasyon", "Belgesel",
-            "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem", "Komedi",
-            "Korku", "Romantik", "Suç",
+            "Aile", "Aksiyon & Macera", "Animasyon", "Belgesel",
+            "Bilim Kurgu & Fantastik", "Çocuklar", "Dram", "Gizem",
+            "Komedi", "Reality", "Savaş & Politika", "Suç", "Talk Show", "Western",
         )
     }
 
@@ -107,12 +107,13 @@ class DiziAbiProvider : MainAPI() {
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
         if (listOf("/dizi/").none { path.startsWith(it) }) return@mapNotNull null
-        
+
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()
+            .ifBlank { card.selectFirst("h2, h3, .title")?.text()?.trim().orEmpty() }
+            .ifBlank { img.attr("alt").replace(Regex("""(?i)\s+(?:dizi|film)?\s*izle$"""), "").trim() }
             .ifBlank { card.text().trim() }
-            .ifBlank { img.attr("alt").trim() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null
@@ -202,7 +203,27 @@ class DiziAbiProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>("https://cdn.plyr.io/static/blank.mp4")
+        val pv = Regex("""data-pv=["']([^"']+)""").find(resp.text)?.groupValues?.get(1)
+            ?: Regex("""s\.php\?s=([\w-]+)""").find(resp.text)?.groupValues?.get(1)
+        if (pv != null) {
+            val host = Regex("""https?://([^/"']+)/assets/js/core\.js""").find(resp.text)?.groupValues?.get(1)
+                ?.takeUnless { it.contains("kankaplayer") } ?: "pilavyerplay.top"
+            val cfg = runCatching {
+                val js = app.get("https://$host/assets/js/s.php?s=$pv", referer = "$mainUrl/").text
+                JSONObject(js.substringAfter("__PLAYER__").substringAfter("=").substringBefore("</script>").trim().trimEnd(';'))
+            }.getOrNull()
+            val stream = cfg?.optString("stream").orEmpty()
+            if (stream.startsWith("http") && seen.add(stream)) {
+                callback.invoke(newExtractorLink(name, "Pilavyer", stream, ExtractorLinkType.M3U8) { this.referer = "https://$host/" })
+                found = true
+                val subs = cfg?.optJSONArray("subs")
+                for (i in 0 until (subs?.length() ?: 0)) {
+                    val s = subs?.optJSONObject(i) ?: continue
+                    if (s.optString("src").startsWith("http")) subtitleCallback.invoke(SubtitleFile(s.optString("lang", "tr"), s.optString("src")))
+                }
+            }
+        }
+        val known = listOf<String>()
         for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
@@ -222,7 +243,7 @@ class DiziAbiProvider : MainAPI() {
         }
         val frames = resp.document.select("iframe").mapNotNull {
             val raw = it.attr("src").ifBlank { it.attr("data-src") }.ifBlank { it.attr("vdo-src") }
-            fixUrlNull(raw)
+            fixUrlNull(raw)?.takeUnless { it.contains("youtu") }
         }.distinct()
         for (frame in frames) {
             if (frame.contains(".mp4") || frame.contains(".m3u8")) {

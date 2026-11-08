@@ -65,12 +65,12 @@ class DiziBalProvider : MainAPI() {
         "$mainUrl/diziler?sirala=yeni&page=SAYFA" to "Son Eklenenler",
         "$mainUrl/diziler?sirala=puan&page=SAYFA" to "En Yüksek Puan",
         "$mainUrl/diziler?tur=dram&page=SAYFA" to "Dram",
-        "$mainUrl/diziler?tur=aksiyon&page=SAYFA" to "Aksiyon",
+        "$mainUrl/diziler?tur=aksiyon-macera&page=SAYFA" to "Aksiyon & Macera",
+        "$mainUrl/diziler?tur=animasyon&page=SAYFA" to "Animasyon",
         "$mainUrl/diziler?tur=komedi&page=SAYFA" to "Komedi",
-        "$mainUrl/diziler?tur=bilim-kurgu&page=SAYFA" to "Bilim Kurgu",
+        "$mainUrl/diziler?tur=bilim-kurgu-fantastik&page=SAYFA" to "Bilim Kurgu & Fantastik",
         "$mainUrl/diziler?tur=gizem&page=SAYFA" to "Gizem",
         "$mainUrl/diziler?tur=suc&page=SAYFA" to "Suç",
-        "$mainUrl/diziler?tur=macera&page=SAYFA" to "Macera",
         "$mainUrl/diziler?tur=belgesel&page=SAYFA" to "Belgesel",
         "$mainUrl/filmler?page=SAYFA" to "Filmler",
     ).filter { Settings.rowEnabled(it.name) }
@@ -319,8 +319,8 @@ class DiziBalProvider : MainAPI() {
     companion object {
         /** Ana sayfa satırları; ayarlardan kapatılabilir. */
         val ROWS = listOf(
-            "Popüler Diziler", "Son Eklenenler", "En Yüksek Puan", "Dram", "Aksiyon",
-            "Komedi", "Bilim Kurgu", "Gizem", "Suç", "Macera", "Belgesel", "Filmler",
+            "Popüler Diziler", "Son Eklenenler", "En Yüksek Puan", "Dram", "Aksiyon & Macera",
+            "Animasyon", "Komedi", "Bilim Kurgu & Fantastik", "Gizem", "Suç", "Belgesel", "Filmler",
         )
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"

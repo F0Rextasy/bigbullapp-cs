@@ -21,6 +21,8 @@ import com.lagradost.cloudstream3.fixUrlNull
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newSearchResponseList
+import com.lagradost.cloudstream3.newMovieLoadResponse
+import com.lagradost.cloudstream3.newMovieSearchResponse
 import com.lagradost.cloudstream3.newTvSeriesLoadResponse
 import com.lagradost.cloudstream3.newTvSeriesSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
@@ -44,10 +46,12 @@ class AsyaLogProvider : MainAPI() {
         if (!Settings.rowEnabled(name)) return@mapNotNull null
         when (name) {
             "Son Eklenenler" -> MainPageData(name, "$mainUrl/")
-            "Asya Filmleri" -> MainPageData(name, "$mainUrl/asya-filmleri/")
+            "Kore Dizileri" -> MainPageData(name, "$mainUrl/diziler/ulke/guney-kore/")
+            "Çin Dizileri" -> MainPageData(name, "$mainUrl/diziler/ulke/cin/")
+            "Tayland Dizileri" -> MainPageData(name, "$mainUrl/diziler/ulke/tayland/")
             "Aksiyon" -> MainPageData(name, "$mainUrl/diziler/aksiyon/")
-            "Çin Dizileri" -> MainPageData(name, "$mainUrl/diziler/cin-dizileri/")
-            "Devam Eden Diziler" -> MainPageData(name, "$mainUrl/devam-eden-diziler/")
+            "Romantik" -> MainPageData(name, "$mainUrl/diziler/romantik/")
+            "Asya Filmleri" -> MainPageData(name, "$mainUrl/filmler/romantik/")
             else -> null
         }
     }
@@ -59,17 +63,25 @@ class AsyaLogProvider : MainAPI() {
             request.data.trimEnd('/') + "/page/$page/"
         }
         val doc = app.get(url, headers = uaHeaders).document
-        val items = doc.select("a.resim[href]").mapNotNull { it.toSearchResult() }.distinctBy { it.url }
+        val anchors = doc.select("div.sayfa-sol a.resim[href], div.son a.resim[href], div.icerik a.resim[href]")
+            .ifEmpty { doc.select("a.resim[href]") }
+        val items = anchors.mapNotNull { it.toSearchResult() }.distinctBy { it.url }
         return newHomePageResponse(request.name, items)
     }
 
     private fun Element.toSearchResult(): SearchResponse? {
         val href = fixUrlNull(attr("href")) ?: return null
-        if (!href.contains("/dizi/")) return null
         val title = attr("title").ifBlank { selectFirst("img")?.attr("alt").orEmpty() }.trim()
         if (title.isBlank()) return null
-        return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-            this.posterUrl = fixUrlNull(selectFirst("img")?.posterSrcLazy())
+        val poster = fixUrlNull(selectFirst("img")?.posterSrcLazy())
+        return if (href.contains("/dizi/") || href.contains("/bolum/")) {
+            newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
+                this.posterUrl = poster
+            }
+        } else {
+            newMovieSearchResponse(title, href, TvType.Movie) {
+                this.posterUrl = poster
+            }
         }
     }
 
@@ -106,8 +118,6 @@ class AsyaLogProvider : MainAPI() {
             }
         }.distinctBy { it.data }
 
-        if (episodes.isEmpty()) throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
-
         // "BENZER DİZİLER" sidebar block (series pages only).
         val recommendations = doc.select("div.sag-vliste a[href]").mapNotNull { it.toSearchResult() }.distinctBy { it.url }
         // "Oyuncular" tab: ul.oync; image src has escaped slashes that 404 as-is.
@@ -120,6 +130,18 @@ class AsyaLogProvider : MainAPI() {
             .find(doc.selectFirst("ul.detay")?.text().orEmpty())?.groupValues?.get(1)?.toIntOrNull()
         val score = Regex("""(?:İMDb|IMDb)\s*:\s*([\d.]+)""")
             .find(doc.selectFirst("div.ssag h2")?.text().orEmpty())?.groupValues?.get(1)
+
+        if (episodes.isEmpty()) {
+            return newMovieLoadResponse(title, url, TvType.Movie, url) {
+                this.posterUrl = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
+                this.plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+                this.tags = doc.select("a[href*='/tur/'], a[href*='/kategori/']").map { it.text() }.distinct().take(8)
+                this.recommendations = recommendations
+                this.actors = actors.ifEmpty { null }
+                this.duration = duration
+                this.score = Score.from10(score)
+            }
+        }
 
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
             this.posterUrl = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
@@ -210,10 +232,12 @@ class AsyaLogProvider : MainAPI() {
         /** Homepage row labels, in display order; each maps to a live category page above. */
         val ROWS = listOf(
             "Son Eklenenler",
-            "Asya Filmleri",
-            "Aksiyon",
+            "Kore Dizileri",
             "Çin Dizileri",
-            "Devam Eden Diziler",
+            "Tayland Dizileri",
+            "Aksiyon",
+            "Romantik",
+            "Asya Filmleri",
         )
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"

@@ -309,13 +309,15 @@ class PuhuTVProvider : MainAPI() {
 
     companion object {
         private val ROW_SLUGS = listOf(
-            "Yeni Eklenenler" to "anasayfa-detay",
+            "Öne Çıkanlar" to "list/anasayfa-one-cikanlar",
+            "puhutv Top 15" to "list/anasayfa-puhutv-top-15",
             "puhutv Orijinal" to "puhutv-orijinal",
             "Yerli Diziler" to "yerli-diziler",
+            "Komedi Dizileri" to "list/komedi-dizileri",
+            "Gerilim Dolu Hikayeler" to "list/anasayfa-gerilim-dolu-hikayeler",
+            "Belgesel Yapımlar" to "list/belgesel-yapimlar",
             "Uzak Doğu Rüzgarı" to "uzak-dogu-ruzgari",
-            "Dram" to "dram",
-            "Aksiyon & Macera" to "aksiyon-macera",
-            "Yaşam & Belgesel" to "yasam",
+            "Yaşam & Gastronomi" to "yasam",
         )
         val ROWS = ROW_SLUGS.map { it.first }
         private val IMAGE_PREFS = listOf(

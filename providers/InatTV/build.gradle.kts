@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "İnatTV — imzalı API üzerinden film, dizi, platform ve canlı yayın katalogları (host: diziboxen.help)"

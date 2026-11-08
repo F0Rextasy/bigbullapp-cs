@@ -55,7 +55,6 @@ class DizillaProvider : MainAPI() {
             "Yabancı Diziler" -> MainPageData(name, "$mainUrl/yabanci-dizi-izle?page=SAYFA")
             "Yerli Diziler" -> MainPageData(name, "$mainUrl/yerli-dizi-izle?page=SAYFA")
             "K-Drama" -> MainPageData(name, "$mainUrl/kdrama-izle?page=SAYFA")
-            "Asya Dizileri" -> MainPageData(name, "$mainUrl/asya-dizileri-izle?page=SAYFA")
             "Tüm Diziler" -> MainPageData(name, "$mainUrl/dizi-izle?page=SAYFA")
             "Anime" -> MainPageData(name, "$mainUrl/anime-izle?page=SAYFA")
             "Türkçe Dublaj" -> MainPageData(name, "$mainUrl/turkce-dublaj-dizi-izle?page=SAYFA")
@@ -88,8 +87,9 @@ class DizillaProvider : MainAPI() {
         val title = selectFirst("span.mvk-t")?.text()?.trim()?.takeIf { it.isNotBlank() }
             ?: attr("aria-label").substringBefore(",").trim().takeIf { it.isNotBlank() }
             ?: return null
+        val poster = fixUrlNull(selectFirst("img")?.posterSrcLazy()) ?: return null
         return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-            this.posterUrl = fixUrlNull(selectFirst("img")?.posterSrcLazy())
+            this.posterUrl = poster
         }
     }
 
@@ -320,7 +320,6 @@ class DizillaProvider : MainAPI() {
             "Yabancı Diziler",
             "Yerli Diziler",
             "K-Drama",
-            "Asya Dizileri",
             "Tüm Diziler",
             "Anime",
             "Türkçe Dublaj",

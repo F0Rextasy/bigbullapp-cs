@@ -1,5 +1,6 @@
 package com.dmax
 
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -46,8 +47,10 @@ class DMAXProvider : MainAPI() {
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 
-    override val mainPage get() = mainPageOf("$mainUrl/" to "Programlar")
-        .filter { Settings.rowEnabled(it.name) }
+    override val mainPage get() = mainPageOf(
+        "$mainUrl/" to "Programlar",
+        "$mainUrl/kesfet/a-z" to "Tüm Programlar (A-Z)",
+    ).filter { Settings.rowEnabled(it.name) }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data, headers = headers).document
@@ -134,14 +137,17 @@ class DMAXProvider : MainAPI() {
             if (!href.startsWith(mainUrl)) return@mapNotNull null
             val path = href.removePrefix(mainUrl).substringBefore('?').trim('/')
             if (path.isBlank() || path.contains('/') || path in STATIC) return@mapNotNull null
-            val title = card.selectFirst("img")?.attr("alt")?.trim()
-                ?.takeIf { it.isNotEmpty() }
+            if (card.attr("onclick").contains("HEADER_ELEMENTS")) return@mapNotNull null
+            val img = card.selectFirst("img") ?: return@mapNotNull null
+            val poster = fixUrlNull(img.posterSrcLazy()) ?: return@mapNotNull null
+            val title = img.attr("alt").trim()
+                .takeIf { it.isNotEmpty() }
                 ?: card.attr("title").trim().takeIf { it.isNotEmpty() }
                 ?: Regex("""GAEventTracker\([^)]*,\s*'([^']+)'""")
                     .find(card.attr("onclick"))?.groupValues?.get(1)?.trim()?.takeIf { it.isNotEmpty() }
                 ?: path.replace('-', ' ').replaceFirstChar { it.uppercase() }
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-                this.posterUrl = fixUrlNull(card.selectFirst("img")?.attr("src"))
+                this.posterUrl = poster
             }
         }.distinctBy { it.url }
 
@@ -149,13 +155,13 @@ class DMAXProvider : MainAPI() {
         .replace('ı', 'i').replace('ş', 's').replace('ğ', 'g')
         .replace('ü', 'u').replace('ö', 'o').replace('ç', 'c')
     companion object {
-        val ROWS = listOf("Programlar")
+        val ROWS = listOf("Programlar", "Tüm Programlar (A-Z)")
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
         private val EPISODE = Regex("""(\d+)-sezon-(\d+)-bolum""")
         private val VIDEO_CODE = Regex("""data-video-code="([^"]+)"""")
-        private val STATIC = setOf("arama", "yayin-akisi", "canli-yayin", "blog")
+        private val STATIC = setOf("arama", "yayin-akisi", "canli-yayin", "blog", "kesfet")
     }
 }

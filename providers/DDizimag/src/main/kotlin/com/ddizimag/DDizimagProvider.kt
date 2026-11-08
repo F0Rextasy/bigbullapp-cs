@@ -49,7 +49,6 @@ class DDizimagProvider : MainAPI() {
         MainPageData(rowName, when (rowName) {
             "Aile" -> "$mainUrl/tur/aile"
             "Aksiyon" -> "$mainUrl/tur/aksiyon"
-            "Aksiyon &amp; Macera" -> "$mainUrl/tur/aksiyon-macera"
             "Animasyon" -> "$mainUrl/tur/animasyon"
             "Belgesel" -> "$mainUrl/tur/belgesel"
             "Bilim Kurgu" -> "$mainUrl/tur/bilim-kurgu"
@@ -217,7 +216,7 @@ class DDizimagProvider : MainAPI() {
             .maxOrNull() ?: Qualities.Unknown.value
 
     companion object {
-        val ROWS = listOf("Aile", "Aksiyon", "Aksiyon &amp; Macera", "Animasyon", "Belgesel",
+        val ROWS = listOf("Aile", "Aksiyon", "Animasyon", "Belgesel",
             "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem", "Komedi", "Korku", "Romantik", "Suç")
     }
 

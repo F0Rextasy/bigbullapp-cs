@@ -1,4 +1,4 @@
-version = 3
+version = 4
 
 cloudstream {
     description = "CanliTV — iptv-org Türkiye canlı TV listesi (ulusal, haber, spor, çocuk, müzik)"

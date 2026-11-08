@@ -1,5 +1,6 @@
 package com.tv8
 
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -49,6 +50,7 @@ class TV8Provider : MainAPI() {
     ).filter { Settings.rowEnabled(it.name) }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
+        if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
         val doc = app.get(request.data, headers = headers).document
         return newHomePageResponse(request.name, doc.cards(), hasNext = false)
     }
@@ -123,13 +125,20 @@ class TV8Provider : MainAPI() {
 
     private fun Document.cards(): List<SearchResponse> =
         select("a[href]").mapNotNull { card ->
-            val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
+            val rawHref = card.attr("href").trim()
+            if (rawHref.isEmpty() || rawHref.startsWith("javascript", true) || rawHref.startsWith("#")) return@mapNotNull null
+            val href = fixUrlNull(rawHref) ?: return@mapNotNull null
             if (!href.startsWith(mainUrl)) return@mapNotNull null
             val path = href.removePrefix(mainUrl).substringBefore('?').trim('/')
             if (path.isBlank() || path.contains('/') || path in STATIC) return@mapNotNull null
-            val title = card.text().trim().takeIf { it.isNotEmpty() } ?: return@mapNotNull null
+            val img = card.selectFirst("img") ?: return@mapNotNull null
+            val poster = fixUrlNull(img.posterSrcLazy()) ?: return@mapNotNull null
+            val title = card.text().trim()
+                .ifBlank { img.attr("alt").trim() }
+                .ifBlank { card.attr("title").trim() }
+                .takeIf { it.isNotEmpty() } ?: return@mapNotNull null
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-                this.posterUrl = fixUrlNull(card.selectFirst("img")?.attr("src"))
+                this.posterUrl = poster
             }
         }.distinctBy { it.url }
 

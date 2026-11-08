@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.26",
+  "version": "1.6.27",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -434,7 +434,7 @@
       "id": "rectv",
       "name": "RecTV",
       "description": "RecTV imzalı resmî API film ve dizi kataloğu (attest/nonce + HMAC-SHA256; arama ve sezon/bölüm uçları, token'lı m3u8).",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": "bigbull",
       "supportedTypes": [
         "movie",

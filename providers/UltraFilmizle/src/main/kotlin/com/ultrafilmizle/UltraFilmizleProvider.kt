@@ -55,7 +55,6 @@ class UltraFilmizleProvider : MainAPI() {
     private val streamHeaders get() = browserHeaders + ("Accept" to "*/*")
 
     override val mainPage get() = mainPageOf(
-        "$mainUrl/" to "Ana Sayfa",
         "$mainUrl/filmler9/" to "Filmler",
         "$mainUrl/kategori/aksiyon/" to "Aksiyon",
         "$mainUrl/kategori/aile/" to "Aile",
@@ -210,21 +209,25 @@ class UltraFilmizleProvider : MainAPI() {
         value.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
 
     private fun Document.cards(): List<SearchResponse> =
-        select("a[href*='/filmler9/']").mapNotNull { card ->
-            val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
-            val title = (card.selectFirst("h2")?.text() ?: card.text()).trim()
+        select("div.movie-box").mapNotNull { box ->
+            val link = box.selectFirst(".film-ismi a[href]") ?: box.selectFirst("a[href*='/filmler9/']") ?: return@mapNotNull null
+            val href = fixUrlNull(link.attr("href")) ?: return@mapNotNull null
+            val img = box.selectFirst("img") ?: return@mapNotNull null
+            val title = link.text().trim()
+                .ifBlank { img.attr("alt").replace(Regex("""\s+izle$""", RegexOption.IGNORE_CASE), "").trim() }
                 .takeIf { it.isNotEmpty() } ?: return@mapNotNull null
             newMovieSearchResponse(title, href, TvType.Movie) {
-                this.posterUrl = fixUrlNull(card.selectFirst("img")?.posterSrcLazy())
-                this.year = card.selectFirst(".year")?.text()?.trim()?.toIntOrNull()
-                this.score = card.selectFirst(".imdb")?.text()?.let { value ->
-                    value.replace(',', '.').toDoubleOrNull()?.let { Score.from10(it) }
+                this.posterUrl = fixUrlNull(img.posterSrcLazy())
+                this.year = YEAR.find(title)?.groupValues?.get(1)?.toIntOrNull()
+                this.score = box.selectFirst(".bolum-ust, .imdb")?.text()?.let { value ->
+                    Regex("""(\d+[.,]\d+)""").find(value)?.groupValues?.get(1)
+                        ?.replace(',', '.')?.toDoubleOrNull()?.let { Score.from10(it) }
                 }
             }
         }.distinctBy { it.url }
 
     companion object {
-        val ROWS = listOf("Ana Sayfa", "Filmler")
+        val ROWS = listOf("Filmler", "Aksiyon", "Aile", "Animasyon", "Belgesel", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem", "Komedi", "Korku", "Macera", "Romantik")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
         private val YEAR = Regex("""\b((?:19|20)\d{2})\b""")

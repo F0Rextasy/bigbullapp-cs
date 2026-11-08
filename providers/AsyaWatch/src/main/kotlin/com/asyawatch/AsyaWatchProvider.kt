@@ -1,6 +1,7 @@
 package com.asyawatch
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -46,6 +47,7 @@ class AsyaWatchProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { row ->
         if (!Settings.rowEnabled(row)) return@mapNotNull null
         when (row) {
+            "Yeni Diziler" -> MainPageData(row, "$mainUrl/")
             "Son Bölümler" -> MainPageData(row, "$mainUrl/dizi-izle")
             "Son Filmler" -> MainPageData(row, "$mainUrl/film-izle")
             else -> null
@@ -55,7 +57,7 @@ class AsyaWatchProvider : MainAPI() {
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
         val doc = app.get(request.data, headers = uaHeaders).document
-        val items = doc.select("a.sc.pcard[href], a.pcard[href]")
+        val items = doc.select("a.sc.pcard[href], a.pcard[href], a[href*='/dizi/'], a[href*='/film/']")
             .mapNotNull { it.toHtmlCard() }
             .distinctBy { it.url }
         return newHomePageResponse(request.name, items, hasNext = false)
@@ -68,7 +70,7 @@ class AsyaWatchProvider : MainAPI() {
             params = mapOf("q" to query.trim()),
             headers = uaHeaders,
         ).document
-        val items = doc.select("a.sc.pcard[href], a.pcard[href]")
+        val items = doc.select("a.sc.pcard[href], a.pcard[href], a[href*='/dizi/'], a[href*='/film/']")
             .mapNotNull { it.toHtmlCard() }
             .distinctBy { it.url }
         return newSearchResponseList(items, false)
@@ -77,11 +79,17 @@ class AsyaWatchProvider : MainAPI() {
     private fun Element.toHtmlCard(): SearchResponse? {
         val href = fixUrlNull(attr("href")) ?: return null
         if (!href.contains("/dizi/") && !href.contains("/film/")) return null
-        val title = attr("aria-label").substringBefore(',').trim()
-            .ifBlank { selectFirst("b")?.text()?.trim().orEmpty() }
-            .ifBlank { selectFirst("img")?.attr("alt")?.trim().orEmpty() }
-            .takeIf { it.isNotBlank() } ?: return null
-        val poster = fixUrlNull(selectFirst("img")?.attr("src"))
+        if (href.contains("/sezon-") || href.contains("/bolum-")) return null
+        val img = selectFirst("img") ?: return null
+        val ariaTitle = attr("aria-label")
+            .replace(Regex("""^\d+\.\s*sıra(?:da)?\s*,?\s*"""), "")
+            .substringBefore(',').trim()
+        val title = selectFirst("b, .tcn, h2, h3")?.text()?.trim().orEmpty()
+            .ifBlank { parent()?.selectFirst("a.tcn, b, h2, h3")?.text()?.trim().orEmpty() }
+            .ifBlank { ariaTitle }
+            .ifBlank { img.attr("alt").trim() }
+            .takeIf { it.isNotBlank() && it.length > 1 } ?: return null
+        val poster = fixUrlNull(img.posterSrcLazy()) ?: return null
         return if (href.contains("/dizi/")) {
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) { posterUrl = poster }
         } else {
@@ -204,7 +212,7 @@ class AsyaWatchProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Son Bölümler", "Son Filmler")
+        val ROWS = listOf("Yeni Diziler", "Son Bölümler", "Son Filmler")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

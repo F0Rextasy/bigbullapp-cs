@@ -272,8 +272,6 @@ class WebteIzleProvider : MainAPI() {
         private val ROW_BASES = linkedMapOf(
             "Yeni Filmler" to "/film-izle",
             "Türkçe Dublaj" to "/tr-dublaj-filmler",
-            "Türkçe Altyazılı" to "/tr-altyazili-filmler",
-            "1080p Filmler" to "/1080p-film-izle",
             "4K Filmler" to "/4k-film-izle",
         )
         val ROWS: List<String> = ROW_BASES.keys.toList()

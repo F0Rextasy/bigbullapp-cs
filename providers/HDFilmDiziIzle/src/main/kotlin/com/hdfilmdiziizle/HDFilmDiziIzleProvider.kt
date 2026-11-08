@@ -61,43 +61,42 @@ class HDFilmDiziIzleProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Filmler" -> "https://www.hdfilmdiziizle.com/film/"
-            "Diziler" -> "https://www.hdfilmdiziizle.com/dizi/"
-            "Aile" -> "https://www.hdfilmdiziizle.com/film-tur/aile/"
-            "Aksiyon" -> "https://www.hdfilmdiziizle.com/film-tur/aksiyon/"
-            "Bilim Kurgu" -> "https://www.hdfilmdiziizle.com/film-tur/bilim-kurgu/"
-            "Dram" -> "https://www.hdfilmdiziizle.com/film-tur/dram/"
-            "Fantastik" -> "https://www.hdfilmdiziizle.com/film-tur/fantastik/"
-            "Gerilim" -> "https://www.hdfilmdiziizle.com/film-tur/gerilim/"
-            "Komedi" -> "https://www.hdfilmdiziizle.com/film-tur/komedi/"
-            "Korku" -> "https://www.hdfilmdiziizle.com/film-tur/korku/"
-            "Macera" -> "https://www.hdfilmdiziizle.com/film-tur/macera/"
-            "Romantik" -> "https://www.hdfilmdiziizle.com/film-tur/romantik/"
-            "Suç" -> "https://www.hdfilmdiziizle.com/film-tur/suc/"
-            "Aile" -> "https://www.hdfilmdiziizle.com/dizi-tur/aile-dizileri/"
-            "Aksiyon" -> "https://www.hdfilmdiziizle.com/dizi-tur/aksiyon-dizileri/"
-            "Bilim Kurgu" -> "https://www.hdfilmdiziizle.com/dizi-tur/bilim-kurgu-dizileri/"
-            "Belgesel" -> "https://www.hdfilmdiziizle.com/dizi-tur/belgesel/"
-            "Dram" -> "https://www.hdfilmdiziizle.com/dizi-tur/dram-dizileri/"
-            "Fantastik" -> "https://www.hdfilmdiziizle.com/dizi-tur/fantastik-diziler/"
-            "Gerilim" -> "https://www.hdfilmdiziizle.com/dizi-tur/gerilim-dizileri/"
-            "Gizem" -> "https://www.hdfilmdiziizle.com/dizi-tur/gizem-dizileri/"
-            "Korku" -> "https://www.hdfilmdiziizle.com/dizi-tur/korku-dizileri/"
-            "Komedi" -> "https://www.hdfilmdiziizle.com/dizi-tur/komedi-dizileri/"
-            "Macera" -> "https://www.hdfilmdiziizle.com/dizi-tur/macera-dizileri/"
-            "Suç" -> "https://www.hdfilmdiziizle.com/dizi-tur/suc-dizileri/"
-            "Seri Filmler" -> "https://www.hdfilmdiziizle.com/seri-boxset-filmler/"
-            "Tümünü Gör" -> "https://www.playhdizle.com/yakinda-gelecek-filmler/"
-            "Türkçe Dublaj Filmler" -> "https://www.hdfilmdiziizle.com/turkce-dublaj-filmler/"
-            "Türkçe Altyazılı Filmler" -> "https://www.hdfilmdiziizle.com/turkce-altyazili-filmler/"
-            "Tümünü Gör" -> "https://www.hdfilmdiziizle.com/en-cok-izlenen-filmler/"
+            "Filmler" -> "$mainUrl/film/"
+            "Diziler" -> "$mainUrl/dizi/"
+            "Aile" -> "$mainUrl/film-tur/aile/"
+            "Aksiyon" -> "$mainUrl/film-tur/aksiyon/"
+            "Bilim Kurgu" -> "$mainUrl/film-tur/bilim-kurgu/"
+            "Dram" -> "$mainUrl/film-tur/dram/"
+            "Fantastik" -> "$mainUrl/film-tur/fantastik/"
+            "Gerilim" -> "$mainUrl/film-tur/gerilim/"
+            "Komedi" -> "$mainUrl/film-tur/komedi/"
+            "Korku" -> "$mainUrl/film-tur/korku/"
+            "Macera" -> "$mainUrl/film-tur/macera/"
+            "Romantik" -> "$mainUrl/film-tur/romantik/"
+            "Suç" -> "$mainUrl/film-tur/suc/"
+            "Dizi · Aile" -> "$mainUrl/dizi-tur/aile-dizileri/"
+            "Dizi · Aksiyon" -> "$mainUrl/dizi-tur/aksiyon-dizileri/"
+            "Dizi · Bilim Kurgu" -> "$mainUrl/dizi-tur/bilim-kurgu-dizileri/"
+            "Dizi · Belgesel" -> "$mainUrl/dizi-tur/belgesel/"
+            "Dizi · Dram" -> "$mainUrl/dizi-tur/dram-dizileri/"
+            "Dizi · Fantastik" -> "$mainUrl/dizi-tur/fantastik-diziler/"
+            "Dizi · Gerilim" -> "$mainUrl/dizi-tur/gerilim-dizileri/"
+            "Dizi · Gizem" -> "$mainUrl/dizi-tur/gizem-dizileri/"
+            "Dizi · Korku" -> "$mainUrl/dizi-tur/korku-dizileri/"
+            "Dizi · Komedi" -> "$mainUrl/dizi-tur/komedi-dizileri/"
+            "Dizi · Macera" -> "$mainUrl/dizi-tur/macera-dizileri/"
+            "Dizi · Suç" -> "$mainUrl/dizi-tur/suc-dizileri/"
+            "Seri Filmler" -> "$mainUrl/seri-boxset-filmler/"
+            "Türkçe Dublaj Filmler" -> "$mainUrl/turkce-dublaj-filmler/"
+            "Türkçe Altyazılı Filmler" -> "$mainUrl/turkce-altyazili-filmler/"
+            "En Çok İzlenen Filmler" -> "$mainUrl/en-cok-izlenen-filmler/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Filmler", "Diziler", "Aile", "Aksiyon", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Komedi", "Korku", "Macera", "Romantik", "Suç", "Aile", "Aksiyon", "Bilim Kurgu", "Belgesel", "Dram", "Fantastik", "Gerilim", "Gizem", "Korku", "Komedi", "Macera", "Suç", "Seri Filmler", "Tümünü Gör", "Türkçe Dublaj Filmler", "Türkçe Altyazılı Filmler", "Tümünü Gör")) {
+            if (request.name in ROWS) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -106,7 +105,14 @@ class HDFilmDiziIzleProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Filmler", "Diziler", "Aile", "Aksiyon", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Komedi", "Korku", "Macera", "Romantik", "Suç", "Aile", "Aksiyon", "Bilim Kurgu", "Belgesel", "Dram", "Fantastik", "Gerilim", "Gizem", "Korku", "Komedi", "Macera", "Suç", "Seri Filmler", "Tümünü Gör", "Türkçe Dublaj Filmler", "Türkçe Altyazılı Filmler", "Tümünü Gör")
+        val ROWS = listOf(
+            "Filmler", "Diziler", "Aile", "Aksiyon", "Bilim Kurgu", "Dram", "Fantastik",
+            "Gerilim", "Komedi", "Korku", "Macera", "Romantik", "Suç", "Dizi · Aile",
+            "Dizi · Aksiyon", "Dizi · Bilim Kurgu", "Dizi · Belgesel", "Dizi · Dram",
+            "Dizi · Fantastik", "Dizi · Gerilim", "Dizi · Gizem", "Dizi · Korku",
+            "Dizi · Komedi", "Dizi · Macera", "Dizi · Suç", "Seri Filmler",
+            "Türkçe Dublaj Filmler", "Türkçe Altyazılı Filmler", "En Çok İzlenen Filmler",
+        )
     }
 
     private val pathPrefixes = listOf("/dizi/", "/film/", "/film_series/")
@@ -123,7 +129,7 @@ class HDFilmDiziIzleProvider : MainAPI() {
             val href = fixUrlNull(row.optString("url")) ?: return@mapNotNull null
             val path = href.substringAfter(mainUrl).substringBefore('?')
             if (pathPrefixes.none { path.startsWith(it) }) return@mapNotNull null
-            val title = cleanTitle(row.optString("title")).ifBlank { return@mapNotNull null }
+            val title = cleanTitle(org.jsoup.parser.Parser.unescapeEntities(row.optString("title"), false)).ifBlank { return@mapNotNull null }
             val isSeries = path.startsWith("/dizi/") || path.contains("/seri/") || path.contains("/series/")
             if (isSeries) newTvSeriesSearchResponse(title, href, TvType.TvSeries)
             else newMovieSearchResponse(title, href, TvType.Movie)
@@ -138,8 +144,9 @@ class HDFilmDiziIzleProvider : MainAPI() {
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()
-            .ifBlank { card.text().trim() }
+            .ifBlank { card.selectFirst(".phd-card-title, h2, h3, .title")?.text()?.trim().orEmpty() }
             .ifBlank { img.attr("alt").trim() }
+            .ifBlank { card.text().trim() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null
@@ -243,6 +250,7 @@ class HDFilmDiziIzleProvider : MainAPI() {
                 .mapNotNull { it.attr("data-source").takeIf { source -> source != "fragman_url" } }
                 .distinct()
             for (source in sources) {
+                if (found && seen.size >= 4) break
                 val encrypted = runCatching {
                     app.post(
                         "$mainUrl/wp-admin/admin-ajax.php",

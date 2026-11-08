@@ -43,7 +43,6 @@ class DiziYouProvider : MainAPI() {
         if (!Settings.rowEnabled(name)) return@mapNotNull null
         when (name) {
             "Son Eklenen Diziler" -> MainPageData(name, "$mainUrl/dizi-arsivi/?filtrele=tarih&sirala=DESC")
-            "IMDb 7+" -> MainPageData(name, "$mainUrl/dizi-arsivi/?filtrele=imdb&sirala=DESC&yil=&imdb=7")
             "Dizi Arşivi" -> MainPageData(name, "$mainUrl/dizi-arsivi/?filtrele=alfabetik&sirala=ASC")
             "Aksiyon" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=Aksiyon")
             "Dram" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=Dram")
@@ -184,7 +183,7 @@ class DiziYouProvider : MainAPI() {
 
     companion object {
         /** Homepage row labels, in display order; each maps to a live archive filter above. */
-        val ROWS = listOf("Son Eklenen Diziler", "IMDb 7+", "Dizi Arşivi", "Aksiyon", "Dram",
+        val ROWS = listOf("Son Eklenen Diziler", "Dizi Arşivi", "Aksiyon", "Dram",
             "Komedi", "Korku", "Gerilim", "Gizem", "Bilim Kurgu", "Romantik")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"

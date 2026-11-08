@@ -44,8 +44,6 @@ class JetFilmizleProvider : MainAPI() {
         if (!Settings.rowEnabled(name)) return@mapNotNull null
         when (name) {
             "Son Eklenenler" -> MainPageData(name, "$mainUrl/filmler/sayfa-SAYFA")
-            "Türkçe Dublaj" -> MainPageData(name, "$mainUrl/turkce-dublaj/sayfa-SAYFA")
-            "Türkçe Altyazılı" -> MainPageData(name, "$mainUrl/turkce-altyazili/sayfa-SAYFA")
             "Aksiyon" -> MainPageData(name, "$mainUrl/tur/aksiyon/sayfa-SAYFA")
             "Aile" -> MainPageData(name, "$mainUrl/tur/aile/sayfa-SAYFA")
             "Animasyon" -> MainPageData(name, "$mainUrl/tur/animasyon/sayfa-SAYFA")
@@ -385,7 +383,7 @@ class JetFilmizleProvider : MainAPI() {
 
     companion object {
         /** Homepage rows in display order; all map to live listing pages. */
-        val ROWS = listOf("Son Eklenenler", "Türkçe Dublaj", "Türkçe Altyazılı", "Aksiyon", "Aile",
+        val ROWS = listOf("Son Eklenenler", "Aksiyon", "Aile",
             "Animasyon", "Belgesel", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Komedi",
             "Korku", "Romantik")
 

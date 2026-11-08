@@ -39,7 +39,12 @@ class AniArsivProvider : MainAPI() {
     override val hasMainPage = true
     override val hasQuickSearch = false
     override val mainPage get() = ROWS.mapNotNull { row ->
-        if (Settings.rowEnabled(row)) MainPageData(row, "$mainUrl/api/trending") else null
+        if (!Settings.rowEnabled(row)) return@mapNotNull null
+        when (row) {
+            "Trend" -> MainPageData(row, "$mainUrl/api/trending")
+            "Tüm Animeler" -> MainPageData(row, "$mainUrl/api/animes")
+            else -> null
+        }
     }
 
     private val headers = mapOf(
@@ -49,8 +54,12 @@ class AniArsivProvider : MainAPI() {
     )
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
-        val arr = JSONArray(app.get(request.data, headers = headers).text)
+        if (page > 1 && !request.data.endsWith("/api/animes")) {
+            return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        }
+        val url = if (request.data.endsWith("/api/animes")) "${request.data}?page=$page" else request.data
+        val raw = app.get(url, headers = headers).text.trim()
+        val arr = if (raw.startsWith("[")) JSONArray(raw) else JSONObject(raw).optJSONArray("items") ?: JSONArray()
         val items = (0 until arr.length()).mapNotNull { i ->
             val o = arr.optJSONObject(i) ?: return@mapNotNull null
             val title = o.optString("baslik").trim()
@@ -62,7 +71,7 @@ class AniArsivProvider : MainAPI() {
                 this.score = Score.from10(o.optString("puani"))
             }
         }
-        return newHomePageResponse(request.name, items, hasNext = false)
+        return newHomePageResponse(request.name, items, hasNext = request.data.endsWith("/api/animes") && items.isNotEmpty())
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
@@ -195,7 +204,7 @@ class AniArsivProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Trend")
+        val ROWS = listOf("Trend", "Tüm Animeler")
         private const val MAX_LINKS = 12
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"

@@ -83,20 +83,15 @@ class HDFilmizleBestProvider : MainAPI() {
             "Prime Video" -> "https://www.hdfilmizle.best/kanal/prime-video/"
             "Disney" -> "https://www.hdfilmizle.best/kanal/disney/"
             "HBO" -> "https://www.hdfilmizle.best/kanal/hbo/"
-            "Aksiyon" -> "https://www.hdfilmizle.best/tur/aksiyon/"
-            "Aile" -> "https://www.hdfilmizle.best/tur/aile/"
             "Animasyon" -> "https://www.hdfilmizle.best/tur/animasyon/"
-            "Belgesel" -> "https://www.hdfilmizle.best/tur/belgesel/"
-            "Bilim Kurgu" -> "https://www.hdfilmizle.best/tur/bilim-kurgu/"
             "Biyografi" -> "https://www.hdfilmizle.best/tur/biyografi/"
-            "Dram" -> "https://www.hdfilmizle.best/tur/dram/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Aksiyon", "Aile", "Belgesel", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Komedi", "Korku", "Macera", "Romantik", "Suç", "Eski Filmler", "Çin", "Güney Kore", "Japonya", "Tayland", "Yerli Filmler", "Seri Filmler", "Netflix", "Prime Video", "Disney", "HBO", "Aksiyon", "Aile", "Animasyon", "Belgesel", "Bilim Kurgu", "Biyografi", "Dram")) {
+            if (request.name in ROWS) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -105,10 +100,15 @@ class HDFilmizleBestProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Aksiyon", "Aile", "Belgesel", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Komedi", "Korku", "Macera", "Romantik", "Suç", "Eski Filmler", "Çin", "Güney Kore", "Japonya", "Tayland", "Yerli Filmler", "Seri Filmler", "Netflix", "Prime Video", "Disney", "HBO", "Aksiyon", "Aile", "Animasyon", "Belgesel", "Bilim Kurgu", "Biyografi", "Dram")
+        val ROWS = listOf(
+            "Aksiyon", "Aile", "Animasyon", "Belgesel", "Bilim Kurgu", "Biyografi", "Dram",
+            "Fantastik", "Gerilim", "Komedi", "Korku", "Macera", "Romantik", "Suç",
+            "Eski Filmler", "Yerli Filmler", "Seri Filmler", "Çin", "Güney Kore",
+            "Japonya", "Tayland", "Netflix", "Prime Video", "Disney", "HBO",
+        )
     }
 
-    private val pathPrefixes = listOf("/film/", "/seri-filmler/", "/ulke/", "/yil/")
+    private val pathPrefixes = listOf("/film/", "/seri-filmler/")
 
     override suspend fun search(query: String): List<SearchResponse> {
         val q = if (false) asciiFold(query) else query
@@ -119,14 +119,15 @@ class HDFilmizleBestProvider : MainAPI() {
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
-        if (listOf("/film/", "/seri-filmler/", "/ulke/", "/yil/").none { path.startsWith(it) }) return@mapNotNull null
+        if (listOf("/film/", "/seri-filmler/").none { path.startsWith(it) }) return@mapNotNull null
         
-        if (path == "/" || path.contains("login") || path.contains("uye-ol") ||
+        if (path == "/" || path.trim('/') == "seri-filmler" || path.contains("login") || path.contains("uye-ol") ||
             path.contains("/giris") || href.contains("?ara=") || href.contains("sirala=")) return@mapNotNull null
-        val img = card.selectFirst("img")
-        val title = card.attr("title").trim()
+        val img = card.selectFirst("img") ?: return@mapNotNull null
+        val title = card.attr("data-title").trim()
+            .ifBlank { card.attr("title").trim() }
+            .ifBlank { img.attr("alt").trim() }
             .ifBlank { card.text().trim() }
-            .ifBlank { img?.attr("alt")?.trim().orEmpty() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null

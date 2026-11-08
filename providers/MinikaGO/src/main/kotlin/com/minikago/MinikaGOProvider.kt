@@ -1,6 +1,7 @@
 package com.minikago
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -55,7 +56,7 @@ class MinikaGOProvider : MainAPI() {
                 ?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
             if (SKIP.containsMatchIn(title)) return@mapNotNull null
             newMovieSearchResponse(title, url, TvType.Movie) {
-                this.posterUrl = item.selectFirst("div.showcase-image img")?.attr("src")
+                this.posterUrl = item.selectFirst("div.showcase-image img")?.posterSrcLazy()
                     ?.let { fixUrlNull(it) }
             }
         }.distinctBy { it.url }

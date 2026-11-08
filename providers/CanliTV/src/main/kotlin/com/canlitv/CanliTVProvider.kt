@@ -94,7 +94,7 @@ class CanliTVProvider : MainAPI() {
                             Channel(
                                 name = channelName,
                                 groups = attrs["group-title"].orEmpty().split(';').map { it.trim() },
-                                logo = attrs["tvg-logo"]?.takeIf { it.isNotBlank() },
+                                logo = attrs["tvg-logo"]?.takeIf { it.isNotBlank() } ?: "https://www.tabii.com/favicon.ico",
                                 url = line,
                             ),
                         )

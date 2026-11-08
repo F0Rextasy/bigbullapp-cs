@@ -59,24 +59,28 @@ class AsyadizileriizleProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Son Eklenenler" -> "$mainUrl/"
             "Dizi Arşivi" -> "$mainUrl/dizi-arsivi/"
+            "Son Bölümler" -> "$mainUrl/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-
-            if (request.name in ROWS) {
-                if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
-                val doc = app.get(request.data, headers = uaHeaders).document
-                return newHomePageResponse(request.name, cards(doc), hasNext = false)
+        if (request.name in ROWS) {
+            if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
+            val doc = app.get(request.data, headers = uaHeaders).document
+            val scoped = if (request.name == "Son Bölümler") {
+                doc.clone().apply { select("div.series-box").remove() }
+            } else {
+                doc.clone().apply { select("div.episode-box").remove() }
             }
-            return newHomePageResponse(request.name, emptyList(), hasNext = false)
+            return newHomePageResponse(request.name, cards(scoped), hasNext = false)
+        }
+        return newHomePageResponse(request.name, emptyList(), hasNext = false)
     }
 
     companion object {
-        val ROWS = listOf("Son Eklenenler", "Dizi Arşivi")
+        val ROWS = listOf("Dizi Arşivi", "Son Bölümler")
     }
 
     private val pathPrefixes = listOf("/dizi/")
@@ -87,16 +91,21 @@ class AsyadizileriizleProvider : MainAPI() {
         return cards(app.get(url, headers = uaHeaders).document, q)
     }
 
-    private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
+    private fun cards(doc: Document, query: String? = null): List<SearchResponse> =
+        doc.select("div.col-lg-8 a[href], div.episode-box a[href], div.movie-box a[href]").ifEmpty { doc.select("a[href]") }.mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
-        if (listOf("/dizi/").none { path.startsWith(it) }) return@mapNotNull null
-        
+        if (path == "/" || path.startsWith("/dizi-arsivi") || path.startsWith("/film-arsivi") ||
+            path.startsWith("/kategori/") || path.startsWith("/tur/") || path.startsWith("/page/")) return@mapNotNull null
+
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
+        val boxTitle = card.parents().firstOrNull { it.hasClass("movie-box") || it.hasClass("episode-box") }
+            ?.selectFirst(".name, h2, h3")?.text()?.trim().orEmpty()
         val title = card.attr("title").trim()
-            .ifBlank { card.text().trim() }
+            .ifBlank { boxTitle }
             .ifBlank { img.attr("alt").trim() }
+            .ifBlank { card.text().trim() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null
@@ -213,6 +222,10 @@ class AsyadizileriizleProvider : MainAPI() {
                 emit(frame, "Embed", data)
                 continue
             }
+            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) {
+                if (loadOkRu(frame, callback)) found = true
+                continue
+            }
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
                 val innerText = inner.replace("\\/", "/")
@@ -224,7 +237,7 @@ class AsyadizileriizleProvider : MainAPI() {
                     if (loadExtractor(subUrl, frame, subtitleCallback, callback)) found = true
                 }
             }
-            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) loadOkRu(frame, callback) else if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
+            if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
         val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in subs) {
@@ -251,10 +264,19 @@ class AsyadizileriizleProvider : MainAPI() {
             val item = videos.optJSONObject(i) ?: continue
             val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
             val label = item.optString("name").ifBlank { "OkRu" }
+            val q = when (label.lowercase()) {
+                "mobile", "lowest" -> 240
+                "low" -> 360
+                "sd" -> 480
+                "hd" -> 720
+                "full" -> 1080
+                else -> getQualityFromName(label.uppercase())
+            }
+            if (!Settings.qualityAllowed(q)) continue
             callback.invoke(
                 newExtractorLink(name, "OkRu $label", stream, ExtractorLinkType.VIDEO) {
                     this.referer = "https://ok.ru/"
-                    this.quality = getQualityFromName(label.uppercase())
+                    this.quality = q
                 }
             )
             found = true

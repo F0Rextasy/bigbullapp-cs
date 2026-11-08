@@ -60,7 +60,8 @@ class SonAnimeProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Son Eklenenler" -> "https://api.sonanime.com/api/anime/home/random?type=movie&limit=12"
+            "Anime Dizileri" -> "https://api.sonanime.com/api/anime/home/random?type=series&limit=12"
+            "Anime Filmleri" -> "https://api.sonanime.com/api/anime/home/random?type=movie&limit=12"
             else -> mainUrl
         })
     }
@@ -71,7 +72,7 @@ class SonAnimeProvider : MainAPI() {
             var hasNext = false
             when (request.name) {
 
-        "Son Eklenenler" -> {
+        "Anime Dizileri", "Anime Filmleri" -> {
             val url = request.data.replace("{page}", page.toString())
             val raw = app.get(url, headers = uaHeaders).text
             val arr = if ("".isEmpty()) {
@@ -99,7 +100,7 @@ class SonAnimeProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Son Eklenenler")
+        val ROWS = listOf("Anime Dizileri", "Anime Filmleri")
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
@@ -131,7 +132,7 @@ class SonAnimeProvider : MainAPI() {
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
         if (listOf("/").none { path.startsWith(it) }) return@mapNotNull null
-        
+
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()

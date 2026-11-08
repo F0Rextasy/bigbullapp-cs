@@ -69,7 +69,9 @@ class TLCtrProvider : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         if (request.data == LIVE) {
-            val card = newLiveSearchResponse(LIVE_NAME, liveUrl(), TvType.Live)
+            val card = newLiveSearchResponse(LIVE_NAME, liveUrl(), TvType.Live) {
+                this.posterUrl = "$mainUrl/favicon.ico"
+            }
             return newHomePageResponse(request.name, listOf(card), hasNext = false)
         }
         // The server-rendered grid is page 0 and carries slugs instead of names; the AJAX

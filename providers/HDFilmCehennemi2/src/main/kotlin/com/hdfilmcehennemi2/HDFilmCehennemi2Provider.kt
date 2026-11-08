@@ -135,12 +135,15 @@ class HDFilmCehennemi2Provider : MainAPI() {
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
         if (listOf("/", "/dizi/", "/tur/").none { path.startsWith(it) }) return@mapNotNull null
         if (!path.trimEnd('/').endsWith("-izle")) return@mapNotNull null
-        if (path == "/" || path.contains("login") || path.contains("uye-ol") ||
+        if (path == "/" || path.startsWith("/tur/") || path.startsWith("/kategori/") ||
+            path.startsWith("/yil/") || path.trim('/') == "dizi-izle" ||
+            path.contains("login") || path.contains("uye-ol") ||
             path.contains("/giris") || href.contains("?ara=") || href.contains("sirala=")) return@mapNotNull null
-        val img = card.selectFirst("img")
+        val img = card.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()
+            .ifBlank { card.selectFirst("h2, h3, .title")?.text()?.trim().orEmpty() }
+            .ifBlank { img.attr("alt").trim() }
             .ifBlank { card.text().trim() }
-            .ifBlank { img?.attr("alt")?.trim().orEmpty() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null

@@ -71,15 +71,15 @@ class AsyaBoxProvider : MainAPI() {
             "Komedi" -> "https://asyabox.co/diziler/komedi-dizileri-izle/"
             "Romantik" -> "https://asyabox.co/diziler/romantik-dizileri-izle/"
             "Tarihi" -> "https://asyabox.co/diziler/tarihi-dizileri-izle/"
-            "Tümünü Gör" -> "https://asyabox.co/diziler/bl-dizileri-izle/"
-            "asya dizileri" -> "https://asyabox.co/"
+            "BL Dizileri" -> "https://asyabox.co/diziler/bl-dizileri-izle/"
+            "Asya Dizileri" -> "https://asyabox.co/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Diziler", "Çin", "Güney Kore", "Japon", "Tayland", "Tayvan", "Dram", "Fantastik", "Gençlik", "Komedi", "Romantik", "Tarihi", "Tümünü Gör", "asya dizileri")) {
+            if (request.name in ROWS) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -88,7 +88,7 @@ class AsyaBoxProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Diziler", "Çin", "Güney Kore", "Japon", "Tayland", "Tayvan", "Dram", "Fantastik", "Gençlik", "Komedi", "Romantik", "Tarihi", "Tümünü Gör", "asya dizileri")
+        val ROWS = listOf("Diziler", "Çin", "Güney Kore", "Japon", "Tayland", "Tayvan", "Dram", "Fantastik", "Gençlik", "Komedi", "Romantik", "Tarihi", "BL Dizileri", "Asya Dizileri")
     }
 
     private val pathPrefixes = listOf("/dizi/")
@@ -225,6 +225,10 @@ class AsyaBoxProvider : MainAPI() {
                 emit(frame, "Embed", data)
                 continue
             }
+            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) {
+                if (loadOkRu(frame, callback)) found = true
+                continue
+            }
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
                 val innerText = inner.replace("\\/", "/")
@@ -236,7 +240,7 @@ class AsyaBoxProvider : MainAPI() {
                     if (loadExtractor(subUrl, frame, subtitleCallback, callback)) found = true
                 }
             }
-            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) loadOkRu(frame, callback) else if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
+            if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
         val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in subs) {
@@ -263,10 +267,19 @@ class AsyaBoxProvider : MainAPI() {
             val item = videos.optJSONObject(i) ?: continue
             val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
             val label = item.optString("name").ifBlank { "OkRu" }
+            val q = when (label.lowercase()) {
+                "mobile", "lowest" -> 240
+                "low" -> 360
+                "sd" -> 480
+                "hd" -> 720
+                "full" -> 1080
+                else -> getQualityFromName(label.uppercase())
+            }
+            if (!Settings.qualityAllowed(q)) continue
             callback.invoke(
                 newExtractorLink(name, "OkRu $label", stream, ExtractorLinkType.VIDEO) {
                     this.referer = "https://ok.ru/"
-                    this.quality = getQualityFromName(label.uppercase())
+                    this.quality = q
                 }
             )
             found = true

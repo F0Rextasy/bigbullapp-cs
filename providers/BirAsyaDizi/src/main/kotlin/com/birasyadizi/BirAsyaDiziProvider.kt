@@ -51,19 +51,19 @@ class BirAsyaDiziProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "&nbsp; Aile" -> "$mainUrl/category/aile/"
-            "&nbsp; Aksiyon" -> "$mainUrl/category/aksiyon/"
-            "&nbsp; Animasyon" -> "$mainUrl/category/animasyon/"
-            "&nbsp; Arkadaşlık" -> "$mainUrl/category/arkadaslik/"
-            "&nbsp; Belgesel" -> "$mainUrl/category/belgesel/"
-            "&nbsp; Bilim Kurgu" -> "$mainUrl/category/bilim-kurgu/"
-            "&nbsp; Dram" -> "$mainUrl/category/dram/"
-            "&nbsp; Fantastik" -> "$mainUrl/category/fantastik/"
-            "&nbsp; Gizem" -> "$mainUrl/category/gizem/"
-            "&nbsp; Komedi" -> "$mainUrl/category/komedi/"
-            "&nbsp; Korku" -> "$mainUrl/category/korku/"
-            "&nbsp; Macera" -> "$mainUrl/category/macera/"
-            "&nbsp; Romantik" -> "$mainUrl/category/romantik/"
+            "Aile" -> "$mainUrl/category/aile/"
+            "Aksiyon" -> "$mainUrl/category/aksiyon/"
+            "Animasyon" -> "$mainUrl/category/animasyon/"
+            "Arkadaşlık" -> "$mainUrl/category/arkadaslik/"
+            "Belgesel" -> "$mainUrl/category/belgesel/"
+            "Bilim Kurgu" -> "$mainUrl/category/bilim-kurgu/"
+            "Dram" -> "$mainUrl/category/dram/"
+            "Fantastik" -> "$mainUrl/category/fantastik/"
+            "Gizem" -> "$mainUrl/category/gizem/"
+            "Komedi" -> "$mainUrl/category/komedi/"
+            "Korku" -> "$mainUrl/category/korku/"
+            "Macera" -> "$mainUrl/category/macera/"
+            "Romantik" -> "$mainUrl/category/romantik/"
             else -> mainUrl
         })
     }
@@ -79,9 +79,9 @@ class BirAsyaDiziProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("&nbsp; Aile", "&nbsp; Aksiyon", "&nbsp; Animasyon", "&nbsp; Arkadaşlık",
-            "&nbsp; Belgesel", "&nbsp; Bilim Kurgu", "&nbsp; Dram", "&nbsp; Fantastik",
-            "&nbsp; Gizem", "&nbsp; Komedi", "&nbsp; Korku", "&nbsp; Macera", "&nbsp; Romantik")
+        val ROWS = listOf("Aile", "Aksiyon", "Animasyon", "Arkadaşlık",
+            "Belgesel", "Bilim Kurgu", "Dram", "Fantastik",
+            "Gizem", "Komedi", "Korku", "Macera", "Romantik")
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
@@ -122,11 +122,12 @@ class BirAsyaDiziProvider : MainAPI() {
         return rows.values.toList()
     }
 
-    private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
+    private fun cards(doc: Document, query: String? = null): List<SearchResponse> =
+        doc.select("div.sayfa-sol a[href], div.icerik a[href]").ifEmpty { doc.select("a[href]") }.mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
         if (listOf("/", "/dizi/").none { path.startsWith(it) }) return@mapNotNull null
-        
+
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()
@@ -250,6 +251,10 @@ class BirAsyaDiziProvider : MainAPI() {
                 emit(frame, "Embed", data)
                 continue
             }
+            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) {
+                if (loadOkRu(frame, callback)) found = true
+                continue
+            }
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
                 val innerText = inner.replace("\\/", "/")
@@ -261,7 +266,7 @@ class BirAsyaDiziProvider : MainAPI() {
                     if (loadExtractor(subUrl, frame, subtitleCallback, callback)) found = true
                 }
             }
-            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) loadOkRu(frame, callback) else if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
+            if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
         val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in subs) {
@@ -288,10 +293,19 @@ class BirAsyaDiziProvider : MainAPI() {
             val item = videos.optJSONObject(i) ?: continue
             val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
             val label = item.optString("name").ifBlank { "OkRu" }
+            val q = when (label.lowercase()) {
+                "mobile", "lowest" -> 240
+                "low" -> 360
+                "sd" -> 480
+                "hd" -> 720
+                "full" -> 1080
+                else -> getQualityFromName(label.uppercase())
+            }
+            if (!Settings.qualityAllowed(q)) continue
             callback.invoke(
                 newExtractorLink(name, "OkRu $label", stream, ExtractorLinkType.VIDEO) {
                     this.referer = "https://ok.ru/"
-                    this.quality = getQualityFromName(label.uppercase())
+                    this.quality = q
                 }
             )
             found = true

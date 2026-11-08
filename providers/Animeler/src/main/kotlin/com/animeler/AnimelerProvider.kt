@@ -71,25 +71,15 @@ class AnimelerProvider : MainAPI() {
     override val hasMainPage = true
 
     override val mainPage = mainPageOf(
-
         "$mainUrl/filtre?sort=popular" to "Popüler",
-
         "$mainUrl/filtre?sort=latest" to "Son Eklenenler",
-
-        "$mainUrl/genre/action" to "Aksiyon",
-
-        "$mainUrl/genre/comedy" to "Komedi",
-
-        "$mainUrl/genre/romance" to "Romantik",
-
-        "$mainUrl/genre/fantasy" to "Fantastik",
-
-        "$mainUrl/genre/drama" to "Dram",
-
-        "$mainUrl/genre/adventure" to "Macera",
-
-        "$mainUrl/genre/supernatural" to "Doğaüstü",
-
+        "$mainUrl/filtre?genre=Action" to "Aksiyon",
+        "$mainUrl/filtre?genre=Comedy" to "Komedi",
+        "$mainUrl/filtre?genre=Romance" to "Romantik",
+        "$mainUrl/filtre?genre=Fantasy" to "Fantastik",
+        "$mainUrl/filtre?genre=Drama" to "Dram",
+        "$mainUrl/filtre?genre=Adventure" to "Macera",
+        "$mainUrl/filtre?genre=Supernatural" to "Doğaüstü",
     )
 
     override val supportedTypes = setOf(TvType.Anime)
@@ -128,27 +118,29 @@ class AnimelerProvider : MainAPI() {
 
 
 
-    private fun cards(doc: Document): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
-
-        val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
-
-        val path = card.attr("href").substringBefore('?')
-
-        if (!path.startsWith("/") || path in skip || path.startsWith("/filtre")) return@mapNotNull null
-
-        val image = card.selectFirst("img") ?: return@mapNotNull null
-
-        val title = card.attr("title").trim().ifBlank { card.text().trim() }
-
-            .takeIf { it.isNotBlank() } ?: return@mapNotNull null
-
-        newTvSeriesSearchResponse(title, href, TvType.Anime) {
-
-            this.posterUrl = fixUrlNull(image.posterSrcLazy())
-
-        }
-
-    }.distinctBy { it.url }
+    private fun cards(doc: Document): List<SearchResponse> {
+        val rscPosters = HashMap<String, String>()
+        val unescaped = doc.html().replace("\\\"", "\"")
+        Regex(""""slug"\s*:\s*"([^"]+)"[^\{\}]*?"posterUrl"\s*:\s*"(https?:[^"]+)"""")
+            .findAll(unescaped)
+            .forEach { m -> rscPosters[m.groupValues[1]] = m.groupValues[2] }
+        return doc.select("article.mac a[href], div.anime-grid-modern a[href]").ifEmpty { doc.select("a[href]") }.mapNotNull { card ->
+            val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
+            val path = card.attr("href").substringBefore('?')
+            if (!path.startsWith("/") || path in skip || path.startsWith("/filtre") || path.startsWith("/genre/")) return@mapNotNull null
+            val image = card.selectFirst("img") ?: card.parent()?.selectFirst("img") ?: return@mapNotNull null
+            val slug = path.trim('/')
+            val title = card.attr("title").trim()
+                .ifBlank { card.parent()?.selectFirst(".mac__title, h3")?.text()?.trim().orEmpty() }
+                .ifBlank { image.attr("alt").trim() }
+                .ifBlank { card.text().trim() }
+                .takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            val poster = fixUrlNull(image.posterSrcLazy()) ?: rscPosters[slug]
+            newTvSeriesSearchResponse(title, href, TvType.Anime) {
+                this.posterUrl = poster
+            }
+        }.distinctBy { it.url }
+    }
 
 
 

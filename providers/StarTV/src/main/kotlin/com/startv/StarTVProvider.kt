@@ -1,5 +1,6 @@
 package com.startv
 
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -39,22 +40,24 @@ class StarTVProvider : MainAPI() {
     override val supportedTypes = setOf(TvType.TvSeries)
 
     override val mainPage get() = ROWS.mapNotNull { row ->
-        if (row == "Diziler" && Settings.rowEnabled(row)) MainPageData(row, "$mainUrl/dizi") else null
+        if (!Settings.rowEnabled(row)) return@mapNotNull null
+        when (row) {
+            "Diziler" -> MainPageData(row, "$mainUrl/dizi")
+            "Programlar" -> MainPageData(row, "$mainUrl/program")
+            else -> null
+        }
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
-        val html = app.get(request.data).text
-        val items = parseSeries(html).take(60).map { (title, slug) -> searchResult(title, slug) }
-        return newHomePageResponse(request.name, items, hasNext = false)
+        val doc = app.get(request.data).document
+        return newHomePageResponse(request.name, parseCards(doc).take(60), hasNext = false)
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val html = app.get("$mainUrl/arama-sonuclari", params = mapOf("q" to query.trim())).text
+        val doc = app.get("$mainUrl/arama-sonuclari", params = mapOf("q" to query.trim())).document
         val needle = normalize(query)
-        return parseSeries(html).mapNotNull { (title, slug) ->
-            if (needle.isBlank() || normalize(title).contains(needle)) searchResult(title, slug) else null
-        }
+        return parseCards(doc).filter { needle.isBlank() || normalize(it.name).contains(needle) }
     }
 
     override suspend fun load(url: String): LoadResponse? {
@@ -120,6 +123,25 @@ class StarTVProvider : MainAPI() {
         return true
     }
 
+    private fun parseCards(doc: org.jsoup.nodes.Document): List<SearchResponse> {
+        val byImg = doc.select("a[href^=/dizi/], a[href^=/program/]").mapNotNull { card ->
+            val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
+            val path = href.removePrefix(mainUrl).trim('/')
+            if (path.count { it == '/' } != 1) return@mapNotNull null
+            val img = card.selectFirst("img") ?: return@mapNotNull null
+            val poster = fixUrlNull(img.posterSrcLazy()) ?: return@mapNotNull null
+            val title = img.attr("title").trim()
+                .ifBlank { img.attr("alt").trim() }
+                .ifBlank { card.text().trim() }
+                .takeIf(String::isNotBlank) ?: return@mapNotNull null
+            newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
+                this.posterUrl = poster
+            }
+        }.distinctBy { it.url }
+        if (byImg.isNotEmpty()) return byImg
+        return parseSeries(doc.html()).map { (title, slug) -> searchResult(title, slug) }
+    }
+
     private fun parseSeries(html: String): List<Pair<String, String>> {
         val text = html.replace("\\\"", "\"")
         val valid = Jsoup.parse(html).select("a[href^=/dizi/]")
@@ -159,7 +181,7 @@ class StarTVProvider : MainAPI() {
         .replace('ü', 'u').replace('ö', 'o').replace('ç', 'c')
 
     companion object {
-        val ROWS = listOf("Diziler")
+        val ROWS = listOf("Diziler", "Programlar")
         private const val UA =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val DYG_API = "https://dygvideo.dygdigital.com/api/video_info"

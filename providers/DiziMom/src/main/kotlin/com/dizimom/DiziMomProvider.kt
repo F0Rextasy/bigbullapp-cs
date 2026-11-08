@@ -43,16 +43,19 @@ class DiziMomProvider : MainAPI() {
     override val mainPage get() = mainPageOf(
         "$mainUrl/" to "Son Eklenenler",
         "$mainUrl/tur/aile" to "Aile",
-        "$mainUrl/tur/aksiyon" to "Aksiyon",
+        "$mainUrl/tur/aksiyon-macera" to "Aksiyon & Macera",
+        "$mainUrl/tur/animasyon" to "Animasyon",
         "$mainUrl/tur/belgesel" to "Belgesel",
-        "$mainUrl/tur/bilim-kurgu" to "Bilim Kurgu",
+        "$mainUrl/tur/bilim-kurgu-fantastik" to "Bilim Kurgu & Fantastik",
+        "$mainUrl/tur/cocuklar" to "Çocuklar",
         "$mainUrl/tur/dram" to "Dram",
-        "$mainUrl/tur/fantastik" to "Fantastik",
-        "$mainUrl/tur/gerilim" to "Gerilim",
         "$mainUrl/tur/gizem" to "Gizem",
         "$mainUrl/tur/komedi" to "Komedi",
-        "$mainUrl/tur/korku" to "Korku",
-        "$mainUrl/tur/romantik" to "Romantik",
+        "$mainUrl/tur/reality" to "Reality",
+        "$mainUrl/tur/savas-politika" to "Savaş & Politika",
+        "$mainUrl/tur/suc" to "Suç",
+        "$mainUrl/tur/talk" to "Talk Show",
+        "$mainUrl/tur/western" to "Western",
     ).filter { Settings.rowEnabled(it.name) }
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.TvSeries)
@@ -205,6 +208,10 @@ class DiziMomProvider : MainAPI() {
 
     companion object {
         /** Ana sayfa satırları; ayarlardan kapatılabilir. */
-        val ROWS = listOf("Son Eklenenler")
+        val ROWS = listOf(
+            "Son Eklenenler", "Aile", "Aksiyon & Macera", "Animasyon", "Belgesel",
+            "Bilim Kurgu & Fantastik", "Çocuklar", "Dram", "Gizem", "Komedi",
+            "Reality", "Savaş & Politika", "Suç", "Talk Show", "Western",
+        )
     }
 }

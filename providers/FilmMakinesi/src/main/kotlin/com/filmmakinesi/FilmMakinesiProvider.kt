@@ -231,11 +231,13 @@ class FilmMakinesiProvider : MainAPI() {
 
         private val ROW_BASES = linkedMapOf(
             "Yeni Filmler" to "",
-            "Film Arşivi" to "/film-arsivi",
-            "Türkçe Dublaj" to "/turkce-dublaj-filmler",
-            "Türkçe Altyazılı" to "/turkce-altyazili-filmler",
+            "Popüler Filmler" to "/populer-filmler",
             "2026 Filmleri" to "/yil/2026",
             "Aksiyon" to "/aksiyon-filmleri-hd-izle",
+            "Bilim Kurgu" to "/bilim-kurgu-filmleri-hd-izle",
+            "Komedi" to "/komedi-fimleri-hd-izle",
+            "Korku" to "/korku-filmleri-hd-izle",
+            "Yerli Filmler" to "/yerli-filmleri-hd-izle",
         )
         val ROWS: List<String> = ROW_BASES.keys.toList()
 

@@ -59,58 +59,85 @@ class TurkceDiziProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Diziler" -> "https://turkcedizi.com/#diziler"
-            "Filmler" -> "https://turkcedizi.com/filmler"
-            "DİZİ Komedi Kulübü" -> "https://turkcedizi.com/komedi-kulubu-turkce-izle"
+            "Öne Çıkanlar" -> "$mainUrl/#featured"
+            "Yeni Eklenenler" -> "$mainUrl/#new"
+            "Diziler" -> "$mainUrl/#diziler"
+            "Filmler" -> "$mainUrl/filmler"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-
-            if (request.name in listOf("Diziler", "Filmler", "DİZİ Komedi Kulübü")) {
-                if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
-                val doc = app.get(request.data, headers = uaHeaders).document
-                return newHomePageResponse(request.name, cards(doc), hasNext = false)
-            }
-            return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        if (request.name !in ROWS || page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        val url = request.data.substringBefore('#')
+        val doc = app.get(url, headers = uaHeaders).document
+        val scope = when (request.name) {
+            "Öne Çıkanlar" -> doc.selectFirst("section[class*=featured]") ?: doc
+            "Yeni Eklenenler" -> doc.selectFirst("section[class*=newReleases]") ?: doc
+            "Diziler" -> doc.selectFirst("div[class*=movieGrid]") ?: doc
+            "Filmler" -> doc.selectFirst("div[class*=movieGrid]") ?: doc
+            else -> doc
+        }
+        return newHomePageResponse(request.name, cards(doc, scope = scope), hasNext = false)
     }
 
     companion object {
-        val ROWS = listOf("Diziler", "Filmler", "DİZİ Komedi Kulübü")
+        val ROWS = listOf("Öne Çıkanlar", "Yeni Eklenenler")
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        // site araması js ile; ?s= kazıması varsayılan liste döndürüyor — sahte sonuç yerine boş dön
-        return emptyList()
+        val arr = runCatching { JSONArray(app.get("$mainUrl/api/search?q=" + java.net.URLEncoder.encode(query, "UTF-8"), headers = uaHeaders).text) }
+            .getOrNull() ?: return emptyList()
+        return (0 until arr.length()).mapNotNull { i ->
+            val o = arr.optJSONObject(i) ?: return@mapNotNull null
+            val title = o.optString("title").trim()
+            val href = o.optString("href").takeIf { it.isNotBlank() }?.let { fixUrl(it) } ?: return@mapNotNull null
+            if (title.isBlank()) return@mapNotNull null
+            val poster = o.optString("posterUrl").takeIf { it.startsWith("http") }
+            if (o.optString("type") == "series") newTvSeriesSearchResponse(title, href, TvType.TvSeries) { posterUrl = poster; year = o.optInt("year").takeIf { it > 1900 } }
+            else newMovieSearchResponse(title, href, TvType.Movie) { posterUrl = poster; year = o.optInt("year").takeIf { it > 1900 } }
+        }
     }
 
-    private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
-        val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
-        val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
-        if (listOf("/", "/film/").none { path.startsWith(it) } || path.trim('/').length < 4) return@mapNotNull null
-        
-        if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
-        val img = card.selectFirst("img") ?: return@mapNotNull null
-        val title = card.attr("title").trim()
-            .ifBlank { card.text().trim() }
-            .ifBlank { img.attr("alt").trim() }
-            .takeIf { it.isNotBlank() } ?: return@mapNotNull null
-        if (query != null && !title.contains(query, ignoreCase = true) &&
-            !href.contains(query, ignoreCase = true)) return@mapNotNull null
-        val hrefLower = href.lowercase()
-        val isSeries = hrefLower.contains("/dizi/") || hrefLower.contains("/seri/") ||
-            hrefLower.contains("/anime/") || hrefLower.contains("/series/")
-        if (isSeries) {
-            newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-                posterUrl = fixUrlNull(img.posterSrcLazy())
+    private fun cards(doc: Document, query: String? = null, scope: org.jsoup.nodes.Element = doc): List<SearchResponse> {
+        val rscPosters = HashMap<String, String>()
+        val unescaped = doc.html().replace("\\\"", "\"")
+        Regex(""""href"\s*:\s*"(/[^"]+)"\s*,\s*"children"\s*:\s*\[\s*\[\s*"\$"\s*,\s*"div"[\s\S]{0,600}?"src"\s*:\s*"(https?:[^"]+)"""")
+            .findAll(unescaped)
+            .forEach { m -> rscPosters[m.groupValues[1]] = m.groupValues[2] }
+        return scope.select("a[href]").mapNotNull { card ->
+            val rawHref = card.attr("href").trim()
+            if (rawHref.startsWith("mailto:") || rawHref.startsWith("#") || rawHref.contains("?page=")) return@mapNotNull null
+            val href = fixUrlNull(rawHref) ?: return@mapNotNull null
+            val path = rawHref.substringAfter(mainUrl, rawHref).substringBefore('?').substringBefore('#')
+            if (listOf("/", "/film/").none { path.startsWith(it) } || path.trim('/').length < 4 || path == "/filmler") return@mapNotNull null
+            if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
+            val img = card.selectFirst("img")
+            val poster = fixUrlNull(img?.posterSrcLazy()) ?: rscPosters[path] ?: return@mapNotNull null
+            val title = card.attr("title").trim()
+                .ifBlank { card.selectFirst("h2, h3, [class*=Title], [class*=title]")?.text()?.trim().orEmpty() }
+                .ifBlank { img?.attr("alt")?.replace(Regex("""(?i)\s*(?:dizi|film)?\s*afişi$"""), "")?.trim().orEmpty() }
+                .ifBlank { card.text().trim() }
+                .takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            if (query != null && !title.contains(query, ignoreCase = true) &&
+                !href.contains(query, ignoreCase = true)) return@mapNotNull null
+            val hrefLower = href.lowercase()
+            val isSeries = hrefLower.contains("dizi") || hrefLower.contains("/seri/") ||
+                hrefLower.contains("/anime/") || hrefLower.contains("/series/") || (requestIsSeries(scope, rawHref))
+            if (isSeries) {
+                newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
+                    posterUrl = poster
+                }
+            } else {
+                newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = poster
+                }
             }
-        } else {
-            newMovieSearchResponse(title, href, TvType.Movie) {
-                posterUrl = fixUrlNull(img.posterSrcLazy())
-            }
-        }
-    }.distinctBy { it.url }
+        }.distinctBy { it.url }
+    }
+
+    private fun requestIsSeries(scope: org.jsoup.nodes.Element, rawHref: String): Boolean =
+        scope.tagName() != "#root" && !rawHref.contains("film")
 
     override suspend fun load(url: String): LoadResponse? {
         val resp = app.get(url, headers = uaHeaders)
@@ -266,6 +293,8 @@ class TurkceDiziProvider : MainAPI() {
                         subtitleCallback.invoke(SubtitleFile(lang, java.net.URI(up).resolve(vtt.trim()).toString()))
                     }
                 }
+            } else if (loadExtractor(url, data, subtitleCallback, callback)) {
+                found = true
             }
         }
         val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)

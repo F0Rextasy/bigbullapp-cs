@@ -711,7 +711,7 @@ internal object InatClient {
             name = name,
             url = url,
             type = type,
-            img = text(row.firstOf("chImg", "chResim", "filmImg", "filmResim", "diziImg", "diziResim", "img", "resim", "poster")),
+            img = text(row.firstOf("chImg", "chResim", "filmImg", "filmResim", "diziImg", "diziResim", "img", "resim", "poster")).replace(Regex("^h+(?=https?://)"), "").takeIf { it.startsWith("http") }.orEmpty(),
             plot = text(row.firstOf("diziDetay", "filmDetay", "chDetay", "detay", "plot", "description")),
             headers = normalizeHeaders(row.firstOf("chHeaders", "bolumHeaders", "filmHeaders", "diziHeaders", "headers")),
             params = stringMap(entryObject(row.firstOf("chReg", "bolumReg", "filmReg", "diziReg", "reg"))),

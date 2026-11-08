@@ -29,18 +29,41 @@ class CanliYayinKanallariProvider : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
-        return newHomePageResponse(request.name, CHANNELS.map { (n, u) ->
-            newLiveSearchResponse(n, u, TvType.Live)
+        val filtered = when (request.name) {
+            "TRT Kanalları" -> CHANNELS.filter { it.first.startsWith("TRT") }
+            "Haber & Spor" -> CHANNELS.filter {
+                !it.first.startsWith("TRT") &&
+                    Regex("(?i)(haber|spor|ntv|bloomberg|tvnet|24 tv|tjk)").containsMatchIn(it.first)
+            }
+            "Müzik, Çocuk & Yerel" -> CHANNELS.filter {
+                !it.first.startsWith("TRT") &&
+                    Regex("(?i)(power|kral|minika|kanal 3|tv264|ilke|edessa|sercem|yol|zarok|4u|tv den|tbmm)").containsMatchIn(it.first)
+            }
+            else -> CHANNELS.filter {
+                !it.first.startsWith("TRT") &&
+                    !Regex("(?i)(haber|spor|ntv|bloomberg|tvnet|24 tv|tjk|power|kral|minika|kanal 3|tv264|ilke|edessa|sercem|yol|zarok|4u|tv den|tbmm)").containsMatchIn(it.first)
+            }
+        }
+        return newHomePageResponse(request.name, filtered.map { (n, u) ->
+            newLiveSearchResponse(n, u, TvType.Live) {
+                this.posterUrl = DEFAULT_LOGO
+            }
         }, hasNext = false)
     }
 
     override suspend fun search(query: String): List<SearchResponse> =
         CHANNELS.filter { (n, _) -> n.contains(query, ignoreCase = true) }
-            .map { (n, u) -> newLiveSearchResponse(n, u, TvType.Live) }
+            .map { (n, u) ->
+                newLiveSearchResponse(n, u, TvType.Live) {
+                    this.posterUrl = DEFAULT_LOGO
+                }
+            }
 
     override suspend fun load(url: String): LoadResponse? {
         val channel = CHANNELS.firstOrNull { it.second == url } ?: return null
-        return newLiveStreamLoadResponse(channel.first, channel.second, channel.second)
+        return newLiveStreamLoadResponse(channel.first, channel.second, channel.second) {
+            this.posterUrl = DEFAULT_LOGO
+        }
     }
 
     override suspend fun loadLinks(
@@ -59,7 +82,8 @@ class CanliYayinKanallariProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Kanallar")
+        private const val DEFAULT_LOGO = "https://www.tabii.com/favicon.ico"
+        val ROWS = listOf("Ulusal", "TRT Kanalları", "Haber & Spor", "Müzik, Çocuk & Yerel")
         val CHANNELS = listOf(
         "TVNET" to "https://tvnet-live.lg.mncdn.com/tvnet-live/tvnet/playlist.m3u8",
         "TGRT Haber" to "https://canli.tgrthaber.com/tgrt.m3u8",

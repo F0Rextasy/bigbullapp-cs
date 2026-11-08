@@ -59,10 +59,10 @@ class DizirellaProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Aile 41" -> "https://dizirella.one/tur/aile/"
-            "Aksiyon 188" -> "https://dizirella.one/tur/aksiyon/"
-            "Animasyon 56" -> "https://dizirella.one/tur/animasyon/"
-            "Belgesel 82" -> "$mainUrl/tur/belgesel/"
+            "Aile" -> "https://dizirella.one/tur/aile/"
+            "Aksiyon" -> "https://dizirella.one/tur/aksiyon/"
+            "Animasyon" -> "https://dizirella.one/tur/animasyon/"
+            "Belgesel" -> "$mainUrl/tur/belgesel/"
             "Dram" -> "$mainUrl/tur/dram/"
             "Fantastik" -> "$mainUrl/tur/fantastik/"
             "Gerilim" -> "$mainUrl/tur/gerilim/"
@@ -86,7 +86,7 @@ class DizirellaProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Aile 41", "Aksiyon 188", "Animasyon 56", "Belgesel 82", "Dram",
+        val ROWS = listOf("Aile", "Aksiyon", "Animasyon", "Belgesel", "Dram",
             "Fantastik", "Gerilim", "Gizem", "Komedi", "Korku", "Romantik", "Suç")
     }
 
@@ -98,16 +98,19 @@ class DizirellaProvider : MainAPI() {
         return cards(app.get(url, headers = uaHeaders).document, q)
     }
 
-    private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
+    private fun cards(doc: Document, query: String? = null): List<SearchResponse> =
+        doc.select("a.r-card[href]").ifEmpty { doc.select("a[href]") }.mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
         if (listOf("/", "/dizi/").none { path.startsWith(it) }) return@mapNotNull null
+        if (path == "/" || path.trim('/').length < 2 || card.hasClass("r-logo")) return@mapNotNull null
         
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()
+            .ifBlank { card.selectFirst(".r-cap-t, h2, h3, .title")?.text()?.trim().orEmpty() }
+            .ifBlank { img.attr("alt").replace(Regex("""(?i)\s+izle$"""), "").trim() }
             .ifBlank { card.text().trim() }
-            .ifBlank { img.attr("alt").trim() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null
@@ -149,8 +152,8 @@ class DizirellaProvider : MainAPI() {
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
             val path = href.substringAfter(mainUrl).substringBefore('?')
             if (basePath.isNotBlank() && !path.startsWith(basePath) &&
-                !path.contains(slug) && !path.contains(slugBase)) return@mapNotNull null
-            val match = Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path) ?: return@mapNotNull null
+                !path.contains(slug) && !path.contains(slugBase) && !path.contains(slug.substringBefore("-izle"))) return@mapNotNull null
+            if (!Regex("""bolum|episode""").containsMatchIn(path)) return@mapNotNull null
             val number = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
                 .find(path)?.groupValues?.getOrNull(2)?.toIntOrNull()
                 ?: Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
@@ -197,9 +200,9 @@ class DizirellaProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>("https://ksdpictures.site/dserv/uploads/70341c68-4e8c-4968-a241-6777af8bc57d/f8a59579-d327-4045-be89-53625415fb18/master.m3u8")
+        val known = listOf<String>()
         for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
-        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
+        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
             .findAll(text).map { it.groupValues[1] }.toList()
@@ -212,12 +215,12 @@ class DizirellaProvider : MainAPI() {
                 continue
             }
             val inner = runCatching { app.get(absolute, headers = uaHeaders, referer = data).text }.getOrNull() ?: continue
-            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(inner)
+            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(inner)
             for (m in innerMedia) emit(m.value, "Embed", absolute)
         }
         val frames = resp.document.select("iframe").mapNotNull {
             val raw = it.attr("src").ifBlank { it.attr("data-src") }.ifBlank { it.attr("vdo-src") }
-            fixUrlNull(raw)
+            fixUrlNull(raw)?.takeUnless { it.contains("youtu") }
         }.distinct()
         for (frame in frames) {
             if (frame.contains(".mp4") || frame.contains(".m3u8")) {
@@ -227,7 +230,7 @@ class DizirellaProvider : MainAPI() {
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
                 val innerText = inner.replace("\\/", "/")
-                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(innerText)) {
+                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(innerText)) {
                     emit(m.value, "Embed", frame)
                 }
                 for (sub in Regex("""<iframe[^>]+(?:src|data-src)="([^"]+)""").findAll(innerText)) {

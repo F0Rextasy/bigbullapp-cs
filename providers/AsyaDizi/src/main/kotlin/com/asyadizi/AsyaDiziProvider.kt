@@ -43,6 +43,7 @@ private fun cleanTitle(raw: String?): String = (raw ?: "")
     .replace(Regex("""\s*\|.*$"""), "")
     .replace(Regex("""\s*[-–]\s*(?:HDFilm|Film|Dizi|Full).*$""", RegexOption.IGNORE_CASE), "")
     .replace(Regex("""\s+izle\b.*$""", RegexOption.IGNORE_CASE), "")
+    .replace(Regex("""(?:\s+\d{4})?(?:\s+\S+)?\s+arşivleri\b.*$""", RegexOption.IGNORE_CASE), "")
     .replace(Regex("""\s*\(\d{4}\).*$"""), "")
     .replace(Regex("""\s+(?:Türkçe|Dublaj|Altyazılı)\b.*$""", RegexOption.IGNORE_CASE), "")
     .trim().trim('-', '–', '|', ',')
@@ -102,9 +103,14 @@ class AsyaDiziProvider : MainAPI() {
         
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
-        val title = card.attr("title").trim()
+        fun cleanCardAttr(v: String) = v.trim().takeIf { it.isNotBlank() && !it.equals("poster", true) }.orEmpty()
+        val boxTitle = card.parents().firstOrNull { it.hasClass("movie-box") || it.tagName() == "article" }
+            ?.selectFirst(".name, .title, h2, h3")?.text()?.trim().orEmpty()
+        val title = cleanCardAttr(card.attr("title"))
+            .ifBlank { cleanCardAttr(img.attr("title")) }
+            .ifBlank { boxTitle }
+            .ifBlank { cleanCardAttr(img.attr("alt")) }
             .ifBlank { card.text().trim() }
-            .ifBlank { img.attr("alt").trim() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null
@@ -194,7 +200,7 @@ class AsyaDiziProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>("https://ok6-29.vkuser.net/?expires=1793428197982&srcIp=176.33.107.59&pr=10&srcAg=CHROME&ms=95.142.206.33&type=3&sig=x4pEvBkTb9E&ct=0&urls=95.163.35.41%3B178.237.23.39&clientType=0&zs=65&id=21144466557663")
+        val known = listOf<String>()
         for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
@@ -221,6 +227,10 @@ class AsyaDiziProvider : MainAPI() {
                 emit(frame, "Embed", data)
                 continue
             }
+            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) {
+                if (loadOkRu(frame, callback)) found = true
+                continue
+            }
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
                 val innerText = inner.replace("\\/", "/")
@@ -232,7 +242,7 @@ class AsyaDiziProvider : MainAPI() {
                     if (loadExtractor(subUrl, frame, subtitleCallback, callback)) found = true
                 }
             }
-            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) loadOkRu(frame, callback) else if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
+            if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
         val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in subs) {
@@ -259,10 +269,19 @@ class AsyaDiziProvider : MainAPI() {
             val item = videos.optJSONObject(i) ?: continue
             val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
             val label = item.optString("name").ifBlank { "OkRu" }
+            val q = when (label.lowercase()) {
+                "mobile", "lowest" -> 240
+                "low" -> 360
+                "sd" -> 480
+                "hd" -> 720
+                "full" -> 1080
+                else -> getQualityFromName(label.uppercase())
+            }
+            if (!Settings.qualityAllowed(q)) continue
             callback.invoke(
                 newExtractorLink(name, "OkRu $label", stream, ExtractorLinkType.VIDEO) {
                     this.referer = "https://ok.ru/"
-                    this.quality = getQualityFromName(label.uppercase())
+                    this.quality = q
                 }
             )
             found = true

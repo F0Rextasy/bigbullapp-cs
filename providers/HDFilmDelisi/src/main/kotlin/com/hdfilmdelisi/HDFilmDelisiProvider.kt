@@ -80,7 +80,6 @@ class HDFilmDelisiProvider : MainAPI() {
             "Tarih" -> "https://hdfilmdelisi1.com/api/films/category/tarih?page={page}"
             "Western" -> "https://hdfilmdelisi1.com/api/films/category/western?page={page}"
             "Yerli" -> "https://hdfilmdelisi1.com/api/films/category/yerli?page={page}"
-            "Çizgi" -> "https://hdfilmdelisi1.com/api/films/category/cizgi?page={page}"
             else -> mainUrl
         })
     }
@@ -573,36 +572,13 @@ class HDFilmDelisiProvider : MainAPI() {
             }
             hasNext = page < 200
         }
-
-        "Çizgi" -> {
-            val url = request.data.replace("{page}", page.toString())
-            val raw = app.get(url, headers = uaHeaders).text
-            val arr = if ("films".isEmpty()) {
-                JSONArray(raw)
-            } else {
-                JSONObject(raw).optJSONArray("films") ?: JSONArray()
-            }
-            for (i in 0 until arr.length()) {
-                val o = arr.optJSONObject(i) ?: continue
-                val title = o.optString("baslik").trim()
-                val slug = o.optString("slug").trim()
-                if (title.isBlank() || slug.isBlank()) continue
-                val href = if (slug.startsWith("http")) slug else "$mainUrl/film/" + slug.trimStart('/')
-                out += newMovieSearchResponse(title, href, TvType.Movie) {
-                    posterUrl = fixUrlNull(o.optString("afis").takeIf { it.startsWith("http") })
-                    year = o.optInt("yayinYili").takeIf { it > 1900 }
-                    score = Score.from10(o.optString("imdbPuani"))
-                }
-            }
-            hasNext = page < 200
-        }
                 else -> Unit
             }
             return newHomePageResponse(request.name, out, hasNext)
     }
 
     companion object {
-        val ROWS = listOf("Aile", "Aksiyon", "Animasyon", "Belgeseller", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem", "Hint", "Komedi", "Korku", "Macera", "Müzikal", "Psikolojik", "Romantik", "Savaş", "Suç", "Tarih", "Western", "Yerli", "Çizgi")
+        val ROWS = listOf("Aile", "Aksiyon", "Animasyon", "Belgeseller", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem", "Hint", "Komedi", "Korku", "Macera", "Müzikal", "Psikolojik", "Romantik", "Savaş", "Suç", "Tarih", "Western", "Yerli")
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
@@ -708,6 +684,19 @@ class HDFilmDelisiProvider : MainAPI() {
         }
     }
 
+    // pl.vixolity.com oynatıcısı: hex -> ters -> base64 -> karakter kaydırma -> base64 ile gizlenmiş JS; "kaynak" HLS master'dır.
+    private suspend fun vixolityMaster(embed: String): String? {
+        val html = runCatching { app.get(embed, headers = uaHeaders, referer = "$mainUrl/").text }.getOrNull() ?: return null
+        val m = Regex("""\}\)\('([0-9a-f]+)',\s*(\d+)\)""").find(html) ?: return null
+        return runCatching {
+            val rev = String(m.groupValues[1].chunked(2).map { it.toInt(16).toByte() }.toByteArray(), Charsets.ISO_8859_1).reversed()
+            val shifted = String(java.util.Base64.getDecoder().decode(rev), Charsets.ISO_8859_1)
+                .map { (it.code - m.groupValues[2].toInt()).toChar() }.joinToString("")
+            val code = String(java.util.Base64.getDecoder().decode(shifted), Charsets.UTF_8)
+            Regex(""""kaynak"\s*:\s*"([^"]+)"""").find(code)?.groupValues?.get(1)?.replace("\\/", "/")
+        }.getOrNull()
+    }
+
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
@@ -729,7 +718,7 @@ class HDFilmDelisiProvider : MainAPI() {
             })
             found = true
         }
-        val known = listOf<String>("https://hdfilmdelisi1.com/vids/matrix_136.mp4")
+        val known = listOf<String>()
         for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
@@ -738,6 +727,13 @@ class HDFilmDelisiProvider : MainAPI() {
         for (embed in embeds) {
             val absolute = fixUrl(embed)
             if (absolute == data) continue
+            if (absolute.contains("vixolity.com")) {
+                vixolityMaster(absolute)?.let { m ->
+                    callback.invoke(newExtractorLink(name, "Vixolity", m, ExtractorLinkType.M3U8) { this.referer = "https://pl.vixolity.com/" })
+                    found = true
+                }
+                continue
+            }
             if (!absolute.contains("embed") && !absolute.contains(".mp4") && !absolute.contains(".m3u8")) continue
             if (absolute.matches(Regex(""".*\.(?:mp4|m3u8).*"""))) {
                 emit(absolute, "Embed", data)

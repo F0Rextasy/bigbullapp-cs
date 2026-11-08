@@ -1,5 +1,6 @@
 package com.kanald
 
+import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -48,6 +49,13 @@ class KanalDProvider : MainAPI() {
         "$mainUrl/diziler" to "Diziler",
         "$mainUrl/programlar" to "Programlar",
     ).filter { Settings.rowEnabled(it.name) }
+
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
+        if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        val doc = app.get(request.data, headers = headers).document
+        return newHomePageResponse(request.name, doc.cards(), hasNext = false)
+    }
+
     override suspend fun search(query: String, page: Int): SearchResponseList? {
         if (page > 1) return newSearchResponseList(emptyList(), false)
         val q = query.trim().lowercase()
@@ -128,15 +136,18 @@ class KanalDProvider : MainAPI() {
     }
 
     private fun Document.cards(): List<SearchResponse> =
-        select("a[href]").mapNotNull { card ->
+        clone().apply { select("header, nav, .sm-new-container").remove() }
+            .select("a[href]").mapNotNull { card ->
             val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
             val path = href.removePrefix(mainUrl).substringBefore('?').trim('/')
             if (path.isBlank() || path.contains('/') || path in STATIC) return@mapNotNull null
-            val caption = card.selectFirst("figcaption p")?.text()?.trim()
-                ?.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
-            if (card.selectFirst("img") == null) return@mapNotNull null
+            val img = card.selectFirst("img") ?: return@mapNotNull null
+            val caption = card.selectFirst("figcaption p")?.text()?.trim()?.takeIf { it.isNotEmpty() }
+                ?: img.attr("alt").trim().takeIf { it.isNotEmpty() }
+                ?: card.attr("title").trim().takeIf { it.isNotEmpty() }
+                ?: path.replace('-', ' ').replaceFirstChar { it.uppercase() }
             newTvSeriesSearchResponse(caption, href, TvType.TvSeries) {
-                this.posterUrl = fixUrlNull(card.selectFirst("img")?.attr("src"))
+                this.posterUrl = fixUrlNull(img.posterSrcLazy())
             }
         }.distinctBy { it.url }
 

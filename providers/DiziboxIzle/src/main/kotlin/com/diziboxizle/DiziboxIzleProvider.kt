@@ -50,7 +50,7 @@ class DiziboxIzleProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { name ->
         if (!Settings.rowEnabled(name)) return@mapNotNull null
         when (name) {
-            "Son Eklenenler" -> MainPageData(name, "$mainUrl/")
+            "Son Eklenenler" -> MainPageData(name, "$mainUrl/dizi-arsivi/?filtrele=tarih&sirala=DESC")
             "Aksiyon" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=aksiyon")
             "Dram" -> MainPageData(name, "$mainUrl/dizi-arsivi/?tur=drama")
             "IMDb 7+" -> MainPageData(name, "$mainUrl/dizi-arsivi/?filtrele=imdb&sirala=DESC&imdb=7")

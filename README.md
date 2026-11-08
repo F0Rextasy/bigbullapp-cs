@@ -246,7 +246,7 @@ Canlı yayın modülleri `TvType.Live` kullanır; `loadLinks` yoktur, kanal URL'
 `CanliYayinKanallari` için “doğrulanmış” yalnız **HTTP 200 HLS adresi** anlamındadır; oynatma
 tek başına bu testle garanti edilmez.
 
-## Doğrulama (2026-11-07)
+## Doğrulama (2026-11-08)
 
 - Cloudstream host runner: 88 aktif modül; DiziPod v6, Yabancidizi v8 ve HDFilmCehennemi v9 canlı doğrulandı.
 - Emülatör smoke: DiziPal, AsyaWatch ve MinikaGO arama → detay → oynatma PASS.

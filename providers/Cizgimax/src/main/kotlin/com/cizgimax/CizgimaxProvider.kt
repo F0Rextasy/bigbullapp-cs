@@ -65,7 +65,7 @@ class CizgimaxProvider : MainAPI() {
             "Belgesel" -> MainPageData(name, "$mainUrl/tur/belgesel/")
             "Bilim Kurgu" -> MainPageData(name, "$mainUrl/tur/bilim-kurgu/")
             "Dram" -> MainPageData(name, "$mainUrl/tur/dram/")
-            "Fantastik" -> MainPageData(name, "$mainUrl/tur/fantastik/")
+            "Fantastik" -> MainPageData(name, "$mainUrl/tur/fantezi/")
             "Gerilim" -> MainPageData(name, "$mainUrl/tur/gerilim/")
             "Komedi" -> MainPageData(name, "$mainUrl/tur/komedi/")
             "Korku" -> MainPageData(name, "$mainUrl/tur/korku/")

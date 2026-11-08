@@ -5,6 +5,17 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.27] - 2026-11-08
+
+### Düzeltildi
+- **Sahte/bozuk akışlar (88 sağlayıcı taraması)**: `AsyaBox`, `AsyaDizi`, `Asyadizileriizle`, `BirAsyaDizi` ok.ru gömmelerinde HTML-escape (`&quot;`) içeren `data-options` bloğunu oynatma linki sanıyordu; ok.ru artık `app.get`'ten önce özel çözücüye gider, kalite eşlemesi (`mobile→240 … full→1080`) ve kalite üst sınırı uygulanır, `loadOkRu` sonucu `found`'a işlenir.
+- **Sabit stub linkler kaldırıldı**: `CanliDizi`/`DiziAbi`/`Dizigom` (`blank.mp4`), `Dizirella` (sabit `master.m3u8`), `HDFilmDelisi` (`matrix_136.mp4`), `Weboo` ve `AsyaDizi` sabit linkleri.
+- **Gerçek akış çıkarımı**: Pilavyer oynatıcısı (`s.php?s=` → `window.__PLAYER__.stream` HLS + altyazı; ölü `kankaplayer.top` → `pilavyerplay.top`) ve YouTube fragman iframe'leri atlanır; `HDFilmDelisi` `pl.vixolity.com` oynatıcısı çözülür; `Dizirella` query'siz `master.m3u8` yakalanır.
+- **Bölüm listeleri**: `Weboo` (`mosaic-ep-card`, 40+ bölüm; `proxy.php` akışı) ve `Dizirella` (`N-sezon-M-bolum` ve `dizi/` sayfası) bölümleri artık listeleniyor.
+- **Kategoriler**: `Cizgimax`, `DiziBal`, `DiziMom`, `CanliDizi`, `DiziAbi` boş/yinelenen satırlar düzeltildi; `HDFilmDelisi` `Çizgi` (100% `Animasyon` kopyası) kaldırıldı.
+- `TurkceDizi` gerçek `/api/search` aramasına kavuştu; `DiziCaN` çift `master.m3u8` vermiyor; `HDFilmDiziIzle` başlık HTML kodları çözülüyor ve yavaş kaynaklarda erken duruyor; `InatTV` bozuk poster (`hhttps://`) temizleniyor; `AsyaDizi` başlıktaki `arşivleri` ekini atıyor.
+- Nuvio: aynı taramada `nuvio/providers/*.js` içinde sabit stub/ok.ru regex hatası bulunmadı; davranış değişikliği yok.
+
 ## [1.6.26] - 2026-11-08
 
 ### Değişti

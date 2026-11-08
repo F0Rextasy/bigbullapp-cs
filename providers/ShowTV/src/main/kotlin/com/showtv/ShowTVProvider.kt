@@ -54,7 +54,12 @@ class ShowTVProvider : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data, headers = headers).document
-        return newHomePageResponse(request.name, doc.cards(), hasNext = false)
+        val selector = if (request.data.contains("/programlar")) {
+            "a[href*='/programlar/tanitim/']"
+        } else {
+            "a[href*='/dizi/tanitim/']"
+        }
+        return newHomePageResponse(request.name, doc.cards(selector), hasNext = false)
     }
 
     override suspend fun search(query: String, page: Int): SearchResponseList? {
@@ -130,20 +135,18 @@ class ShowTVProvider : MainAPI() {
         throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
     }
 
-    private fun Document.cards(): List<SearchResponse> =
-        select("a[href*='/dizi/tanitim/'], a[href*='/programlar/tanitim/']").mapNotNull { card ->
+    private fun Document.cards(
+        selector: String = "a[href*='/dizi/tanitim/'], a[href*='/programlar/tanitim/']",
+    ): List<SearchResponse> =
+        select(selector).mapNotNull { card ->
             val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
             val title = card.attr("title").trim().ifBlank {
                 card.selectFirst("span.text-base")?.text()?.trim().orEmpty()
             }.ifBlank {
                 card.selectFirst("h2, h3, h4")?.text()?.trim().orEmpty()
             }.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
-            val isSeries = href.contains("/dizi/")
-            val type = if (isSeries) TvType.TvSeries else TvType.TvSeries
             val poster = fixUrlNull(card.selectFirst("img")?.posterSrcLazy())
-            if (isSeries) newTvSeriesSearchResponse(title, href, type) {
-                this.posterUrl = poster
-            } else newMovieSearchResponse(title, href, TvType.Movie) {
+            newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
                 this.posterUrl = poster
             }
         }.distinctBy { it.url }

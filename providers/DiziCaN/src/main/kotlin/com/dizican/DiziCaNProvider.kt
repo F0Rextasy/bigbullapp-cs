@@ -102,16 +102,20 @@ class DiziCaNProvider : MainAPI() {
         return cards(app.get("$mainUrl/?s=" + java.net.URLEncoder.encode(token, "UTF-8"), headers = uaHeaders).document, token)
     }
 
-    private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
+    private fun cards(doc: Document, query: String? = null): List<SearchResponse> =
+        doc.select("div.col-lg-8 a[href], div.dz-grid a[href]").ifEmpty { doc.select("a[href]") }.mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
         if (listOf("/", "/bolum/").none { path.startsWith(it) } || path.trim('/').length < 4) return@mapNotNull null
-        
+        if (path.startsWith("/ulke/") || path.startsWith("/category/") || path.startsWith("/dizi-kategori/")) return@mapNotNull null
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
+        val boxTitle = card.parents().firstOrNull { it.hasClass("movie-box") || it.tagName() == "article" }
+            ?.selectFirst(".name, .title, h2, h3")?.text()?.trim().orEmpty()
         val title = card.attr("title").trim()
-            .ifBlank { card.text().trim() }
+            .ifBlank { boxTitle }
             .ifBlank { img.attr("alt").trim() }
+            .ifBlank { card.text().trim() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null
@@ -235,6 +239,7 @@ class DiziCaNProvider : MainAPI() {
                 if (loadOkRu(frame, callback)) found = true
                 continue
             }
+            val seenBefore = seen.size
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
                 val innerText = inner.replace("\\/", "/")
@@ -246,7 +251,7 @@ class DiziCaNProvider : MainAPI() {
                     if (loadExtractor(subUrl, frame, subtitleCallback, callback)) found = true
                 }
             }
-            if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
+            if (seen.size == seenBefore && loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
         val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in subs) {

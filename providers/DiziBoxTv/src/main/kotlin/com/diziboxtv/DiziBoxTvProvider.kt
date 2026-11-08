@@ -62,14 +62,14 @@ class DiziBoxTvProvider : MainAPI() {
         MainPageData(rowName, when (rowName) {
             "Diziler" -> "https://diziboxtv.com/diziler"
             "Filmler" -> "https://diziboxtv.com/filmler"
-            "Dram ›" -> "https://diziboxtv.com/?kategori=Dram#icerikler"
+            "Dram" -> "https://diziboxtv.com/?kategori=Dram#icerikler"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in listOf("Diziler", "Filmler", "Dram ›")) {
+            if (request.name in ROWS) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -78,7 +78,7 @@ class DiziBoxTvProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Diziler", "Filmler", "Dram ›")
+        val ROWS = listOf("Diziler", "Filmler", "Dram")
     }
 
     private val pathPrefixes = listOf("/dizi/", "/film/")
@@ -97,8 +97,9 @@ class DiziBoxTvProvider : MainAPI() {
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()
+            .ifBlank { card.selectFirst("h3, h2, .title")?.text()?.trim().orEmpty() }
+            .ifBlank { img.attr("alt").replace(Regex("""(?i)\s+afişi$"""), "").trim() }
             .ifBlank { card.text().trim() }
-            .ifBlank { img.attr("alt").trim() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null
