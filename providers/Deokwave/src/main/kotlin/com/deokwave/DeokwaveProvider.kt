@@ -1,6 +1,7 @@
 package com.deokwave
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.parseHlsVariants
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -19,25 +20,16 @@ import com.lagradost.cloudstream3.newAnimeSearchResponse
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
-import com.lagradost.cloudstream3.newMovieSearchResponse
 import com.lagradost.cloudstream3.newTvSeriesLoadResponse
-import com.lagradost.cloudstream3.newTvSeriesSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
+import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.nodes.Document
-
-private fun asciiFold(value: String): String = value
-    .replace('ı', 'i').replace('İ', 'I')
-    .replace('ş', 's').replace('Ş', 'S')
-    .replace('ğ', 'g').replace('Ğ', 'G')
-    .replace('ü', 'u').replace('Ü', 'U')
-    .replace('ö', 'o').replace('Ö', 'O')
-    .replace('ç', 'c').replace('Ç', 'C')
 
 private fun cleanTitle(raw: String?): String = (raw ?: "")
     .replace(Regex("""\s*\|.*$"""), "")
@@ -53,7 +45,7 @@ class DeokwaveProvider : MainAPI() {
     override var mainUrl = "https://deokwave.com"
     override var name = "Deokwave"
     override var lang = "tr"
-    override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
+    override val supportedTypes = setOf(TvType.Anime, TvType.Movie, TvType.TvSeries)
 
     override val hasMainPage = true
     override val mainPage get() = ROWS.mapNotNull { rowName ->
@@ -87,25 +79,19 @@ class DeokwaveProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val q = if (false) asciiFold(query) else query
-        val url = "https://deokwave.com/search_api.php?q={q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
+        val url = "https://deokwave.com/search_api.php?q=" + java.net.URLEncoder.encode(query, "UTF-8")
         val raw = app.get(url, headers = uaHeaders).text
         val root = if (raw.trimStart().startsWith("[")) JSONObject() else JSONObject(raw)
         val out = mutableListOf<SearchResponse>()
-
-        run {
-            val arr = if ("animes".isEmpty()) JSONArray(raw) else root.optJSONArray("animes") ?: return@run
-            for (i in 0 until arr.length()) {
-                val o = arr.optJSONObject(i) ?: continue
-                val title = o.optString("name_english").trim()
-                val slug = o.optString("animeid").trim()
-                if (title.isBlank() || slug.isBlank()) continue
-                val href = if (slug.startsWith("http")) slug else "$mainUrl/anime/" + slug.trimStart('/')
-                out += newMovieSearchResponse(title, href, TvType.Movie) {
-                    posterUrl = fixUrlNull(o.optString("poster").takeIf { it.startsWith("http") })
-                    year = o.optInt("").takeIf { it > 1900 }
-                    score = Score.from10(o.optString(""))
-                }
+        val arr = root.optJSONArray("animes") ?: JSONArray()
+        for (i in 0 until arr.length()) {
+            val o = arr.optJSONObject(i) ?: continue
+            val title = o.optString("name_english").trim().ifBlank { o.optString("name").trim() }
+            val slug = o.optString("animeid").trim()
+            if (title.isBlank() || slug.isBlank()) continue
+            val href = if (slug.startsWith("http")) slug else "$mainUrl/anime/" + slug.trimStart('/')
+            out += newAnimeSearchResponse(title, href, TvType.Anime) {
+                posterUrl = fixUrlNull(o.optString("poster").takeIf { it.startsWith("http") })
             }
         }
         return out.distinctBy { it.url }
@@ -122,17 +108,8 @@ class DeokwaveProvider : MainAPI() {
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null
-        val hrefLower = href.lowercase()
-        val isSeries = hrefLower.contains("/dizi/") || hrefLower.contains("/seri/") ||
-            hrefLower.contains("/anime/") || hrefLower.contains("/series/")
-        if (isSeries) {
-            newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-                posterUrl = fixUrlNull(img.posterSrcLazy())
-            }
-        } else {
-            newMovieSearchResponse(title, href, TvType.Movie) {
-                posterUrl = fixUrlNull(img.posterSrcLazy())
-            }
+        newAnimeSearchResponse(title, href, TvType.Anime) {
+            posterUrl = fixUrlNull(img.posterSrcLazy())
         }
     }.distinctBy { it.url }
 
@@ -146,6 +123,7 @@ class DeokwaveProvider : MainAPI() {
                 ?: doc.selectFirst("meta[property=og:title]")?.attr("content")
         ).ifBlank { throw ErrorLoadingException("$name: başlık okunamadı") }
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
+            ?: Regex("""animeBasePoster\s*=\s*['"](https?:[^'"]+)['"]""").find(raw)?.groupValues?.get(1)
         val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
         val genres = doc.select("[itemprop=genre], a[href*='/tur/'], a[href*='/kategori/']")
             .mapNotNull { it.attr("content").ifBlank { it.text() }.trim().takeIf(String::isNotBlank) }
@@ -156,24 +134,51 @@ class DeokwaveProvider : MainAPI() {
             doc.selectFirst("[itemprop=ratingValue]")?.attr("content")
                 ?: Regex(""""(?:imdbPuani|ratingValue|imdb)"\s*:\s*"?([0-9.]+)""").find(raw)?.groupValues?.get(1)
         )
-        val basePath = url.substringAfter(mainUrl).substringBefore('?').trimEnd('/')
-        val slug = basePath.trim('/').split('/').lastOrNull().orEmpty()
-        val slugBase = slug.removeSuffix("-izle").removeSuffix("-film-izle")
-        val episodes = doc.select("a[href]").mapNotNull { anchor ->
+        val animeId = Regex("""animeIdJs\s*=\s*['"]([A-Za-z0-9_]+)['"]""").find(raw)?.groupValues?.get(1)
+            ?: pageUrl.substringAfter("/anime/").trim('/').substringBefore('/')
+        val jsEpisodes = mutableListOf<com.lagradost.cloudstream3.Episode>()
+        Regex("""var\s+allSezonlar\s*=\s*(\{[^\r\n;]+\})\s*;""").find(raw)?.groupValues?.get(1)?.let { jsonText ->
+            runCatching {
+                val seasonsObj = JSONObject(jsonText)
+                for (snKey in seasonsObj.keys()) {
+                    val sn = snKey.toIntOrNull() ?: continue
+                    if (sn < 1) continue
+                    val epMap = seasonsObj.optJSONObject(snKey) ?: continue
+                    for (epKey in epMap.keys()) {
+                        val epNum = epKey.toIntOrNull() ?: continue
+                        val epInfo = epMap.optJSONObject(epKey)
+                        val thumb = epInfo?.optString("thumbnail")?.replace("\\/", "/")?.takeIf { it.startsWith("http") }
+                        val epHref = "$mainUrl/watch/$animeId/season/$sn/episode/$epNum"
+                        jsEpisodes += newEpisode(epHref) {
+                            this.season = sn
+                            this.episode = epNum
+                            this.name = "$sn. Sezon $epNum. Bölüm"
+                            this.posterUrl = thumb
+                        }
+                    }
+                }
+            }
+        }
+        val domEpisodes = doc.select("a[href]").mapNotNull { anchor ->
             val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
             val path = href.substringAfter(mainUrl).substringBefore('?')
             if (!Regex("""(?:bolum|episode)""", RegexOption.IGNORE_CASE).containsMatchIn(path)) return@mapNotNull null
+            val seasonNum = Regex("""(?:sezon|season)[-_/]?(\d+)""", RegexOption.IGNORE_CASE).find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
             val number = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
                 .find(path)?.groupValues?.getOrNull(2)?.toIntOrNull()
                 ?: Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
                 ?: Regex("""(\d+)[-_]bolum""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
             newEpisode(href) {
+                this.season = seasonNum ?: 1
                 this.name = anchor.text().trim().ifBlank { "Bölüm $number" }
                 this.episode = number
             }
-        }.distinctBy { it.data }.sortedBy { it.episode ?: 0 }
+        }
+        val episodes = (jsEpisodes + domEpisodes)
+            .distinctBy { it.data }
+            .sortedWith(compareBy({ it.season ?: 1 }, { it.episode ?: 0 }))
         if (episodes.isNotEmpty()) {
-            return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
+            return newTvSeriesLoadResponse(title, url, TvType.Anime, episodes) {
                 this.posterUrl = poster
                 this.plot = plot
                 this.year = year
@@ -182,7 +187,9 @@ class DeokwaveProvider : MainAPI() {
                 this.tags = genres.ifEmpty { null }
             }
         }
-        return newMovieLoadResponse(title, url, TvType.Movie, url) {
+        val watchUrl = doc.selectFirst("a[href*='/watch/']")?.let { fixUrlNull(it.attr("href")) }
+            ?: if (animeId.isNotBlank()) "$mainUrl/watch/$animeId/" else url
+        return newMovieLoadResponse(title, url, TvType.Movie, watchUrl) {
             this.posterUrl = poster
             this.plot = plot
             this.year = year
@@ -198,38 +205,45 @@ class DeokwaveProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val resp = app.get(data, headers = uaHeaders)
+        val watchData = if (data.contains("/anime/")) data.replace("/anime/", "/watch/") else data
+        val resp = app.get(watchData, headers = uaHeaders)
         val text = resp.text.replace("\\/", "/").replace("\\\"", "\"")
         var found = false
         val seen = mutableSetOf<String>()
-        suspend fun emit(stream: String, label: String, referer: String) {
+        suspend fun emit(stream: String, label: String, referer: String, explicitQuality: Int? = null) {
             if (!stream.startsWith("http") || !seen.add(stream)) return
-            val type = if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
-            val quality = getQualityFromName(label)
-            if (!Settings.qualityAllowed(quality)) return
-            callback.invoke(newExtractorLink(name, label, stream, type) {
-                this.referer = referer
-                this.quality = quality
-            })
-            found = true
+            val isM3u8 = stream.contains(".m3u8")
+            val type = if (isM3u8) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+            val quality = explicitQuality ?: if (isM3u8) Qualities.Unknown.value else getQualityFromName(label)
+            if (Settings.qualityAllowed(quality)) {
+                callback.invoke(newExtractorLink(name, label, stream, type) {
+                    this.referer = referer
+                    this.quality = quality
+                })
+                found = true
+            }
+            if (isM3u8 && explicitQuality == null) {
+                val playlist = runCatching { app.get(stream, headers = uaHeaders, referer = referer).text }.getOrNull().orEmpty()
+                for ((h, vUrl) in parseHlsVariants(stream, playlist)) {
+                    emit(vUrl, "$label ${h}p", referer, h)
+                }
+            }
         }
-        loadTokenFlow(data) { stream, label, referer -> emit(stream, label, referer) }
-        val known = listOf<String>()
-        for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
-        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
-        for (m in media) emit(m.value, "Direct", data)
+        loadTokenFlow(watchData, resp.text, resp.cookies) { stream, label, referer -> emit(stream, label, referer) }
+        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(text)
+        for (m in media) emit(m.value, "Direct", watchData)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
             .findAll(text).map { it.groupValues[1] }.toList()
         for (embed in embeds) {
             val absolute = fixUrl(embed)
-            if (absolute == data) continue
+            if (absolute == watchData) continue
             if (!absolute.contains("embed") && !absolute.contains(".mp4") && !absolute.contains(".m3u8")) continue
             if (absolute.matches(Regex(""".*\.(?:mp4|m3u8).*"""))) {
-                emit(absolute, "Embed", data)
+                emit(absolute, "Embed", watchData)
                 continue
             }
-            val inner = runCatching { app.get(absolute, headers = uaHeaders, referer = data).text }.getOrNull() ?: continue
-            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(inner)
+            val inner = runCatching { app.get(absolute, headers = uaHeaders, referer = watchData).text }.getOrNull() ?: continue
+            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(inner)
             for (m in innerMedia) emit(m.value, "Embed", absolute)
         }
         val frames = resp.document.select("iframe").mapNotNull {
@@ -238,13 +252,13 @@ class DeokwaveProvider : MainAPI() {
         }.distinct()
         for (frame in frames) {
             if (frame.contains(".mp4") || frame.contains(".m3u8")) {
-                emit(frame, "Embed", data)
+                emit(frame, "Embed", watchData)
                 continue
             }
-            val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
+            val inner = runCatching { app.get(frame, headers = uaHeaders, referer = watchData).text }.getOrNull()
             if (inner != null) {
                 val innerText = inner.replace("\\/", "/")
-                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(innerText)) {
+                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(innerText)) {
                     emit(m.value, "Embed", frame)
                 }
                 for (sub in Regex("""<iframe[^>]+(?:src|data-src)="([^"]+)""").findAll(innerText)) {
@@ -264,38 +278,74 @@ class DeokwaveProvider : MainAPI() {
         return found
     }
 
-
     private suspend fun loadTokenFlow(
         data: String,
+        rawPage: String,
+        cookies: Map<String, String>,
         emit: suspend (String, String, String) -> Unit,
     ) {
-        val page = runCatching { app.get(data, headers = uaHeaders + mapOf("Referer" to data)).text }
-            .getOrNull()?.replace("&quot;", "\"")?.replace("\\\"", "\"") ?: return
+        val page = rawPage.replace("&quot;", "\"").replace("\\\"", "\"")
         val cfg = Regex("""([A-Za-z0-9_]{3,40})"\s*:\s*"([^"]{1,400})""")
             .findAll(page).associate { it.groupValues[1] to it.groupValues[2] }
-        val qualities = listOf("1080", "720", "480")
-        for (q in qualities) {
-            if (!Settings.qualityAllowed(q.toIntOrNull() ?: 0)) continue
-            val payload = JSONObject()
-            payload.put("videoid", cfg["videoId"] ?: "")
-            payload.put("quality", q)
-            payload.put("sid", cfg["playbackSessionId"] ?: "")
-            val headers = uaHeaders + mapOf(
-                "Content-Type" to "application/json",
-                "X-CSRF-Token" to (cfg["csrfToken"] ?: ""),
-            )
-            val body = runCatching {
-                app.post(fixUrl("/api/v1/video/token/"), json = payload, headers = headers, referer = data).text
-            }.getOrNull() ?: continue
-            val token = runCatching { JSONObject(body).optString("token") }
-                .getOrNull().orEmpty()
-            if (token.isBlank()) continue
-            var url = "https://sw2.deokwave.com/v/{videoid}/{quality}/?vt={token}"
-        url = url.replace("{videoid}", cfg["videoId"] ?: "")
-            url = url.replace("{quality}", q)
-                .replace("{token}", java.net.URLEncoder.encode(token, "UTF-8"))
-            emit(url, q + "p", data)
+        val mainVideoId = cfg["videoId"].orEmpty()
+        if (mainVideoId.isBlank()) return
+        val sid = cfg["playbackSessionId"].orEmpty()
+        val csrf = cfg["csrfToken"].orEmpty()
+        data class SourceEntry(val labelPrefix: String, val vid: String, val quals: List<String>)
+        val sources = mutableListOf<SourceEntry>()
+        val cfgJson = Regex("""data-config="(\{.*?\})"\s*>""").find(rawPage)?.groupValues?.get(1)
+            ?.replace("&quot;", "\"")
+            ?.let { runCatching { JSONObject(it) }.getOrNull() }
+        val fansubs = cfgJson?.optJSONArray("fansubs")
+        if (fansubs != null && fansubs.length() > 0) {
+            for (i in 0 until fansubs.length()) {
+                val fs = fansubs.optJSONObject(i) ?: continue
+                if (fs.optBoolean("is4k", false)) continue
+                val vid = fs.optString("videoid").trim()
+                if (vid.isBlank()) continue
+                val fname = fs.optString("name").trim().ifBlank { "Deokwave" }
+                val qArr = fs.optJSONArray("qualities")
+                val qs = mutableListOf<String>()
+                if (qArr != null) {
+                    for (j in 0 until qArr.length()) {
+                        val q = qArr.optString(j).trim().trimEnd('p')
+                        if (q.isNotBlank()) qs += q
+                    }
+                }
+                sources += SourceEntry(fname, vid, qs.ifEmpty { listOf("1080", "720", "480", "360") })
+            }
+        }
+        if (sources.isEmpty()) {
+            val qArr = cfgJson?.optJSONArray("qualities")
+            val qs = mutableListOf<String>()
+            if (qArr != null) {
+                for (j in 0 until qArr.length()) {
+                    val q = qArr.optString(j).trim().trimEnd('p')
+                    if (q.isNotBlank()) qs += q
+                }
+            }
+            sources += SourceEntry("Deokwave", mainVideoId, qs.ifEmpty { listOf("1080", "720", "480", "360") })
+        }
+        val headers = uaHeaders + mapOf(
+            "Content-Type" to "application/json",
+            "X-CSRF-Token" to csrf,
+        )
+        for (src in sources.distinctBy { it.vid }) {
+            for (q in src.quals) {
+                if (!Settings.qualityAllowed(q.toIntOrNull() ?: 0)) continue
+                val payload = JSONObject()
+                payload.put("videoid", src.vid)
+                payload.put("quality", q)
+                payload.put("sid", sid)
+                val body = runCatching {
+                    app.post(fixUrl("/api/v1/video/token/"), json = payload, headers = headers, cookies = cookies, referer = data).text
+                }.getOrNull() ?: continue
+                val token = runCatching { JSONObject(body).optString("token") }
+                    .getOrNull().orEmpty()
+                if (token.isBlank()) continue
+                val url = "https://sw2.deokwave.com/v/${src.vid}/$q/?vt=" + java.net.URLEncoder.encode(token, "UTF-8")
+                emit(url, "${src.labelPrefix} • ${q}p", data)
+            }
         }
     }
-
 }

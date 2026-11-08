@@ -47,7 +47,7 @@ open class BaseSettings(private val file: String) {
         }
     }
 
-    fun rowEnabled(name: String): Boolean = prefs?.getStringSet(ROW_KEY, null)?.contains(name) != true
+    open fun rowEnabled(name: String): Boolean = prefs?.getStringSet(ROW_KEY, null)?.contains(name) != true
 
     fun setRows(names: Collection<String>, enabled: Set<String>) {
         prefs?.edit()?.putStringSet(ROW_KEY, names.filterNot { it in enabled }.toSet())?.apply()

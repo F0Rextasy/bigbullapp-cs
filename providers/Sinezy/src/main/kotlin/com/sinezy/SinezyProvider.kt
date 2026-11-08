@@ -2,6 +2,7 @@ package com.sinezy
 
 import android.util.Base64
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.parseHlsVariants
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -102,21 +103,25 @@ class SinezyProvider : MainAPI() {
         val iframeHtml = runCatching {
             Base64.decode(encoded, Base64.DEFAULT).toString(Charsets.UTF_8)
         }.getOrNull() ?: throw ErrorLoadingException("$name: oynatıcı verisi çözülemedi. $REPORT_HINT")
-        val playerUrl = fixUrlNull(Regex("""src=["']([^"']+)["']""").find(iframeHtml)?.groupValues?.get(1))
+        val rawPlayerUrl = fixUrlNull(Regex("""src=["']([^"']+)["']""").find(iframeHtml)?.groupValues?.get(1))
             ?: throw ErrorLoadingException("$name: oynatıcı adresi bulunamadı. $REPORT_HINT")
+        val playerOrigin = rawPlayerUrl.substringBefore("/video/").lowercase()
+        val playerUrl = "$playerOrigin/video/${rawPlayerUrl.substringAfter("/video/")}"
 
-        val playerHtml = app.get(playerUrl, headers = headers, referer = pageUrl).text
+        val playerResp = app.get(playerUrl, headers = headers, referer = pageUrl)
+        val playerHtml = playerResp.text
         val id = playerUrl.substringAfterLast('/').substringBefore('?').trim()
         if (id.isEmpty()) throw ErrorLoadingException("$name: oynatıcı kimliği bulunamadı. $REPORT_HINT")
-        val api = "${playerUrl.substringBefore("/video/")}/player/index.php?data=$id&do=getVideo"
+        val api = "$playerOrigin/player/index.php?data=$id&do=getVideo"
         val response = app.post(
             api,
             data = mapOf("hash" to id, "r" to "$mainUrl/"),
             headers = headers + mapOf(
                 "Referer" to playerUrl,
-                "Origin" to playerUrl.substringBefore("/video/"),
+                "Origin" to playerOrigin,
                 "X-Requested-With" to "XMLHttpRequest",
             ),
+            cookies = playerResp.cookies,
         ).text
         val body = runCatching { JSONObject(response) }.getOrNull()
             ?: throw ErrorLoadingException("$name: oynatıcı yanıtı okunamadı. $REPORT_HINT")
@@ -125,17 +130,29 @@ class SinezyProvider : MainAPI() {
         for (key in listOf("securedLink", "videoSource")) {
             val stream = body.optString(key).trim().replace("\\/", "/")
             if (!stream.startsWith("http")) continue
-            val live = runCatching {
-                app.get(stream, headers = headers, referer = playerUrl).text.trimStart().startsWith("#EXTM3U")
-            }.getOrDefault(false)
-            if (!live) continue
-            callback.invoke(
-                newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
-                    this.referer = playerUrl
-                    this.headers = headers
-                    this.quality = Qualities.Unknown.value
-                },
-            )
+            val m3u8Text = runCatching {
+                app.get(stream, headers = headers, referer = playerUrl).text
+            }.getOrNull().orEmpty()
+            if (!m3u8Text.trimStart().startsWith("#EXTM3U")) continue
+            if (Settings.qualityAllowed(Qualities.Unknown.value)) {
+                callback.invoke(
+                    newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
+                        this.referer = playerUrl
+                        this.headers = headers
+                        this.quality = Qualities.Unknown.value
+                    },
+                )
+            }
+            for ((h, vUrl) in parseHlsVariants(stream, m3u8Text)) {
+                if (!Settings.qualityAllowed(h)) continue
+                callback.invoke(
+                    newExtractorLink(name, "$name • ${h}p", vUrl, ExtractorLinkType.M3U8) {
+                        this.referer = playerUrl
+                        this.headers = headers
+                        this.quality = h
+                    },
+                )
+            }
             found = true
             break
         }

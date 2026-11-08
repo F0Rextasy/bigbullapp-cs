@@ -31,6 +31,7 @@ import java.security.interfaces.ECPublicKey
 import java.security.spec.ECGenParameterSpec
 import android.util.Base64
 import com.bigbull.common.aesGcmDecrypt
+import com.bigbull.common.parseHlsVariants
 
 /**
  * Dizigecesi — dizigecesi.com film arşivi.
@@ -132,8 +133,9 @@ class DizigecesiProvider : MainAPI() {
                 .find(embed)?.groupValues?.get(1)?.let(::fixUrl) ?: continue
             val wrapperHtml = runCatching { app.get(wrapper, headers = headers, referer = pageUrl).text }
                 .getOrNull() ?: continue
-            val inner = Regex("""<iframe[^>]+src=["']([^"']+)""")
+            val rawInner = Regex("""<iframe[^>]+src=["']([^"']+)""")
                 .find(wrapperHtml)?.groupValues?.get(1)?.let(::fixUrl) ?: wrapper
+            val inner = rawInner.replace(Regex("""#\d+\.\d+\.\d+\.\d+$"""), "")
             var handled = inner.contains("filemoon") &&
                 resolveFilemoon(inner, pageUrl, subCallback, linkCallback)
             if (!handled) handled = loadExtractor(inner, pageUrl, subCallback, linkCallback)
@@ -215,15 +217,30 @@ class DizigecesiProvider : MainAPI() {
             }
             val quality = Regex("""(\d{3,4})p""").find(label)?.groupValues?.get(1)?.toIntOrNull()
                 ?: Qualities.Unknown.value
-            if (!Settings.qualityAllowed(quality)) continue
-             callback(
-                newExtractorLink(name, "Filemoon ${label}".trim(), stream, type) {
-                    this.referer = frame
-                    this.quality = quality
-                    this.headers = headers
-                },
-            )
-            found = true
+            if (Settings.qualityAllowed(quality)) {
+                callback(
+                    newExtractorLink(name, "Filemoon ${label}".trim(), stream, type) {
+                        this.referer = frame
+                        this.quality = quality
+                        this.headers = headers
+                    },
+                )
+                found = true
+            }
+            if (type == ExtractorLinkType.M3U8) {
+                val playlist = runCatching { app.get(stream, headers = headers, referer = frame).text }.getOrNull().orEmpty()
+                for ((h, vUrl) in parseHlsVariants(stream, playlist)) {
+                    if (!Settings.qualityAllowed(h)) continue
+                    callback(
+                        newExtractorLink(name, "Filemoon • ${h}p", vUrl, ExtractorLinkType.M3U8) {
+                            this.referer = frame
+                            this.quality = h
+                            this.headers = headers
+                        },
+                    )
+                    found = true
+                }
+            }
         }
         return found
     }

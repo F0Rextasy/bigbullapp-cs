@@ -112,7 +112,7 @@ Tek modül derleme ve cihaza kurulum:
 | `CizgiSite` | www.cizgi.site | Dizi | — | — | — | — | — | — |
 | `Ddizi` | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
 | `DDizimag` | ddizimag.icu | Dizi | — | — | — | — | — | — |
-| `Deokwave` | deokwave.com | Dizi | — | — | — | — | — | — |
+| `Deokwave` | deokwave.com | Anime | — | — | — | — | — | ✓ |
 | `DiziAbi` | diziabi.net | Film | — | — | — | — | — | — |
 | `Dizibaba` | dizibaba.net | Film | — | — | — | — | — | — |
 | `DiziBal` | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |

@@ -1,4 +1,4 @@
-// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt42006709:movie:1:1", "description":"İnatTV yerli film kataloğu (imzalı liste + AES çözümleyici, HLS/MP4; 4K film katalogları upstream'de kapatıldı).", "verified":true, "version":"1.0.5"}
+// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt42006709:movie:1:1", "description":"İnatTV yerli film kataloğu (imzalı liste + AES çözümleyici, HLS/MP4; 4K film katalogları upstream'de kapatıldı).", "verified":true, "version":"1.0.6"}
 /**
  * inattvfilmler — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.
@@ -9,7 +9,7 @@ var CFG = {
   "url": "https://diziboxen.help/CDN/001/002/dizibox/v2/film/yerli-filmler.php",
   "dataType": "tv_mode",
   "movieList": true,
-  "q2160": true,
+  "q2160": false,
   "exoSwap": false
 };
 
@@ -599,7 +599,31 @@ function resolveEntry(entry) {
   var headers = merge(entry.headers, { "cache-control": "no-cache" });
   var handler = String(entry.type || "").replace(/_(u|s)_mode$/, "_mode");
   var request;
-  if (!entry.url) return Promise.reject(new Error("no url"));
+  if (!entry.url) return Promise.reject(new Error("no url"));
+  if (handler === "nok5_mode") {
+    var vkHeaders = {
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+      "referer": "https://vk.com/",
+      "origin": "https://vk.com",
+      "x-requested-with": "XMLHttpRequest",
+      "content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+    };
+    return http("https://vk.com/al_video.php", { method: "POST", headers: vkHeaders, body: entry.url }).then(function (r) {
+      if (r.code < 200 || r.code > 299) throw new Error("HTTP " + r.code);
+      var clean = String(r.text || "").replace(/\\\//g, "/");
+      var extras = [];
+      var qList = ["2160", "1440", "1080", "720", "480", "360", "240"];
+      for (var qi = 0; qi < qList.length; qi++) {
+        var q = qList[qi];
+        var qm = new RegExp('"url' + q + '"\\s*:\\s*"(https?:[^"]+)"').exec(clean);
+        if (qm && qm[1]) extras.push({ url: qm[1], quality: q + "p", isHls: false });
+      }
+      var hm = /"hls"\s*:\s*"(https?:[^"]+)"/.exec(clean);
+      if (hm && hm[1]) extras.unshift({ url: hm[1], quality: "auto", isHls: true });
+      if (!extras.length) throw new Error("no vk stream");
+      return { url: extras[0].url, headers: { "referer": "https://vk.com/" }, extras: extras };
+    });
+  }
   if (handler === "web_mode" || handler === "link_mode") {
     if (!CFG.exoSwap || entry.url.indexOf("web.php") < 0) return Promise.reject(new Error("embed"));
     request = http(swappedExo(entry.url), { headers: headers });

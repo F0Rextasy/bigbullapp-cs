@@ -1,6 +1,7 @@
 package com.dizican
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.parseHlsVariants
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -15,7 +16,6 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.newAnimeSearchResponse
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
@@ -24,20 +24,12 @@ import com.lagradost.cloudstream3.newTvSeriesLoadResponse
 import com.lagradost.cloudstream3.newTvSeriesSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
+import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
-import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.nodes.Document
-
-private fun asciiFold(value: String): String = value
-    .replace('ı', 'i').replace('İ', 'I')
-    .replace('ş', 's').replace('Ş', 'S')
-    .replace('ğ', 'g').replace('Ğ', 'G')
-    .replace('ü', 'u').replace('Ü', 'U')
-    .replace('ö', 'o').replace('Ö', 'O')
-    .replace('ç', 'c').replace('Ç', 'C')
 
 private fun cleanTitle(raw: String?): String = (raw ?: "")
     .replace(Regex("""\s*\|.*$"""), "")
@@ -76,13 +68,12 @@ class DiziCaNProvider : MainAPI() {
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-
-            if (request.name in ROWS) {
-                if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
-                val doc = app.get(request.data, headers = uaHeaders).document
-                return newHomePageResponse(request.name, cards(doc), hasNext = false)
-            }
-            return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        if (request.name in ROWS) {
+            if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
+            val doc = app.get(request.data, headers = uaHeaders).document
+            return newHomePageResponse(request.name, cards(doc), hasNext = false)
+        }
+        return newHomePageResponse(request.name, emptyList(), hasNext = false)
     }
 
     companion object {
@@ -90,14 +81,10 @@ class DiziCaNProvider : MainAPI() {
             "Komedi", "Korku", "Romantik", "Bilim Kurgu", "Gizem", "Suç")
     }
 
-    private val pathPrefixes = listOf("/", "/bolum/")
-
     override suspend fun search(query: String): List<SearchResponse> {
-        // Site araması WordPress ?s= şeklinde; /arama/<q> uç noktası boş dönüyor.
         val url = "$mainUrl/?s=" + java.net.URLEncoder.encode(query, "UTF-8")
         val first = cards(app.get(url, headers = uaHeaders).document, query)
         if (first.isNotEmpty() || !query.contains(' ')) return first
-        // Çok kelimeli sorguda boş dönüyorsa tek kelimeyle bir kez daha dene (Nuvio zinciriyle aynı).
         val token = query.trim().split(Regex("\\s+")).first()
         return cards(app.get("$mainUrl/?s=" + java.net.URLEncoder.encode(token, "UTF-8"), headers = uaHeaders).document, token)
     }
@@ -158,7 +145,6 @@ class DiziCaNProvider : MainAPI() {
             val path = href.substringAfter(mainUrl).substringBefore('?')
             if (basePath.isNotBlank() && !path.startsWith(basePath) &&
                 !path.contains(slug) && !path.contains(slugBase)) return@mapNotNull null
-            // site bölüm sayfaları: /bolum/<slug>-(S)-sezon-(E)-bolum/ veya /bolum/<slug>-(E)-bolum-izle/
             if (!path.contains("/bolum/")) return@mapNotNull null
             val seasonEp = Regex("""(\d+)-sezon-(\d+)-bolum""").find(path)
             val number = seasonEp?.groupValues?.get(2)?.toIntOrNull()
@@ -193,77 +179,104 @@ class DiziCaNProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val resp = app.get(data, headers = uaHeaders)
-        val text = resp.text.replace("\\/", "/").replace("\\\"", "\"")
+        val firstResp = app.get(data, headers = uaHeaders)
+        val baseData = data.trimEnd('/')
+        val partUrls = (listOf(data) + firstResp.document.select("a[href]").mapNotNull { a ->
+            val href = fixUrlNull(a.attr("href")) ?: return@mapNotNull null
+            if (href.trimEnd('/').matches(Regex(Regex.escape(baseData) + """/\d+"""))) href else null
+        }).distinct().take(6)
+
         var found = false
         val seen = mutableSetOf<String>()
-        suspend fun emit(stream: String, label: String, referer: String) {
+        suspend fun emit(stream: String, label: String, referer: String, explicitQuality: Int? = null) {
             if (!stream.startsWith("http") || !seen.add(stream)) return
-            val type = if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
-            val quality = getQualityFromName(label)
-            if (!Settings.qualityAllowed(quality)) return
-            callback.invoke(newExtractorLink(name, label, stream, type) {
-                this.referer = referer
-                this.quality = quality
-            })
-            found = true
-        }
-        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(text)
-        for (m in media) emit(m.value, "Direct", data)
-        val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
-            .findAll(text).map { it.groupValues[1] }.toList()
-        for (embed in embeds) {
-            val absolute = fixUrl(embed)
-            if (absolute == data) continue
-            if (!absolute.contains("embed") && !absolute.contains(".mp4") && !absolute.contains(".m3u8")) continue
-            if (absolute.matches(Regex(""".*\.(?:mp4|m3u8).*"""))) {
-                emit(absolute, "Embed", data)
-                continue
+            val isM3u8 = stream.contains(".m3u8")
+            val type = if (isM3u8) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+            val quality = explicitQuality ?: if (isM3u8) Qualities.Unknown.value else getQualityFromName(label)
+            if (Settings.qualityAllowed(quality)) {
+                callback.invoke(newExtractorLink(name, label, stream, type) {
+                    this.referer = referer
+                    this.quality = quality
+                })
+                found = true
             }
-            val inner = runCatching { app.get(absolute, headers = uaHeaders, referer = data).text }.getOrNull() ?: continue
-            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(inner)
-            for (m in innerMedia) emit(m.value, "Embed", absolute)
-        }
-        val regexFrames = Regex("""<iframe\b[^>]*?\b(?:src|data-src|vdo-src)\s*=\s*["']([^"']+)["']""", RegexOption.IGNORE_CASE).findAll(text).mapNotNull { fixUrlNull(it.groupValues[1]) }.toList()
-        val frames = (resp.document.select("iframe").mapNotNull {
-            val raw = it.attr("src").ifBlank { it.attr("data-src") }.ifBlank { it.attr("vdo-src") }
-            fixUrlNull(raw)
-        } + regexFrames).distinct()
-        for (frame in frames) {
-            if (frame.contains(".mp4") || frame.contains(".m3u8")) {
-                emit(frame, "Embed", data)
-                continue
-            }
-            // ok.ru embed'i çekirdek extractor'ı çözemiyor (çöp "Embed" linki); özel çözücüye yönlendir
-            if (frame.contains("ok.ru/videoembed")) {
-                if (loadOkRu(frame, callback)) found = true
-                continue
-            }
-            val seenBefore = seen.size
-            val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
-            if (inner != null) {
-                val innerText = inner.replace("\\/", "/")
-                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(innerText)) {
-                    emit(m.value, "Embed", frame)
-                }
-                for (sub in Regex("""<iframe[^>]+(?:src|data-src)="([^"]+)""").findAll(innerText)) {
-                    val subUrl = fixUrl(sub.groupValues[1])
-                    if (loadExtractor(subUrl, frame, subtitleCallback, callback)) found = true
+            if (isM3u8 && explicitQuality == null) {
+                val playlist = runCatching { app.get(stream, headers = uaHeaders, referer = referer).text }.getOrNull().orEmpty()
+                for ((h, vUrl) in parseHlsVariants(stream, playlist)) {
+                    emit(vUrl, "$label ${h}p", referer, h)
                 }
             }
-            if (seen.size == seenBefore && loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
-        val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
-        for (m in subs) {
-            if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))
+
+        for (pageUrl in partUrls) {
+            val resp = if (pageUrl == data) firstResp else runCatching { app.get(pageUrl, headers = uaHeaders, referer = data) }.getOrNull() ?: continue
+            val text = resp.text.replace("\\/", "/").replace("\\\"", "\"")
+            val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(text)
+            for (m in media) emit(m.value, "Direct", pageUrl)
+            val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
+                .findAll(text).map { it.groupValues[1] }.toList()
+            for (embed in embeds) {
+                val absolute = fixUrl(embed)
+                if (absolute == pageUrl) continue
+                if (!absolute.contains("embed") && !absolute.contains(".mp4") && !absolute.contains(".m3u8")) continue
+                if (absolute.matches(Regex(""".*\.(?:mp4|m3u8).*"""))) {
+                    emit(absolute, "Embed", pageUrl)
+                    continue
+                }
+                val inner = runCatching { app.get(absolute, headers = uaHeaders, referer = pageUrl).text }.getOrNull() ?: continue
+                val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(inner)
+                for (m in innerMedia) emit(m.value, "Embed", absolute)
+            }
+            val regexFrames = Regex("""<iframe\b[^>]*?\b(?:src|data-src|vdo-src)\s*=\s*["']([^"']+)["']""", RegexOption.IGNORE_CASE)
+                .findAll(text).mapNotNull { fixUrlNull(it.groupValues[1]?.replace("&amp;", "&")) }.toList()
+            val frames = (resp.document.select("iframe").mapNotNull {
+                val raw = it.attr("src").ifBlank { it.attr("data-src") }.ifBlank { it.attr("vdo-src") }
+                fixUrlNull(raw)
+            } + regexFrames).distinct()
+            for (frame in frames) {
+                if (!frame.startsWith("http") || frame.endsWith("/embed/") || frame.endsWith("/video/") ||
+                    frame.contains("vzaar.com") || frame.contains("youtu")) continue
+                Regex("""[?&]video=([^&#"'\s]+)""").find(frame)?.groupValues?.get(1)?.let { enc ->
+                    val decoded = runCatching { java.net.URLDecoder.decode(enc, "UTF-8") }.getOrDefault(enc)
+                    val resolved = runCatching { java.net.URI(frame).resolve(decoded).toString() }.getOrDefault(decoded)
+                    if (resolved.contains(".m3u8") || resolved.contains(".mp4")) {
+                        emit(resolved, "HintDizi", frame)
+                        return@let
+                    }
+                }
+                if (frame.contains(".mp4") || frame.contains(".m3u8")) {
+                    emit(frame, "Embed", pageUrl)
+                    continue
+                }
+                if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) {
+                    if (loadOkRu(frame, callback)) found = true
+                    continue
+                }
+                val seenBefore = seen.size
+                val inner = runCatching { app.get(frame, headers = uaHeaders, referer = pageUrl).text }.getOrNull()
+                if (inner != null) {
+                    val innerText = inner.replace("\\/", "/")
+                    for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(innerText)) {
+                        emit(m.value, "Embed", frame)
+                    }
+                    for (sub in Regex("""<iframe[^>]+(?:src|data-src)="([^"]+)""").findAll(innerText)) {
+                        val subUrl = fixUrl(sub.groupValues[1])
+                        if (loadExtractor(subUrl, frame, subtitleCallback, callback)) found = true
+                    }
+                }
+                if (seen.size == seenBefore && loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
+            }
+            val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
+            for (m in subs) {
+                if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))
+            }
         }
-        if (!found && frames.isEmpty() && embeds.isEmpty() && media.none()) {
+        if (!found) {
             throw ErrorLoadingException("$name: oynatılabilir akış yok")
         }
         return found
     }
 
-    // ok.ru videoPlayerMetadata çözücüsü (Dizifon'da cihaz kanıtlı).
     private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
         val id = Regex("""videoembed/(\d+)""").find(embed)?.groupValues?.get(1) ?: return false
         val body = runCatching {
@@ -279,17 +292,19 @@ class DiziCaNProvider : MainAPI() {
             val item = videos.optJSONObject(i) ?: continue
             val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
             val label = item.optString("name").ifBlank { "OkRu" }
+            val q = when (label.lowercase()) {
+                "mobile", "lowest" -> 240
+                "low" -> 360
+                "sd" -> 480
+                "hd" -> 720
+                "full" -> 1080
+                else -> getQualityFromName(label.uppercase())
+            }
+            if (!Settings.qualityAllowed(q)) continue
             callback.invoke(
                 newExtractorLink(name, "OkRu $label", stream, ExtractorLinkType.VIDEO) {
                     this.referer = "https://ok.ru/"
-                    this.quality = when (label.lowercase()) {
-                        "mobile", "lowest" -> 240
-                        "low" -> 360
-                        "sd" -> 480
-                        "hd" -> 720
-                        "full" -> 1080
-                        else -> getQualityFromName(label.uppercase())
-                    }
+                    this.quality = q
                 }
             )
             found = true

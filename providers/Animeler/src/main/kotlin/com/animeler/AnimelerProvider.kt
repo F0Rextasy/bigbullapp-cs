@@ -230,14 +230,21 @@ class AnimelerProvider : MainAPI() {
 
         // Some episodes inject the iframe with JS; the raw page still has the stable id.
 
+        val rawUnescaped = resp.text.replace("\\/", "/").replace("\\\"", "\"")
         val embedded = Regex("""(?:ok\.ru|odnoklassniki\.ru)/videoembed/(\d+)""")
-
-            .findAll(resp.text).map { it.groupValues[1] }.distinct().take(3)
-
+            .findAll(rawUnescaped).map { it.groupValues[1] }.distinct().take(4)
         for (id in embedded) {
-
             if (loadOkRu("https://ok.ru/videoembed/$id", linkCallback)) found = true
-
+        }
+        val embeddedMail = Regex("""my\.mail\.ru/video/embed/(\d+)""")
+            .findAll(rawUnescaped).map { it.groupValues[1] }.distinct().take(4)
+        for (id in embeddedMail) {
+            if (loadMailRu("https://my.mail.ru/video/embed/$id", linkCallback)) found = true
+        }
+        val extraEmbeds = Regex("""https?://(?:video\.sibnet\.ru/shell\.php\?videoid=\d+|vidmoly\.[a-z]+/embed-[^"'\s<>]+|gdriveplayer\.[a-z]+/embed[^"'\s<>]+)""")
+            .findAll(rawUnescaped).map { it.value }.distinct().take(6)
+        for (extra in extraEmbeds) {
+            if (extra !in frames && loadExtractor(extra, "$mainUrl/", subCallback, linkCallback)) found = true
         }
 
         if (!found) throw ErrorLoadingException("$name: oynatılabilir akış yok")

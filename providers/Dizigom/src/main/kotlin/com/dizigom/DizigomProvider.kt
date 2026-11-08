@@ -1,6 +1,7 @@
 package com.dizigom
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.parseHlsVariants
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -15,7 +16,6 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.newAnimeSearchResponse
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
@@ -27,17 +27,8 @@ import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
-import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.nodes.Document
-
-private fun asciiFold(value: String): String = value
-    .replace('ı', 'i').replace('İ', 'I')
-    .replace('ş', 's').replace('Ş', 'S')
-    .replace('ğ', 'g').replace('Ğ', 'G')
-    .replace('ü', 'u').replace('Ü', 'U')
-    .replace('ö', 'o').replace('Ö', 'O')
-    .replace('ç', 'c').replace('Ç', 'C')
 
 private fun cleanTitle(raw: String?): String = (raw ?: "")
     .replace(Regex("""\s*\|.*$"""), "")
@@ -77,33 +68,32 @@ class DizigomProvider : MainAPI() {
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-
-            if (request.name in ROWS) {
-                if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
-                val doc = app.get(request.data, headers = uaHeaders).document
-                return newHomePageResponse(request.name, cards(doc), hasNext = false)
-            }
-            return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        if (request.name in ROWS) {
+            if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
+            val doc = app.get(request.data, headers = uaHeaders).document
+            return newHomePageResponse(request.name, cards(doc), hasNext = false)
+        }
+        return newHomePageResponse(request.name, emptyList(), hasNext = false)
     }
 
     companion object {
-        val ROWS = listOf("Aile", "Aksiyon", "Animasyon", "Belgesel",
-            "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem", "Komedi", "Korku", "Romantik", "Suç")
+        val ROWS = listOf(
+            "Aile", "Aksiyon", "Animasyon", "Belgesel",
+            "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem", "Komedi", "Korku", "Romantik", "Suç",
+        )
     }
 
     private val pathPrefixes = listOf("/film/", "/diziler/", "/dizi/")
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val q = if (false) asciiFold(query) else query
-        val url = "https://www.dizigom.news/ara?q={q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
-        return cards(app.get(url, headers = uaHeaders).document, q)
+        val url = "$mainUrl/ara?q=" + java.net.URLEncoder.encode(query, "UTF-8")
+        return cards(app.get(url, headers = uaHeaders).document, query)
     }
 
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
         if (pathPrefixes.none { path.startsWith(it) }) return@mapNotNull null
-
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()
@@ -188,10 +178,10 @@ class DizigomProvider : MainAPI() {
         val text = resp.text.replace("\\/", "/").replace("\\\"", "\"")
         var found = false
         val seen = mutableSetOf<String>()
-        suspend fun emit(stream: String, label: String, referer: String) {
-            if (!stream.startsWith("http") || !seen.add(stream)) return
+        suspend fun emit(stream: String, label: String, referer: String, forcedQuality: Int? = null) {
+            val quality = forcedQuality ?: getQualityFromName(label)
+            if (!stream.startsWith("http") || !seen.add("$quality|$stream")) return
             val type = if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
-            val quality = getQualityFromName(label)
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
                 this.referer = referer
@@ -199,28 +189,39 @@ class DizigomProvider : MainAPI() {
             })
             found = true
         }
-        val pv = Regex("""data-pv=["']([^"']+)""").find(resp.text)?.groupValues?.get(1)
-            ?: Regex("""s\.php\?s=([\w-]+)""").find(resp.text)?.groupValues?.get(1)
-        if (pv != null) {
+        val pvs = (
+            Regex("""data-pv=["']([^"']+)""").findAll(resp.text).map { it.groupValues[1] } +
+                Regex("""s\.php\?s=([\w-]+)""").findAll(resp.text).map { it.groupValues[1] }
+            ).distinct().toList()
+        if (pvs.isNotEmpty()) {
             val host = Regex("""https?://([^/"']+)/assets/js/core\.js""").find(resp.text)?.groupValues?.get(1)
                 ?.takeUnless { it.contains("kankaplayer") } ?: "pilavyerplay.top"
-            val cfg = runCatching {
-                val js = app.get("https://$host/assets/js/s.php?s=$pv", referer = "$mainUrl/").text
-                JSONObject(js.substringAfter("__PLAYER__").substringAfter("=").substringBefore("</script>").trim().trimEnd(';'))
-            }.getOrNull()
-            val stream = cfg?.optString("stream").orEmpty()
-            if (stream.startsWith("http") && seen.add(stream)) {
-                callback.invoke(newExtractorLink(name, "Pilavyer", stream, ExtractorLinkType.M3U8) { this.referer = "https://$host/" })
-                found = true
-                val subs = cfg?.optJSONArray("subs")
-                for (i in 0 until (subs?.length() ?: 0)) {
-                    val s = subs?.optJSONObject(i) ?: continue
-                    if (s.optString("src").startsWith("http")) subtitleCallback.invoke(SubtitleFile(s.optString("lang", "tr"), s.optString("src")))
+            val refUrl = "https://$host/"
+            for ((idx, pv) in pvs.withIndex()) {
+                val cfg = runCatching {
+                    val js = app.get("https://$host/assets/js/s.php?s=$pv", headers = uaHeaders, referer = "$mainUrl/").text
+                    JSONObject(js.substringAfter("__PLAYER__").substringAfter("=").substringBefore("</script>").trim().trimEnd(';'))
+                }.getOrNull() ?: continue
+                val stream = cfg.optString("stream").orEmpty()
+                val baseLabel = if (pvs.size > 1) "Pilavyer ${idx + 1}" else "Pilavyer"
+                if (stream.startsWith("http")) {
+                    emit(stream, baseLabel, refUrl, forcedQuality = 0)
+                    val masterText = runCatching { app.get(stream, headers = uaHeaders, referer = refUrl).text }.getOrNull().orEmpty()
+                    for ((h, variantUrl) in parseHlsVariants(stream, masterText)) {
+                        emit(variantUrl, "$baseLabel • ${h}p", refUrl, forcedQuality = h)
+                    }
+                    val subs = cfg.optJSONArray("subs")
+                    for (i in 0 until (subs?.length() ?: 0)) {
+                        val s = subs?.optJSONObject(i) ?: continue
+                        val subSrc = s.optString("src")
+                        val subLang = s.optString("lang", "tr")
+                        if (subSrc.startsWith("http") && Settings.subtitleAllowed(subLang)) {
+                            subtitleCallback.invoke(SubtitleFile(subLang, subSrc))
+                        }
+                    }
                 }
             }
         }
-        val known = listOf<String>()
-        for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
@@ -268,5 +269,4 @@ class DizigomProvider : MainAPI() {
         }
         return found
     }
-
 }

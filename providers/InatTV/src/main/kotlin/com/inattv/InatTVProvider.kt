@@ -1,6 +1,7 @@
 package com.inattv
 
 import android.util.Base64
+import com.bigbull.common.parseHlsVariants
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -93,6 +94,9 @@ private val SEASON_NAME = Regex("""(?:sezon|season)""", RegexOption.IGNORE_CASE)
 private val EPISODE_NUMBER = Regex("""(\d+)\s*[.\-]?\s*(?:bölüm|bolum|episode)""", RegexOption.IGNORE_CASE)
 private val MEDIA_URL = Regex("""\.(?:m3u8|mp4|webm|ts|mkv)(?:[?#].*)?$""", RegexOption.IGNORE_CASE)
 private val PROMO_DOMAIN = Regex("""https?://inattv\d*\.cfd(?:/.*)?$""", RegexOption.IGNORE_CASE)
+private val VK_MP4_PATTERN = Regex(""""url(\d+)"\s*:\s*"\s*([^"]+?)"""")
+private val VK_HLS_PATTERN = Regex(""""hls[^"]*"\s*:\s*"\s*([^"]+?)"""")
+private val CONTAINER_TYPES = setOf("dizi_mode", "sezon_mode", "sezonlar", "bolum_mode", "film_mode", "tv_mode")
 private val FORBIDDEN_HEADERS = setOf(
     "host", "connection", "content-length", "transfer-encoding", "proxy-authorization",
     "proxy-connection", "x-ts", "x-nc", "x-sg", "x-st",
@@ -427,8 +431,7 @@ data class InatCfg(
     val sha: String,
     val fallbackUrl: String = "",
 ) {
-    val isMovieList: Boolean get() = name.contains("Sinema", true) ||
-        name.contains("Yerli Filmler", true) || name.contains("Mubi", true)
+    val isMovieList: Boolean get() = name.contains("Yerli Filmler", true) || name.contains("Mubi", true)
     val isLiveList: Boolean get() = type == "tv_mode" && !isMovieList
 }
 
@@ -517,11 +520,84 @@ internal object InatClient {
         return rows
     }
 
+    suspend fun resolveAll(entry: InatEntry, baseLabel: String): List<Pair<String, InatStream>> {
+        val handler = entry.type.replace(Regex("_(u|s)_mode$"), "_mode")
+        if (handler == "nok5_mode") {
+            return resolveVkNok5(entry, baseLabel)
+        }
+        return listOf(baseLabel to resolve(entry))
+    }
+
+    private suspend fun resolveVkNok5(entry: InatEntry, baseLabel: String): List<Pair<String, InatStream>> {
+        val raw = entry.url.trim()
+        if (raw.isEmpty()) throw ErrorLoadingException("İnatTV: ${entry.name} için yayın adresi yok. $REPORT_HINT")
+        val form = LinkedHashMap<String, String>()
+        val queryPart = if (raw.startsWith("http://") || raw.startsWith("https://")) {
+            raw.substringAfter('?', "")
+        } else {
+            raw
+        }
+        for (pair in queryPart.split('&')) {
+            if (pair.isEmpty()) continue
+            val k = pair.substringBefore('=')
+            val v = pair.substringAfter('=', "")
+            if (k.isNotEmpty()) form[k] = URLDecoder.decode(v, "UTF-8")
+        }
+        val vkHeaders = LinkedHashMap<String, String>().apply {
+            put("user-agent", BROWSER_UA)
+            put("referer", "https://vk.com/")
+            put("x-requested-with", "XMLHttpRequest")
+            for ((k, v) in entry.headers) put(k, v)
+        }
+        val endpoints = if (raw.startsWith("http://") || raw.startsWith("https://")) {
+            listOf(raw.substringBefore('?'), "https://vk.com/al_video.php", "https://vkvideo.ru/al_video.php").distinct()
+        } else {
+            listOf("https://vk.com/al_video.php", "https://vkvideo.ru/al_video.php")
+        }
+        var body = ""
+        for (ep in endpoints) {
+            val text = runCatching { app.post(ep, data = form, headers = vkHeaders).text }.getOrNull().orEmpty()
+            if (text.contains("hls") || text.contains("\"url")) {
+                body = text
+                break
+            }
+        }
+        if (body.isEmpty()) {
+            throw ErrorLoadingException("İnatTV: ${entry.name} VK kaynağı çözülemedi. $REPORT_HINT")
+        }
+        val out = ArrayList<Pair<String, InatStream>>()
+        val seen = HashSet<String>()
+        val hls = captureTarget(body, entry.params["Regex1"])
+            ?: VK_HLS_PATTERN.find(body)?.groupValues?.get(1)?.replace("\\/", "/")
+        if (!hls.isNullOrBlank() && hls.startsWith("http") && seen.add(hls)) {
+            out += "$baseLabel • HLS" to InatStream.Direct(hls, vkHeaders)
+        }
+        val mp4s = VK_MP4_PATTERN.findAll(body).mapNotNull { m ->
+            val q = m.groupValues[1].toIntOrNull() ?: return@mapNotNull null
+            val u = m.groupValues[2].replace("\\/", "/").trim()
+            if (u.startsWith("http")) q to u else null
+        }.sortedByDescending { it.first }
+        for ((q, u) in mp4s) {
+            if (seen.add(u)) {
+                out += "$baseLabel • ${q}p" to InatStream.Direct(u, vkHeaders)
+            }
+        }
+        if (out.isEmpty()) {
+            throw ErrorLoadingException("İnatTV: ${entry.name} VK akışı bulunamadı. $REPORT_HINT")
+        }
+        return out
+    }
+
     suspend fun resolve(entry: InatEntry): InatStream {
         if (entry.url.isEmpty()) throw ErrorLoadingException("İnatTV: ${entry.name} için yayın adresi yok. $REPORT_HINT")
         val headers = entry.headers + ("Cache-Control" to "no-cache")
         val handler = entry.type.replace(Regex("_(u|s)_mode$"), "_mode")
         return when {
+            handler == "nok5_mode" -> resolveVkNok5(entry, entry.name).first().second
+            handler == "live_url_mode" -> {
+                httpUri(entry.url)
+                InatStream.Direct(entry.url, entry.headers)
+            }
             handler == "web_mode" || handler == "link_mode" -> {
                 httpUri(entry.url)
                 InatStream.Embed(webTarget(entry.url), entry.headers)
@@ -701,12 +777,15 @@ internal object InatClient {
         val type = text(row.firstOf("chType", "bolumType", "filmType", "diziType", "type"))
         val name = text(row.firstOf("chName", "bolumName", "filmName", "diziName", "title", "name"))
         val url = text(row.firstOf("chUrl", "bolumUrl", "filmUrl", "diziUrl", "url"))
-        if (isPromoEntry(name, url, type)) return null
+        if (url.isBlank() || isPromoEntry(name, url, type)) return null
         val rowType = text(row.opt("diziType")).ifEmpty { text(row.opt("chType")).ifEmpty { text(row.opt("catType")) } }
-        val episode = row.has("bolumName") || row.has("bolumUrl") || rowType == "bolum_mode" ||
-            EPISODE_NAME.containsMatchIn(label)
-        val season = !episode && (row.has("sezonName") || row.has("sezonUrl") || rowType == "sezon_mode" ||
-            SEASON_NAME.containsMatchIn(label))
+        val isSeasonContainer = row.has("sezonName") || row.has("sezonUrl") || rowType == "sezon_mode" ||
+            type == "sezon_mode" || type == "sezonlar" || SEASON_NAME.containsMatchIn(label)
+        val episode = !isSeasonContainer && (
+            row.has("bolumName") || row.has("bolumUrl") || rowType == "bolum_mode" ||
+                EPISODE_NAME.containsMatchIn(label)
+            )
+        val season = isSeasonContainer
         return InatEntry(
             name = name,
             url = url,
@@ -743,9 +822,10 @@ class InatTVProvider : MainAPI() {
     }
 
     override val mainPage: List<MainPageData>
-        get() = InatCfgRegistry.ALL
-            .filter { Settings.rowEnabled(it.name) }
-            .map { MainPageData(it.name, it.id) }
+        get() = InatCfgRegistry.ALL.mapNotNull { cfg ->
+            if (!Settings.rowEnabled(cfg.name)) return@mapNotNull null
+            MainPageData(cfg.name, cfg.id)
+        }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         if (page > 1) return newHomePageResponse(request.name, emptyList(), false)
@@ -783,17 +863,13 @@ class InatTVProvider : MainAPI() {
                 val entry = pick(rows(cfg), ref)
                     ?: throw ErrorLoadingException("$name: ${ref.name} bulunamadı. $REPORT_HINT")
                 val single = cfg.isMovieList && entry.type.isNotEmpty() &&
-                    entry.type !in setOf("tv_mode", "dizi_mode", "sezon_mode", "bolum_mode")
+                    entry.type !in setOf("tv_mode", "dizi_mode", "sezon_mode", "bolum_mode", "film_mode")
                 if (single) {
                     newMovieLoadResponse(
                         entry.name.ifBlank { cfg.name },
                         url,
                         TvType.Movie,
-                        tokenUrl(
-                            cfg, MODE_SINGLE, entry.url, ref.index, entry.name,
-                            entry.host, entry.pin, entry.type,
-                            headers = entry.headers, params = entry.params,
-                        ),
+                        url,
                     ) {
                         this.posterUrl = entry.img.ifBlank { null }
                         this.plot = entry.plot.ifBlank { null }
@@ -811,6 +887,32 @@ class InatTVProvider : MainAPI() {
         }
     }
 
+    private fun baseChannelTitle(title: String): String =
+        title.substringBefore('|').trim().lowercase()
+
+    private suspend fun expandContainerTargets(
+        initial: List<Pair<String, InatEntry>>,
+        depth: Int = 0,
+    ): List<Pair<String, InatEntry>> {
+        if (depth >= 2) return initial
+        val out = ArrayList<Pair<String, InatEntry>>()
+        for ((label, entry) in initial) {
+            if (entry.type in CONTAINER_TYPES && entry.url.startsWith("http")) {
+                val sub = runCatching { rows(entry.url, entry.host, entry.pin, entry.dataType) }.getOrNull().orEmpty()
+                if (sub.isNotEmpty()) {
+                    val mapped = sub.mapIndexed { idx, child ->
+                        val childLabel = child.name.ifBlank { "$label #${idx + 1}" }
+                        childLabel to child
+                    }
+                    out += expandContainerTargets(mapped, depth + 1)
+                    continue
+                }
+            }
+            out += label to entry
+        }
+        return out
+    }
+
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
@@ -819,7 +921,7 @@ class InatTVProvider : MainAPI() {
     ): Boolean {
         val ref = parseToken(data) ?: throw ErrorLoadingException("$name: kaynak bağlantısı okunamadı. $REPORT_HINT")
         val cfg = cfgFor(ref.url)
-        val targets: List<Pair<String, InatEntry>> = when (ref.mode) {
+        val rawTargets: List<Pair<String, InatEntry>> = when (ref.mode) {
             MODE_EMBED -> listOf(cfg.name to embedEntry(cfg, ref.url))
             MODE_SINGLE -> {
                 val direct = InatEntry(
@@ -837,6 +939,12 @@ class InatTVProvider : MainAPI() {
                     episode = false,
                 )
                 val candidates = mutableListOf(direct)
+                val baseTitle = baseChannelTitle(direct.name)
+                if (baseTitle.isNotEmpty()) {
+                    runCatching { rows(cfg) }.getOrNull().orEmpty()
+                        .filter { it.url != direct.url && baseChannelTitle(it.name) == baseTitle }
+                        .forEach { candidates += it }
+                }
                 if (cfg.fallbackUrl.isNotBlank()) {
                     try {
                         InatClient.entries(cfg.fallbackUrl, cfg.host, cfg.sha, cfg.dataType)
@@ -851,32 +959,62 @@ class InatTVProvider : MainAPI() {
                 .filter { !it.season && it.url.isNotEmpty() }
                 .mapIndexed { index, entry -> entry.name.ifBlank { "Kaynak ${index + 1}" } to entry }
             else -> {
-                val entry = pick(rows(ref.url, ref.host, ref.pin, ref.dataType), ref)
+                val allRows = rows(ref.url, ref.host, ref.pin, ref.dataType)
+                val entry = pick(allRows, ref)
                     ?: throw ErrorLoadingException("$name: ${ref.name} bulunamadı. $REPORT_HINT")
-                listOf(entry.name.ifBlank { "Kaynak" } to entry)
+                val candidates = mutableListOf(entry)
+                if (ref.mode == MODE_ITEM) {
+                    val baseTitle = baseChannelTitle(entry.name)
+                    if (baseTitle.isNotEmpty()) {
+                        allRows.filter { it !== entry && baseChannelTitle(it.name) == baseTitle }
+                            .forEach { candidates += it }
+                    }
+                }
+                candidates.map { it.name.ifBlank { "Kaynak" } to it }
             }
         }
+        val targets = expandContainerTargets(rawTargets)
         var sent = 0
         var failure: String? = null
+        val seenUrls = HashSet<String>()
         for ((label, entry) in targets) {
             try {
-                when (val stream = InatClient.resolve(entry)) {
-                    is InatStream.Embed -> {
-                        if (loadExtractor(stream.url, refererOf(stream), subtitleCallback, callback)) {
-                            sent++
-                        } else {
-                            failure = failure ?: "$name: $label oynatıcısı çözülemedi."
+                for ((streamLabel, stream) in InatClient.resolveAll(entry, label)) {
+                    when (stream) {
+                        is InatStream.Embed -> {
+                            if (loadExtractor(stream.url, refererOf(stream), subtitleCallback, callback)) {
+                                sent++
+                            } else {
+                                failure = failure ?: "$name: $streamLabel oynatıcısı çözülemedi."
+                            }
                         }
-                    }
-                    is InatStream.Direct -> {
-                        val quality = qualityOf(label)
-                        if (!Settings.qualityAllowed(quality)) continue
-                        callback.invoke(newExtractorLink(name, label, stream.url, linkTypeOf(stream.url)) {
-                            this.referer = refererOf(stream)
-                            this.headers = mediaHeaders(stream.headers)
-                            this.quality = quality
-                        })
-                        sent++
+                        is InatStream.Direct -> {
+                            val quality = qualityOf(streamLabel)
+                            val refUrl = refererOf(stream)
+                            val hdrs = mediaHeaders(stream.headers)
+                            if (Settings.qualityAllowed(quality) && seenUrls.add("${quality}|${stream.url}")) {
+                                callback.invoke(newExtractorLink(name, streamLabel, stream.url, linkTypeOf(stream.url)) {
+                                    this.referer = refUrl
+                                    this.headers = hdrs
+                                    this.quality = quality
+                                })
+                                sent++
+                            }
+                            if (stream.url.contains(".m3u8", ignoreCase = true) && quality == Qualities.Unknown.value) {
+                                val masterText = runCatching {
+                                    app.get(stream.url, headers = hdrs, referer = refUrl).text
+                                }.getOrNull().orEmpty()
+                                for ((h, variantUrl) in parseHlsVariants(stream.url, masterText)) {
+                                    if (!Settings.qualityAllowed(h) || !seenUrls.add("$h|$variantUrl")) continue
+                                    callback.invoke(newExtractorLink(name, "$streamLabel • ${h}p", variantUrl, ExtractorLinkType.M3U8) {
+                                        this.referer = refUrl
+                                        this.headers = hdrs
+                                        this.quality = h
+                                    })
+                                    sent++
+                                }
+                            }
+                        }
                     }
                 }
             } catch (e: ErrorLoadingException) {
@@ -938,9 +1076,14 @@ class InatTVProvider : MainAPI() {
         }
     }
 
-    private fun isSeriesRow(cfg: InatCfg, entry: InatEntry): Boolean = when (entry.type) {
-        "sezon_mode", "dizi_mode", "sezonlar" -> true
-        "film_mode" -> false
+    private fun isSeriesContainer(entry: InatEntry): Boolean =
+        entry.type in setOf("sezon_mode", "dizi_mode", "sezonlar") && entry.url.startsWith("http")
+
+    private fun isSeriesRow(cfg: InatCfg, entry: InatEntry): Boolean = when {
+        cfg.name.equals("Derbiler", ignoreCase = true) -> true
+        entry.url.contains("canli", ignoreCase = true) && entry.url.endsWith(".php", ignoreCase = true) -> true
+        entry.type in setOf("sezon_mode", "dizi_mode", "sezonlar") -> true
+        entry.type == "film_mode" -> false
         else -> cfg.name.contains("dizi", ignoreCase = true) && !cfg.name.contains("film", ignoreCase = true)
     }
 
@@ -956,19 +1099,31 @@ class InatTVProvider : MainAPI() {
         val poster = entry.img.ifBlank { children.firstNotNullOfOrNull { it.img.ifBlank { null } }.orEmpty() }
         val plot = entry.plot.ifBlank { children.firstNotNullOfOrNull { it.plot.ifBlank { null } }.orEmpty() }
 
-        if (children.any { it.season }) {
+        if (children.any { it.season || isSeriesContainer(it) }) {
             val seasons = children.mapIndexedNotNull { index, season ->
-                if (season.season && season.url.isNotBlank()) (index + 1) to season else null
+                if ((season.season || isSeriesContainer(season)) && season.url.isNotBlank()) (index + 1) to season else null
             }
             if (seasons.isEmpty()) {
                 throw ErrorLoadingException("$name: ${entry.name} için sezon adresi yok. $REPORT_HINT")
             }
             val episodes = seasons.flatMap { (seasonNumber, season) ->
-                rows(season).mapIndexed { index, row ->
-                    newEpisode(tokenUrl(cfg, MODE_ROW, season.url, index, row.name, season.host, season.pin, season.dataType)) {
-                        this.name = row.name.ifBlank { "${index + 1}. Bölüm" }
+                val seasonRows = rows(season)
+                val expanded = if (seasonRows.any { isSeriesContainer(it) }) {
+                    seasonRows.flatMap { sub ->
+                        if (isSeriesContainer(sub)) {
+                            rows(sub).mapIndexed { subIdx, leaf -> Triple(sub, subIdx, leaf) }
+                        } else {
+                            listOf(Triple(season, seasonRows.indexOf(sub), sub))
+                        }
+                    }
+                } else {
+                    seasonRows.mapIndexed { idx, leaf -> Triple(season, idx, leaf) }
+                }
+                expanded.mapIndexed { epPos, (parent, index, row) ->
+                    newEpisode(tokenUrl(cfg, MODE_ROW, parent.url, index, row.name, parent.host, parent.pin, parent.dataType)) {
+                        this.name = row.name.ifBlank { "${epPos + 1}. Bölüm" }
                         this.season = seasonNumber
-                        this.episode = episodeNumber(row.name) ?: (index + 1)
+                        this.episode = episodeNumber(row.name) ?: (epPos + 1)
                         this.posterUrl = row.img.ifBlank { poster }.ifBlank { null }
                     }
                 }
@@ -1013,10 +1168,12 @@ class InatTVProvider : MainAPI() {
         val text = label.lowercase()
         return when {
             text.contains("2160") || text.contains("4k") -> Qualities.P2160.value
+            text.contains("1440") || text.contains("2k") -> Qualities.P1440.value
             text.contains("1080") -> Qualities.P1080.value
             text.contains("720") -> Qualities.P720.value
             text.contains("480") -> Qualities.P480.value
             text.contains("360") -> Qualities.P360.value
+            text.contains("240") -> Qualities.P240.value
             else -> Qualities.Unknown.value
         }
     }

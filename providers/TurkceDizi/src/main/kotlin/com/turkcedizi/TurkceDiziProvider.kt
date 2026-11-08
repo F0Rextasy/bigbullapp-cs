@@ -1,6 +1,7 @@
 package com.turkcedizi
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.parseHlsVariants
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -15,7 +16,6 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.newAnimeSearchResponse
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
@@ -24,20 +24,13 @@ import com.lagradost.cloudstream3.newTvSeriesLoadResponse
 import com.lagradost.cloudstream3.newTvSeriesSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
+import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.nodes.Document
-
-private fun asciiFold(value: String): String = value
-    .replace('ı', 'i').replace('İ', 'I')
-    .replace('ş', 's').replace('Ş', 'S')
-    .replace('ğ', 'g').replace('Ğ', 'G')
-    .replace('ü', 'u').replace('Ü', 'U')
-    .replace('ö', 'o').replace('Ö', 'O')
-    .replace('ç', 'c').replace('Ç', 'C')
 
 private fun cleanTitle(raw: String?): String = (raw ?: "")
     .replace(Regex("""\s*\|.*$"""), "")
@@ -82,7 +75,7 @@ class TurkceDiziProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Öne Çıkanlar", "Yeni Eklenenler")
+        val ROWS = listOf("Öne Çıkanlar", "Yeni Eklenenler", "Diziler", "Filmler")
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
@@ -102,7 +95,7 @@ class TurkceDiziProvider : MainAPI() {
     private fun cards(doc: Document, query: String? = null, scope: org.jsoup.nodes.Element = doc): List<SearchResponse> {
         val rscPosters = HashMap<String, String>()
         val unescaped = doc.html().replace("\\\"", "\"")
-        Regex(""""href"\s*:\s*"(/[^"]+)"\s*,\s*"children"\s*:\s*\[\s*\[\s*"\$"\s*,\s*"div"[\s\S]{0,600}?"src"\s*:\s*"(https?:[^"]+)"""")
+        Regex(""""href"\s*:\s*"(/[^"]+)"[\s\S]{0,180}?"src"\s*:\s*"(https?:[^"]+)"""")
             .findAll(unescaped)
             .forEach { m -> rscPosters[m.groupValues[1]] = m.groupValues[2] }
         return scope.select("a[href]").mapNotNull { card ->
@@ -166,15 +159,17 @@ class TurkceDiziProvider : MainAPI() {
             if (basePath.isNotBlank() && !path.startsWith(basePath) &&
                 !path.contains(slug) && !path.contains(slugBase)) return@mapNotNull null
             if (!Regex("""(?:bolum|episode)""", RegexOption.IGNORE_CASE).containsMatchIn(pathAndQuery)) return@mapNotNull null
+            val seasonNum = Regex("""(?:sezon|season)[-_ /=]?(\d+)""", RegexOption.IGNORE_CASE).find(pathAndQuery)?.groupValues?.getOrNull(1)?.toIntOrNull()
             val number = Regex("""(?:sezon|season)[-_ /=]?(\d+).*?(?:bolum|episode)[-_ /=]?(\d+)""", RegexOption.IGNORE_CASE)
                 .find(pathAndQuery)?.groupValues?.getOrNull(2)?.toIntOrNull()
                 ?: Regex("""(?:bolum|episode)[-_ /=]?(\d+)""", RegexOption.IGNORE_CASE).find(pathAndQuery)?.groupValues?.getOrNull(1)?.toIntOrNull()
                 ?: Regex("""(\d+)[-_]bolum""", RegexOption.IGNORE_CASE).find(pathAndQuery)?.groupValues?.getOrNull(1)?.toIntOrNull() ?: return@mapNotNull null
             newEpisode(href) {
+                this.season = seasonNum ?: 1
                 this.name = anchor.text().trim().ifBlank { "Bölüm $number" }
                 this.episode = number
             }
-        }.distinctBy { it.data }.sortedBy { it.episode ?: 0 }
+        }.distinctBy { it.data }.sortedWith(compareBy({ it.season ?: 1 }, { it.episode ?: 0 }))
         if (episodes.isNotEmpty()) {
             return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
@@ -201,10 +196,11 @@ class TurkceDiziProvider : MainAPI() {
         val text = resp.text.replace("\\/", "/").replace("\\\"", "\"")
         var found = false
         val seen = mutableSetOf<String>()
-        suspend fun emit(stream: String, label: String, referer: String) {
+        suspend fun emit(stream: String, label: String, referer: String, explicitQuality: Int? = null) {
             if (!stream.startsWith("http") || !seen.add(stream)) return
-            val type = if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
-            val quality = getQualityFromName(label)
+            val isM3u8 = stream.contains(".m3u8")
+            val type = if (isM3u8) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+            val quality = explicitQuality ?: if (isM3u8) Qualities.Unknown.value else getQualityFromName(label)
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
                 this.referer = referer
@@ -212,7 +208,7 @@ class TurkceDiziProvider : MainAPI() {
             })
             found = true
         }
-        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
+        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
             .findAll(text).map { it.groupValues[1] }.toList()
@@ -225,7 +221,7 @@ class TurkceDiziProvider : MainAPI() {
                 continue
             }
             val inner = runCatching { app.get(absolute, headers = uaHeaders, referer = data).text }.getOrNull() ?: continue
-            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(inner)
+            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(inner)
             for (m in innerMedia) emit(m.value, "Embed", absolute)
         }
         val frames = resp.document.select("iframe").mapNotNull {
@@ -237,10 +233,14 @@ class TurkceDiziProvider : MainAPI() {
                 emit(frame, "Embed", data)
                 continue
             }
+            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) {
+                if (loadOkRu(frame, seen, callback)) found = true
+                continue
+            }
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
                 val innerText = inner.replace("\\/", "/")
-                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(innerText)) {
+                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(innerText)) {
                     emit(m.value, "Embed", frame)
                 }
                 for (sub in Regex("""<iframe[^>]+(?:src|data-src)="([^"]+)""").findAll(innerText)) {
@@ -250,39 +250,23 @@ class TurkceDiziProvider : MainAPI() {
             }
             if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
-        // turkcedizi şeması (Nuvio JS zincirinin Kotlin port'u):
-        // sayfa -> iframeUrl -> "ters-base64 + OpenSSL AES" oynatıcı -> master.m3u8 (varyantlar + VTT)
-        val playerUrl = Regex("""iframeUrl\\?"\s*:\s*\\?"([^"\s\\]+)""").find(text)?.groupValues?.get(1)
-        if (playerUrl != null) {
+        val playerUrls = Regex("""iframeUrl\\?"\s*:\s*\\?"([^"\s\\]+)""")
+            .findAll(text).map { it.groupValues[1] }.distinct().toList()
+        for (playerUrl in playerUrls) {
             val url = if (playerUrl.startsWith("//")) "https:$playerUrl" else fixUrl(playerUrl)
+            if (url.contains("ok.ru") || url.contains("odnoklassniki")) {
+                if (loadOkRu(url, seen, callback)) found = true
+                continue
+            }
             val playerHtml = runCatching { app.get(url, headers = uaHeaders, referer = data).text }.getOrNull()
-            val dbg = System.getenv("TD_DEBUG") != null
-            if (dbg) runCatching {
-                java.io.File("C:/Users/Extasy/Desktop/cloudstream/research/_td_player_sample.html")
-                    .apply { parentFile.mkdirs() }.writeText("#url=$url#ref=$data\n$playerHtml")
-            }
-            val plain = playerHtml?.let { runCatching { decodeTurkceDiziPlayer(it) }.fold({ it }, { if (dbg) "EX:" + it.message else null }) }
-            if (dbg) runCatching {
-                java.io.File("C:/Users/Extasy/Desktop/cloudstream/research/_td_decode_state.txt").writeText("htmlLen=${playerHtml?.length}\nplain=${plain?.take(360)}")
-            }
-            val master = plain?.takeIf { !it.startsWith("EX:") }
-                ?.let { p -> Regex("""file\s*:\s*"([^"]+)""").find(p)?.groupValues?.get(1) }
+            val plain = playerHtml?.let { runCatching { decodeTurkceDiziPlayer(it) }.getOrNull() }
+            val master = plain?.let { p -> Regex("""file\s*:\s*"([^"]+)""").find(p)?.groupValues?.get(1) }
             if (master != null) {
-                emit(master, "master", url)
+                emit(master, "TurkceDizi", url, Qualities.Unknown.value)
                 val playlist = runCatching { app.get(master, headers = uaHeaders, referer = url).text }.getOrNull() ?: ""
-                val lines = playlist.lines()
-                var variants = 0
-                for (i in lines.indices) {
-                    if (!lines[i].startsWith("#EXT-X-STREAM-INF")) continue
-                    val h = Regex("RESOLUTION=\\d+x(\\d+)").find(lines[i])?.groupValues?.get(1)
-                    var j = i + 1
-                    while (j < lines.size && (lines[j].isBlank() || lines[j].startsWith("#"))) j++
-                    if (j < lines.size) {
-                        emit(java.net.URI(master).resolve(lines[j].trim()).toString(), h?.plus("p") ?: "auto", url)
-                        variants++
-                    }
+                for ((h, vUrl) in parseHlsVariants(master, playlist)) {
+                    emit(vUrl, "TurkceDizi ${h}p", url, h)
                 }
-                if (variants == 0 && playlist.startsWith("#EXTM3U")) emit(master, "master", url)
                 for (s in Regex("#EXT-X-MEDIA:[^\\r\\n]*TYPE=SUBTITLES[^\\r\\n]*").findAll(playlist).take(3)) {
                     val uri = Regex("URI=\"([^\"]+)\"").find(s.value)?.groupValues?.get(1) ?: continue
                     val lang = Regex("LANGUAGE=\"([^\"]+)\"").find(s.value)?.groupValues?.get(1)?.lowercase() ?: "tr"
@@ -307,8 +291,43 @@ class TurkceDiziProvider : MainAPI() {
         return found
     }
 
+    private suspend fun loadOkRu(embed: String, seen: MutableSet<String>, callback: (ExtractorLink) -> Unit): Boolean {
+        val id = Regex("""videoembed/(\d+)""").find(embed)?.groupValues?.get(1) ?: return false
+        val body = runCatching {
+            app.post(
+                "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
+                data = emptyMap(),
+                headers = mapOf("User-Agent" to "Mozilla/5.0 (Linux; Android 13)", "Referer" to "https://ok.ru/"),
+            ).text
+        }.getOrNull() ?: return false
+        val videos = runCatching { JSONObject(body).optJSONArray("videos") }.getOrNull() ?: return false
+        var found = false
+        for (i in 0 until videos.length()) {
+            val item = videos.optJSONObject(i) ?: continue
+            val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
+            if (!seen.add(stream)) continue
+            val label = item.optString("name").ifBlank { "OkRu" }
+            val q = when (label.lowercase()) {
+                "mobile", "lowest" -> 240
+                "low" -> 360
+                "sd" -> 480
+                "hd" -> 720
+                "full" -> 1080
+                else -> getQualityFromName(label.uppercase())
+            }
+            if (!Settings.qualityAllowed(q)) continue
+            callback.invoke(
+                newExtractorLink(name, "OkRu $label", stream, ExtractorLinkType.VIDEO) {
+                    this.referer = "https://ok.ru/"
+                    this.quality = q
+                }
+            )
+            found = true
+        }
+        return found
+    }
+
     private fun jstr(s: String): ByteArray {
-        // JS atob boşluk/ters eğik çizgiyi esnetir; android Base64 esnetmez, filtrele.
         val letters = s.filter { it.isLetterOrDigit() || it == '+' || it == '/' }.replace('-', '+').replace('_', '/')
         val pad = (4 - letters.length % 4) % 4
         return try {
@@ -318,7 +337,6 @@ class TurkceDiziProvider : MainAPI() {
         }
     }
 
-    // CryptoJS.AES.decrypt(passphrase, blob) == EVP_BytesToKey(MD5) + AES-256-CBC + "Salted__"
     private fun decodeTurkceDiziPlayer(html: String): String? {
         val decoder = Regex(
             """var\s+(_\w+)\s*=\s*function\s*\(\s*s\s*\)\s*\{\s*return\s+atob\(\s*s\.split\(\s*''\s*\)\.reverse\(\)\.join\(\s*''\s*\)\s*\)\s*\}"""

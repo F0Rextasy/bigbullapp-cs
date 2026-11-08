@@ -1,5 +1,6 @@
 package com.bigbull.common
 
+import java.net.URI
 import java.security.MessageDigest
 import javax.crypto.Cipher
 import javax.crypto.SecretKeyFactory
@@ -80,4 +81,40 @@ fun evpMd5AesCbcDecrypt(cipherBytes: ByteArray, password: String, saltHex: Strin
     val first = md5(pw, salt)
     val key = (first + md5(first, pw, salt)).copyOf(32)
     return String(aesCbcDecrypt(cipherBytes, key, ivHex.hexToBytes()), Charsets.UTF_8)
+}
+
+private val HLS_RES = Regex("""RESOLUTION=\d+x(\d+)""", RegexOption.IGNORE_CASE)
+private val HLS_NAME = Regex("""NAME="(\d{3,4})p?"""", RegexOption.IGNORE_CASE)
+
+/** HLS master playlist içindeki #EXT-X-STREAM-INF kalite varyantlarını (yükseklik px, tam URL) olarak çıkarır. */
+fun parseHlsVariants(masterUrl: String, m3u8Text: String): List<Pair<Int, String>> {
+    if (!m3u8Text.contains("#EXT-X-STREAM-INF")) return emptyList()
+    val base = runCatching { URI(masterUrl.trim()) }.getOrNull() ?: return emptyList()
+    val lines = m3u8Text.lineSequence().map { it.trim() }.filter { it.isNotEmpty() }.toList()
+    val out = ArrayList<Pair<Int, String>>()
+    val seen = HashSet<String>()
+    var i = 0
+    while (i < lines.size) {
+        val line = lines[i]
+        if (line.startsWith("#EXT-X-STREAM-INF", ignoreCase = true)) {
+            val height = HLS_RES.find(line)?.groupValues?.get(1)?.toIntOrNull()
+                ?: HLS_NAME.find(line)?.groupValues?.get(1)?.toIntOrNull()
+                ?: 0
+            var j = i + 1
+            while (j < lines.size && lines[j].startsWith("#")) j++
+            if (j < lines.size) {
+                val target = runCatching {
+                    val raw = lines[j]
+                    if (raw.startsWith("http://") || raw.startsWith("https://")) raw
+                    else base.resolve(raw).toString()
+                }.getOrNull()
+                if (!target.isNullOrBlank() && height > 0 && seen.add("$height|$target")) {
+                    out.add(height to target)
+                }
+                i = j
+            }
+        }
+        i++
+    }
+    return out.sortedByDescending { it.first }
 }

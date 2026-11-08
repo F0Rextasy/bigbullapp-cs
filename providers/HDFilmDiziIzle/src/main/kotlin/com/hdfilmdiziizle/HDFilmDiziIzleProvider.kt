@@ -2,6 +2,7 @@ package com.hdfilmdiziizle
 
 import com.bigbull.common.aesCbcDecrypt
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.parseHlsVariants
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -16,7 +17,6 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
-import com.lagradost.cloudstream3.newAnimeSearchResponse
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
@@ -30,16 +30,7 @@ import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import java.util.Base64
 import org.json.JSONArray
-import org.json.JSONObject
 import org.jsoup.nodes.Document
-
-private fun asciiFold(value: String): String = value
-    .replace('ı', 'i').replace('İ', 'I')
-    .replace('ş', 's').replace('Ş', 'S')
-    .replace('ğ', 'g').replace('Ğ', 'G')
-    .replace('ü', 'u').replace('Ü', 'U')
-    .replace('ö', 'o').replace('Ö', 'O')
-    .replace('ç', 'c').replace('Ç', 'C')
 
 private fun cleanTitle(raw: String?): String = (raw ?: "")
     .replace(Regex("""\s*\|.*$"""), "")
@@ -95,13 +86,12 @@ class HDFilmDiziIzleProvider : MainAPI() {
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-
-            if (request.name in ROWS) {
-                if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
-                val doc = app.get(request.data, headers = uaHeaders).document
-                return newHomePageResponse(request.name, cards(doc), hasNext = false)
-            }
-            return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        if (request.name in ROWS) {
+            if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
+            val doc = app.get(request.data, headers = uaHeaders).document
+            return newHomePageResponse(request.name, cards(doc), hasNext = false)
+        }
+        return newHomePageResponse(request.name, emptyList(), hasNext = false)
     }
 
     companion object {
@@ -140,7 +130,6 @@ class HDFilmDiziIzleProvider : MainAPI() {
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
         if (listOf("/dizi/", "/film/", "/film_series/").none { path.startsWith(it) }) return@mapNotNull null
-        
         if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()
@@ -230,12 +219,13 @@ class HDFilmDiziIzleProvider : MainAPI() {
             label: String,
             referer: String,
             forcedType: ExtractorLinkType? = null,
+            forcedQuality: Int? = null,
         ) {
-            if (!stream.startsWith("http") || !seen.add(stream)) return
+            if (!stream.startsWith("http") || !seen.add("$forcedQuality|$stream")) return
             if (stream.contains("cloudflare.com/static/")) return
             val type = forcedType
                 ?: if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
-            val quality = getQualityFromName(label)
+            val quality = forcedQuality ?: getQualityFromName(label)
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
                 this.referer = referer
@@ -247,10 +237,13 @@ class HDFilmDiziIzleProvider : MainAPI() {
             ?: Regex("""data-id="(\d+)""").find(text)?.groupValues?.get(1)
         if (postId != null) {
             val sources = resp.document.select("button.playhd-btn[data-source]")
-                .mapNotNull { it.attr("data-source").takeIf { source -> source != "fragman_url" } }
-                .distinct()
-            for (source in sources) {
-                if (found && seen.size >= 4) break
+                .mapNotNull { btn ->
+                    val src = btn.attr("data-source").takeIf { it.isNotBlank() && it != "fragman_url" } ?: return@mapNotNull null
+                    val label = btn.text().trim().ifBlank { src.removeSuffix("_url") }
+                    src to label
+                }
+                .distinctBy { it.first }
+            for ((source, btnLabel) in sources) {
                 val encrypted = runCatching {
                     app.post(
                         "$mainUrl/wp-admin/admin-ajax.php",
@@ -263,7 +256,7 @@ class HDFilmDiziIzleProvider : MainAPI() {
                 val target = runCatching { decryptSource(encrypted) }.getOrNull()
                     ?.let(::fixUrlNull) ?: continue
                 if (target.contains(".m3u8") || target.contains(".mp4")) {
-                    emit(target, "Player", data)
+                    emit(target, btnLabel, data)
                     continue
                 }
                 val innerResp = runCatching { app.get(target, headers = uaHeaders, referer = data) }
@@ -277,14 +270,15 @@ class HDFilmDiziIzleProvider : MainAPI() {
                     val masterText = runCatching {
                         app.get(master, headers = uaHeaders, referer = playerBase).text
                     }.getOrNull().orEmpty()
-                    val height = Regex("""RESOLUTION=\d+x(\d+)""").findAll(masterText)
-                        .mapNotNull { it.groupValues[1].toIntOrNull() }.maxOrNull()
-                    emit(
-                        master,
-                        listOfNotNull(source.removeSuffix("_url"), height?.let { "${it}p" }).joinToString(" "),
-                        playerBase,
-                        forcedType = if (masterText.contains("#EXTM3U")) ExtractorLinkType.M3U8 else null,
-                    )
+                    val isHls = masterText.contains("#EXTM3U") || master.contains(".m3u8")
+                    val lType = if (isHls) ExtractorLinkType.M3U8 else null
+                    emit(master, btnLabel, playerBase, forcedType = lType, forcedQuality = 0)
+                    for ((h, variantUrl) in parseHlsVariants(master, masterText)) {
+                        emit(variantUrl, "$btnLabel • ${h}p", playerBase, forcedType = ExtractorLinkType.M3U8, forcedQuality = h)
+                    }
+                    for (subMatch in Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)?""").findAll(innerHtml)) {
+                        if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", subMatch.value))
+                    }
                     continue
                 }
                 if (loadExtractor(target, data, subtitleCallback, callback)) {
@@ -293,10 +287,10 @@ class HDFilmDiziIzleProvider : MainAPI() {
                 }
                 for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""")
                     .findAll(innerHtml)) {
-                    emit(m.value, "Player", target)
+                    emit(m.value, btnLabel, target)
                 }
                 for (m in Regex("""["'](/[^"']+\.m3u8(?:\?[^"']*)?)["']""").findAll(innerHtml)) {
-                    emit(fixUrl(m.groupValues[1]), "Player", target)
+                    emit(fixUrl(m.groupValues[1]), btnLabel, target)
                 }
                 for (frame in inner.select("iframe[src]")) {
                     val sub = fixUrlNull(frame.attr("src")) ?: continue
@@ -304,7 +298,7 @@ class HDFilmDiziIzleProvider : MainAPI() {
                     val subDoc = runCatching { app.get(sub, headers = uaHeaders, referer = target).document }
                         .getOrNull() ?: continue
                     for (m in Regex("""["'](/[^"']+\.m3u8(?:\?[^"']*)?)["']""").findAll(subDoc.outerHtml())) {
-                        emit(fixUrl(m.groupValues[1]), "Player", sub)
+                        emit(fixUrl(m.groupValues[1]), btnLabel, sub)
                     }
                 }
             }
@@ -386,5 +380,4 @@ class HDFilmDiziIzleProvider : MainAPI() {
         ),
         Charsets.UTF_8,
     )
-
 }

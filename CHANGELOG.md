@@ -5,6 +5,26 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.28] - 2026-11-09
+
+### Eklendi
+- **Ortak HLS varyant ayrıştırıcısı (`Common.parseHlsVariants`)**: Master `.m3u8` içindeki `#EXT-X-STREAM-INF` satırlarından çözünürlük yüksekliğini (`RESOLUTION=\d+x(\d+)`) ve göreli/mutlak alt oynatma listesi adreslerini çıkaran ortak yardımcı eklendi; master akışın yanı sıra tüm alt kaliteler (`2160p..240p`) ayrı `ExtractorLink` olarak sunulur.
+- **İnatTV otomatik eski eklenti temizliği (`InatTVPlugin.purgeLegacyInatPlugins`)**: Kullanıcı cihazında önceden kurulmuş 35 eski `Inat*` eklentisini (`InatNetflix`, `InatDisney`, `InatYabanciDiziler`, `InatSpor` vb.) uygulama açılışında ve ayarlar ekranında `PluginManager` üzerinden bellekten kaldırır, diskteki `.cs3`/`.dex`/`.odex` dosyalarını siler, `APIHolder.allProviders`/`apis` listelerinden çıkarır ve `DataStore` ana sayfa tercihini otomatik olarak `İnatTV`'ye taşır.
+
+### Düzeltildi
+- **İnatTV v3 (`providers/InatTV`) + Nuvio `inattvdizi` (1.0.4) / `inattvfilmler` (1.0.6)**:
+  - `nok5_mode` (VK `al_video.php` POST → HLS + `240p..2160p` MP4 akışları) desteği hem Cloudstream hem Nuvio tarafına eklendi.
+  - `storage` ve `data` nesneleri altındaki `chUrl`/`url`/`source` alanları, iç içe sezon/bölüm listeleri (`dizi`/`bolum`/`items`/`episodes`) ve tek öğeli diziler düzeltildi; tüm 24 kategori (`Yabancı Diziler`..`Liste 1-2-3`) uçtan uca doğrulandı.
+  - Nuvio `inattvdizi` ve `inattvfilmler` çoklu katalog araması (`diziler`, `yerli-diziler`, `netflix`, `disney`, `amazon-prime`, `hbomax`, `exxen`, `gain`, `tabii`, `tod`, `mubi`, `yerli-filmler`) ile genişletildi.
+- **Çoklu kaynak ve çoklu kalite çıkarımı (17 sağlayıcı)**:
+  - **Deokwave v3**: Dizi bölümleri `var allSezonlar` JSON'undan çıkarıldı, bölüm izleme URL'sindeki sondaki `/` kaldırıldı (`404` hatası giderildi), oturum çerezleri `/api/v1/video/token/` isteğine aktarıldı ve tüm `fansubs` + kalite seçenekleri (`1080p`, `720p`, `480p`) eklendi.
+  - **Animeler v9**: Next.js RSC gövdesindeki `my.mail.ru/video/embed/`, `ok.ru/videoembed/`, `sibnet.ru`, `vidmoly` ve `gdriveplayer` alternatif kaynakları çıkarıldı.
+  - **Sinezy v5**: FirePlayer büyük/küçük harf `Origin` uyumsuzluğu (`https://Player.filmizle.in` → `https://player.filmizle.in`), `fireplayer_player` oturum çerezi aktarımı ve HLS kalite varyantları düzeltildi.
+  - **Dizigecesi v10**: Gömülü oynatıcı URL'lerinin sonundaki `#<ip>` eki temizlendi ve Filemoon HLS kalite varyantları eklendi.
+  - **TurkceDizi v7**: `Diziler` ve `Filmler` satırlarındaki RSC poster regex'i `aria-label` özniteliğini kapsayacak şekilde genişletildi (`35/35` poster); tüm `iframeUrl` eşleşmeleri ve `ok.ru` çoklu kalite akışları eklendi.
+  - **HDFilmDiziIzle v6**: İlk kaynakta erken duran `break` kaldırıldı; tüm alternatif sunucular (`Close`, `Vidmoxy`, `Fast`, `Rumble`) ve HLS kalite varyantları çıkarılıyor.
+  - **CanliDizi v4**, **DiziAbi v4**, **Dizigom v4**, **HDFilmDelisi v5**, **DiziCaN v9**, **AsyaBox v4**, **AsyaDizi v4**, **Asyadizileriizle v4**, **BirAsyaDizi v5**, **Dizirella v4**, **Weboo v3**: HLS master varyant ayrıştırması (`parseHlsVariants`) ve gömülü oynatıcı (`HintDizi`, `Pilavyer`, `Vixolity`, `OkRu`) çoklu kalite desteği eklendi.
+
 ## [1.6.27] - 2026-11-08
 
 ### Düzeltildi

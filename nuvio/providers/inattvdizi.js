@@ -1,4 +1,4 @@
-// @provider {"id":"inattvdizi", "name":"İnatTV Dizi", "types":["tv"], "domain":"inatbox", "formats":["m3u8"], "sample":"tt0944947:tv:1:1", "description":"İnatTV yabancı, yerli ve platform dizileri kataloğu (imzalı liste + AES çözümleyici, HLS).", "verified":true, "version":"1.0.3"}
+// @provider {"id":"inattvdizi", "name":"İnatTV Dizi", "types":["tv"], "domain":"inatbox", "formats":["m3u8"], "sample":"tt0944947:tv:1:1", "description":"İnatTV yabancı, yerli ve platform dizileri kataloğu (imzalı liste + AES çözümleyici, HLS).", "verified":true, "version":"1.0.4"}
 var CFG = {
   id: "inattvdizi",
   name: "İnatTV Dizi",
