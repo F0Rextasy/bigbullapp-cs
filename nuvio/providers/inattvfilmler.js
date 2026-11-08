@@ -1,4 +1,4 @@
-// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt42006709:movie:1:1", "description":"İnatTV yerli film kataloğu (imzalı liste + AES çözümleyici, HLS/MP4; 4K film katalogları upstream'de kapatıldı).", "verified":true, "version":"1.0.4"}
+// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt42006709:movie:1:1", "description":"İnatTV yerli film kataloğu (imzalı liste + AES çözümleyici, HLS/MP4; 4K film katalogları upstream'de kapatıldı).", "verified":true, "version":"1.0.5"}
 /**
  * inattvfilmler — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.
@@ -6,8 +6,7 @@
 
 var CFG = {
   "name": "İnatTV Filmler",
-  "url": "https://4k.filmizleeeee.cfd/4k/03/public/catalog-exo.php",
-  "fallbackUrl": "https://4k.filmizleeeee.cfd/4k/03/public/catalog-web.php",
+  "url": "https://diziboxen.help/CDN/001/002/dizibox/v2/film/yerli-filmler.php",
   "dataType": "tv_mode",
   "movieList": true,
   "q2160": true,
@@ -820,20 +819,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
   return titleOf(tmdbId, mediaType)
     .then(function (title) {
       if (!title) return null;
-      var FILM_URLS = [
-        "https://diziboxen.help/CDN/001/002/dizibox/v2/film/yerli-filmler.php"
-      ];
-      var filmChain = Promise.resolve([]);
-      FILM_URLS.forEach(function (u) {
-        filmChain = filmChain.then(function (acc) {
-          if (acc.length) return acc;
-          return entries(u, CFG.dataType).then(function (rows) {
-            return pickCandidates(rows, title).length ? rows : [];
-          }).catch(function () { return []; });
-        });
-      });
-      return filmChain
-        .then(function (list) {
+      return entries(CFG.url, CFG.dataType).then(function (list) {
           var cands = pickCandidates(list, title), targets = [], chain = Promise.resolve();
           cands.forEach(function (entry) {
             chain = chain.then(function () {

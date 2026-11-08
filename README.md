@@ -151,19 +151,19 @@ Tek modül derleme ve cihaza kurulum:
 | `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `HDFilmizleBest` | hdfilmizle.best | Dizi | — | — | — | — | — | — |
-| `InatListe1Tr` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
-| `InatListe2Glb` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
-| `InatListe3Tr` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
-| `InatSpor` **pasif** | sprboxs.bar | Canlı TV | — | — | — | — | — | — |
-| `InatDerbiler` **pasif** | sprboxs.bar | Canlı TV | — | — | — | — | — | — |
-| `InatPremium` **pasif** | inattv257.cfd | Canlı TV | — | — | — | — | — | — |
-| `InatSinema` **pasif** | diziboxen.help | Film | — | — | — | — | — | — |
-| `InatBelgesel` **pasif** | diziboxen.help | Belgesel | — | — | — | — | — | — |
-| `InatUlusal` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
-| `InatHaber` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
-| `InatEbaTv` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
-| `InatCocuk` **pasif** | diziboxen.help | Çocuk | — | — | — | — | — | — |
-| `InatDini` **pasif** | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatListe1Tr` | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatListe2Glb` | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatListe3Tr` | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatSpor` | sprboxs.bar | Canlı TV | — | — | — | — | — | — |
+| `InatDerbiler` | sprboxs.bar | Canlı TV | — | — | — | — | — | — |
+| `InatPremium` | inattv257.cfd | Canlı TV | — | — | — | — | — | — |
+| `InatSinema` | diziboxen.help | Film | — | — | — | — | — | — |
+| `InatBelgesel` | diziboxen.help | Belgesel | — | — | — | — | — | — |
+| `InatUlusal` | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatHaber` | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatEbaTv` | diziboxen.help | Canlı TV | — | — | — | — | — | — |
+| `InatCocuk` | diziboxen.help | Çocuk | — | — | — | — | — | — |
+| `InatDini` | diziboxen.help | Canlı TV | — | — | — | — | — | — |
 | `InatExxen` | diziboxen.help | Dizi | — | — | — | — | — | — |
 | `InatGain` | diziboxen.help | Dizi | — | — | — | — | — | — |
 | `InatNetflix` | diziboxen.help | Dizi | — | — | — | — | — | — |
@@ -171,10 +171,10 @@ Tek modül derleme ve cihaza kurulum:
 | `InatDisney` | diziboxen.help | Dizi | — | — | — | — | — | — |
 | `InatAmazonPrime` | diziboxen.help | Dizi | — | — | — | — | — | — |
 | `InatTabii` | diziboxen.help | Dizi | — | — | — | — | — | — |
-| `InatMubi` **pasif** | diziboxen.help | Film | — | — | — | — | — | — |
-| `InatTod` **pasif** | sprboxs.bar | Dizi | — | — | — | — | — | — |
-| `InatYabanciDiziler` **pasif** | diziboxen.help | Dizi | — | — | — | — | — | — |
-| `InatYerliDiziler` **pasif** | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatMubi` | diziboxen.help | Film | — | — | — | — | — | — |
+| `InatTod` | sprboxs.bar | Dizi | — | — | — | — | — | — |
+| `InatYabanciDiziler` | diziboxen.help | Dizi | — | — | — | — | — | — |
+| `InatYerliDiziler` | diziboxen.help | Dizi | — | — | — | — | — | — |
 | `InatYerliFilmler` | diziboxen.help | Film | — | — | — | — | — | — |
 | `Inat4k01Exo` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |
 | `Inat4k01Web` **pasif** | 4k.filmizleeeee.cfd | Film | — | — | — | — | — | — |

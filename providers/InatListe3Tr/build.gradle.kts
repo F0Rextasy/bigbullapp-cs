@@ -1,8 +1,8 @@
-version = 1
+version = 2
 cloudstream {
     description = "Inat Baks — Liste 3 - TR (canli tv kanallari, imzalı Inat API)"
     authors = listOf("F0Rextasy")
-    status = 0
+    status = 1
     tvTypes = listOf("Live", "Movie", "TvSeries")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=diziboxen.help&sz=%size%"

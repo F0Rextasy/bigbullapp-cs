@@ -5,6 +5,12 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.25] - 2026-11-08
+### Eklendi
+- **İnat katalog modülleri (17 adet) yeniden aktif**: `ct.php` resmî config'i tüm bölümleri listeliyor (diziler, platformlar, yerli filmler, canlı TV kategorileri, spor/derbiler/TOD/premium/mubi); yalnız upstream'den kaldırılan 4K film bucket'ları pasif kaldı.
+### Düzeltildi
+- **Nuvio `inattvfilmler` (1.0.5)**: taban adres tek yere alındı; ölü 4K host kalıntısı silindi.
+
 ## [1.6.24] - 2026-11-08
 
 ### Eklendi

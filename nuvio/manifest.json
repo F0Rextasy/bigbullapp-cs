@@ -374,7 +374,7 @@
       "id": "inattvfilmler",
       "name": "İnatTV Filmler",
       "description": "İnatTV yerli film kataloğu (imzalı liste + AES çözümleyici, HLS/MP4; 4K film katalogları upstream'de kapatıldı).",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
