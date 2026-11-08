@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.23",
+  "version": "1.6.24",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -406,6 +406,26 @@
         "mp4"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=jetfilmizle.app&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "puhutv",
+      "name": "PuhuTV",
+      "description": "PuhuTV yerli dizi, puhutv Orijinal yapimlar ve filmler; DYG HLS akislari.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
+      "filename": "providers/puhutv.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=puhutv.com&sz=128",
       "contentLanguage": [
         "tr"
       ]

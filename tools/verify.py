@@ -348,6 +348,34 @@ def verify_dizilife() -> dict:
     return verify_shared_player(base("DiziLife"), "/ara?q=gibi", r'href="([^"]*/dizi/[^"]+)"')
 
 
+
+def verify_puhutv() -> dict:
+    b = base("puhutv.com")
+    search = json.loads(get("https://appservice.puhutv.com/search/search?query=sahsiyet&v=2&source=web", ref=f"{b}/"))
+    items = [x for g in search.get("data", []) for x in (g.get("data") or [])]
+    if not items:
+        return {"ok": False, "detail": "search returned nothing"}
+    web_url = items[0].get("web_url") or ""
+    slug = web_url.rstrip("/").split("/")[-1]
+    det = json.loads(get(f"{b}/api/slug/{slug}", ref=f"{b}/")).get("data") or {}
+    seasons = det.get("seasons") or []
+    if not seasons:
+        return {"ok": False, "detail": "no seasons"}
+    eps = json.loads(get(f"{b}/api/seasons/{seasons[0]['id']}/episodes?e_page=1&e_per=5", ref=f"{b}/")).get("data", {}).get("episodes") or []
+    watch_slug = ((eps[0].get("assets") or [{}])[0]).get("slug_path") if eps else None
+    if not watch_slug:
+        return {"ok": False, "detail": "no episode watch slug"}
+    vid = (json.loads(get(f"{b}/api/slug/{watch_slug}", ref=f"{b}/")).get("data") or {}).get("video_id")
+    if not vid:
+        return {"ok": False, "detail": "no video_id"}
+    vinfo = json.loads(get(f"https://dygvideo.dygdigital.com/api/video_info?akamai=true&PublisherId=29&ReferenceId={vid}&SecretKey=NtvApiSecret2014*", ref=f"{b}/"))
+    stream = ((vinfo.get("data") or {}).get("flavors") or {}).get("hls") or ""
+    if not stream.startswith("http"):
+        return {"ok": False, "detail": "no hls flavor"}
+    playlist = get(stream, ref=f"{b}/")
+    return {"ok": playlist.startswith("#EXTM3U"), "detail": f"episode={watch_slug} stream={stream[:50]}"}
+
+
 VERIFIERS = {
     "dizibox.live": verify_dizibox,
     "Dizibox": verify_dizibox,
@@ -367,6 +395,8 @@ VERIFIERS = {
     "kultfilmler.net": verify_kultfilmler,
     "yabancidizi.live": verify_yabancidizi,
     "dizi83.life": verify_dizilife,
+    "puhutv.com": verify_puhutv,
+    "PuhuTV": verify_puhutv,
 }
 
 

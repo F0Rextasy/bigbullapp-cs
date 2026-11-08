@@ -1,6 +1,26 @@
 {
  "generated": "2026-11-01",
  "providers": {
+  "puhutv.com": {
+   "id": "puhutv-com",
+   "name": "PuhuTV",
+   "mainUrl": "https://puhutv.com",
+   "status": "implemented",
+   "http": 200,
+   "title": "puhutv | Sen Nasıl İzlersen",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries",
+    "Movie"
+   ],
+   "poolNames": [
+    "PuhuTV"
+   ],
+   "source": "manual",
+   "health": "ok",
+   "checked": "2026-11-08T04:10:00Z",
+   "module": "PuhuTV"
+  },
   "asyalog.co": {
    "id": "asyalog-co",
    "name": "AsyaLog",

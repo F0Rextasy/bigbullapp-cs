@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.24] - 2026-11-08
+
+### Eklendi
+- **PuhuTV v1 (`puhutv.com`) + Nuvio `puhutv` (`1.0.0`)**: Cloudstream (95. aktif modül) ve Nuvio (30. sağlayıcı) için yerli dizi, puhutv Orijinal, film ve belgesel kaynağı eklendi; sayfalı kategori akışları (`/api/slug`), anlık arama (`appservice.puhutv.com`), oyuncu kadrosu, film süresi, sezon/bölüm listesi, VTT altyazılar ve DYG (`PublisherId=29`) 4K'ya kadar HLS akışları doğrulandı.
+
 ## [1.6.23] - 2026-11-07
 
 ### Eklendi

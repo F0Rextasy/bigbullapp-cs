@@ -392,6 +392,12 @@
    "runner": "bench_runner.py 2026-10-30"
   },
   {
+   "module": "PuhuTV",
+   "result": "pass",
+   "evidence": "runner 2026-11-08: pass, search=1, ep=12, links=7 (240p..2160p), subs=4; Nuvio tt7920978/77994 7 stream, tt1795096 3 stream",
+   "runner": "qa 2026-11-08"
+  },
+  {
    "module": "SelcukFlix",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=2, ep=7",

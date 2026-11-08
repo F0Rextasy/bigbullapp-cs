@@ -11,7 +11,7 @@ canlı TV kaynakları. Her site Cloudstream'de ayrı bir Gradle modülü/`.cs3` 
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-94-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-95-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -195,6 +195,7 @@ Tek modül derleme ve cihaza kurulum:
 | `MinikaGO` | minikago.com.tr | Çocuk | — | — | — | — | — | — |
 | `NetFilmizle` | netfilmizle.com | Film | — | — | — | — | — | — |
 | `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
+| `PuhuTV` | puhutv.com | Dizi/Film | ✓ | — | — | ✓ | film | — |
 | `RecTV` | a.psrectv80.xyz (imzalı API) | Film/Dizi | ✓ | — | — | — | ✓ | ✓ |
 | `SelcukFlix` | selcukflix.app | Dizi/Film | — | — | — | — | ✓ | ✓ |
 | `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
@@ -215,7 +216,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Yabancidizi` | yabancidizi.watch | Dizi/Film | — | ✓ | — | ✓ | film | ✓ |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**Inat notu:** Inat'ın **35 platformu ayrı modül** olarak tutulur; runner’da pass olan **8 platform aktif**, pass olmayan **27 platform pasif** (`4k.filmizleeeee.cfd` 4K katalogları upstream'de kapatıldı). Aktif platformlar: Exxen, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii ve Yerli Filmler. Depoda toplam **94 aktif modül** var (`AsyaLuna` sunucusu silindiği için pasif). Pasif platformlar kendi `build.gradle.kts` dosyasında `status = 0` ile işaretlenir; kaynak dosyaları korunuyor.
+**Inat notu:** Inat'ın **35 platformu ayrı modül** olarak tutulur; runner’da pass olan **8 platform aktif**, pass olmayan **27 platform pasif** (`4k.filmizleeeee.cfd` 4K katalogları upstream'de kapatıldı). Aktif platformlar: Exxen, Gain, Netflix, HBO Max, Disney+, Amazon Prime, Tabii ve Yerli Filmler. Depoda toplam **95 aktif modül** var (`AsyaLuna` sunucusu silindiği için pasif). Pasif platformlar kendi `build.gradle.kts` dosyasında `status = 0` ile işaretlenir; kaynak dosyaları korunuyor.
 
 Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
 `README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.
@@ -232,11 +233,11 @@ Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Reposito
 `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json` →
 **Refresh** → sağlayıcıları tek tek aç. Tam liste: [`nuvio/manifest.json`](nuvio/manifest.json).
 
-**Kapsam**: Uygulama performansını korumak ve kasmayı önlemek amacıyla Nuvio tarafında yalnızca seçilmiş **29 ana sağlayıcı** yayınlanır:
+**Kapsam**: Uygulama performansını korumak ve kasmayı önlemek amacıyla Nuvio tarafında yalnızca seçilmiş **30 ana sağlayıcı** yayınlanır:
 - **Anime (3):** `Anizium`, `AnimeciX`, `AsyaAnimeleri`
 - **Dizi (13):** `Dizibox`, `Dizilla`, `DiziPal`, `SelcukFlix`, `Ddizi`, `WebdramaTurkey2`, `Dizikorea3`, `Sezonlukdizi`, `DiziYou`, `DiziBal`, `İnatTV Dizi`, `DiziMom`, `DiziPod`
 - **Film (9):** `HDFilmCehennemi`, `FullHDFilmizlesene`, `SetFilmIzle`, `YesilCamTv`, `İnatTV Filmler`, `FilmMakinesi`, `WebteIzle`, `FilmModu`, `JetFilmizle`
-- **Film & Dizi (1):** `RecTV`
+- **Film & Dizi (2):** `PuhuTV`, `RecTV`
 - **Belgesel & TV (3):** `BelgeselX`, `DMAX`, `TLCtr`
 
 Repo eklemek sağlayıcıları çalıştırmaz: Plugins ekranında **Enable plugin providers globally** ve
