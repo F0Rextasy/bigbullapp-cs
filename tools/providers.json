@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-01",
+ "generated": "2026-11-08",
  "providers": {
   "puhutv.com": {
    "id": "puhutv-com",
@@ -1536,118 +1536,44 @@
   },
   "diziboxen.help": {
    "id": "diziboxen-help",
-   "name": "Inat Baks",
+   "name": "İnatTV",
    "mainUrl": "https://diziboxen.help",
    "status": "implemented",
-   "http": 520,
-   "title": "",
+   "http": 200,
+   "title": "İnatTV",
    "language": "tr",
    "tvTypes": [
-    "Live",
+    "TvSeries",
     "Movie",
-    "TvSeries"
+    "Live"
+   ],
+   "poolNames": [
+    "InatTV"
    ],
    "source": "provider-source",
-   "health": "unknown",
-   "module": null,
-   "disabled": true,
-   "modules": [
-    "InatListe1Tr",
-    "InatListe2Glb",
-    "InatListe3Tr",
-    "InatSinema",
-    "InatBelgesel",
-    "InatUlusal",
-    "InatHaber",
-    "InatEbaTv",
-    "InatCocuk",
-    "InatDini",
-    "InatExxen",
-    "InatGain",
-    "InatNetflix",
-    "InatHboMax",
-    "InatDisney",
-    "InatAmazonPrime",
-    "InatTabii",
-    "InatMubi",
-    "InatYabanciDiziler",
-    "InatYerliDiziler",
-    "InatYerliFilmler"
-   ]
+   "health": "ok",
+   "checked": "2026-11-08T14:29:00Z",
+   "module": "InatTV"
   },
   "sprboxs.bar": {
    "id": "sprboxs-bar",
-   "name": "Inat Baks",
+   "name": "İnatTV (Spor & TOD)",
    "mainUrl": "https://sprboxs.bar",
    "status": "implemented",
-   "http": 520,
-   "title": "",
+   "http": 200,
+   "title": "İnatTV Spor",
    "language": "tr",
    "tvTypes": [
     "Live",
-    "Movie",
     "TvSeries"
    ],
-   "source": "provider-source",
-   "health": "unknown",
-   "module": null,
-   "disabled": true,
-   "modules": [
-    "InatSpor",
-    "InatDerbiler",
-    "InatTod"
-   ]
-  },
-  "inattv257.cfd": {
-   "id": "inattv257-cfd",
-   "name": "Inat Baks",
-   "mainUrl": "https://inattv257.cfd",
-   "status": "implemented",
-   "http": 520,
-   "title": "",
-   "language": "tr",
-   "tvTypes": [
-    "Live",
-    "Movie",
-    "TvSeries"
+   "poolNames": [
+    "InatTV"
    ],
    "source": "provider-source",
-   "health": "unknown",
-   "module": null,
-   "disabled": true,
-   "modules": [
-    "InatPremium"
-   ]
-  },
-  "4k.filmizleeeee.cfd": {
-   "id": "4k-filmizleeeee-cfd",
-   "name": "Inat Baks",
-   "mainUrl": "https://4k.filmizleeeee.cfd",
-   "status": "implemented",
-   "http": 520,
-   "title": "",
-   "language": "tr",
-   "tvTypes": [
-    "Live",
-    "Movie",
-    "TvSeries"
-   ],
-   "source": "provider-source",
-   "health": "unknown",
-   "module": null,
-   "disabled": true,
-   "modules": [
-    "Inat4k01Exo",
-    "Inat4k01Web",
-    "Inat4k02Web",
-    "Inat4k03Exo",
-    "Inat4k03Web",
-    "Inat4k04Exo",
-    "Inat4k04Web",
-    "Inat4k06Exo",
-    "Inat4k06Web",
-    "Inat4k07Web"
-   ]
+   "health": "ok",
+   "checked": "2026-11-08T14:29:00Z",
+   "module": "InatTV"
   },
   "dizipal1594.com": {
    "id": "dizipal1594-com",

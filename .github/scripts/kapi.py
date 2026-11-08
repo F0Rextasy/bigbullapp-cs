@@ -55,7 +55,10 @@ def surum(taban):
         if mod in ORTAK:
             continue
         eski = kt_surum(git("show", f"{taban}:providers/{mod}/build.gradle.kts"))
-        yeni = kt_surum(open(f"providers/{mod}/build.gradle.kts", encoding="utf-8").read())
+        try:
+            yeni = kt_surum(open(f"providers/{mod}/build.gradle.kts", encoding="utf-8").read())
+        except FileNotFoundError:
+            continue  # silinmiş
         if eski is not None and yeni is not None and yeni <= eski:
             hata.append(f"{mod}: kaynak değişti ama version {eski} -> {yeni} artmadı")
     for p in degisen:

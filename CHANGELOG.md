@@ -5,10 +5,13 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
-## [1.6.25] - 2026-11-08
-### Eklendi
-- **İnat katalog modülleri (17 adet) yeniden aktif**: `ct.php` resmî config'i tüm bölümleri listeliyor (diziler, platformlar, yerli filmler, canlı TV kategorileri, spor/derbiler/TOD/premium/mubi); yalnız upstream'den kaldırılan 4K film bucket'ları pasif kaldı.
+## [1.6.26] - 2026-11-08
+
+### Değişti
+- **İnatTV v1 (`providers/InatTV`) — tek sağlayıcı birleştirmesi**: Cloudstream'deki 35 ayrı `Inat*` modülü (`InatNetflix`, `InatDisney`, `InatYabanciDiziler`, `InatSpor` vb.) **RecTV** mimarisiyle tek bir **`İnatTV`** (`InatTV`) eklentisinde birleştirildi; 24 aktif kategori (Yabancı/Yerli Diziler, Yerli Filmler, Netflix, Disney+, Amazon Prime, HBO Max, EXXEN, Gain, Tabii, Mubi, TOD, Sinema, Belgesel, Spor, Derbiler ve canlı TV listeleri) ana sayfa satırı ve eklenti ayarlarından seçilebilir hale getirildi.
+
 ### Düzeltildi
+- **İnatTV HTTP 403 / Cloudflare hız sınırı (`error code: 1006`)**: 25 ayrı eklentinin aynı anda `diziboxen.help` / `sprboxs.bar` uçlarına paralel istek atarak geçici Cloudflare IP engeline (`1006`) yol açması tek eklenti mimarisi ve 30 dakikalık bellek önbelleği (`CACHE_LIMIT = 64`) ile giderildi; `API_HEADERS` içine `User-Agent: speedrestapi` başlığı eklendi, ölü `4k.filmizleeeee.cfd` katalogları ve liste başı reklam/sosyal medya satırları (`@inattvapk`, `inattv*.cfd`) temizlendi.
 - **Nuvio `inattvfilmler` (1.0.5)**: taban adres tek yere alındı; ölü 4K host kalıntısı silindi.
 
 ## [1.6.24] - 2026-11-08

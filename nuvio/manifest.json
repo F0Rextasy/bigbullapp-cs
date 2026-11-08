@@ -1,6 +1,10 @@
 {
   "name": "BB Nuvio",
+<<<<<<< HEAD
   "version": "1.6.25",
+=======
+  "version": "1.6.26",
+>>>>>>> be66d91 (İnatTV v1: 35 ayrı Inat modülü tek sağlayıcıda birleştirildi ve HTTP 403/1006 giderildi (v1.6.26))
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [

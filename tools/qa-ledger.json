@@ -1,6 +1,6 @@
 {
  "generated": "2026-11-08",
- "note": "120 TR modül runner benchmark (2026-11-05)",
+ "note": "89 TR modül runner benchmark (2026-11-08)",
  "modules": [
   {
    "module": "AniArsiv",
@@ -147,6 +147,18 @@
    "runner": "autopilot.py 2026-10-30"
   },
   {
+   "module": "Diziasia",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=1, ep=12",
+   "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "Dizibaba",
+   "result": "pass",
+   "evidence": "runner 2026-10-31: pass, links=1, search=24, main=24",
+   "runner": "REA+manual 2026-10-31"
+  },
+  {
    "module": "DiziBal",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=1, ep=0",
@@ -157,6 +169,18 @@
    "result": "pass",
    "evidence": "runner 2026-10-31: pass, links=1, ep=26",
    "runner": "autopilot.py 2026-10-31"
+  },
+  {
+   "module": "Dizibox",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=2, ep=3",
+   "runner": "bench_runner.py 2026-10-30"
+  },
+  {
+   "module": "DiziboxIzle",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=6, ep=6",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "DiziBoxTv",
@@ -185,16 +209,40 @@
    "date": "2026-11-04"
   },
   {
+   "module": "Dizigecesi",
+   "result": "pass",
+   "evidence": "runner 2026-11-01: Filemoon captcha+attest, canlı HLS HTTP 200",
+   "runner": "qa 2026-11-01"
+  },
+  {
    "module": "Dizigom",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=1, ep=0",
    "runner": "autopilot.py 2026-10-30"
   },
   {
+   "module": "Dizikorea3",
+   "result": "pass",
+   "evidence": "Nuvio 2026-11-04: tt43088191 ve 316197 -> 1 stream (vidmoly 1080p); playerdkorea 10 sn gecikmesi kaldırıldı; Cloudstream v6 compile PASS.",
+   "runner": "qa 2026-11-04"
+  },
+  {
+   "module": "Dizilab",
+   "result": "pass",
+   "evidence": "runner 2026-11-01: pass, links=1, canlı HLS (ksdpictures)",
+   "runner": "qa 2026-11-01"
+  },
+  {
    "module": "DiziLife",
    "result": "pass",
    "evidence": "runner 2026-11-05: pass, links=1, ep=9",
    "runner": "autopilot.py 2026-11-05"
+  },
+  {
+   "module": "Dizilla",
+   "result": "pass",
+   "evidence": "probe 2026-11-04: /ara?q=gibi 200, 5 kart, detay 200, sezon/bolum bağlantısı mevcut (tam zincir koşusu yok; domain dizilla.la)",
+   "runner": "verify-probe 2026-11-04"
   },
   {
    "module": "DiziMom",
@@ -228,54 +276,6 @@
    "runner": "bench_runner.py 2026-10-30"
   },
   {
-   "module": "Diziasia",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=1, ep=12",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Dizibox",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=2, ep=3",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "DiziboxIzle",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=6, ep=6",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Dizikorea3",
-   "result": "pass",
-   "evidence": "Nuvio 2026-11-04: tt43088191 ve 316197 -> 1 stream (vidmoly 1080p); playerdkorea 10 sn gecikmesi kaldırıldı; Cloudstream v6 compile PASS.",
-   "runner": "qa 2026-11-04"
-  },
-  {
-   "module": "Dizilla",
-   "result": "pass",
-   "evidence": "probe 2026-11-04: /ara?q=gibi 200, 5 kart, detay 200, sezon/bolum bağlantısı mevcut (tam zincir koşusu yok; domain dizilla.la)",
-   "runner": "verify-probe 2026-11-04"
-  },
-  {
-   "module": "HDFilmCehennemi",
-   "result": "pass",
-   "evidence": "Nuvio 1.0.11 2026-11-07: .split(\"#\") ayraç rotasyonu + sahte p9k decoy düzeltildi, 3/3 canlı PASS (tt0133093); Cloudstream v9.",
-   "runner": "qa 2026-11-07"
-  },
-  {
-   "module": "HDFilmDelisi",
-   "result": "pass",
-   "evidence": "runner 2026-11-05: pass, links=1, ep=0",
-   "runner": "autopilot.py 2026-11-05"
-  },
-  {
-   "module": "MinikaGO",
-   "result": "pass",
-   "evidence": "probe 2026-11-04: /arama?q=aslan 200, 63 bölüm bağlantısı (runner yok; minikago.com.tr)",
-   "runner": "verify-probe 2026-11-04"
-  },
-  {
    "module": "DMAX",
    "result": "pass",
    "evidence": "runner 2026-10-31: pass, links=1, ep=5",
@@ -300,6 +300,12 @@
    "runner": "jvm-runner 2026-11-04"
   },
   {
+   "module": "FilmMakinesi",
+   "result": "pass",
+   "evidence": "2026-11-06: CS v1 derleme pass (:FilmMakinesi:make, cs3 27KB); Nuvio filmmakinesi.js host'ta canli: /?s= 200 -> oynatloload embed 200 -> video-bilgi 200 -> d1.verseneload m3u8 200 (132KB, 1080p/480p); sub tr vtt 200 (WEBVTT). Ornek tt13611778 (The Mongoose).",
+   "runner": "qa 2026-11-06"
+  },
+  {
    "module": "FilmModu",
    "result": "pass",
    "evidence": "runner 2026-10-30: pass, links=1, ep=0",
@@ -318,10 +324,22 @@
    "runner": "qa 2026-11-04"
   },
   {
+   "module": "HDFilmCehennemi",
+   "result": "pass",
+   "evidence": "Nuvio 1.0.11 2026-11-07: .split(\"#\") ayraç rotasyonu + sahte p9k decoy düzeltildi, 3/3 canlı PASS (tt0133093); Cloudstream v9.",
+   "runner": "qa 2026-11-07"
+  },
+  {
    "module": "HDFilmCehennemi2",
    "result": "pass",
    "evidence": "runner 2026-11-02: /api/search 24 sonuç; pass, links=1",
    "runner": "qa 2026-11-02"
+  },
+  {
+   "module": "HDFilmDelisi",
+   "result": "pass",
+   "evidence": "runner 2026-11-05: pass, links=1, ep=0",
+   "runner": "autopilot.py 2026-11-05"
   },
   {
    "module": "HDFilmDiziIzle",
@@ -342,6 +360,12 @@
    "result": "pass",
    "evidence": "runner 2026-10-31: pass, links=1, ep=0",
    "runner": "autopilot.py 2026-10-31"
+  },
+  {
+   "module": "InatTV",
+   "result": "pass",
+   "evidence": "runner 2026-11-08: 24 kategori tek modülde birleştirildi; Yabancı Diziler (25), Netflix (414), Yerli Filmler (330), Breaking Bad 124 bölüm + HLS m3u8 200 OK",
+   "runner": "qa 2026-11-08"
   },
   {
    "module": "JetFilmizle",
@@ -380,6 +404,12 @@
    "runner": "qa 2026-11-04"
   },
   {
+   "module": "MinikaGO",
+   "result": "pass",
+   "evidence": "probe 2026-11-04: /arama?q=aslan 200, 63 bölüm bağlantısı (runner yok; minikago.com.tr)",
+   "runner": "verify-probe 2026-11-04"
+  },
+  {
    "module": "NetFilmizle",
    "result": "pass",
    "evidence": "runner 2026-11-01: Aşkınla Yanıyorum HLS HTTP 200",
@@ -394,8 +424,14 @@
   {
    "module": "PuhuTV",
    "result": "pass",
-   "evidence": "runner 2026-11-08: pass, search=1, ep=12, links=7 (240p..2160p), subs=4; Nuvio tt7920978/77994 7 stream, tt1795096 3 stream",
+   "evidence": "runner 2026-11-08: Şahsiyet 12 bölüm, 7 HLS link (144p-2160p) + 4 VTT altyazı, ana sayfa 40 kart; Nuvio puhutv 1.0.0 7 stream PASS",
    "runner": "qa 2026-11-08"
+  },
+  {
+   "module": "Rectv",
+   "result": "pass",
+   "evidence": "runner 2026-11-07: search 200 (q=st), load 200 (rectv://movie/11551), links 200 ok=true 1x token'lı m3u8; host-side by/filtres 3 sayfa x2 tur + genre=10 -> 200, m3u8 200 #EXTM3U; detay ucu 404 (item icinde sources[] hazır); status=3 (emulator smoke yok)",
+   "runner": "qa 2026-11-07"
   },
   {
    "module": "SelcukFlix",
@@ -434,10 +470,22 @@
    "runner": "autopilot.py 2026-10-31"
   },
   {
+   "module": "Sinezy",
+   "result": "pass",
+   "evidence": "runner 2026-10-31: pass, links=1, subs=1, main=12, search=32",
+   "runner": "autopilot.py 2026-10-31"
+  },
+  {
    "module": "SonAnime",
    "result": "pass",
    "evidence": "port 2026-11-04: api.sonanime.com link zinciri; runner PASS search=15 load=TvSeries eps=39 links=3 (1080/720/480 imzalı MP4). DVD: 360 kademesi API boş dönüyorsa atlanıyor",
    "runner": "jvm-runner 2026-11-04"
+  },
+  {
+   "module": "StarTV",
+   "result": "pass",
+   "evidence": "runner 2026-10-30: pass, links=2, ep=49",
+   "runner": "bench_runner.py 2026-10-30"
   },
   {
    "module": "TLCtr",
@@ -478,240 +526,22 @@
    "runner": "autopilot.py 2026-10-30"
   },
   {
-   "module": "Yabancidizi",
-   "result": "pass",
-   "evidence": "runner 2026-11-07: v8 yabancidizi.watch, dizi dexter search=4 ep=12 links=2 subs=4; film links=1 subs=2 (RSC + PBKDF2/AES + pichive).",
-   "runner": "qa 2026-11-07"
-  },
-  {
-   "module": "StarTV",
-   "result": "pass",
-   "evidence": "runner 2026-10-30: pass, links=2, ep=49",
-   "runner": "bench_runner.py 2026-10-30"
-  },
-  {
-   "module": "Sinezy",
-   "result": "pass",
-   "evidence": "runner 2026-10-31: pass, links=1, subs=1, main=12, search=32",
-   "runner": "autopilot.py 2026-10-31"
-  },
-  {
-   "module": "Dizilab",
-   "result": "pass",
-   "evidence": "runner 2026-11-01: pass, links=1, canlı HLS (ksdpictures)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "Dizibaba",
-   "result": "pass",
-   "evidence": "runner 2026-10-31: pass, links=1, search=24, main=24",
-   "runner": "REA+manual 2026-10-31"
-  },
-  {
-   "module": "Dizigecesi",
-   "result": "pass",
-   "evidence": "runner 2026-11-01: Filemoon captcha+attest, canlı HLS HTTP 200",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatListe1Tr",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 178 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatListe2Glb",
-   "result": "blocked",
-   "evidence": "runner 2026-11-01: ana sayfa/kategori upstream 502 veya InatDecodeException; runner parse-error",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatListe3Tr",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 2081 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatSpor",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 68 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatDerbiler",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 8 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatPremium",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 1 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatSinema",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 35 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatBelgesel",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 28 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatUlusal",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 42 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatHaber",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 33 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatEbaTv",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 4 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatCocuk",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 11 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatDini",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 10 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatExxen",
-   "result": "pass",
-   "evidence": "runner 2026-11-01: 1 bağlantı, kategori dolu",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatGain",
-   "result": "pass",
-   "evidence": "runner 2026-11-01: 1 bağlantı, kategori dolu",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatNetflix",
-   "result": "pass",
-   "evidence": "runner 2026-11-01: 1 bağlantı, kategori dolu",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatHboMax",
-   "result": "pass",
-   "evidence": "runner 2026-11-01: 1 bağlantı, kategori dolu",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatDisney",
-   "result": "pass",
-   "evidence": "runner 2026-11-01: 1 bağlantı, kategori dolu",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatAmazonPrime",
-   "result": "pass",
-   "evidence": "runner 2026-11-01: 2 bağlantı, kategori dolu",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatTabii",
-   "result": "pass",
-   "evidence": "runner 2026-11-01: 1 bağlantı, kategori dolu",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatMubi",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 126 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatTod",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 10 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatYabanciDiziler",
-   "result": "partial",
-   "evidence": "runner 2026-11-01: kategori dolu, 26 içerik; aşk sorgusunda sonuç yok (kategori testi ayrı)",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatYerliDiziler",
-   "result": "blocked",
-   "evidence": "runner 2026-11-01: kategori dolu, 575 içerik; runner parse-error",
-   "runner": "qa 2026-11-01"
-  },
-  {
-   "module": "InatYerliFilmler",
-   "result": "pass",
-   "evidence": "v",
-   "runner": "qa 2026-11-01",
-   "device": "PARTIAL",
-   "date": "2026-11-04"
-  },
-  {
-   "module": "NuvioAddon",
-   "result": "pass",
-   "evidence": "emülatör cs33 2026-11-02: addon kuruldu (\"BigBull TR Katalog was validated and added successfully\"); ana sayfada 79 katalog satırı posterlerle (Anizm/Asya Animeleri/AnimeciX); satır→detay (Cinemeta)→kaynak listesinde plugin sağlayıcı; 1219 IMDb item; build 79 ok / 0 fail",
-   "runner": "nuvio/addon/build.mjs + emulator-5554"
-  },
-  {
-   "module": "YesilCamTv",
-   "result": "pass",
-   "evidence": "runner 2026-11-05: pass, links=3, ep=0",
-   "runner": "autopilot.py 2026-11-05"
-  },
-  {
-   "module": "Nuvio-DilEtiketi",
-   "result": "pass",
-   "evidence": "2026-11-06: 22 Nuvio saglayici basliklarina '__langLabeled' sarmalayicisi (Altyazili etiketi) eklendi; 242 statik check + dizibox LIVE (tt0903747 tv 2 5, 1 stream) + sentetik sarmalayici testi (X - 720p • Altyazılı / etiketli baslik korundu). manifest 1.6.16, tum sürümler 1.0.x+1.",
-   "runner": "qa 2026-11-06"
-  },
-  {
-   "module": "FilmMakinesi",
-   "result": "pass",
-   "evidence": "2026-11-06: CS v1 derleme pass (:FilmMakinesi:make, cs3 27KB); Nuvio filmmakinesi.js host'ta canli: /?s= 200 -> oynatloload embed 200 -> video-bilgi 200 -> d1.verseneload m3u8 200 (132KB, 1080p/480p); sub tr vtt 200 (WEBVTT). Ornek tt13611778 (The Mongoose).",
-   "runner": "qa 2026-11-06"
-  },
-  {
    "module": "WebteIzle",
    "result": "pass",
    "evidence": "2026-11-06: CS v1 derleme pass (:WebteIzle:make, cs3 29KB); zincir canli (CF Chrome uzerinden): the-mongoose wip=19227 -> dataAlternatif3 200 (VidMoly/OkRu/Filemoon/Pixel) -> dataEmbed 200 vidmoly('sgrkr71t8wtt') -> vidmoly.biz master m3u8 200 (900p); dizide /izle/dublaj/<slug>/1-sezon-2-bolum -> 720p. Host'tan site CF 403 (retryable); Nuvio webteizle.js verified:false -> manifest enabled:false.",
    "runner": "qa 2026-11-06"
   },
   {
-   "module": "Rectv",
+   "module": "Yabancidizi",
    "result": "pass",
-   "evidence": "runner 2026-11-07: search 200 (q=st), load 200 (rectv://movie/11551), links 200 ok=true 1x token'lı m3u8; host-side by/filtres 3 sayfa x2 tur + genre=10 -> 200, m3u8 200 #EXTM3U; detay ucu 404 (item icinde sources[] hazır); status=3 (emulator smoke yok)",
+   "evidence": "runner 2026-11-07: v8 yabancidizi.watch, dizi dexter search=4 ep=12 links=2 subs=4; film links=1 subs=2 (RSC + PBKDF2/AES + pichive).",
    "runner": "qa 2026-11-07"
   },
   {
-   "module": "Inat katalog modülleri (17 aktif)",
+   "module": "YesilCamTv",
    "result": "pass",
-   "evidence": "2026-11-08: ct.php (resmî config, kendi imzamızla çözüldü) tüm bölümleri listeliyor; onaylı geçmiş: runner 2026-11-04 10/10 İnat PASS, yerli-filmler/nf canlı 200, inattvdizi+inattvfilmler Nuvio canlı HLS. Şu an hattımızın çıkışı İnat CDN CF-ban'ında olduğundan kategori başına canlı tur cihazda/geçici açıkken tekrarlanır.",
-   "runner": "probe+ct.php 2026-11-08"
-  },
-  {
-   "module": "Inat4k Film (10 modül)",
-   "result": "skip",
-   "evidence": "2026-11-08: ct.php resmî config'inden 4K bucket'lar ÇIKARILMIŞ; 4k.filmizleeeee.cfd catalog-exo/web 404 → status=0 (v2) pasif.",
-   "runner": "probe+ct.php 2026-11-08"
+   "evidence": "runner 2026-11-05: pass, links=3, ep=0",
+   "runner": "autopilot.py 2026-11-05"
   }
  ]
 }
