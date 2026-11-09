@@ -35,7 +35,7 @@ class AniArsivProvider : MainAPI() {
     override var mainUrl = "https://aniarsiv.com"
     override var name = "AniArsiv"
     override var lang = "tr"
-    override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
+    override val supportedTypes = setOf(TvType.Anime, TvType.TvSeries, TvType.Movie)
     override val hasMainPage = true
     override val hasQuickSearch = false
     override val mainPage get() = ROWS.mapNotNull { row ->
@@ -48,10 +48,15 @@ class AniArsivProvider : MainAPI() {
     }
 
     private val headers = mapOf(
-        "User-Agent" to UA,
-        "Accept" to "application/json, text/plain, */*",
-        "Referer" to "$mainUrl/",
+        "user-agent" to UA,
+        "accept" to "application/json, text/plain, */*",
+        "referer" to "$mainUrl/",
     )
+
+    private fun posterOf(o: JSONObject): String? =
+        o.optString("cover_image").trim().takeIf { it.startsWith("http") }
+            ?: o.optString("banner_image").trim().takeIf { it.startsWith("http") }
+            ?: o.optString("resim").trim().takeIf { it.startsWith("https://") }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         if (page > 1 && !request.data.endsWith("/api/animes")) {
@@ -65,8 +70,8 @@ class AniArsivProvider : MainAPI() {
             val title = o.optString("baslik").trim()
             val slug = o.optString("slug").trim()
             if (title.isBlank() || slug.isBlank()) return@mapNotNull null
-            newTvSeriesSearchResponse(title, "$mainUrl/anime/$slug", TvType.TvSeries) {
-                this.posterUrl = o.optString("resim").takeIf { it.startsWith("http") }
+            newTvSeriesSearchResponse(title, "$mainUrl/anime/$slug", TvType.Anime) {
+                this.posterUrl = posterOf(o)
                 this.year = o.optInt("yil").takeIf { it > 1900 }
                 this.score = Score.from10(o.optString("puani"))
             }
@@ -83,8 +88,8 @@ class AniArsivProvider : MainAPI() {
             val title = o.optString("baslik").trim()
             val slug = o.optString("slug").trim()
             if (title.isBlank() || slug.isBlank()) return@mapNotNull null
-            newTvSeriesSearchResponse(title, "$mainUrl/anime/$slug", TvType.TvSeries) {
-                this.posterUrl = o.optString("resim").takeIf { it.startsWith("http") }
+            newTvSeriesSearchResponse(title, "$mainUrl/anime/$slug", TvType.Anime) {
+                this.posterUrl = posterOf(o)
                 this.year = o.optInt("yil").takeIf { it > 1900 }
                 this.score = Score.from10(o.optString("puani"))
             }
@@ -108,15 +113,16 @@ class AniArsivProvider : MainAPI() {
                 this.episode = e.optInt("index").takeIf { it > 0 }
             }
         }.distinctBy { it.data }
-        val poster = o.optString("resim").takeIf { it.startsWith("http") }
+        val poster = posterOf(o)
+        val banner = o.optString("banner_image").trim().takeIf { it.startsWith("http") } ?: poster
         val plot = o.optString("ozet").trim().ifBlank { null }
         val year = o.optInt("yil").takeIf { it > 1900 }
         val score = Score.from10(o.optString("puani"))
         val tags = o.optString("turler").split(',').map { it.trim() }.filter { it.isNotBlank() }
         if (episodes.isNotEmpty()) {
-            return newTvSeriesLoadResponse(title, "$mainUrl/anime/$slug", TvType.TvSeries, episodes) {
+            return newTvSeriesLoadResponse(title, "$mainUrl/anime/$slug", TvType.Anime, episodes) {
                 this.posterUrl = poster
-                this.backgroundPosterUrl = poster
+                this.backgroundPosterUrl = banner
                 this.plot = plot
                 this.year = year
                 this.score = score
@@ -125,7 +131,7 @@ class AniArsivProvider : MainAPI() {
         }
         return newMovieLoadResponse(title, "$mainUrl/anime/$slug", TvType.Movie, "$mainUrl/anime/$slug") {
             this.posterUrl = poster
-            this.backgroundPosterUrl = poster
+            this.backgroundPosterUrl = banner
             this.plot = plot
             this.year = year
             this.score = score
@@ -151,7 +157,7 @@ class AniArsivProvider : MainAPI() {
             callback(newExtractorLink(name, label, stream, ExtractorLinkType.VIDEO) {
                 this.referer = referer
                 this.quality = quality
-                this.headers = mapOf("User-Agent" to UA)
+                this.headers = mapOf("user-agent" to UA)
             })
             found = true
         }
@@ -196,7 +202,7 @@ class AniArsivProvider : MainAPI() {
             callback(newExtractorLink(name, "TAU $label", stream, ExtractorLinkType.VIDEO) {
                 this.referer = embed
                 this.quality = quality
-                this.headers = mapOf("User-Agent" to UA)
+                this.headers = mapOf("user-agent" to UA)
             })
             sent = true
         }

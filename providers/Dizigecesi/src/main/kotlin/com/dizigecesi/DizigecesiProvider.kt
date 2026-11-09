@@ -48,7 +48,7 @@ class DizigecesiProvider : MainAPI() {
     override val supportedTypes = setOf(TvType.Movie)
 
     private val headers = mapOf(
-        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+        "user-agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
             "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
@@ -291,7 +291,7 @@ class DizigecesiProvider : MainAPI() {
             .put("nonce", challenge.optString("nonce"))
             .put("signature", sigText)
             .put("public_key", jwk)
-            .put("client", JSONObject().put("user_agent", headers["User-Agent"]))
+            .put("client", JSONObject().put("user_agent", headers["user-agent"]))
             .put("storage", JSONObject())
             .put("attributes", JSONObject().put("entropy", "high"))
         val attest = runCatching {

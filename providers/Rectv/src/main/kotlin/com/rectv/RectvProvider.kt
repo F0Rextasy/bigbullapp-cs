@@ -105,7 +105,7 @@ class RectvProvider : MainAPI() {
     }
 
     private suspend fun nonceGet(): String? = runCatching {
-        val r = app.get("$mainUrl/api/attest/nonce", headers = mapOf("User-Agent" to UA))
+        val r = app.get("$mainUrl/api/attest/nonce", headers = mapOf("user-agent" to UA))
         JSONObject(r.text).optString("nonce", "").takeIf { it.isNotEmpty() }
     }.getOrNull()
 
@@ -119,7 +119,7 @@ class RectvProvider : MainAPI() {
                 "X-Nonce" to nonce,
                 "X-Client-Id" to CLIENT_ID,
                 "X-App-Version" to APP_VERSION,
-                "User-Agent" to UA,
+                "user-agent" to UA,
             )
             val r = runCatching { app.get("$mainUrl$path", headers = headers) }.getOrNull() ?: return null
             if (r.isSuccessful) return r.text
@@ -347,7 +347,7 @@ class RectvProvider : MainAPI() {
                 this.referer = mainUrl
                 this.quality = q
                 this.type = ExtractorLinkType.M3U8
-                this.headers = mapOf("User-Agent" to UA)
+                this.headers = mapOf("user-agent" to UA)
             })
         }
     }

@@ -218,7 +218,7 @@ class DiziBalProvider : MainAPI() {
                 if (isHls) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO,
             ) {
                 this.referer = "$mainUrl/"
-                this.headers = mapOf("User-Agent" to UA)
+                this.headers = mapOf("user-agent" to UA)
                 this.quality = quality
             }
         }

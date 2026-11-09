@@ -302,7 +302,7 @@ class TLCtrProvider : MainAPI() {
         callback(newExtractorLink(name, label, link, ExtractorLinkType.M3U8) {
             this.referer = "$mainUrl/"
             this.quality = quality
-            this.headers = mapOf("User-Agent" to UA)
+            this.headers = mapOf("user-agent" to UA)
         })
     }
 

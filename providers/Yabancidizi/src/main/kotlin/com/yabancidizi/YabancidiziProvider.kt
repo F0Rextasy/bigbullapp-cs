@@ -1,5 +1,6 @@
 package com.yabancidizi
 
+import com.bigbull.common.pichiveSign
 import com.bigbull.common.browserHeaders
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
@@ -294,7 +295,7 @@ class YabancidiziProvider : MainAPI() {
         var found = false
         val masters = config.optJSONArray("sources") ?: return false
         for (i in 0 until masters.length()) {
-            val master = masters.optJSONObject(i)?.optString("master")?.takeIf { it.startsWith("http") } ?: continue
+            val master = masters.optJSONObject(i)?.optString("master")?.takeIf { it.startsWith("http") }?.let { pichiveSign(html, it) } ?: continue
             if (!seenLinks.add(master)) continue
             callback.invoke(
                 newExtractorLink(this.name, linkName, master, ExtractorLinkType.M3U8) {
@@ -308,7 +309,7 @@ class YabancidiziProvider : MainAPI() {
         if (subtitles != null) {
             for (i in 0 until subtitles.length()) {
                 val item = subtitles.optJSONObject(i) ?: continue
-                val subUrl = item.optString("url").takeIf { it.startsWith("http") } ?: continue
+                val subUrl = item.optString("url").takeIf { it.startsWith("http") }?.let { pichiveSign(html, it) } ?: continue
                 if (!seenSubtitles.add(subUrl)) continue
                 val subLang = item.optString("label").ifBlank { "Türkçe" }
                 subtitleCallback.invoke(

@@ -262,7 +262,7 @@ class AsyaAnimeleriProvider : MainAPI() {
         val id = Regex("""rumble\.com/embed/([^/?"]+)""").find(embed)?.groupValues?.get(1) ?: return false
         val body = app.get(
             "https://rumble.com/embed/$id/",
-            headers = mapOf("User-Agent" to BROWSER_UA, "Referer" to "$mainUrl/"),
+            headers = mapOf("user-agent" to BROWSER_UA, "Referer" to "$mainUrl/"),
         ).text
         val stream = body.substringAfter("\"hls\":{\"url\":\"", "").substringBefore('"')
             .replace("\\/", "/")
@@ -285,7 +285,7 @@ class AsyaAnimeleriProvider : MainAPI() {
             app.post(
                 "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
                 data = mapOf("cmd" to "videoPlayerMetadata", "mid" to id),
-                headers = mapOf("User-Agent" to BROWSER_UA),
+                headers = mapOf("user-agent" to BROWSER_UA),
                 referer = "https://ok.ru/videoembed/$id",
             ).text
         }.getOrNull() ?: return false
@@ -303,7 +303,7 @@ class AsyaAnimeleriProvider : MainAPI() {
      * page and token, but `/get_video` then answers a JSON error as `text/html`.
      */
     private suspend fun loadStreamTape(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
-        val path = app.get(embed, headers = mapOf("User-Agent" to BROWSER_UA)).text
+        val path = app.get(embed, headers = mapOf("user-agent" to BROWSER_UA)).text
             .substringAfter("id=\"ideoolink\"", "").substringAfter('>').substringBefore('<')
             .trim().removePrefix("/")
         if (!path.startsWith("streamtape.com/")) return false

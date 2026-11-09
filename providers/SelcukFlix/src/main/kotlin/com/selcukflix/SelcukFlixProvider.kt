@@ -1,5 +1,6 @@
 package com.selcukflix
 
+import com.bigbull.common.pichiveSign
 import android.util.Base64
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -48,7 +49,7 @@ class SelcukFlixProvider : MainAPI() {
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
 
-    private val uaHeaders get() = mapOf("User-Agent" to UA, "Accept-Language" to "tr-TR,tr;q=0.9")
+    private val uaHeaders get() = mapOf("user-agent" to UA, "Accept-Language" to "tr-TR,tr;q=0.9")
 
     override val mainPage get() = ROW_PATHS.mapNotNull { (title, path) ->
         if (!Settings.rowEnabled(title)) return@mapNotNull null
@@ -296,20 +297,20 @@ class SelcukFlixProvider : MainAPI() {
             ?: return false
 
         config.optJSONArray("subtitles").objects().forEach { track ->
-            val url = track.optString("url").takeIf { it.startsWith("http") }
+            val url = track.optString("url").takeIf { it.startsWith("http") }?.let { pichiveSign(playerHtml, it) }
                 ?: track.optString("tok").takeIf { it.isNotEmpty() }
                     ?.let { "${ORIGIN.find(playerUrl)?.value.orEmpty()}/nsub.php?v=$it" }
                 ?: return@forEach
             val lang = track.optString("label").trim().ifEmpty { track.optString("lang").trim() }
                 .ifEmpty { "Altyazı" }
             emitSubtitle(SubtitleFile(lang, url).apply {
-                this.headers = mapOf("Referer" to playerUrl, "User-Agent" to UA)
+                this.headers = mapOf("Referer" to playerUrl, "user-agent" to UA)
             })
         }
 
         var found = false
         config.optJSONArray("sources").objects().forEach { source ->
-            val master = source.optString("master").takeIf { it.startsWith("http") } ?: return@forEach
+            val master = source.optString("master").takeIf { it.startsWith("http") }?.let { pichiveSign(playerHtml, it) } ?: return@forEach
             val title = source.optString("title").trim().ifEmpty { "Kaynak" }
             emitPlaylist(master, playerUrl, listOf(label, title).filter { it.isNotEmpty() }.joinToString(" · "), emit)
             found = true

@@ -1,5 +1,6 @@
 package com.asyawatch
 
+import com.bigbull.common.pichiveSign
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -195,8 +196,9 @@ class AsyaWatchProvider : MainAPI() {
                     }
                 }
             }
-            for (master in Regex(""""(?:master|file)"\s*:\s*"(https?://[^"]+)"""")
+            for (rawMaster in Regex(""""(?:master|file)"\s*:\s*"(https?://[^"]+)"""")
                 .findAll(embed).map { it.groupValues[1] }.distinct()) {
+                val master = pichiveSign(embed, rawMaster)
                 val playlist = runCatching { app.get(master, headers = uaHeaders, referer = candidate).text }
                     .getOrNull().orEmpty()
                 if (!playlist.startsWith("#EXTM3U") && !master.contains("pichive.online")) continue

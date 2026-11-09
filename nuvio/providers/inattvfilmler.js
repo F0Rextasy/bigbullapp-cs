@@ -1,4 +1,4 @@
-// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt42006709:movie:1:1", "description":"İnatTV yerli film kataloğu (imzalı liste + AES çözümleyici, HLS/MP4; 4K film katalogları upstream'de kapatıldı).", "verified":true, "version":"1.0.6"}
+// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt42006709:movie:1:1", "description":"İnatTV yerli film kataloğu (imzalı liste + AES çözümleyici, HLS/MP4; 4K film katalogları upstream'de kapatıldı).", "verified":true, "version":"1.0.7"}
 /**
  * inattvfilmler — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.
@@ -301,7 +301,9 @@ var SIGN_KEY = (function () {
 })();
 
 function decLayer(value, keyText) {
-  var parts = String(value).replace(/^\uFEFF/, "").trim().split(":");
+  var raw = String(value).replace(/^\uFEFF/, "").trim();
+  var tr = raw.length > 64 && raw.indexOf(":") > 0 && /^[a-fA-F0-9]{64}$/.test(raw.slice(-64));
+  var parts = (tr ? raw.slice(0, -64) : raw).split(":"); // str.* yanıtı HMAC izi taşır
   if (parts.length !== 2) throw new Error("layer");
   var ct = b64b(parts[0]), iv = b64b(parts[1]);
   if (iv.length !== 16) throw new Error("layer");
@@ -801,6 +803,7 @@ function numericTitle(id, mediaType) {
     .catch(function () { return ""; });
 }
 function titleOf(id, mediaType) {
+  if (/^__alt__:/.test(String(id))) return Promise.resolve(decodeURIComponent(String(id).slice(8)));
   var key = String(id || "").trim();
   if (/^\d+$/.test(key)) return numericTitle(key, mediaType);
   var kind = mediaType === "tv" ? "series" : "movie";
@@ -900,6 +903,50 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
     });
 };
 
+
+/* Cinemeta basligi yerellestirir ("Gibi" -> "As If"); sonuc bossa Wikidata TR/EN basliklariyla yeniden dene. */
+function __altTitles(raw, mediaType) {
+  var h = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  var stmt = /^tt\d+$/.test(raw) ? "P345=" + raw : (mediaType === "movie" ? "P4947=" : "P4983=") + raw;
+  return fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + stmt), { headers: h })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) {
+      var hits = (j && j.query && j.query.search) || [];
+      if (!hits.length) return null;
+      return fetch(api + "&action=wbgetentities&props=labels|aliases&languages=tr|en&ids=" + hits[0].title, { headers: h }).then(function (r) { return r.ok ? r.json() : null; });
+    })
+    .then(function (j) {
+      var out = [], seen = {}, ents = (j && j.entities) || {}, k, l, a, i;
+      function add(v) {
+        v = String(v || "").replace(/\s*\([^)]*\)\s*$/, "").trim();
+        if (v && !seen[v.toLowerCase()]) { seen[v.toLowerCase()] = 1; out.push(v); }
+      }
+      for (k in ents) {
+        l = ents[k].labels || {}; a = ents[k].aliases || {};
+        add((l.tr || {}).value); add((l.en || {}).value);
+        for (i = 0; i < (a.tr || []).length && i < 2; i++) add(a.tr[i].value);
+      }
+      return out;
+    })
+    .catch(function () { return []; });
+}
+var __cinemetaGetStreams = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  var raw = String(id || "");
+  return __cinemetaGetStreams(raw, mediaType, season, episode).then(function (streams) {
+    if ((streams && streams.length) || /^__alt__:/.test(raw)) return streams || [];
+    return __altTitles(raw, mediaType).then(function (titles) {
+      var chain = Promise.resolve([]);
+      titles.forEach(function (t) {
+        chain = chain.then(function (out) {
+          return out.length ? out : __cinemetaGetStreams("__alt__:" + encodeURIComponent(t), mediaType, season, episode);
+        });
+      });
+      return chain;
+    });
+  }).catch(function () { return []; });
+};
 
 /* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
    Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */

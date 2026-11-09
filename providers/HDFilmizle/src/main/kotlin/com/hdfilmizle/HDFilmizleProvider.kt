@@ -224,7 +224,7 @@ class HDFilmizleProvider : MainAPI() {
             callback.invoke(
                 newExtractorLink(name, candidate.label, candidate.url, ExtractorLinkType.M3U8) {
                     this.referer = candidate.referer
-                    this.headers = mapOf("User-Agent" to MOBILE_UA, "Accept" to "*/*")
+                    this.headers = mapOf("user-agent" to MOBILE_UA, "Accept" to "*/*")
                     this.quality = candidate.quality
                 }
             )
@@ -381,7 +381,7 @@ class HDFilmizleProvider : MainAPI() {
     }
 
     private val mobileHeaders = mapOf(
-        "User-Agent" to MOBILE_UA,
+        "user-agent" to MOBILE_UA,
         "Accept" to "*/*",
     )
 

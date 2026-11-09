@@ -11,6 +11,7 @@ import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
+import com.lagradost.cloudstream3.amap
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
@@ -78,10 +79,10 @@ private val SIGNING_KEY: ByteArray = run {
 }
 
 private val API_HEADERS = mapOf(
-    "User-Agent" to "speedrestapi",
-    "Referer" to "https://speedrestapi.com/",
-    "X-Requested-With" to "com.bp.box",
-    "Cache-Control" to "no-cache",
+    "user-agent" to "speedrestapi",
+    "referer" to "https://speedrestapi.com/",
+    "x-requested-with" to "com.bp.box",
+    "cache-control" to "no-cache",
 )
 
 private val HEX_64 = Regex("^[a-fA-F0-9]{64}$")
@@ -191,7 +192,12 @@ private fun optionalPayload(value: String): String {
 }
 
 private fun decodeLayer(value: String, keyText: String): String {
-    val parts = value.trim().removePrefix("\uFEFF").split(":")
+    val raw = value.trim().removePrefix("\uFEFF")
+    // str.filmizleeeee.cfd yanıtı "<ct>:<iv><64 hex HMAC>" biter; iv 24 karakterlik base64'tür.
+    val body = optionalPayload(raw).let {
+        if (it === raw && raw.length > 64 && raw.contains(':') && HEX_64.matches(raw.takeLast(64))) raw.dropLast(64) else it
+    }
+    val parts = body.split(":")
     if (parts.size != 2 || parts.any { !BASE64_BODY.matches(it) }) throw InatDecodeException()
     val encrypted = base64Decode(parts[0])
     val iv = base64Decode(parts[1])
@@ -341,6 +347,10 @@ private fun httpUri(value: String): URI {
 
 private fun webTarget(value: String): String {
     val uri = httpUri(value)
+    if (uri.rawPath.orEmpty().endsWith("/yt.php")) {
+        val vid = uri.rawQuery.orEmpty().split("&").firstOrNull { it.startsWith("v=") }?.substringAfter('=')
+        if (!vid.isNullOrBlank()) return "https://www.youtube.com/watch?v=$vid"
+    }
     if (!uri.rawPath.orEmpty().endsWith("/web.php")) return value
     val encoded = uri.rawQuery.orEmpty().split("&")
         .firstOrNull { it.startsWith("url=") }?.substringAfter('=') ?: return value
@@ -431,7 +441,7 @@ data class InatCfg(
     val sha: String,
     val fallbackUrl: String = "",
 ) {
-    val isMovieList: Boolean get() = name.contains("Yerli Filmler", true) || name.contains("Mubi", true)
+    val isMovieList: Boolean get() = name.contains("Yerli Filmler", true) || name.contains("Mubi", true) || name.contains("Dizi Film BOX", true)
     val isLiveList: Boolean get() = type == "tv_mode" && !isMovieList
 }
 
@@ -445,6 +455,7 @@ object InatCfgRegistry {
         InatCfg("plat_Eezq0PIaOgfuROrP97RMrve8", "Yabancı Diziler", "DİZİLER", "dizi_mode", "tv_mode", "https://diziboxen.help/CDN/001/002/dizibox/v2/yabanci-dizi/index.php", DIZIBOX, DIZIBOX_SHA),
         InatCfg("plat__LKyrd8ppH12JNFYVgUX1rJO", "Yerli Diziler", "DİZİLER", "dizi_mode", "tv_mode", "https://diziboxen.help/CDN/001/002/dizibox/v2/yerli-dizi/index.php", DIZIBOX, DIZIBOX_SHA),
         InatCfg("plat_Q9tlKwxINorm6gHWwjkJigM9", "Yerli Filmler", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://diziboxen.help/CDN/001/002/dizibox/v2/film/yerli-filmler.php", DIZIBOX, DIZIBOX_SHA),
+        InatCfg("plat_dfbox_001", "Dizi Film BOX", "SİNEMA & FİLMLER", "tv_mode", "tv_mode", "https://diziboxen.help/CDN/001/002/dizibox/v2/film/dizi-film-box.php", DIZIBOX, DIZIBOX_SHA),
         InatCfg("plat_b6c0fgN5DT1TlQLs3X4DFEUC", "Netflix", "YAYIN PLATFORMLARI", "dizi_mode", "tv_mode", "https://diziboxen.help/CDN/001/002/dizibox/v2/nf/index.php", DIZIBOX, DIZIBOX_SHA),
         InatCfg("plat_nKFKpIsaKwC_hjUOBLcrYJrI", "Disney+", "YAYIN PLATFORMLARI", "dizi_mode", "tv_mode", "https://diziboxen.help/CDN/001/002/dizibox/v2/dsny/index.php", DIZIBOX, DIZIBOX_SHA),
         InatCfg("plat_htbHFdgXWa6QAiUxh2m_iFAc", "Amazon Prime", "YAYIN PLATFORMLARI", "dizi_mode", "tv_mode", "https://diziboxen.help/CDN/001/002/dizibox/v2/amz/index.php", DIZIBOX, DIZIBOX_SHA),
@@ -495,6 +506,7 @@ internal sealed class InatStream {
 internal object InatClient {
     private val random = SecureRandom()
     private val listCache = ConcurrentHashMap<String, Pair<Long, List<InatEntry>>>()
+    private val rotatedHosts = ConcurrentHashMap<String, Boolean>()
 
     @Volatile
     private var clockOffset = 0L
@@ -590,7 +602,7 @@ internal object InatClient {
 
     suspend fun resolve(entry: InatEntry): InatStream {
         if (entry.url.isEmpty()) throw ErrorLoadingException("İnatTV: ${entry.name} için yayın adresi yok. $REPORT_HINT")
-        val headers = entry.headers + ("Cache-Control" to "no-cache")
+        val headers = entry.headers + ("cache-control" to "no-cache")
         val handler = entry.type.replace(Regex("_(u|s)_mode$"), "_mode")
         return when {
             handler == "nok5_mode" -> resolveVkNok5(entry, entry.name).first().second
@@ -606,7 +618,7 @@ internal object InatClient {
                 val body = request(
                     entry.url,
                     "GET",
-                    entry.headers + mapOf("Content-Type" to "application/json", "Accept" to "application/json"),
+                    entry.headers + mapOf("content-type" to "application/json", "accept" to "application/json"),
                     null,
                     signed = true,
                 )
@@ -672,7 +684,7 @@ internal object InatClient {
         val encoded = request(
             url,
             "POST",
-            API_HEADERS + ("Content-Type" to "application/x-www-form-urlencoded; charset=UTF-8"),
+            API_HEADERS + ("content-type" to "application/x-www-form-urlencoded; charset=UTF-8"),
             form,
             signed = true,
         )
@@ -696,11 +708,12 @@ internal object InatClient {
         val body = form?.entries?.joinToString("&") { "${it.key}=${it.value}" } ?: ""
         var attempt = 0
         var target = url
-        var rotated = false
         val alternate = alternateUrl(uri)
         while (true) {
-            val requestHeaders = LinkedHashMap(headers)
+            val requestHeaders = LinkedHashMap<String, String>()
+            for ((k, v) in headers) requestHeaders[k.lowercase()] = v
             if (signed) {
+                requestHeaders.putIfAbsent("user-agent", "speedrestapi")
                 val timestamp = (System.currentTimeMillis() / 1000 + clockOffset).toString()
                 val nonce = randomHex(16)
                 requestHeaders["x-ts"] = timestamp
@@ -709,6 +722,8 @@ internal object InatClient {
                     SIGNING_KEY,
                     "$method\n$path\n$timestamp\n$nonce\n${sha256Hex(body)}",
                 ).toHex()
+            } else {
+                requestHeaders.putIfAbsent("user-agent", BROWSER_UA)
             }
             val response = try {
                 if (method == "POST") {
@@ -717,8 +732,11 @@ internal object InatClient {
                     app.get(target, headers = requestHeaders)
                 }
             } catch (e: Exception) {
-                if (!rotated && alternate != null) {
-                    rotated = true
+                if (attempt < 2) {
+                    attempt++
+                    continue
+                }
+                if (target == url && alternate != null) {
                     target = alternate
                     continue
                 }
@@ -726,20 +744,15 @@ internal object InatClient {
                 throw ErrorLoadingException("İnatTV: istek başarısız (${e.javaClass.simpleName}: ${e.message}). $REPORT_HINT")
             }
             val serverTime = response.headers["x-st"] ?: response.headers["X-St"]
-            val corrected = if (signed && serverTime != null && SERVER_TIME.matches(serverTime)) {
+            if (signed && serverTime != null && SERVER_TIME.matches(serverTime)) {
                 val offset = serverTime.toLong() - System.currentTimeMillis() / 1000
-                val changed = kotlin.math.abs(offset - clockOffset) > 2
-                if (changed) clockOffset = offset
-                changed
-            } else {
-                false
+                if (kotlin.math.abs(offset - clockOffset) > 2) clockOffset = offset
             }
-            if (response.code == 403 && signed && corrected && attempt == 0) {
+            if (response.code in HOST_FAILURE_CODES && attempt < 2) {
                 attempt++
                 continue
             }
-            if (!rotated && alternate != null && response.code in HOST_FAILURE_CODES) {
-                rotated = true
+            if (response.code in HOST_FAILURE_CODES && target == url && alternate != null) {
                 target = alternate
                 continue
             }
@@ -842,8 +855,8 @@ class InatTVProvider : MainAPI() {
         val results = mutableListOf<SearchResponse>()
         val targets = InatCfgRegistry.SEARCH_CFGS +
             InatCfgRegistry.ALL.filter { it !in InatCfgRegistry.SEARCH_CFGS && InatClient.isCached(it) }
-        for (cfg in targets) {
-            val list = runCatching { rows(cfg) }.getOrNull() ?: continue
+        val fetched = targets.amap { cfg -> runCatching { cfg to rows(cfg) }.getOrNull() }.filterNotNull()
+        for ((cfg, list) in fetched) {
             for ((index, entry) in list.withIndex()) {
                 if (!entry.name.contains(term, ignoreCase = true)) continue
                 val key = "${cfg.isLiveList}|${entry.name.trim().lowercase()}"
@@ -1001,8 +1014,9 @@ class InatTVProvider : MainAPI() {
                                 sent++
                             }
                             if (stream.url.contains(".m3u8", ignoreCase = true) && quality == Qualities.Unknown.value) {
+                                val fetchHdrs = if (refUrl.isNotBlank()) hdrs + ("referer" to refUrl) else hdrs
                                 val masterText = runCatching {
-                                    app.get(stream.url, headers = hdrs, referer = refUrl).text
+                                    app.get(stream.url, headers = fetchHdrs).text
                                 }.getOrNull().orEmpty()
                                 for ((h, variantUrl) in parseHlsVariants(stream.url, masterText)) {
                                     if (!Settings.qualityAllowed(h) || !seenUrls.add("$h|$variantUrl")) continue
@@ -1069,10 +1083,20 @@ class InatTVProvider : MainAPI() {
         if (season || episode) return null
         val target = tokenUrl(cfg, MODE_ITEM, cfg.url, index, title)
         val image = img.ifBlank { null }
+        val pHeaders = mapOf("user-agent" to BROWSER_UA)
         return when {
-            cfg.isLiveList -> newLiveSearchResponse(title, target, TvType.Live, false) { posterUrl = image }
-            isSeriesRow(cfg, this) -> newTvSeriesSearchResponse(title, target, TvType.TvSeries, false) { posterUrl = image }
-            else -> newMovieSearchResponse(title, target, TvType.Movie, false) { posterUrl = image }
+            cfg.isLiveList -> newLiveSearchResponse(title, target, TvType.Live, false) {
+                posterUrl = image
+                posterHeaders = pHeaders
+            }
+            isSeriesRow(cfg, this) -> newTvSeriesSearchResponse(title, target, TvType.TvSeries, false) {
+                posterUrl = image
+                posterHeaders = pHeaders
+            }
+            else -> newMovieSearchResponse(title, target, TvType.Movie, false) {
+                posterUrl = image
+                posterHeaders = pHeaders
+            }
         }
     }
 
@@ -1106,8 +1130,9 @@ class InatTVProvider : MainAPI() {
             if (seasons.isEmpty()) {
                 throw ErrorLoadingException("$name: ${entry.name} için sezon adresi yok. $REPORT_HINT")
             }
-            val episodes = seasons.flatMap { (seasonNumber, season) ->
-                val seasonRows = rows(season)
+            val episodes = seasons.amap { (seasonNumber, season) ->
+                // Tek ölü sezon adresi tüm dizinin load()'unu düşürmesin.
+                val seasonRows = runCatching { rows(season) }.getOrNull().orEmpty()
                 val expanded = if (seasonRows.any { isSeriesContainer(it) }) {
                     seasonRows.flatMap { sub ->
                         if (isSeriesContainer(sub)) {
@@ -1127,7 +1152,7 @@ class InatTVProvider : MainAPI() {
                         this.posterUrl = row.img.ifBlank { poster }.ifBlank { null }
                     }
                 }
-            }
+            }.flatten()
             if (episodes.isEmpty()) throw ErrorLoadingException("$name: ${entry.name} için bölüm bulunamadı. $REPORT_HINT")
             return newTvSeriesLoadResponse(entry.name, url, TvType.TvSeries, episodes) {
                 this.posterUrl = poster.ifBlank { null }
@@ -1186,14 +1211,17 @@ class InatTVProvider : MainAPI() {
             is InatStream.Direct -> stream.headers
             is InatStream.Embed -> stream.headers
         }
-        return headers["referer"] ?: "$mainUrl/"
+        val ref = headers["referer"].orEmpty().trim()
+        if (ref.isNotEmpty() && ref != "https://speedrestapi.com/") return ref
+        return if (stream is InatStream.Embed) "$mainUrl/" else ""
     }
 
     private fun mediaHeaders(headers: Map<String, String>): Map<String, String> {
         val result = LinkedHashMap<String, String>()
         for ((key, value) in headers) {
-            if (key == "authorization" || key == "cookie" || key == "accept-encoding") continue
-            result[key] = value
+            val k = key.lowercase()
+            if (k == "authorization" || k == "cookie" || k == "accept-encoding") continue
+            result[k] = value
         }
         val userAgent = result["user-agent"]
         if (userAgent.isNullOrEmpty() || userAgent == "speedrestapi") result["user-agent"] = BROWSER_UA

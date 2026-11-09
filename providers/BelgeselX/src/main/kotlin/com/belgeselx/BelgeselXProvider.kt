@@ -298,7 +298,7 @@ class BelgeselXProvider : MainAPI() {
         private const val CACHE_MS = 10 * 60 * 1000L
 
         private val UA = mapOf(
-            "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+            "user-agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
                 "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         )
 

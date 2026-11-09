@@ -138,7 +138,7 @@ class LoveFilmProvider : MainAPI() {
             callback.invoke(
                 newExtractorLink(name, label, stream, type) {
                     this.referer = pageUrl
-                    this.headers = mapOf("User-Agent" to UA)
+                    this.headers = mapOf("user-agent" to UA)
                     this.quality = quality
                 }
             )

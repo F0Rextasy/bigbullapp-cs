@@ -171,7 +171,7 @@ class FilmEkseniProvider : MainAPI() {
                     val type = if (".m3u8" in stream) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
                     links += newExtractorLink(name, label, stream, type) {
                         this.referer = embed
-                        this.headers = mapOf("User-Agent" to UA)
+                        this.headers = mapOf("user-agent" to UA)
                         this.quality = quality
                     }
                 }

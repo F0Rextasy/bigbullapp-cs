@@ -41,6 +41,7 @@ class WebteIzleProvider : MainAPI() {
     override var mainUrl = "https://webteizle.info"
     private val uaHeaders get() = browserHeaders
     private val killer = CloudflareKiller()
+    private val posterHdrs get() = uaHeaders + mapOf("Referer" to "$mainUrl/") + killer.getCookieHeaders(mainUrl).toMap()
     private val ajaxHeaders get() = browserHeaders + mapOf(
         "X-Requested-With" to "XMLHttpRequest",
         "Origin" to mainUrl,
@@ -76,7 +77,7 @@ class WebteIzleProvider : MainAPI() {
         if (title.isBlank()) return null
         return newMovieSearchResponse(title, href, TvType.Movie) {
             this.posterUrl = fixUrlNull(selectFirst("img")?.posterSrcLazy())
-            this.posterHeaders = uaHeaders
+            this.posterHeaders = posterHdrs
         }
     }
 

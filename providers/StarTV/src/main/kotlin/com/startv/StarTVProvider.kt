@@ -97,7 +97,7 @@ class StarTVProvider : MainAPI() {
             ?: throw ErrorLoadingException("$name: içerik kimliği bulunamadı. $REPORT_HINT")
         val api = "$DYG_API?akamai=true&PublisherId=1&ReferenceId=StarTv_$contentId&SecretKey=$DYG_SECRET"
         val json = runCatching {
-            JSONObject(app.get(api, headers = mapOf("User-Agent" to UA), referer = "$mainUrl/").text)
+            JSONObject(app.get(api, headers = mapOf("user-agent" to UA), referer = "$mainUrl/").text)
         }.getOrNull() ?: throw ErrorLoadingException("$name: video bilgisi alınamadı. $REPORT_HINT")
         val flavors = json.optJSONObject("data")?.optJSONObject("flavors")
             ?: throw ErrorLoadingException("$name: video kaynağı yok. $REPORT_HINT")
@@ -105,7 +105,7 @@ class StarTVProvider : MainAPI() {
             ?: flavors.optJSONObject("0")?.optString("file_url_1")?.takeIf { it.startsWith("http") }
             ?: throw ErrorLoadingException("$name: HLS adresi yok. $REPORT_HINT")
         val playlist = runCatching {
-            app.get(master, referer = "$mainUrl/", headers = mapOf("User-Agent" to UA)).text
+            app.get(master, referer = "$mainUrl/", headers = mapOf("user-agent" to UA)).text
         }.getOrNull().orEmpty()
         val variants = parseVariants(playlist, master)
         var emitted = 0
@@ -114,7 +114,7 @@ class StarTVProvider : MainAPI() {
             callback(newExtractorLink(name, if (quality > 0) "$name ${quality}p" else name, url, ExtractorLinkType.M3U8) {
                 this.referer = "$mainUrl/"
                 this.quality = quality
-                this.headers = mapOf("User-Agent" to UA)
+                this.headers = mapOf("user-agent" to UA)
             })
             emitted++
         }

@@ -5,6 +5,18 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.29] - 2026-11-09
+
+### Düzeltildi
+- **İnatTV v4 (`providers/InatTV`)**: `str.filmizleeeee.cfd` çözümleyici yanıtının sonundaki 64 karakterlik HMAC izi `decodeLayer` öncesinde atılmadığı için her `regex_lb` bölümü çözülemeyip kapalı gömülü adrese düşüyordu (gerçek cihazda "oynatıcısı çözülemedi"); iz artık ayıklanıyor. `embed.filmizleeeee.cfd/yt.php?v=<id>` adresleri YouTube izleme adresine çevrilir. Dizi `load()` içinde sezonlar paralel yüklenir ve tek ölü sezon tüm diziyi düşürmez. `Dizi Film BOX` kataloğu eklendi.
+- **Tarayıcı User-Agent'ı (38 sağlayıcı + `Common.browserHeaders`)**: Cloudstream `NiceHttp` varsayılan `user-agent` (küçük harf) başlığıyla büyük harfli `User-Agent` çakışınca sağlayıcının kendi UA'sı ezilebiliyordu; anahtarlar küçük harfe alındı.
+- **Pichive PoW koruması ve oynatılamayan akışlar (`Common.kt` + 5 sağlayıcı)**: `four.pichive.online` gömmelerindeki `NP_GATE` PoW mekanizması çözüldü (`Common.pichiveSign`); Dizilla, SelcukFlix, Yabancidizi, DiziPal, AsyaWatch üzerinde 404 veren `nm.php` akışları HLS olarak başarıyla oynatılır.
+- **Deokwave v4 (`providers/Deokwave`)**: ExoPlayer 401 Unauthorized hatasını önlemek için oturum çerezleri (`Cookie` ve `Referer`) akış başlıklarına eklendi.
+- **AsyaDizi v5, MinikaGO v3, TV8 v3**: AsyaDizi sosyal paylaşım linklerinin bölüm sanılması engellendi; MinikaGO 500 dönen arama rotasında vitrin yedeği eklendi; TV8 `data-image` poster çıkarma hatası düzeltildi.
+- **Ana sayfa görselleri**: `Dizibox` (dil bayrağı `altyazi.png` poster seçiliyordu), `AniArsiv` (ölü `turkanime.co` yerine `cover_image`), `WebteIzle` (poster `Referer`/çerez) düzeltildi; ortak `posterSrcLazyImpl` bayrak/ikonları reddeder, `data-bg`/`style=background-image` kaynaklarını okur.
+- **Nuvio (30 sağlayıcı, her biri +1 patch)**: Cinemeta yerelleştirilmiş başlık döndürdüğü için (`Gibi` → `As If`) çoğu Türk dizisi/filmi bulunamıyordu; sonuç boşsa Wikidata TR/EN başlıklarıyla yeniden denenir (`__alt__:` kısa yolu). `inattvdizi`/`inattvfilmler` HMAC izli yanıtı çözer; `inattvdizi` Exxen yolu (`/ex/`) düzeltildi, Amazon Prime eklendi.
+- **`jvm-runner`/AutoUpdater**: `Proxy-Authorization` çift `Basic` hatası, İnat 403'lerinde çıkış IP'si değiştirerek yeniden deneme, `loadExtractor` gerçek Cloudstream ana bilgisayar listesiyle sınırlandırıldı (sahte "pass" kalktı), oynatılamayan akış `stream-unplayable` sınıflanır; `bench_runner.py` alan adları ve `autoheal.py` `BIGBULL_PROXY` düzeltildi.
+
 ## [1.6.28] - 2026-11-09
 
 ### Eklendi

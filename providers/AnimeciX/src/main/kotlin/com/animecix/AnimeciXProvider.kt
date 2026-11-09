@@ -228,7 +228,7 @@ class AnimeciXProvider : MainAPI() {
         return Base64.encodeToString(sealed, Base64.NO_WRAP) + "." + Base64.encodeToString(iv, Base64.NO_WRAP)
     }
 
-    private fun uaHeaders() = mapOf("User-Agent" to UA)
+    private fun uaHeaders() = mapOf("user-agent" to UA)
 
     companion object {
         /** Homepage rows in display order; all map to live listing pages. */

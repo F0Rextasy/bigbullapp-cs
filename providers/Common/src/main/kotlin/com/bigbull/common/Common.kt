@@ -11,27 +11,34 @@ import javax.crypto.spec.SecretKeySpec
 import org.jsoup.nodes.Element
 
 // Tüm modüllerin kopyaladığı tarayıcı kimliği; UA rulajı tek yerden yapılır.
-val browserHeaders = mapOf(
-    "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-    "Accept-Language" to "tr-TR,tr;q=0.9",
-)
+// NiceHttp app.defaultHeaders küçük harfli "user-agent" kullandığı için anahtarlar küçük harflidir.
+val browserHeaders: Map<String, String> = java.util.TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER).apply {
+    put("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36")
+    put("accept-language", "tr-TR,tr;q=0.9")
+}
 
 fun Element.posterSrcLazy(): String? =
     posterSrcLazyImpl()
 
 private val PLACEHOLDER_IMG = Regex(
-    """^(data:|about:|javascript:)|/(pixel|blank|lazy|placeholder|empty|spacer|transparent)\.(png|gif|jpg|jpeg|svg|webp)""",
+    """^(data:|about:|javascript:)|/(pixel|blank|lazy|placeholder|empty|spacer|transparent|altyazi|dublaj|tr-flag|en-flag)\.(png|gif|jpg|jpeg|svg|webp)""",
     RegexOption.IGNORE_CASE,
 )
+private val BG_URL = Regex("""url\(['"]?([^'")\s]+)['"]?\)""", RegexOption.IGNORE_CASE)
 
 private fun Element.posterSrcLazyImpl(): String? {
-    for (attrName in listOf("data-src", "data-original", "data-lazy-src", "data-wpfc-original-src", "data-lazy", "src")) {
+    for (attrName in listOf("data-src", "data-original", "data-lazy-src", "data-wpfc-original-src", "data-lazy", "data-bg", "data-background", "data-image", "data-poster", "src")) {
         val v = attr(attrName).trim()
         if (v.isNotEmpty() && !PLACEHOLDER_IMG.containsMatchIn(v)) return v
     }
     for (attrName in listOf("data-srcset", "srcset")) {
         val v = attr(attrName).trim().substringBefore(',').trim().substringBefore(' ').trim()
         if (v.isNotEmpty() && !PLACEHOLDER_IMG.containsMatchIn(v)) return v
+    }
+    val style = attr("style").trim()
+    if (style.isNotEmpty()) {
+        val bg = BG_URL.find(style)?.groupValues?.get(1)?.trim().orEmpty()
+        if (bg.isNotEmpty() && !PLACEHOLDER_IMG.containsMatchIn(bg)) return bg
     }
     return null
 }
@@ -117,4 +124,42 @@ fun parseHlsVariants(masterUrl: String, m3u8Text: String): List<Pair<Int, String
         i++
     }
     return out.sortedByDescending { it.first }
+}
+
+/**
+ * pichive iframe'i `nm.php`/`nsub.php` adreslerine proof-of-work ister (`&p=<nonce>`), yoksa 404 döner.
+ * Sayfadaki `NP_GATE` (önek `String.fromCharCode`, sayaç base36, `& maske`) ya da varsayılan biçim
+ * (`sha256("n:i")` ilk `b` biti sıfır) çözülür. shortcut: sayfa bu iki biçimden birini bırakırsa
+ * nonce null olur ve adres imzasız kalır; yeni biçimde tekrar çözülmeli.
+ */
+fun pichiveGateNonce(html: String): String? {
+    val gate = Regex(""""gate"\s*:\s*\{\s*"n"\s*:\s*"([^"]+)"(?:\s*,\s*"b"\s*:\s*(\d+))?""").find(html) ?: return null
+    val n = gate.groupValues[1]
+    val bits = gate.groupValues[2].toIntOrNull() ?: 12
+    val md = MessageDigest.getInstance("SHA-256")
+    fun first(msg: String): Long {
+        val d = md.digest(msg.toByteArray(Charsets.UTF_8))
+        return ((d[0].toLong() and 0xff) shl 24) or ((d[1].toLong() and 0xff) shl 16) or
+            ((d[2].toLong() and 0xff) shl 8) or (d[3].toLong() and 0xff)
+    }
+    val custom = html.contains("NP_GATE=") || html.contains("NP_GATE =")
+    if (!custom) {
+        for (i in 0 until 50_000_000) if (first("$n:$i") ushr (32 - bits) == 0L) return i.toString()
+        return null
+    }
+    val codes = Regex("""String\.fromCharCode\(([\d,\s]+)\)""").find(html)?.groupValues?.get(1)
+        ?.split(',')?.map { it.trim().toInt().toChar() }?.joinToString("") ?: return null
+    val mask = Regex("""&\s*(\d+)\s*\)\s*===\s*0""").find(html)?.groupValues?.get(1)?.toLongOrNull() ?: return null
+    for (i in 0 until 50_000_000) {
+        val nonce = java.lang.Long.toString(i.toLong(), 36)
+        if (first("$codes$n.$nonce") and mask == 0L) return nonce
+    }
+    return null
+}
+
+/** `nm.php`/`nsub.php` adresine [pichiveGateNonce] ile bulunan `&p=` imzasını ekler; diğer adresler değişmez. */
+fun pichiveSign(html: String, url: String): String {
+    if (!url.contains("pichive") || !(url.contains("/nm.php") || url.contains("/nsub.php")) || url.contains("&p=")) return url
+    val nonce = pichiveGateNonce(html) ?: return url
+    return "$url&p=$nonce"
 }

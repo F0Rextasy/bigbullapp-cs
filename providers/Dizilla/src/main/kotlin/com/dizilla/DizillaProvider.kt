@@ -1,5 +1,6 @@
 package com.dizilla
 
+import com.bigbull.common.pichiveSign
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.Actor
@@ -240,7 +241,7 @@ class DizillaProvider : MainAPI() {
         val masters = config.optJSONArray("sources") ?: return false
         for (index in 0 until masters.length()) {
             val master = masters.optJSONObject(index)?.optString("master")
-                ?.takeIf { it.startsWith("http") } ?: continue
+                ?.takeIf { it.startsWith("http") }?.let { pichiveSign(html, it) } ?: continue
             callback.invoke(
                 newExtractorLink(this.name, linkName, master, ExtractorLinkType.M3U8) {
                     this.referer = player.url
@@ -254,7 +255,7 @@ class DizillaProvider : MainAPI() {
         if (subtitles != null) {
             for (index in 0 until subtitles.length()) {
                 val item = subtitles.optJSONObject(index) ?: continue
-                val subtitleUrl = item.optString("url").takeIf { it.startsWith("http") } ?: continue
+                val subtitleUrl = item.optString("url").takeIf { it.startsWith("http") }?.let { pichiveSign(html, it) } ?: continue
                 if (!seenSubtitles.add(subtitleUrl)) continue
                 val subtitleLang = item.optString("label").takeIf { it.isNotBlank() } ?: "Türkçe"
                 subtitleCallback.invoke(

@@ -41,7 +41,7 @@ class TV8Provider : MainAPI() {
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
 
     private val headers = mapOf(
-        "User-Agent" to UA,
+        "user-agent" to UA,
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 
@@ -131,10 +131,10 @@ class TV8Provider : MainAPI() {
             if (!href.startsWith(mainUrl)) return@mapNotNull null
             val path = href.removePrefix(mainUrl).substringBefore('?').trim('/')
             if (path.isBlank() || path.contains('/') || path in STATIC) return@mapNotNull null
-            val img = card.selectFirst("img") ?: return@mapNotNull null
-            val poster = fixUrlNull(img.posterSrcLazy()) ?: return@mapNotNull null
-            val title = card.text().trim()
-                .ifBlank { img.attr("alt").trim() }
+            val dataImg = card.attr("data-image").takeIf { it.isNotBlank() }?.let { if (it.startsWith("http")) it else "$mainUrl/$it" }
+            val poster = fixUrlNull(dataImg) ?: fixUrlNull(card.selectFirst("img")?.posterSrcLazy())
+            val title = card.attr("data-title").trim()
+                .ifBlank { card.text().trim() }
                 .ifBlank { card.attr("title").trim() }
                 .takeIf { it.isNotEmpty() } ?: return@mapNotNull null
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) {

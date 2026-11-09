@@ -297,7 +297,7 @@ class TurkceDiziProvider : MainAPI() {
             app.post(
                 "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
                 data = emptyMap(),
-                headers = mapOf("User-Agent" to "Mozilla/5.0 (Linux; Android 13)", "Referer" to "https://ok.ru/"),
+                headers = mapOf("user-agent" to "Mozilla/5.0 (Linux; Android 13)", "Referer" to "https://ok.ru/"),
             ).text
         }.getOrNull() ?: return false
         val videos = runCatching { JSONObject(body).optJSONArray("videos") }.getOrNull() ?: return false

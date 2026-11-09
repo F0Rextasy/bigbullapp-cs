@@ -96,7 +96,7 @@ class DiziboxProvider : MainAPI() {
             .filter { it.isNotBlank() }.joinToString(" - ")
             .ifBlank { anchor.attr("title") }
         return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-            val img = selectFirst("img")
+            val img = selectFirst("img.afis, img.wp-post-image, a.figure-link img") ?: select("img").lastOrNull()
             this.posterUrl = fixUrlNull(
                 img?.attr("data-src")?.takeIf { it.isNotBlank() } ?: img?.attr("src")
             )

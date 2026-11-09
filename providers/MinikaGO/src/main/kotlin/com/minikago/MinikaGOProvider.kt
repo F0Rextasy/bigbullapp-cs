@@ -66,31 +66,38 @@ class MinikaGOProvider : MainAPI() {
     override suspend fun search(query: String): List<SearchResponse> {
         val term = query.trim()
         if (term.isBlank()) return emptyList()
-        val doc = searchPage(term) ?: return emptyList()
         val needle = normalize(term)
-        return doc.select("div.search-item").mapNotNull { item ->
+        val doc = searchPage(term) ?: runCatching { app.get("$mainUrl/webtv", headers = uaHeaders).document }.getOrNull()
+            ?: return emptyList()
+        val searchItems = doc.select("div.search-item").mapNotNull { item ->
             val title = item.selectFirst("h2.item-content-title")?.text()?.trim() ?: return@mapNotNull null
             if (!normalize(title).contains(needle)) return@mapNotNull null
             if (SKIP.containsMatchIn(title)) return@mapNotNull null
             val url = item.selectFirst("a[href*='/bolum/']")?.attr("href")
                 ?.let { fixUrlNull(it) } ?: return@mapNotNull null
             newMovieSearchResponse(title, url, TvType.Movie)
+        }
+        if (searchItems.isNotEmpty()) return searchItems.distinctBy { it.url }
+        return doc.select("div.showcase-item").mapNotNull { item ->
+            val title = item.selectFirst("a.showcase-text span")?.text()?.trim() ?: return@mapNotNull null
+            if (!normalize(title).contains(needle)) return@mapNotNull null
+            if (SKIP.containsMatchIn(title)) return@mapNotNull null
+            val url = item.selectFirst("div.showcase-image a[href*='/bolum/']")?.attr("href")
+                ?.let { fixUrlNull(it) } ?: return@mapNotNull null
+            newMovieSearchResponse(title, url, TvType.Movie) {
+                this.posterUrl = item.selectFirst("div.showcase-image img")?.posterSrcLazy()?.let { fixUrlNull(it) }
+            }
         }.distinctBy { it.url }
     }
 
-    /** Site /arama 500 dönebildiği için query= birincil, q= yedek; ikisi de düşerse hata bildirilir. */
+    /** Site /arama 500 dönebildiği için query= birincil, q= yedek; ikisi de çökerse null döner (webtv yedeği devreye girer). */
     private suspend fun searchPage(term: String): Document? {
-        var reachable = false
         for (param in listOf("query", "q")) {
-            val doc = try {
-                app.get("$mainUrl/arama", params = mapOf(param to term), headers = uaHeaders)
-                    .document.also { reachable = true }
-            } catch (_: Exception) {
-                continue
-            }
+            val doc = runCatching {
+                app.get("$mainUrl/arama", params = mapOf(param to term), headers = uaHeaders).document
+            }.getOrNull() ?: continue
             if (doc.selectFirst("div.search-item") != null) return doc
         }
-        if (!reachable) throw ErrorLoadingException("$name: arama yanıt vermedi. $REPORT_HINT")
         return null
     }
 
@@ -125,7 +132,7 @@ class MinikaGOProvider : MainAPI() {
             callback(newExtractorLink(name, if (quality > 0) "$name ${quality}p" else name, link, ExtractorLinkType.VIDEO) {
                 this.referer = "$mainUrl/"
                 this.quality = quality
-                this.headers = mapOf("User-Agent" to UA)
+                this.headers = mapOf("user-agent" to UA)
             })
             emitted++
         }

@@ -136,7 +136,10 @@ class AsyaDiziProvider : MainAPI() {
         val slug = basePath.trim('/').split('/').lastOrNull().orEmpty()
         val slugBase = slug.removeSuffix("-izle").removeSuffix("-film-izle")
         val episodes = doc.select("a[href]").mapNotNull { anchor ->
-            val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
+            val rawHref = anchor.attr("href").trim()
+            if (rawHref.contains("share") || rawHref.contains("facebook.com") || rawHref.contains("twitter.com") || rawHref.contains("whatsapp.com") || rawHref.contains("pinterest.com")) return@mapNotNull null
+            val href = fixUrlNull(rawHref) ?: return@mapNotNull null
+            if (!href.startsWith(mainUrl)) return@mapNotNull null
             val path = href.substringAfter(mainUrl).substringBefore('?')
             if (basePath.isNotBlank() && !path.startsWith(basePath) &&
                 !path.contains(slug) && !path.contains(slugBase)) return@mapNotNull null
@@ -265,7 +268,7 @@ class AsyaDiziProvider : MainAPI() {
             app.post(
                 "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
                 data = emptyMap(),
-                headers = mapOf("User-Agent" to "Mozilla/5.0 (Linux; Android 13)", "Referer" to "https://ok.ru/"),
+                headers = mapOf("user-agent" to "Mozilla/5.0 (Linux; Android 13)", "Referer" to "https://ok.ru/"),
             ).text
         }.getOrNull() ?: return false
         val videos = runCatching { JSONObject(body).optJSONArray("videos") }.getOrNull() ?: return false

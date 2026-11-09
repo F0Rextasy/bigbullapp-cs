@@ -128,7 +128,7 @@ class DiziPodProvider : MainAPI() {
             linkCallback.invoke(
                 newExtractorLink(name, label, stream, type) {
                     this.referer = embedUrl
-                    this.headers = mapOf("User-Agent" to UA)
+                    this.headers = mapOf("user-agent" to UA)
                     this.quality = Qualities.Unknown.value
                 }
             )

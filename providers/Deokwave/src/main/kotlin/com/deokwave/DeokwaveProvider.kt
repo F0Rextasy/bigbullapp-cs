@@ -210,7 +210,7 @@ class DeokwaveProvider : MainAPI() {
         val text = resp.text.replace("\\/", "/").replace("\\\"", "\"")
         var found = false
         val seen = mutableSetOf<String>()
-        suspend fun emit(stream: String, label: String, referer: String, explicitQuality: Int? = null) {
+        suspend fun emit(stream: String, label: String, referer: String, explicitQuality: Int? = null, headers: Map<String, String>? = null) {
             if (!stream.startsWith("http") || !seen.add(stream)) return
             val isM3u8 = stream.contains(".m3u8")
             val type = if (isM3u8) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
@@ -219,17 +219,20 @@ class DeokwaveProvider : MainAPI() {
                 callback.invoke(newExtractorLink(name, label, stream, type) {
                     this.referer = referer
                     this.quality = quality
+                    if (headers != null) this.headers = headers
                 })
                 found = true
             }
             if (isM3u8 && explicitQuality == null) {
                 val playlist = runCatching { app.get(stream, headers = uaHeaders, referer = referer).text }.getOrNull().orEmpty()
                 for ((h, vUrl) in parseHlsVariants(stream, playlist)) {
-                    emit(vUrl, "$label ${h}p", referer, h)
+                    emit(vUrl, "$label ${h}p", referer, h, headers)
                 }
             }
         }
-        loadTokenFlow(watchData, resp.text, resp.cookies) { stream, label, referer -> emit(stream, label, referer) }
+        val cookieHeader = resp.cookies.entries.joinToString("; ") { "${it.key}=${it.value}" }
+        val streamHeaders = if (cookieHeader.isNotBlank()) mapOf("Cookie" to cookieHeader, "Referer" to watchData) else mapOf("Referer" to watchData)
+        loadTokenFlow(watchData, resp.text, resp.cookies) { stream, label, referer -> emit(stream, label, referer, headers = streamHeaders) }
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in media) emit(m.value, "Direct", watchData)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")

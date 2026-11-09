@@ -51,7 +51,7 @@ class WebdramaTurkey2Provider : MainAPI() {
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie, TvType.Anime)
 
     private val browserHeaders = mapOf(
-        "User-Agent" to UA,
+        "user-agent" to UA,
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 

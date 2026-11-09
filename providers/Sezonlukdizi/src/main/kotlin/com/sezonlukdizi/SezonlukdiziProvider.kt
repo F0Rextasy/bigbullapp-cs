@@ -52,7 +52,7 @@ class SezonlukdiziProvider : MainAPI() {
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 
     private val ajaxHeaders get() = mapOf(
-        "User-Agent" to ua,
+        "user-agent" to ua,
         "X-Requested-With" to "XMLHttpRequest",
     )
 
@@ -263,7 +263,7 @@ class SezonlukdiziProvider : MainAPI() {
         val code = embedUrl.trimEnd('/').substringAfterLast('/')
         val embedOrigin = Regex("""^(https?://[^/]+)""").find(embedUrl)?.groupValues?.get(1) ?: return false
         val headers = mapOf(
-            "User-Agent" to ua,
+            "user-agent" to ua,
             "Accept" to "*/*",
             "Referer" to "$mainUrl/",
             "x-embed-origin" to "sezonlukdizi.cc",

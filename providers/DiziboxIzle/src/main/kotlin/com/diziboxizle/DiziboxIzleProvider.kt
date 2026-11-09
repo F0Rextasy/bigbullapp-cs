@@ -276,7 +276,7 @@ class DiziboxIzleProvider : MainAPI() {
                 "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
                 data = emptyMap(),
                 headers = mapOf(
-                    "User-Agent" to "Mozilla/5.0 (Linux; Android 13)",
+                    "user-agent" to "Mozilla/5.0 (Linux; Android 13)",
                     "Referer" to "https://ok.ru/",
                 ),
             ).text

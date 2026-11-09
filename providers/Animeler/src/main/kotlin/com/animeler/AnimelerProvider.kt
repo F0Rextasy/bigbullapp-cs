@@ -259,7 +259,7 @@ class AnimelerProvider : MainAPI() {
 
             ?: runCatching {
 
-                val page = app.get(embed, headers = mapOf("User-Agent" to "Mozilla/5.0")).text
+                val page = app.get(embed, headers = mapOf("user-agent" to "Mozilla/5.0")).text
 
                 Regex("""/video/meta/(\d+)""").find(page)?.groupValues?.get(1)
 
@@ -275,7 +275,7 @@ class AnimelerProvider : MainAPI() {
 
                 headers = mapOf(
 
-                    "User-Agent" to "Mozilla/5.0",
+                    "user-agent" to "Mozilla/5.0",
 
                     "Referer" to "https://my.mail.ru/video/embed/$id",
 
@@ -307,7 +307,7 @@ class AnimelerProvider : MainAPI() {
 
                 this.quality = getQualityFromName(label.uppercase())
 
-                this.headers = mapOf("User-Agent" to "Mozilla/5.0")
+                this.headers = mapOf("user-agent" to "Mozilla/5.0")
 
             })
 
@@ -335,7 +335,7 @@ class AnimelerProvider : MainAPI() {
 
                 headers = mapOf(
 
-                    "User-Agent" to "Mozilla/5.0 (Linux; Android 13)",
+                    "user-agent" to "Mozilla/5.0 (Linux; Android 13)",
 
                     "Referer" to "https://ok.ru/",
 
@@ -365,7 +365,7 @@ class AnimelerProvider : MainAPI() {
 
                     this.quality = getQualityFromName(label.uppercase())
 
-                    this.headers = mapOf("User-Agent" to "Mozilla/5.0 (Linux; Android 13)")
+                    this.headers = mapOf("user-agent" to "Mozilla/5.0 (Linux; Android 13)")
 
                 }
 

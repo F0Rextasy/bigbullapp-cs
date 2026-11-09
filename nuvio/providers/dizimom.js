@@ -1,4 +1,4 @@
-// @provider {"id":"dizimom", "name":"DiziMom", "types":["tv"], "domain":"ddizimom.net", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"DiziMom yabancı diziler Türkçe dublaj/altyazılı arşivi (pilavyer HLS).", "version":"1.1.0", "verified":true}
+// @provider {"id":"dizimom", "name":"DiziMom", "types":["tv"], "domain":"ddizimom.net", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"DiziMom yabancı diziler Türkçe dublaj/altyazılı arşivi (pilavyer HLS).", "version":"1.1.1", "verified":true}
 /**
  * dizimom — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /ara?q= -> strict card match -> /dizi/<slug> ->
@@ -70,6 +70,7 @@ function pick(cards, wanted) {
 }
 
 function titleOf(id, mediaType) {
+  if (/^__alt__:/.test(String(id))) return Promise.resolve(decodeURIComponent(String(id).slice(8)));
   var kind = mediaType === "tv" ? "series" : "movie";
   return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
     .then(function (body) {
@@ -288,6 +289,50 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }
   return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
     return __origGetStreams(imdb || raw, mediaType, season, episode);
+  }).catch(function () { return []; });
+};
+
+/* Cinemeta basligi yerellestirir ("Gibi" -> "As If"); sonuc bossa Wikidata TR/EN basliklariyla yeniden dene. */
+function __altTitles(raw, mediaType) {
+  var h = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  var stmt = /^tt\d+$/.test(raw) ? "P345=" + raw : (mediaType === "movie" ? "P4947=" : "P4983=") + raw;
+  return fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + stmt), { headers: h })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) {
+      var hits = (j && j.query && j.query.search) || [];
+      if (!hits.length) return null;
+      return fetch(api + "&action=wbgetentities&props=labels|aliases&languages=tr|en&ids=" + hits[0].title, { headers: h }).then(function (r) { return r.ok ? r.json() : null; });
+    })
+    .then(function (j) {
+      var out = [], seen = {}, ents = (j && j.entities) || {}, k, l, a, i;
+      function add(v) {
+        v = String(v || "").replace(/\s*\([^)]*\)\s*$/, "").trim();
+        if (v && !seen[v.toLowerCase()]) { seen[v.toLowerCase()] = 1; out.push(v); }
+      }
+      for (k in ents) {
+        l = ents[k].labels || {}; a = ents[k].aliases || {};
+        add((l.tr || {}).value); add((l.en || {}).value);
+        for (i = 0; i < (a.tr || []).length && i < 2; i++) add(a.tr[i].value);
+      }
+      return out;
+    })
+    .catch(function () { return []; });
+}
+var __cinemetaGetStreams = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  var raw = String(id || "");
+  return __cinemetaGetStreams(raw, mediaType, season, episode).then(function (streams) {
+    if ((streams && streams.length) || /^__alt__:/.test(raw)) return streams || [];
+    return __altTitles(raw, mediaType).then(function (titles) {
+      var chain = Promise.resolve([]);
+      titles.forEach(function (t) {
+        chain = chain.then(function (out) {
+          return out.length ? out : __cinemetaGetStreams("__alt__:" + encodeURIComponent(t), mediaType, season, episode);
+        });
+      });
+      return chain;
+    });
   }).catch(function () { return []; });
 };
 

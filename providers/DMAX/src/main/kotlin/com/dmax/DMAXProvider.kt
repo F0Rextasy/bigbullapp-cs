@@ -43,7 +43,7 @@ class DMAXProvider : MainAPI() {
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
 
     private val headers = mapOf(
-        "User-Agent" to UA,
+        "user-agent" to UA,
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 

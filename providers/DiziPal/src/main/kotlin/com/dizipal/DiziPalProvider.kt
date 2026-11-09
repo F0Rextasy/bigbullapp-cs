@@ -1,5 +1,6 @@
 package com.dizipal
 
+import com.bigbull.common.pichiveSign
 import android.util.Base64
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -54,7 +55,7 @@ class DiziPalProvider : MainAPI() {
 
     // Oynatıcı CDN'i (aşağıdaki UA sabitinin yorumu) Chrome UA'ya 403 verdiği için tüm
     // istekler Firefox UA ile gider; browserHeaders (Chrome/130) burada bilinçli kullanılmaz.
-    private val uaHeaders get() = mapOf("User-Agent" to UA, "Accept-Language" to "tr-TR,tr;q=0.9")
+    private val uaHeaders get() = mapOf("user-agent" to UA, "Accept-Language" to "tr-TR,tr;q=0.9")
 
     /** Yalnız bu iki bölüm `?page=N` ile sayfalanıyor; diğerleri tek istekte tüm listeyi verir. */
     private val pagedSections = setOf("$mainUrl/yabanci-dizi-izle", "$mainUrl/film-izle")
@@ -330,7 +331,7 @@ class DiziPalProvider : MainAPI() {
 
         config.optJSONArray("subtitles").objects().forEach { track ->
             // Yeni oynatıcı altyazıyı `tok` ile verir (`nsub.php?v=`); eski yük `url` taşır.
-            val url = track.optString("url").takeIf { it.startsWith("http") }
+            val url = track.optString("url").takeIf { it.startsWith("http") }?.let { pichiveSign(playerHtml, it) }
                 ?: track.optString("tok").takeIf { it.isNotEmpty() }
                     ?.let { "${ORIGIN.find(playerUrl)?.value.orEmpty()}/nsub.php?v=$it" }
                 ?: return@forEach
@@ -338,13 +339,13 @@ class DiziPalProvider : MainAPI() {
                 .ifEmpty { track.optString("lang").trim() }
                 .ifEmpty { "Altyazı" }
             emitSubtitle(SubtitleFile(label, url).apply {
-                this.headers = mapOf("Referer" to playerUrl, "User-Agent" to UA)
+                this.headers = mapOf("Referer" to playerUrl, "user-agent" to UA)
             })
         }
 
         var found = false
         config.optJSONArray("sources").objects().forEach { source ->
-            val master = source.optString("master").takeIf { it.startsWith("http") } ?: return@forEach
+            val master = source.optString("master").takeIf { it.startsWith("http") }?.let { pichiveSign(playerHtml, it) } ?: return@forEach
             val label = source.optString("title").trim().ifEmpty { "Kaynak" }
             emitPlaylist(master, playerUrl, label, emit)
             found = true
