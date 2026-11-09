@@ -177,6 +177,7 @@ class DdiziProvider : MainAPI() {
                     // streambox referans istiyor; twimg/yandex disk Referer başlığı gelince 403 veriyor.
                     this.referer = if (stream.contains("streambox.")) referer else ""
                     this.quality = getQualityFromName(match.groupValues[2])
+                this.headers = uaHeaders
                 })
                 found = true
             }

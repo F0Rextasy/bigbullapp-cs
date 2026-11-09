@@ -1,6 +1,6 @@
 {
-  "generated": "2026-11-08",
-  "note": "89 TR modül runner benchmark (2026-11-08)",
+  "generated": "2026-11-09",
+  "note": "89 TR modül runner benchmark (2026-11-09)",
   "modules": [
     {
       "module": "AniArsiv",
@@ -125,8 +125,8 @@
     {
       "module": "Ddizi",
       "result": "pass",
-      "evidence": "runner 2026-10-30: pass, links=1, ep=13",
-      "runner": "bench_runner.py 2026-10-30"
+      "evidence": "runner 2026-11-09: pass, links=1, ep=13",
+      "runner": "autopilot.py 2026-11-09"
     },
     {
       "module": "DDizimag",

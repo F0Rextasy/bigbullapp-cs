@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.31] - 2026-11-09
+
+### Değişti
+- **Ddizi v5**: taban adres https://ddizi.tel -> https://www.ddizi.tel.
+
 ## [1.6.30] - 2026-11-09
 
 ### Düzeltildi

@@ -298,21 +298,6 @@
    "latencyMs": 206,
    "title": ""
   },
-  "www.ddizi.tel": {
-   "id": "www-ddizi-tel",
-   "name": "Ddizi",
-   "mainUrl": "https://www.ddizi.tel",
-   "status": "implemented",
-   "module": "Ddizi",
-   "source": "provider-source",
-   "language": "?",
-   "tvTypes": [],
-   "http": 200,
-   "health": "ok",
-   "checked": "2026-10-29T19:23:07Z",
-   "latencyMs": 334,
-   "title": "Ddizi, dizi izle, dizi seyret, dizi, canlı dizi, ddizi.tel"
-  },
   "ddizimom.net": {
    "id": "ddizimom-net",
    "name": "DiziMom",
@@ -1738,6 +1723,26 @@
    "latencyMs": 900,
    "module": "Rectv",
    "note": "imzali resmi API (attest nonce + HMAC); liste uclari + m3u8 200 kanitli; detay ucu yok (liste item icinde sources)"
+  },
+  "ddizi.tel": {
+   "id": "ddizi-tel",
+   "name": "Ddizi",
+   "mainUrl": "https://www.ddizi.tel",
+   "status": "implemented",
+   "http": 200,
+   "title": "Ddizi",
+   "language": "tr",
+   "tvTypes": [
+    "TvSeries"
+   ],
+   "poolNames": [
+    "Ddizi"
+   ],
+   "source": "provider-source",
+   "health": "ok",
+   "checked": "2026-11-09T12:29:06Z",
+   "latencyMs": 0,
+   "module": "Ddizi"
   }
  }
 }
