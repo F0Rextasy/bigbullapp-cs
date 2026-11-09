@@ -1,4 +1,4 @@
-// @provider {"id":"selcukflix", "name":"SelcukFlix", "types":["movie", "tv"], "domain":"selcukflix.app", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"SelcukFlix - Turkce dublaj/altyazili film ve diziler; PBKDF2+SHA512 player token -> HLS master.", "verified":true, "version":"1.1.2"}
+// @provider {"id":"selcukflix", "name":"SelcukFlix", "types":["movie", "tv"], "domain":"selcukflix.app", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"SelcukFlix - Turkce dublaj/altyazili film ve diziler; PBKDF2+SHA512 player token -> HLS master.", "verified":true, "version":"1.1.3"}
 /**
  * selcukflix — Nuvio provider (bb-nuvio).
  * Flow: IMDb id (TMDB -> Wikidata) -> POST /api/mj {action:searchContent} (exact object_related_imdb_id,
@@ -545,14 +545,14 @@ function pichiveSign(html, url) {
   }
   var nVar = fn[1], body = fn[3];
   var cm = /var\s+(\w+)\s*=\s*String\.fromCharCode\(([\d,\s]+)\)/.exec(body);
-  var nm = /var\s+(\w+)\s*=\s*\w+\.toString\(36\)/.exec(body);
-  var im = /\(\s*\w+\(([^)]+)\)\[(\d+)\]\s*&\s*(\d+)\s*\)\s*===\s*0/.exec(body);
+  var nm = /var\s+(\w+)\s*=\s*(?:\w+\.toString\((\d*)\)|String\(\w+\))/.exec(body);
+  var im = /\(\s*\w+\(([^)]+)\)\[(\d+)\]\s*(>>>|&)\s*(\d+)\s*\)\s*===?\s*0/.exec(body);
   if (!cm || !nm || !im) return u;
   var saltVar = cm[1], salt = cm[2].split(",").map(function (x) { return String.fromCharCode(parseInt(x.trim(), 10)); }).join("");
-  var nonceVar = nm[1], parts = im[1].split("+").map(function (s) { return s.trim(); });
-  var wordIdx = parseInt(im[2], 10) || 0, mask = parseInt(im[3], 10) >>> 0;
+  var nonceVar = nm[1], radix = parseInt(nm[2], 10) || 10, parts = im[1].split("+").map(function (s) { return s.trim(); });
+  var wordIdx = parseInt(im[2], 10) || 0, op = im[3], rhs = parseInt(im[4], 10) >>> 0;
   for (var k = 0; k < 5000000; k++) {
-    var nonce = k.toString(36), msg = "";
+    var nonce = k.toString(radix), msg = "";
     for (var p = 0; p < parts.length; p++) {
       var tok = parts[p];
       if (tok === nVar) msg += n;
@@ -560,7 +560,8 @@ function pichiveSign(html, url) {
       else if (tok === nonceVar) msg += nonce;
       else msg += tok.replace(/^["']|["']$/g, "");
     }
-    if (((sha256Words(msg)[wordIdx] & mask) >>> 0) === 0) return u + "&p=" + nonce;
+    var w = sha256Words(msg)[wordIdx] >>> 0;
+    if ((op === ">>>" ? (w >>> rhs) : ((w & rhs) >>> 0)) === 0) return u + "&p=" + nonce;
   }
   return u;
 }

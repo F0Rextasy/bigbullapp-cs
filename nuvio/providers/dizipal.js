@@ -1,4 +1,4 @@
-// @provider {"id":"dizipal", "name":"DiziPal", "types":["movie", "tv"], "domain":"dizipal1594.com", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.", "verified":true, "version":"1.0.10"}
+// @provider {"id":"dizipal", "name":"DiziPal", "types":["movie", "tv"], "domain":"dizipal1595.com", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.", "verified":true, "version":"1.0.11"}
 /**
  * dizipal — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> POST /api/mj {action:searchContent} -> content/episode page
@@ -6,12 +6,12 @@
  *       -> dplayer82 player -> NP_CONFIG master (or legacy openPlayer) -> HLS variants.
  * The player CDN's Cloudflare rule 403s Chrome-style UAs (regardless of TLS) and undici's TLS
  * fingerprint, so requests carry a Firefox UA; that passes both the CDN and the Wikidata lookup.
- * The site moved from dizipal1592.com to dizipal1594.com; 1592 301s, and a redirected POST
+ * The site moved from dizipal1592.com to dizipal1595.com; 1592 301s, and a redirected POST
  * turns into a GET, which /api/mj rejects with 405.
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0";
-var BASE = "https://dizipal1594.com";
+var BASE = "https://dizipal1595.com";
 var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 var K512HEX =
   "428a2f98d728ae22 7137449123ef65cd b5c0fbcfec4d3b2f e9b5dba58189dbbc 3956c25bf348b538 59f111f1b605d019 923f82a4af194f9b ab1c5ed5da6d8118 " +
@@ -558,14 +558,14 @@ function pichiveSign(html, url) {
   }
   var nVar = fn[1], body = fn[3];
   var cm = /var\s+(\w+)\s*=\s*String\.fromCharCode\(([\d,\s]+)\)/.exec(body);
-  var nm = /var\s+(\w+)\s*=\s*\w+\.toString\(36\)/.exec(body);
-  var im = /\(\s*\w+\(([^)]+)\)\[(\d+)\]\s*&\s*(\d+)\s*\)\s*===\s*0/.exec(body);
+  var nm = /var\s+(\w+)\s*=\s*(?:\w+\.toString\((\d*)\)|String\(\w+\))/.exec(body);
+  var im = /\(\s*\w+\(([^)]+)\)\[(\d+)\]\s*(>>>|&)\s*(\d+)\s*\)\s*===?\s*0/.exec(body);
   if (!cm || !nm || !im) return u;
   var saltVar = cm[1], salt = cm[2].split(",").map(function (x) { return String.fromCharCode(parseInt(x.trim(), 10)); }).join("");
-  var nonceVar = nm[1], parts = im[1].split("+").map(function (s) { return s.trim(); });
-  var wordIdx = parseInt(im[2], 10) || 0, mask = parseInt(im[3], 10) >>> 0;
+  var nonceVar = nm[1], radix = parseInt(nm[2], 10) || 10, parts = im[1].split("+").map(function (s) { return s.trim(); });
+  var wordIdx = parseInt(im[2], 10) || 0, op = im[3], rhs = parseInt(im[4], 10) >>> 0;
   for (var k = 0; k < 5000000; k++) {
-    var nonce = k.toString(36), msg = "";
+    var nonce = k.toString(radix), msg = "";
     for (var p = 0; p < parts.length; p++) {
       var tok = parts[p];
       if (tok === nVar) msg += n;
@@ -573,7 +573,8 @@ function pichiveSign(html, url) {
       else if (tok === nonceVar) msg += nonce;
       else msg += tok.replace(/^["']|["']$/g, "");
     }
-    if (((sha256Words(msg)[wordIdx] & mask) >>> 0) === 0) return u + "&p=" + nonce;
+    var w = sha256Words(msg)[wordIdx] >>> 0;
+    if ((op === ">>>" ? (w >>> rhs) : ((w & rhs) >>> 0)) === 0) return u + "&p=" + nonce;
   }
   return u;
 }

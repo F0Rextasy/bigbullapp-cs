@@ -156,13 +156,16 @@ fun pichiveGateNonce(html: String): String? {
     val cm = Regex("""var\s+(\w+)\s*=\s*String\.fromCharCode\(([\d,\s]+)\)""").find(body) ?: return null
     val saltVar = cm.groupValues[1]
     val salt = cm.groupValues[2].split(',').map { it.trim().toInt().toChar() }.joinToString("")
-    val nonceVar = Regex("""var\s+(\w+)\s*=\s*\w+\.toString\(36\)""").find(body)?.groupValues?.get(1) ?: return null
-    val im = Regex("""\(\s*\w+\(([^)]+)\)\[(\d+)\]\s*&\s*(\d+)\s*\)\s*===\s*0""").find(body) ?: return null
+    val nonceMatch = Regex("""var\s+(\w+)\s*=\s*(?:\w+\.toString\((\d*)\)|String\(\w+\))""").find(body) ?: return null
+    val nonceVar = nonceMatch.groupValues[1]
+    val radix = nonceMatch.groupValues[2].toIntOrNull()?.coerceIn(2, 36) ?: 10
+    val im = Regex("""\(\s*\w+\(([^)]+)\)\[(\d+)\]\s*(>>>|&)\s*(\d+)\s*\)\s*===?\s*0""").find(body) ?: return null
     val parts = im.groupValues[1].split('+').map { it.trim() }
     val wordIdx = im.groupValues[2].toIntOrNull() ?: 0
-    val mask = im.groupValues[3].toLongOrNull() ?: return null
+    val op = im.groupValues[3]
+    val rhs = im.groupValues[4].toLongOrNull() ?: return null
     for (i in 0 until 50_000_000) {
-        val nonce = java.lang.Long.toString(i.toLong(), 36)
+        val nonce = java.lang.Long.toString(i.toLong(), radix)
         val msg = buildString {
             for (p in parts) {
                 when (p) {
@@ -173,7 +176,9 @@ fun pichiveGateNonce(html: String): String? {
                 }
             }
         }
-        if (wordAt(msg, wordIdx) and mask == 0L) return nonce
+        val w = wordAt(msg, wordIdx)
+        val ok = if (op == ">>>") (w ushr rhs.toInt()) == 0L else (w and rhs) == 0L
+        if (ok) return nonce
     }
     return null
 }

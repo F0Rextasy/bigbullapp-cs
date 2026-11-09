@@ -46,7 +46,7 @@ import org.jsoup.nodes.Element
  * Her iki CDN de isteklerde oynatıcı sayfasını `Referer` olarak şart koşar.
  */
 class DiziPalProvider : MainAPI() {
-    override var mainUrl = "https://dizipal1594.com"
+    override var mainUrl = "https://dizipal1595.com"
     override var name = "DiziPal"
     override var lang = "tr"
     override val hasMainPage = true

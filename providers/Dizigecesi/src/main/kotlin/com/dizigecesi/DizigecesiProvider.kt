@@ -222,7 +222,7 @@ class DizigecesiProvider : MainAPI() {
                     newExtractorLink(name, "Filemoon ${label}".trim(), stream, type) {
                         this.referer = frame
                         this.quality = quality
-                        this.headers = headers
+                        this.headers = this@DizigecesiProvider.headers + mapOf("referer" to frame, "origin" to frameBase)
                     },
                 )
                 found = true

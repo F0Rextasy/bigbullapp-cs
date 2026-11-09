@@ -7,6 +7,9 @@ sayı arttığında güncelleme sunar.
 
 ## [1.6.31] - 2026-11-09
 
+### Düzeltildi
+- **SelcukFlix v9, Dizilla v14, DiziPal v11, AsyaWatch v9, Yabancidizi v11, Dizigecesi v14**: Videoların açılırken hata vermesi sorunu hem Cloudstream hem Nuvio tarafında giderildi; DiziPal güncel adresine taşındı.
+
 ### Değişti
 - **Ddizi v5**: taban adres https://ddizi.tel -> https://www.ddizi.tel.
 
