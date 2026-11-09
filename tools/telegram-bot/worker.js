@@ -1,38 +1,30 @@
 /**
  * BigBullApp Telegram Gatekeeper & Moderasyon Botu
- * Cloudflare Workers - ucretsiz plan, serverless
+ * Cloudflare Workers - %100 Ucretsiz, Serverless
  *
- * Dogrulama akisi (captcha yok, yalniz Start):
- * 1. Yeni uye gruba girer (chat_member) -> aninda sessize alinir.
- * 2. Grupta "Doğrulamak İçin Tıkla" butonu cikar (bota yonlendirir).
- * 3. Kullanici bota /start dedigi anda izinleri grubun varsayilanina doner,
- *    gruptaki dogrulama mesaji silinir, ozelden bilgi verilir.
- *
- * Durum tasimaz: baglanti HMAC imzalidir, tek kullanimlik olmasi mesajin silinmesine
- * ve kullanicinin hala "kisitli" olmasina baglidir. Uyari sayaci icin istege bagli
- * BOT_KV (ucretsiz KV) kullanilir; yoksa bellekte tutulur (README).
+ * Dogrulama Akisi:
+ * 1. Yeni uye gruba girer -> Aninda sessize alinir (mesaj yazamaz).
+ * 2. Grupta "🤖 Doğrulamak İçin Tıkla" butonu cikar (bota yonlendirir).
+ * 3. Kullanici butona basip bota "Başlat (Start)" dedigi anda:
+ *    - Gruptaki tum mesaj ve medya izinleri acilir.
+ *    - Gruptaki dogrulama mesaji otomatik silinir.
+ *    - Kullaniciya ozelden "Doğrulama başarılı!" bilgisi verilir.
  */
 
-const warnings = new Map();     // BOT_KV yoksa yedek uyari sayaci (isolate basina)
-const floodTracker = new Map(); // Anti-flood sayaci
-const adminCache = new Map();   // Yonetici onbellegi
-let cachedBotUsername = null;   // getMe ile otomatik ogrenilir
+const recentJoins = new Map();     // Cift tetiklemeyi onler
+const pendingCaptchas = new Map(); // Suresi dolanlari temizlemek icin
+const warnings = new Map();        // Uyari sayaci (3/3 = ban)
+const floodTracker = new Map();    // Anti-flood sayaci
+const adminCache = new Map();      // Admin onbellegi
+let cachedBotUsername = null;      // getMe ile otomatik ogrenilir
 
-// env.GROUP_ID / env.VERIFY_THREAD_ID ile ezilebilir (telegram-topics.json: "sohbet" konusu)
-const DEFAULT_GROUP_ID = "-1003994138025";
-const DEFAULT_VERIFY_THREAD = 6;
-
-const ALLOWED_TG_NAMES = new Set(["bigbull_app"]); // izinli t.me adlari (tam eslesme)
-const ANON_ADMIN_BOT_ID = 1087968824;              // GroupAnonymousBot
-
-const FLOOD_LIMIT = 6;       // 6 saniyede 6 mesaj
+const CAPTCHA_TIMEOUT_MS = 15 * 60 * 1000; // 15 dakika
+const FLOOD_LIMIT = 6;                     // 6 saniyede 6 mesaj
 const FLOOD_WINDOW_MS = 6000;
-const FLOOD_MUTE_SEC = 3600; // 1 saat
-const MIN_MUTE_SEC = 30;     // Telegram 30 sn'den kisayi "sonsuz" sayar
-const MAX_MUTE_SEC = 366 * 86400;
+const FLOOD_MUTE_SEC = 3600;               // 1 saat
 
-// Grup varsayilani okunamazsa kullanilan yedek izinler
-const FALLBACK_PERMISSIONS = {
+// Tam uye izinleri (Fotograf, dosya, video dahil)
+const FULL_PERMISSIONS = {
   can_send_messages: true,
   can_send_audios: true,
   can_send_documents: true,
@@ -45,9 +37,18 @@ const FALLBACK_PERMISSIONS = {
   can_add_web_page_previews: true
 };
 
-const MUTE_PERMISSIONS = Object.fromEntries(
-  Object.keys(FALLBACK_PERMISSIONS).map((k) => [k, false])
-);
+const MUTE_PERMISSIONS = {
+  can_send_messages: false,
+  can_send_audios: false,
+  can_send_documents: false,
+  can_send_photos: false,
+  can_send_videos: false,
+  can_send_video_notes: false,
+  can_send_voice_notes: false,
+  can_send_polls: false,
+  can_send_other_messages: false,
+  can_add_web_page_previews: false
+};
 
 export default {
   async fetch(request, env, ctx) {
@@ -74,19 +75,20 @@ export default {
 
     try {
       const update = await request.json();
-      ctx.waitUntil(
-        handleUpdate(update, env).catch((err) => console.error("handleUpdate hatasi:", err))
-      );
+      ctx.waitUntil(handleUpdate(update, env));
+      return new Response("OK", { status: 200 });
     } catch (err) {
       console.error("Webhook hatasi:", err);
+      return new Response("OK", { status: 200 });
     }
-    return new Response("OK", { status: 200 });
   }
 };
 
 async function handleUpdate(update, env) {
   const token = env.TELEGRAM_BOT_TOKEN;
   if (!token) return;
+
+  await cleanupExpiredCaptchas(token);
 
   if (update.chat_join_request) {
     await tg(token, "approveChatJoinRequest", {
@@ -97,7 +99,7 @@ async function handleUpdate(update, env) {
   }
 
   if (update.chat_member) {
-    await handleChatMemberUpdate(update.chat_member, token, env);
+    await handleChatMemberUpdate(update.chat_member, token);
     return;
   }
 
@@ -115,32 +117,54 @@ async function getBotUsername(token) {
   return cachedBotUsername;
 }
 
-async function handleChatMemberUpdate(cm, token, env) {
-  const old = cm.old_chat_member;
-  const now = cm.new_chat_member;
-  const user = now?.user;
+async function cleanupExpiredCaptchas(token) {
+  const now = Date.now();
+  for (const [key, item] of pendingCaptchas.entries()) {
+    if (now >= item.expiresAt) {
+      pendingCaptchas.delete(key);
+      await kickUser(token, item.chatId, item.userId);
+      if (item.msgId) {
+        await tg(token, "deleteMessage", { chat_id: item.chatId, message_id: item.msgId });
+      }
+    }
+  }
+}
+
+async function handleChatMemberUpdate(cm, token) {
+  const oldStatus = cm.old_chat_member?.status;
+  const newStatus = cm.new_chat_member?.status;
+  const user = cm.new_chat_member?.user;
+  const actor = cm.from;
+
   if (!user) return;
 
-  const wasOutside =
-    old?.status === "left" || old?.status === "kicked" ||
-    (old?.status === "restricted" && !old.is_member);
-  const isNowMember = now.status === "member" || (now.status === "restricted" && now.is_member);
+  const wasOutside = oldStatus === "left" || oldStatus === "kicked";
+  const isNowMember = newStatus === "member" || (newStatus === "restricted" && cm.new_chat_member?.is_member);
 
   if (wasOutside && isNowMember) {
-    await processNewMember(cm.chat, user, cm.from, token, env);
+    await processNewMember(cm.chat, user, actor, null, token);
   }
 }
 
 /**
  * Gruba yeni uye girdiginde: sessize alir ve bota /start linki verir
  */
-async function processNewMember(chat, member, actor, token, env) {
-  const botUsername = await getBotUsername(token);
-  if (!botUsername || (member.is_bot && member.username === botUsername)) return;
+async function processNewMember(chat, member, actor, threadId, token) {
+  const key = `${chat.id}:${member.id}`;
+  const now = Date.now();
 
-  // Katilma isteklerini onaylayan botun kendisi de "actor" olur; yonetici sayilmaz.
-  const actorIsAdmin = actor && actor.id !== member.id && !actor.is_bot
-    ? Boolean(await getAdminInfo(token, chat.id, actor.id))
+  if (recentJoins.has(key) && now - recentJoins.get(key) < 10000) {
+    return;
+  }
+  recentJoins.set(key, now);
+
+  const botUsername = await getBotUsername(token);
+  if (member.is_bot && member.username === botUsername) {
+    return;
+  }
+
+  const actorIsAdmin = actor && actor.id !== member.id
+    ? await isUserAdmin(token, chat.id, actor.id)
     : false;
 
   // Yabanci bot eklendiyse ve ekleyen admin degilse banla
@@ -167,38 +191,47 @@ async function processNewMember(chat, member, actor, token, env) {
     `🔒 <b>Gruba mesaj yazabilmek için doğrulama yapmalısın:</b>\n` +
     `Aşağıdaki butona tıklayıp açılan botta <b>Başlat (Start)</b> tuşuna basman yeterlidir.`;
 
+  // Deep-link: https://t.me/<BotUsername>?start=v_<chatId>_<userId>_<msgId>_<ts36>_<sig>
+  const ts36 = Math.floor(now / 1000).toString(36);
+  const sig0 = await signHex(token, `${chat.id}:${member.id}:0:${ts36}`, 8);
+  const baseStartUrl = `https://t.me/${botUsername}?start=v_${chat.id}_${member.id}`;
+
   const params = {
     chat_id: chat.id,
     text,
     parse_mode: "HTML",
-    reply_markup: { inline_keyboard: [[await verifyButton(token, botUsername, chat.id, member.id, 0)]] }
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: "🤖 Doğrulamak İçin Tıkla (Start)", url: `${baseStartUrl}_0_${ts36}_${sig0}` }]
+      ]
+    }
   };
 
-  const groupId = String(env?.GROUP_ID || DEFAULT_GROUP_ID);
-  const verifyThread = Number(env?.VERIFY_THREAD_ID || DEFAULT_VERIFY_THREAD);
-  if (String(chat.id) === groupId && verifyThread) {
-    params.message_thread_id = verifyThread;
+  const effectiveThreadId = threadId || (String(chat.id) === "-1003994138025" ? 6 : null);
+  if (effectiveThreadId) {
+    params.message_thread_id = effectiveThreadId;
   }
 
   const res = await tg(token, "sendMessage", params);
-  const msgId = res?.result?.message_id;
-  if (res?.ok && msgId) {
-    // Baglanti mesaj id'sini tasir (start'ta mesaj silinerek tek kullanimlik olur)
+  if (res?.ok && res.result?.message_id) {
+    const msgId = res.result.message_id;
+    const sig = await signHex(token, `${chat.id}:${member.id}:${msgId}:${ts36}`, 8);
+    pendingCaptchas.set(key, {
+      chatId: chat.id,
+      userId: member.id,
+      msgId,
+      expiresAt: now + CAPTCHA_TIMEOUT_MS
+    });
     await tg(token, "editMessageReplyMarkup", {
       chat_id: chat.id,
       message_id: msgId,
-      reply_markup: { inline_keyboard: [[await verifyButton(token, botUsername, chat.id, member.id, msgId)]] }
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: "🤖 Doğrulamak İçin Tıkla (Start)", url: `${baseStartUrl}_${msgId}_${ts36}_${sig}` }]
+        ]
+      }
     });
   }
-}
-
-// Deep-link: https://t.me/<Bot>?start=v_<chatId>_<userId>_<msgId>_<sig16>  (Telegram siniri 64 karakter)
-async function verifyButton(token, botUsername, chatId, userId, msgId) {
-  const sig = await signHex(token, `${chatId}:${userId}:${msgId}`, 16);
-  return {
-    text: "🤖 Doğrulamak İçin Tıkla (Start)",
-    url: `https://t.me/${botUsername}?start=v_${chatId}_${userId}_${msgId}_${sig}`
-  };
 }
 
 /**
@@ -211,47 +244,65 @@ async function handlePrivateCommand(message, token) {
 
   if (!text.startsWith("/start")) return;
 
-  const payload = text.split(/\s+/)[1] || "";
+  const parts = text.split(/\s+/);
+  const payload = parts[1] || "";
 
+  // Dogrulama parametresi varsa: v_<chatId>_<userId>_<msgId>_<ts36>_<sig>
   if (payload.startsWith("v_")) {
-    const [, targetChatId, targetUserStr, msgIdStr, sig] = payload.split("_");
+    const [, targetChatId, targetUserStr, msgIdStr, ts36, sig] = payload.split("_");
     const targetUserId = parseInt(targetUserStr, 10);
-    const msgId = parseInt(msgIdStr, 10) || 0;
-    const expectedSig = await signHex(token, `${targetChatId}:${targetUserId}:${msgId}`, 16);
+    const embeddedMsgId = msgIdStr ? parseInt(msgIdStr, 10) : 0;
+    const tsSec = ts36 ? parseInt(ts36, 36) : 0;
+    const ageMs = Date.now() - tsSec * 1000;
+    const expectedSig = ts36
+      ? await signHex(token, `${targetChatId}:${targetUserId}:${embeddedMsgId}:${ts36}`, 8)
+      : "";
 
-    // Baska bir kullanici linke tikladiysa veya imza gecersizse reddet
-    if (userId !== targetUserId || !sig || sig !== expectedSig) {
-      await privateReply(token, privateChatId, "⚠️ Geçersiz veya size ait olmayan doğrulama bağlantısı!");
+    // Baska bir kullanici linke tikladiysa, suresi dolduysa veya imza gecersizse reddet
+    if (
+      userId !== targetUserId ||
+      !sig ||
+      sig !== expectedSig ||
+      !Number.isFinite(ageMs) ||
+      ageMs < -60000 ||
+      ageMs > CAPTCHA_TIMEOUT_MS
+    ) {
+      await tg(token, "sendMessage", {
+        chat_id: privateChatId,
+        text: "⚠️ Geçersiz, süresi dolmuş veya size ait olmayan doğrulama bağlantısı!",
+        parse_mode: "HTML"
+      });
       return;
     }
 
-    // Yalniz hala kisitli (dogrulanmamis) uye dogrulanir; uye degilse veya zaten dogrulandiysa reddet
-    const member = (await tg(token, "getChatMember", { chat_id: targetChatId, user_id: targetUserId }))?.result;
-    if (member?.status !== "restricted" || !member.is_member || member.can_send_messages) {
-      await privateReply(token, privateChatId, "⚠️ Bu doğrulama bağlantısı daha önce kullanılmış veya artık geçerli değil!");
+    // 1. Gruptaki dogrulama mesajini sil (daha once silindiyse tekrar kullanimi reddet)
+    const key = `${targetChatId}:${targetUserId}`;
+    const pending = pendingCaptchas.get(key);
+    pendingCaptchas.delete(key);
+    const msgIdToDelete = embeddedMsgId || pending?.msgId;
+    const delRes = msgIdToDelete
+      ? await tg(token, "deleteMessage", {
+          chat_id: targetChatId,
+          message_id: msgIdToDelete
+        })
+      : null;
+    if (!msgIdToDelete || (!delRes?.ok && !pending)) {
+      await tg(token, "sendMessage", {
+        chat_id: privateChatId,
+        text: "⚠️ Bu doğrulama bağlantısı daha önce kullanılmış!",
+        parse_mode: "HTML"
+      });
       return;
     }
 
-    // Gruptaki dogrulama mesajini sil (silinmisse baglanti daha once kullanilmistir)
-    if (msgId) {
-      const del = await tg(token, "deleteMessage", { chat_id: targetChatId, message_id: msgId });
-      if (!del?.ok) {
-        await privateReply(token, privateChatId, "⚠️ Bu doğrulama bağlantısı daha önce kullanılmış!");
-        return;
-      }
-    }
-
-    // Gruptaki tum mesaj ve medya izinlerini ac (grubun varsayilani)
-    const res = await tg(token, "restrictChatMember", {
+    // 2. Gruptaki tum mesaj ve medya izinlerini ac
+    await tg(token, "restrictChatMember", {
       chat_id: targetChatId,
       user_id: targetUserId,
-      permissions: await groupPermissions(token, targetChatId)
+      permissions: FULL_PERMISSIONS
     });
-    if (!res?.ok) {
-      await privateReply(token, privateChatId, "⚠️ Doğrulama tamamlanamadı, lütfen bir yöneticiye bildirin.");
-      return;
-    }
 
+    // 3. Kullaniciya ozelden basari mesaji gonder
     await tg(token, "sendMessage", {
       chat_id: privateChatId,
       text:
@@ -305,21 +356,33 @@ async function handleMessage(message, token, env) {
     return;
   }
 
-  // Giris/cikis servis mesajlari silinir; girisleri chat_member olayi isler (cift islem olmasin)
-  if (message.new_chat_members?.length || message.left_chat_member) {
+  if (message.new_chat_members && message.new_chat_members.length > 0) {
+    await tg(token, "deleteMessage", { chat_id: chat.id, message_id: message.message_id });
+    for (const member of message.new_chat_members) {
+      await processNewMember(chat, member, sender, message.message_thread_id, token);
+    }
+    return;
+  }
+
+  if (message.left_chat_member) {
     await tg(token, "deleteMessage", { chat_id: chat.id, message_id: message.message_id });
     return;
   }
 
-  if (!sender || message.is_automatic_forward) return;
+  if (!sender) return;
 
   const key = `${chat.id}:${sender.id}`;
+
+  if (pendingCaptchas.has(key)) {
+    await tg(token, "deleteMessage", { chat_id: chat.id, message_id: message.message_id });
+    return;
+  }
+
   const text = (message.text || message.caption || "").trim();
-  const adminInfo = await senderAdminInfo(token, message);
-  const isAdmin = Boolean(adminInfo);
+  const isAdmin = await isUserAdmin(token, chat.id, sender.id);
 
   if (!isAdmin) {
-    if (checkFlood(key, message.media_group_id)) {
+    if (checkFlood(key)) {
       await tg(token, "deleteMessage", { chat_id: chat.id, message_id: message.message_id });
       const untilDate = Math.floor(Date.now() / 1000) + FLOOD_MUTE_SEC;
       await tg(token, "restrictChatMember", {
@@ -341,7 +404,7 @@ async function handleMessage(message, token, env) {
       .map((e) => e.url || "")
       .filter(Boolean)
       .join(" ");
-    if (hasUnauthorizedTelegramLink(`${text} ${entityUrls}`, await getBotUsername(token))) {
+    if (hasUnauthorizedTelegramLink(`${text} ${entityUrls}`)) {
       await tg(token, "deleteMessage", { chat_id: chat.id, message_id: message.message_id });
       await addWarning(token, chat.id, sender, "İzinsiz Telegram grup/kanal reklamı", message.message_thread_id, env);
       return;
@@ -349,28 +412,11 @@ async function handleMessage(message, token, env) {
   }
 
   if (text.startsWith("/") || text.startsWith("!")) {
-    await handleGroupCommand(message, text, adminInfo, token, env);
+    await handleGroupCommand(message, text, isAdmin, token, env);
   }
 }
 
-// Anonim yonetici (grubun kendi sender_chat'i) tum haklara sahip sayilir.
-async function senderAdminInfo(token, message) {
-  if (message.sender_chat?.id === message.chat.id || message.from.id === ANON_ADMIN_BOT_ID) {
-    return { status: "creator" };
-  }
-  return getAdminInfo(token, message.chat.id, message.from.id);
-}
-
-// Komut -> gereken yonetici hakki
-const COMMAND_RIGHTS = {
-  sil: "can_delete_messages", del: "can_delete_messages",
-  pin: "can_pin_messages", unpin: "can_pin_messages",
-  ban: "can_restrict_members", unban: "can_restrict_members", kick: "can_restrict_members",
-  mute: "can_restrict_members", unmute: "can_restrict_members",
-  warn: "can_restrict_members", unwarn: "can_restrict_members"
-};
-
-async function handleGroupCommand(message, rawText, adminInfo, token, env) {
+async function handleGroupCommand(message, rawText, isAdmin, token, env) {
   const chat = message.chat;
   const threadId = message.message_thread_id;
   const parts = rawText.slice(1).split(/\s+/);
@@ -408,8 +454,7 @@ async function handleGroupCommand(message, rawText, adminInfo, token, env) {
     return;
   }
 
-  const right = COMMAND_RIGHTS[cmd];
-  if (!right || !hasRight(adminInfo, right)) return;
+  if (!isAdmin) return;
 
   const replyMsg = message.reply_to_message;
   const targetUser = replyMsg?.from;
@@ -442,27 +487,9 @@ async function handleGroupCommand(message, rawText, adminInfo, token, env) {
     return;
   }
 
-  if (!replyMsg) return;
-
-  // Kanal (sender_chat) adina yazilmis mesaj: from ortak bir bot hesabidir, hedef kanaldir.
-  const targetChat = replyMsg.sender_chat;
-  if (targetChat) {
-    if (targetChat.id === chat.id) {
-      await replyHtml(token, message, "⚠️ Bir yönetici üzerinde moderasyon işlemi uygulanamaz.");
-    } else if (cmd === "ban") {
-      await tg(token, "banChatSenderChat", { chat_id: chat.id, sender_chat_id: targetChat.id });
-      await tg(token, "deleteMessage", { chat_id: chat.id, message_id: replyMsg.message_id });
-      await tg(token, "deleteMessage", { chat_id: chat.id, message_id: message.message_id });
-      await sendHtml(token, chat.id, `🔨 <b>${escapeHtml(targetChat.title || "Kanal")}</b> kanalı gruptan <b>yasaklandı (ban)</b>.`, threadId);
-    } else {
-      await replyHtml(token, message, "⚠️ Kanal hesaplarına yalnızca /ban uygulanır.");
-    }
-    return;
-  }
-
   if (!targetUser) return;
 
-  if (targetUser.id === ANON_ADMIN_BOT_ID || await getAdminInfo(token, chat.id, targetUser.id)) {
+  if (await isUserAdmin(token, chat.id, targetUser.id)) {
     await replyHtml(token, message, "⚠️ Bir yönetici üzerinde moderasyon işlemi uygulanamaz.");
     return;
   }
@@ -495,10 +522,6 @@ async function handleGroupCommand(message, rawText, adminInfo, token, env) {
 
   if (cmd === "mute") {
     const durationSec = parseDuration(args[0]);
-    if (durationSec === null) {
-      await replyHtml(token, message, "⚠️ Geçersiz süre. Örnek: <code>/mute 10m</code>, <code>1h</code>, <code>1d</code> (30 sn – 366 gün).");
-      return;
-    }
     const payload = {
       chat_id: chat.id,
       user_id: targetUser.id,
@@ -509,7 +532,7 @@ async function handleGroupCommand(message, rawText, adminInfo, token, env) {
     }
     await tg(token, "restrictChatMember", payload);
     await tg(token, "deleteMessage", { chat_id: chat.id, message_id: message.message_id });
-    const timeLabel = durationSec > 0 ? ` (${escapeHtml(args[0])})` : " (süresiz)";
+    const timeLabel = args[0] ? ` (${escapeHtml(args[0])})` : " (süresiz)";
     await sendHtml(token, chat.id, `🔇 ${targetMention} susturuldu${timeLabel}.`, threadId);
     return;
   }
@@ -518,7 +541,7 @@ async function handleGroupCommand(message, rawText, adminInfo, token, env) {
     await tg(token, "restrictChatMember", {
       chat_id: chat.id,
       user_id: targetUser.id,
-      permissions: await groupPermissions(token, chat.id)
+      permissions: FULL_PERMISSIONS
     });
     await tg(token, "deleteMessage", { chat_id: chat.id, message_id: message.message_id });
     await sendHtml(token, chat.id, `🔊 ${targetMention} kullanıcısının susturması kaldırıldı.`, threadId);
@@ -534,30 +557,27 @@ async function handleGroupCommand(message, rawText, adminInfo, token, env) {
   }
 
   if (cmd === "unwarn") {
-    await clearWarnings(env, `${chat.id}:${targetUser.id}`);
+    const warnKey = `${chat.id}:${targetUser.id}`;
+    warnings.delete(warnKey);
+    if (env?.BOT_KV) await env.BOT_KV.delete(`warn:${warnKey}`);
     await tg(token, "deleteMessage", { chat_id: chat.id, message_id: message.message_id });
     await sendHtml(token, chat.id, `✨ ${targetMention} kullanıcısının uyarıları sıfırlandı.`, threadId);
+    return;
   }
-}
-
-// BOT_KV (ucretsiz KV) varsa tek kaynak odur; yoksa isolate bellegi.
-async function readWarnings(env, key) {
-  if (env?.BOT_KV) return parseInt((await env.BOT_KV.get(`warn:${key}`)) || "0", 10) || 0;
-  return warnings.get(key) || 0;
-}
-
-async function clearWarnings(env, key) {
-  warnings.delete(key);
-  if (env?.BOT_KV) await env.BOT_KV.delete(`warn:${key}`);
 }
 
 async function addWarning(token, chatId, user, reason, threadId, env) {
   const key = `${chatId}:${user.id}`;
-  const count = (await readWarnings(env, key)) + 1;
+  let prev = warnings.get(key) || 0;
+  if (!prev && env?.BOT_KV) {
+    prev = parseInt((await env.BOT_KV.get(`warn:${key}`)) || "0", 10) || 0;
+  }
+  const count = prev + 1;
   const mention = `<a href="tg://user?id=${user.id}">${escapeHtml(user.first_name)}</a>`;
 
   if (count >= 3) {
-    await clearWarnings(env, key);
+    warnings.delete(key);
+    if (env?.BOT_KV) await env.BOT_KV.delete(`warn:${key}`);
     await tg(token, "banChatMember", { chat_id: chatId, user_id: user.id });
     await sendHtml(
       token,
@@ -577,17 +597,13 @@ async function addWarning(token, chatId, user, reason, threadId, env) {
   }
 }
 
-function checkFlood(key, mediaGroupId) {
+function checkFlood(key) {
   const now = Date.now();
-  if (floodTracker.size > 1000) floodTracker.clear();
   const entry = floodTracker.get(key);
   if (!entry || now > entry.resetAt) {
-    floodTracker.set(key, { count: 1, resetAt: now + FLOOD_WINDOW_MS, group: mediaGroupId });
+    floodTracker.set(key, { count: 1, resetAt: now + FLOOD_WINDOW_MS });
     return false;
   }
-  // Album parcalari ayri guncelleme gelir; ilki sayilir, kalani tek mesaj sayilir.
-  if (mediaGroupId && entry.group === mediaGroupId) return false;
-  entry.group = mediaGroupId;
   entry.count += 1;
   if (entry.count > FLOOD_LIMIT) {
     floodTracker.delete(key);
@@ -596,50 +612,42 @@ function checkFlood(key, mediaGroupId) {
   return false;
 }
 
-function hasUnauthorizedTelegramLink(text, botUsername) {
+function hasUnauthorizedTelegramLink(text) {
   if (!text) return false;
   const re = /(?:https?:\/\/)?(?:t\.me|telegram\.me|telegram\.dog)\/([a-z0-9_+]+)/gi;
   for (const match of text.matchAll(re)) {
     const target = match[1].toLowerCase();
-    if (!ALLOWED_TG_NAMES.has(target) && target !== String(botUsername || "").toLowerCase()) {
+    if (target !== "bigbull_app" && !target.startsWith("bigbull")) {
       return true;
     }
   }
   return false;
 }
 
-// Bos -> 0 (suresiz), gecersiz -> null, aksi halde Telegram'in kabul ettigi araliga sikistirilmis saniye.
 function parseDuration(str) {
   if (!str) return 0;
   const m = str.trim().match(/^(\d+)([smhd])$/i);
-  if (!m) return null;
-  const sec = parseInt(m[1], 10) * { s: 1, m: 60, h: 3600, d: 86400 }[m[2].toLowerCase()];
-  return sec > MAX_MUTE_SEC ? null : Math.max(sec, MIN_MUTE_SEC);
+  if (!m) return 0;
+  const val = parseInt(m[1], 10);
+  const unit = m[2].toLowerCase();
+  if (unit === "s") return val;
+  if (unit === "m") return val * 60;
+  if (unit === "h") return val * 3600;
+  if (unit === "d") return val * 86400;
+  return 0;
 }
 
-function hasRight(info, right) {
-  return Boolean(info) && (info.status === "creator" || info[right] === true);
-}
-
-// Yonetici degilse null, aksi halde getChatMember sonucu (haklarla birlikte), 60 sn onbellekli.
-async function getAdminInfo(token, chatId, userId) {
+async function isUserAdmin(token, chatId, userId) {
   const key = `${chatId}:${userId}`;
   const now = Date.now();
   const cached = adminCache.get(key);
-  if (cached && now < cached.expiresAt) return cached.info;
+  if (cached && now < cached.expiresAt) return cached.isAdmin;
 
   const res = await tg(token, "getChatMember", { chat_id: chatId, user_id: userId });
-  const member = res?.result;
-  const info = member?.status === "creator" || member?.status === "administrator" ? member : null;
-  if (adminCache.size > 1000) adminCache.clear();
-  adminCache.set(key, { info, expiresAt: now + 60 * 1000 });
-  return info;
-}
-
-// Grubun varsayilan uye izinleri; okunamazsa yedek izinler.
-async function groupPermissions(token, chatId) {
-  const res = await tg(token, "getChat", { chat_id: chatId });
-  return res?.result?.permissions || FALLBACK_PERMISSIONS;
+  const status = res?.result?.status;
+  const isAdmin = status === "creator" || status === "administrator";
+  adminCache.set(key, { isAdmin, expiresAt: now + 60 * 1000 });
+  return isAdmin;
 }
 
 async function kickUser(token, chatId, userId) {
@@ -651,10 +659,6 @@ async function sendHtml(token, chatId, text, threadId) {
   const payload = { chat_id: chatId, text, parse_mode: "HTML", disable_web_page_preview: true };
   if (threadId) payload.message_thread_id = threadId;
   return await tg(token, "sendMessage", payload);
-}
-
-async function privateReply(token, chatId, text) {
-  return await tg(token, "sendMessage", { chat_id: chatId, text, parse_mode: "HTML" });
 }
 
 async function replyHtml(token, message, text) {
@@ -669,28 +673,14 @@ async function replyHtml(token, message, text) {
   return await tg(token, "sendMessage", payload);
 }
 
-// Hata firlatmaz: { ok:false } doner ve loglar. 429'da kisa retry_after ise bir kez yeniden dener.
-async function tg(token, method, payload, retry = true) {
-  try {
-    const res = await fetch(`https://api.telegram.org/bot${token}/${method}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json();
-    if (!data.ok) {
-      const wait = data.parameters?.retry_after;
-      if (data.error_code === 429 && retry && wait <= 5) {
-        await new Promise((r) => setTimeout(r, wait * 1000));
-        return tg(token, method, payload, false);
-      }
-      console.log(`[tg] ${method} ${data.error_code}: ${data.description}`);
-    }
-    return data;
-  } catch (err) {
-    console.log(`[tg] ${method} hata: ${err}`);
-    return { ok: false, description: String(err) };
-  }
+async function tg(token, method, payload) {
+  const url = `https://api.telegram.org/bot${token}/${method}`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  return await res.json();
 }
 
 function escapeHtml(text) {

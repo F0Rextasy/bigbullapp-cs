@@ -6,7 +6,7 @@ Kullanim:
   python tools/telegram-bot/setup_webhook.py --info
 
   # Webhook'u Cloudflare Worker URL'ine bagla:
-  python tools/telegram-bot/setup_webhook.py --set https://bigbull-tg-bot.senin-adin.workers.dev
+  python tools/telegram-bot/setup_webhook.py --set https://bigbull-bot.senin-adın.workers.dev
 
   # Webhook'u kaldir (polling moduna geri don):
   python tools/telegram-bot/setup_webhook.py --delete
@@ -32,11 +32,7 @@ def call_api(token: str, method: str, data: dict = None) -> dict:
         with urllib.request.urlopen(req, timeout=15) as res:
             return json.loads(res.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
-        body = exc.read().decode("utf-8", errors="replace")
-        try:
-            return json.loads(body)
-        except ValueError:
-            return {"ok": False, "description": f"HTTP {exc.code}: {body[:200]}"}
+        return json.loads(exc.read().decode("utf-8"))
     except Exception as exc:
         return {"ok": False, "description": str(exc)}
 

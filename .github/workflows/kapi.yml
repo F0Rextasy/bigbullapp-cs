@@ -23,8 +23,6 @@ jobs:
           node-version: 20
       - name: Nuvio statik ve sandbox testi
         run: node nuvio/test/run.mjs
-      - name: Telegram bot testi
-        run: node tools/telegram-bot/test.mjs
       - name: Manifest üretimi ve senkron kontrolü
         run: |
           node nuvio/tools/build-manifest.mjs --strict

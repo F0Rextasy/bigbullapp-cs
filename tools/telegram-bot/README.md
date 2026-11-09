@@ -1,78 +1,72 @@
-# BigBullApp Telegram Gatekeeper & Moderasyon Botu
+# BigBullApp Telegram Gatekeeper & Tam Moderasyon Botu (v2.0)
 
-MissRose'a ihtiyaç bırakmayan, Cloudflare Workers **ücretsiz planında** çalışan Telegram doğrulama, anti-spam ve grup yönetim botu. Sunucu, veritabanı veya cron gerekmez.
+MissRose'a ihtiyaç bırakmayan, Cloudflare Workers üzerinde **%100 ücretsiz, sunucusuz (serverless), 7/24 kesintisiz** çalışan Telegram doğrulama, anti-spam ve grup yönetim botu.
 
-## Özellikler
+## Özellikler (MissRose Tam Karşılığı)
 
-### 1. Doğrulama (yalnız Start)
-Captcha yoktur. Akış:
-1. Yeni üye girer (`chat_member`) → anında susturulur ve grupta **Doğrulamak İçin Tıkla** butonu çıkar.
-2. Üye butona basıp bota **Başlat (Start)** der → izinleri **grubun varsayılan üye izinlerine** döner, gruptaki doğrulama mesajı silinir, özelden bilgi gelir.
-- Bağlantı HMAC imzalıdır; yalnız o üye kullanabilir. Tek kullanımlıktır: mesaj silinir ve üye artık "kısıtlı" değildir.
-- Katılma isteğiyle gelenler (`chat_join_request`) otomatik onaylanır ve yine doğrulamadan geçer. Bir **yönetici** tarafından eklenenler doğrulamaya girmez.
-- "X gruba katıldı / gruptan ayrıldı" servis mesajları silinir.
-- Süre sınırı yoktur; doğrulamayan üye susturulmuş kalır (yönetici `/unmute` ile açabilir ya da `/kick` atabilir).
+### 1. Güvenlik & Doğrulama (Captcha)
+- **4 Şıklı Matematik Captcha:** Tek butona otomatik tıklayan userbot'ları engeller (Örn: `7 + 5 = ?`).
+- **Yanlış Cevap Koruması:** Yanlış şıkka basan hesabı otomatik gruptan çıkarır (`kick` — tekrar katılıp deneyebilir).
+- **15 Dakika Süre Sınırı (Timeout):** Doğrulama yapmayanları ve eski captcha mesajlarını gruptan otomatik temizler.
+- **Tam Medya İzinleri (Bot API 6.5+):** Doğrulanan üyenin fotoğraf, ekran görüntüsü, video ve dosya gönderme izinlerini eksiksiz açar.
+- **Çift Giriş Algılama:** Hem normal girişleri (`new_chat_members`) hem de büyük gruplardaki davet linki girişlerini (`chat_member`) yakalar.
+- **Servis Mesajı Temizliği:** *"X gruba katıldı"* ve *"X gruptan ayrıldı"* mesajlarını otomatik siler.
 
 ### 2. Otomatik Koruma
-- **Anti-Bot:** Yönetici olmayan birinin gruba eklediği bot anında banlanır.
-- **Anti-Reklam:** Yönetici olmayanların paylaştığı yabancı `t.me/...` bağlantıları (grup, kanal, davet, bot) silinir ve `warn` verilir. İzinli adlar `worker.js` içindeki `ALLOWED_TG_NAMES`.
-- **Anti-Flood:** 6 saniyede 6'dan fazla mesaj atan hesap **1 saat** susturulur. Çok fotoğraflı albüm tek mesaj sayılır.
+- **Anti-Bot (`/lock bot`):** Admin olmayan bir üye gruba bot eklerse botu anında banlar.
+- **Anti-Reklam:** Admin olmayanların paylaştığı yabancı Telegram grup/kanal davet linklerini (`t.me/...`) anında siler ve uyarı (`warn`) verir.
+- **Anti-Flood:** 6 saniye içinde 6'dan fazla mesaj gönderen spam hesapları otomatik **1 saat** susturur.
 
-### 3. Yönetici Komutları *(mesaja yanıt vererek)*
-Her komut, komutu veren yöneticide ilgili Telegram yetkisini arar. Anonim yönetici tüm haklara sahip sayılır.
+### 3. Admin Moderasyon Komutları *(Mesaja yanıt vererek / Reply ile)*
+| Komut | Açıklama |
+| :--- | :--- |
+| `/ban [sebep]` | Kullanıcıyı kalıcı yasaklar ve mesajını siler. |
+| `/unban` | Kullanıcının yasağını kaldırır. |
+| `/kick` | Kullanıcıyı gruptan çıkarır (tekrar girebilir) ve mesajını siler. |
+| `/mute [10m\|1h\|1d]` | Kullanıcıyı belirtilen süre boyunca (veya süresiz) susturur. |
+| `/unmute` | Kullanıcının susturmasını kaldırır ve tüm medya izinlerini açar. |
+| `/warn [sebep]` | Kullanıcıyı uyarır (**3/3** uyarıya ulaşanı otomatik banlar). |
+| `/unwarn` | Kullanıcının uyarı sayacını sıfırlar. |
+| `/sil` veya `/del` | Yanıtlanan mesajı ve komut mesajını sessizce siler. |
+| `/pin` / `/unpin` | Yanıtlanan mesajı sabitler veya sabitlemesini kaldırır. |
 
-| Komut | Gereken yetki | Açıklama |
-| :--- | :--- | :--- |
-| `/ban [sebep]` | Kullanıcıları kısıtla | Kalıcı yasaklar, mesajı siler. Kanal adına yazılmış mesajda kanalı yasaklar. |
-| `/unban` | Kullanıcıları kısıtla | Yasağı kaldırır. |
-| `/kick` | Kullanıcıları kısıtla | Gruptan çıkarır (tekrar girebilir). |
-| `/mute [30s\|10m\|1h\|1d]` | Kullanıcıları kısıtla | Süreli (30 sn – 366 gün) ya da süresiz susturur; geçersiz süre reddedilir. |
-| `/unmute` | Kullanıcıları kısıtla | Susturmayı kaldırır (grubun varsayılan izinleri). |
-| `/warn [sebep]` | Kullanıcıları kısıtla | Uyarır; **3/3**'te banlar. |
-| `/unwarn` | Kullanıcıları kısıtla | Uyarıları sıfırlar. |
-| `/sil` veya `/del` | Mesajları sil | Yanıtlanan mesajı ve komutu siler. |
-| `/pin` / `/unpin` | Mesajları sabitle | Sabitler / kaldırır. |
-
-### 4. Herkese Açık Komutlar
-`/kurallar` (`/rules`), `/linkler` (`/site`, `/repo`), `/id` (kullanıcı, grup, konu id'si).
-
----
-
-## Kurulum
-
-### Adım 1: Worker
-Cloudflare Dashboard → **Workers & Pages** → **Create Worker** → [worker.js](worker.js) içeriğini yapıştırıp **Deploy** (ya da `npx wrangler deploy`).
-
-### Adım 2: Değişkenler (Settings → Variables and Secrets)
-| Ad | Zorunlu | Açıklama |
-| :--- | :--- | :--- |
-| `TELEGRAM_BOT_TOKEN` | evet | BotFather token'ı (*Secret*). |
-| `SECRET_TOKEN` | hayır | Webhook gizli anahtarı. Boşsa token'dan türetilir; `setup_webhook.py` aynı türetmeyi kullanır. |
-| `GROUP_ID`, `VERIFY_THREAD_ID` | hayır | Forum grubunda doğrulama mesajının gideceği konu. Varsayılan: `worker.js` başındaki sabitler (`tools/telegram-topics.json` → `sohbet`). |
-| `BOT_KV` | önerilir | KV bağlantısı (aşağıda). |
-
-### Adım 3: Uyarı sayacı için KV (ücretsiz, önerilir)
-Worker örnekleri bellekte durum tutmaz; KV olmadan `/warn` sayacı örnek yeniden başlayınca sıfırlanabilir ve 3/3 ban güvenilmez olur.
-1. **Storage & Databases → KV → Create** (ör. `bigbull-bot`).
-2. Worker → **Settings → Bindings → Add → KV namespace**, değişken adı **`BOT_KV`**.
-
-Kullanım çok düşüktür (uyarı başına 1 yazma; ücretsiz sınır günde 1000).
-
-### Adım 4: Webhook
-`allowed_updates` ve gizli anahtar şarttır; tarayıcıdan elle `setWebhook` çağrısı **kullanmayın** (gizli anahtarsız kurulursa Worker her isteği 403 ile reddeder).
-```bash
-TELEGRAM_BOT_TOKEN=<BOT_TOKEN> python tools/telegram-bot/setup_webhook.py --set https://<WORKER_ADRESINIZ>.workers.dev
-TELEGRAM_BOT_TOKEN=<BOT_TOKEN> python tools/telegram-bot/setup_webhook.py --info   # durum
-```
-Worker `SECRET_TOKEN` değişkeniyle özel anahtar kullanıyorsa aynı değeri `--secret` ile verin.
-
-### Adım 5: Grup izinleri
-Botu **yönetici** yapın: ✅ Kullanıcıları kısıtla · ✅ Mesajları sil · ✅ Mesajları sabitle · ✅ Kullanıcı davet et. Doğrulanan üyeye verilen izinler **Grup ayarları → İzinler** bölümündeki varsayılanlardır.
+### 4. Herkese Açık Topluluk Komutları
+- `/kurallar` veya `/rules` — Topluluk kurallarını gösterir.
+- `/linkler` veya `/site` — `bigbullapp.com` ve GitHub bağlantılarını gösterir.
+- `/id` — Kullanıcı, Grup ve Forum Konu (Thread) ID bilgisini gösterir.
 
 ---
 
-## Test
+## 3 Adımda Kurulum
+
+### Adım 1: Cloudflare Worker Oluşturma
+1. [Cloudflare Dashboard](https://dash.cloudflare.com)'a giriş yapın.
+2. Sol menüden **Workers & Pages** -> **Create application** -> **Create Worker** butonuna tıklayın (veya GitHub reponuzu doğrudan bağlayın).
+3. [worker.js](worker.js) içeriğini yapıştırıp **Deploy** deyin.
+
+### Adım 2: Bot Token'ını Tanımlama
+Worker sayfanızda **Settings** -> **Variables and Secrets** sekmesinden:
+- **Variable name:** `TELEGRAM_BOT_TOKEN`
+- **Value:** BotFather token'ınız (*Secret / Encrypt* olarak kaydedin).
+
+### Adım 3: Webhook'u Bağlama
+> **Önemli:** Büyük gruplarda yeni üye girişlerini (`chat_member`) yakalamak için `allowed_updates` parametresi şarttır.
+
+**A) Python Aracı ile (Önerilen):**
 ```bash
-node tools/telegram-bot/test.mjs
+python setup_webhook.py --token <BOT_TOKEN> --set https://<WORKER_ADRESINIZ>.workers.dev
 ```
-Telegram API taklit edilerek doğrulama akışı, yetkiler, flood, reklam, mute süresi, uyarı/KV ve hata dayanıklılığı sınanır (ağ ve hesap gerekmez). `kapi.yml` her push'ta çalıştırır.
+
+**B) Tarayıcıdan Tek Tıkla:**
+```text
+https://api.telegram.org/bot<BOT_TOKEN>/setWebhook?url=https://<WORKER_ADRESINIZ>.workers.dev&drop_pending_updates=true&allowed_updates=%5B%22message%22,%22callback_query%22,%22chat_member%22,%22chat_join_request%22%5D
+```
+
+---
+
+## Telegram Grup İzinleri
+MissRose'u gruptan çıkardıktan sonra kendi botunuza **Yönetici (Admin)** olarak şu izinleri verin:
+- ✅ **Kullanıcıları Kısıtla / Yasakla** (`can_restrict_members`)
+- ✅ **Mesajları Sil** (`can_delete_messages`)
+- ✅ **Mesajları Sabitle** (`can_pin_messages`)
+- ✅ **Kullanıcı Davet Et** (`can_invite_users`)
