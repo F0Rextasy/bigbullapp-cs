@@ -190,7 +190,8 @@ class FilmizyonProvider : MainAPI() {
         val seen = mutableSetOf<String>()
         suspend fun emit(stream: String, label: String, referer: String) {
             if (!stream.startsWith("http") || !seen.add(stream)) return
-            val type = if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+            val isM3u8 = stream.contains(".m3u8") || stream.contains("/vs/") || stream.endsWith(".gif")
+            val type = if (isM3u8) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
             val quality = getQualityFromName(label)
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
@@ -198,6 +199,16 @@ class FilmizyonProvider : MainAPI() {
                 this.quality = quality
             })
             found = true
+        }
+        fun decodeVixolity(html: String): String? {
+            val m = Regex("""\}\)\('([0-9a-f]+)',\s*(\d+)\)""").find(html) ?: return null
+            return runCatching {
+                val rev = String(m.groupValues[1].chunked(2).map { it.toInt(16).toByte() }.toByteArray(), Charsets.ISO_8859_1).reversed()
+                val shifted = String(java.util.Base64.getDecoder().decode(rev), Charsets.ISO_8859_1)
+                    .map { (it.code - m.groupValues[2].toInt()).toChar() }.joinToString("")
+                val code = String(java.util.Base64.getDecoder().decode(shifted), Charsets.UTF_8)
+                Regex(""""kaynak"\s*:\s*"([^"]+)"""").find(code)?.groupValues?.get(1)?.replace("\\/", "/")
+            }.getOrNull()
         }
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
@@ -226,6 +237,7 @@ class FilmizyonProvider : MainAPI() {
             }
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
+                decodeVixolity(inner)?.let { emit(it, "Vixolity", "https://pl.vixolity.com/") }
                 val innerText = inner.replace("\\/", "/")
                 for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(innerText)) {
                     emit(m.value, "Embed", frame)

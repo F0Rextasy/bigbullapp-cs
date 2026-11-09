@@ -105,7 +105,25 @@ for (const file of fs.readdirSync(providersDir).sort()) {
         try {
           const r = await timedFetch(u, { method: "GET", headers: hdrs });
           if (!r || (r.status < 200 || r.status >= 300)) continue;
-          const body = await r.text();
+          let body = "";
+          if (r.body && typeof r.body.getReader === "function") {
+            const reader = r.body.getReader();
+            const chunks = [];
+            let total = 0;
+            try {
+              while (total < 65536) {
+                const { done, value } = await reader.read();
+                if (done || !value) break;
+                chunks.push(value);
+                total += value.byteLength;
+              }
+            } finally {
+              try { await reader.cancel(); } catch {}
+            }
+            body = Buffer.concat(chunks).toString("utf8");
+          } else {
+            body = await r.text();
+          }
           if (isM3u8 || body.includes("#EXTM3U")) {
             if (!body.includes("#EXTM3U")) continue;
             if (/TYPE=AUDIO|AUDIO=/i.test(body)) {
