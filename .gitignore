@@ -29,15 +29,7 @@ omp-md-placeholder
 /*.js
 # local-only research and generated reports
 /research/
-/tools/planned.json
-/tools/providers-ranked.md
-/tools/health-report.md
-/tools/verify-report.md
-/tools/revive-suggestions.md
-/tools/history.jsonl
-/tools/dashboard.html
 # local QA runner / bot tooling is never published
-/tools/jvm-runner/
 *.har
 
 # Python
@@ -64,20 +56,6 @@ AGENTS.md
 /design/
 /web-ui/
 /webui/
-/tools/design.md
-/tools/web-ui/
-/tools/scratch/
-/tools/local/
-/tools/*.bak
 # local bot tooling (never publish; live under ~/.omp or tools/)
-/tools/rose_setup.py
-/tools/bot/
-/tools/bots/
-/tools/*-bot/
-!/tools/telegram-bot/
-/tools/bigbull-bot/
-/tools/apkcrack/
-/tools/blutter/
-/tools/blutter-trufae/
 /apktool.jar
 /no

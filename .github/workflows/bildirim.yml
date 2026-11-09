@@ -40,12 +40,8 @@ jobs:
             echo "TELEGRAM_BOT_TOKEN yok; bildirim atlandı."
             exit 0
           fi
-          CHAT=$(python3 -c "import json;print(json.load(open('tools/telegram-topics.json'))['chat_id'])")
-          THREAD=$(python3 -c "import json;print(json.load(open('tools/telegram-topics.json'))['topics']['duyuru']['thread_id'])")
-          if [ -z "$CHAT" ] || [ -z "$THREAD" ]; then
-            echo "tools/telegram-topics.json eksik; bildirim atlandı."
-            exit 0
-          fi
+          CHAT="${TELEGRAM_CHAT_ID:-@BigBull_App}"
+          THREAD="${TELEGRAM_THREAD_ID:-3}"
 
           # workflow_run olaylarında github.event.before boştur; önceki başarılı Derleme çalışmasının head_sha değerini bul.
           BEFORE=""

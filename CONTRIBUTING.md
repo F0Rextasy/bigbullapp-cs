@@ -69,17 +69,11 @@ yasaktır. Her yeni alan canlı istekle (URL + çıkan değer) kanıtlanır; kan
 - Yeni bağımlılık yerine `Regex` ve `substringAfter/Before` tercih edilir.
 - Yorum yalnızca kodun gösteremediği nedeni tek satırda anlatır.
 
-## Bot ve doğrulama
+## Doğrulama ve CI
 
-- `python tools/verify.py` — tüm doğrulanmış sağlayıcılar; `--domain a.com,b.com` ile seçim.
-  Taban adres `tools/providers.json` → `mainUrl`'den okunur, kodda sabit değildir.
-- `python tools/revive.py --domain <domain>` — yalnız öneri; `--apply --patch-code` ile uygular.
-  Kod yaması başarısızsa registry değişmez. Verifier'ı olmayan domain otomatik uygulanmaz.
-- `python tools/check.py` — domain sağlığı.
-- Yeni sağlayıcı eklerken `verify.py` içindeki `VERIFIERS` sözlüğüne bir doğrulayıcı ekle; yoksa
-  bot o domaini asla otomatik güncellemez.
-
-CI: `build.yml` `builds` dalını üretir; `kapi.yml` test/manifest/sürüm kapısını çalıştırır; `nuvio-catalog.yml` statik Nuvio kataloglarını yeniler; `bildirim.yml` sürüm artışlarını Telegram'a gönderir.
+- `.github/scripts/kapi.py`: sürüm artışı, Nuvio statik/sandbox testleri ve `.cs3` sayısı denetimi.
+- `node nuvio/test/run.mjs` ve `node nuvio/tools/verify-all.mjs`: Nuvio sağlayıcı doğrulaması.
+- CI: `build.yml` `builds` dalını üretir; `kapi.yml` test/manifest/sürüm kapısını çalıştırır; `nuvio-catalog.yml` statik Nuvio kataloglarını yeniler; `bildirim.yml` sürüm artışlarını Telegram'a gönderir.
 
 ## Commit
 

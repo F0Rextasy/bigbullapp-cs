@@ -13,7 +13,6 @@ on:
       - "**/*.md"
       - ".github/workflows/**"
       - "repo.json"
-      - "tools/**"
       - "research/**"
   workflow_dispatch:
 
