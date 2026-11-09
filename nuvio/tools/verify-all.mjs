@@ -100,7 +100,7 @@ for (const file of fs.readdirSync(providersDir).sort()) {
         const u = String(s.url || "");
         if (!u.startsWith("http")) continue;
         const hdrs = { ...(s.headers || {}) };
-        const isM3u8 = /\.m3u8(\?|$)|\/nm\.php|master\.txt/i.test(u);
+        const isM3u8 = /\.m3u8(\?|$)|\/nm\.php|master\.txt|\/sheila\/|\[HLS\]/i.test(u + " " + String(s.title || ""));
         if (!isM3u8 && !hdrs.Range && !hdrs.range) hdrs.Range = "bytes=0-1023";
         try {
           const r = await timedFetch(u, { method: "GET", headers: hdrs });

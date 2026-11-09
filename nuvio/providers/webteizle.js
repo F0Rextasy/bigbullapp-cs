@@ -1,4 +1,4 @@
-// @provider {"id":"webteizle", "name":"WebteIzle", "types":["movie", "tv"], "domain":"webteizle.info", "formats":["m3u8"], "description":"WebteIzle film/dizi kaynaklari (vidmoly, streamruby HLS; ok.ru/pixel yedek).", "sample":"tt0499549:movie:1:1", "verified":true, "version":"1.0.5"}
+// @provider {"id":"webteizle", "name":"WebteIzle", "types":["movie", "tv"], "domain":"webteizle.info", "formats":["m3u8"], "description":"WebteIzle film/dizi kaynaklari (vidmoly, streamruby HLS; ok.ru/pixel yedek).", "sample":"tt0499549:movie:1:1", "verified":true, "version":"1.0.6"}
 /**
  * webteizle — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /hakkinda/<slug> (yoksa /filtre?a=) -> #wip data-id ->
@@ -247,14 +247,16 @@ function okru(id) {
 }
 
 // dil 0 = sitenin "Türkçe Dublaj" secimi; altyazi etiketi yalniz vtt dosyasi ekliyse.
-function row(url, quality, subs, dubbing, hls) {
+function row(url, quality, subs, dubbing, hls, referer) {
   var label = (dubbing ? " \u2022 TR Dublaj" : "") + (subs.length ? " \u2022 Altyaz\u0131l\u0131" : "");
+  var hdrs = { "User-Agent": UA };
+  if (referer) hdrs.Referer = referer;
   return {
     name: "WebteIzle",
     title: "WebteIzle - " + quality + (hls ? " [HLS]" : " [MP4]") + label,
     url: url,
     quality: quality,
-    headers: {},
+    headers: hdrs,
     subtitles: subs
   };
 }
@@ -311,18 +313,18 @@ function play(job, dubbing) {
     }
     return Promise.resolve([row(job.url, "auto", [], dubbing, Boolean(job.hls))]);
   }
-  return text(job.url, { referer: job.referer }).then(function (page) {
+  return text(job.url, { referer: job.referer, headers: { "Sec-Fetch-Dest": "iframe", "Sec-Fetch-Mode": "navigate" } }).then(function (page) {
     var hit = playable(page);
     if (!hit) return [];
     var tagged = /(\d{3,4})p/.exec(String(hit.label || ""));
     var fallback = tagged ? tagged[1] + "p" : "auto";
-    return text(hit.url)
+    return text(hit.url, { referer: job.url })
       .then(function (master) {
         var height = heightOf(master);
-        return [row(hit.url, height ? height + "p" : fallback, hit.subs, dubbing, true)];
+        return [row(hit.url, height ? height + "p" : fallback, hit.subs, dubbing, true, job.url)];
       })
       .catch(function () {
-        return [row(hit.url, fallback, hit.subs, dubbing, true)];
+        return [row(hit.url, fallback, hit.subs, dubbing, true, job.url)];
       });
   });
 }

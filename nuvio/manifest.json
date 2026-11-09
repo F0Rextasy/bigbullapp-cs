@@ -124,7 +124,7 @@
       "id": "dizibox",
       "name": "Dizibox",
       "description": "Dizibox dizi kaynaklari (king.php -> sheila HLS).",
-      "version": "1.0.13",
+      "version": "1.0.14",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -552,7 +552,7 @@
       "id": "webteizle",
       "name": "WebteIzle",
       "description": "WebteIzle film/dizi kaynaklari (vidmoly, streamruby HLS; ok.ru/pixel yedek).",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "movie",

@@ -1,4 +1,4 @@
-// @provider {"id":"dizibox", "name":"Dizibox", "types":["tv"], "domain":"dizibox.live", "formats":["m3u8"], "description":"Dizibox dizi kaynaklari (king.php -> sheila HLS).", "sample":"tt0903747:tv:2:5", "version":"1.0.13"}
+// @provider {"id":"dizibox", "name":"Dizibox", "types":["tv"], "domain":"dizibox.live", "formats":["m3u8"], "description":"Dizibox dizi kaynaklari (king.php -> sheila HLS).", "sample":"tt0903747:tv:2:5", "version":"1.0.14"}
 /**
  * dizibox — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> site search -> series -> episode -> king.php player -> embed -> sheila HLS.
@@ -156,7 +156,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
             title: "Dizibox - " + quality + " [HLS]",
             url: stream,
             quality: quality,
-            headers: { Referer: embedUrl },
+            headers: { "User-Agent": UA, Referer: embedUrl },
             subtitles: []
           }
         ];
