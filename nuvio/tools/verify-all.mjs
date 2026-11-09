@@ -88,8 +88,54 @@ for (const file of fs.readdirSync(providersDir).sort()) {
       if (attempt === 0) await new Promise((resolve) => setTimeout(resolve, 1000));
     }
     const rowsOut = Array.isArray(out) ? out : [];
-    ok = rowsOut.length > 0;
-    note = ok ? `${rowsOut.length} stream(s) — ${String(rowsOut[0].url).slice(0, 60)}` : "0 streams";
+    if (rowsOut.length === 0) {
+      ok = false;
+      note = "0 streams";
+    } else {
+      const allUrls = new Set(rowsOut.map((s) => String(s.url || "")));
+      let playableCount = 0;
+      let silentVariant = false;
+      let firstPlayableUrl = "";
+      for (const s of rowsOut.slice(0, 3)) {
+        const u = String(s.url || "");
+        if (!u.startsWith("http")) continue;
+        const hdrs = { ...(s.headers || {}) };
+        const isM3u8 = /\.m3u8(\?|$)|\/nm\.php|master\.txt/i.test(u);
+        if (!isM3u8 && !hdrs.Range && !hdrs.range) hdrs.Range = "bytes=0-1023";
+        try {
+          const r = await timedFetch(u, { method: "GET", headers: hdrs });
+          if (!r || (r.status < 200 || r.status >= 300)) continue;
+          const body = await r.text();
+          if (isM3u8 || body.includes("#EXTM3U")) {
+            if (!body.includes("#EXTM3U")) continue;
+            if (/TYPE=AUDIO|AUDIO=/i.test(body)) {
+              const baseDir = u.slice(0, u.lastIndexOf("/"));
+              const children = body.split(/\r?\n/).map((l) => l.trim()).filter((l) => l && !l.startsWith("#"));
+              if (children.some((c) => allUrls.has(c.startsWith("http") ? c : `${baseDir}/${c}`))) {
+                silentVariant = true;
+              }
+            }
+            playableCount++;
+            if (!firstPlayableUrl) firstPlayableUrl = u;
+          } else if (!/^\s*<!DOCTYPE|^\s*<html/i.test(body)) {
+            playableCount++;
+            if (!firstPlayableUrl) firstPlayableUrl = u;
+          }
+        } catch {
+          // try next stream candidate
+        }
+      }
+      if (silentVariant) {
+        ok = false;
+        note = `silent-video-variant (${rowsOut.length} streams split from TYPE=AUDIO master)`;
+      } else if (playableCount === 0) {
+        ok = false;
+        note = `stream-unplayable (${rowsOut.length} stream(s), 0 HTTP 200 media) — ${String(rowsOut[0].url).slice(0, 60)}`;
+      } else {
+        ok = true;
+        note = `${rowsOut.length} stream(s), ${playableCount} verified — ${firstPlayableUrl.slice(0, 60)}`;
+      }
+    }
   } catch (e) {
     note = e.name === "AbortError" ? `timeout ${timeoutMs}ms` : `threw: ${e.message}`;
   } finally {
