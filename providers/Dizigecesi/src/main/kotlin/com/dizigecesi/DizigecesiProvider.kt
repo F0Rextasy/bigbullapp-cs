@@ -227,7 +227,7 @@ class DizigecesiProvider : MainAPI() {
                 )
                 found = true
             }
-            if (type == ExtractorLinkType.M3U8) {
+            if (false && type == ExtractorLinkType.M3U8) {
                 val playlist = runCatching { app.get(stream, headers = headers, referer = frame).text }.getOrNull().orEmpty()
                 for ((h, vUrl) in parseHlsVariants(stream, playlist)) {
                     if (!Settings.qualityAllowed(h)) continue
