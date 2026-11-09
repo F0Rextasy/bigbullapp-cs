@@ -1,4 +1,4 @@
-// @provider {"id":"webdramaturkey2", "name":"WebdramaTurkey2", "types":["movie", "tv"], "domain":"webdramaturkey2.com", "formats":["m3u8"], "sample":"tt29569035:tv:1:1", "description":"WebdramaTurkey2 Kore/Cin/Japon dizileri, filmleri ve animeleri (Turkce altyazili).", "version":"1.0.7"}
+// @provider {"id":"webdramaturkey2", "name":"WebdramaTurkey2", "types":["movie", "tv"], "domain":"webdramaturkey2.com", "formats":["m3u8"], "sample":"tt29569035:tv:1:1", "description":"WebdramaTurkey2 Kore/Cin/Japon dizileri, filmleri ve animeleri (Turkce altyazili).", "version":"1.0.8"}
 /**
  * webdramaturkey2 — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /arama/<q> -> dizi|film page -> episode -> /ajax/embed -> video.php
@@ -57,7 +57,7 @@ function titleOf(id, mediaType) {
 }
 
 function rowsFromPlaylist(masterUrl, playlist, referer) {
-  var list = [], lines = String(playlist || "").split(/\r?\n/);
+  var list = [], lines = /TYPE=AUDIO|AUDIO=/i.test(String(playlist || "")) ? [] : String(playlist || "").split(/\r?\n/);
   for (var i = 0; i < lines.length; i++) {
     if (lines[i].indexOf("#EXT-X-STREAM-INF") !== 0) continue;
     var height = first(/RESOLUTION=\d+x(\d+)/, lines[i]);

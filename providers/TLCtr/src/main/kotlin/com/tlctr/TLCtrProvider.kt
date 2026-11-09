@@ -277,6 +277,7 @@ class TLCtrProvider : MainAPI() {
 
     /** Master playlist pairs: (height, variant URL). Relative URIs resolve against the master path. */
     private fun parseVariants(playlist: String, master: String): List<Pair<Int, String>> {
+        if (playlist.contains("TYPE=AUDIO", ignoreCase = true) || playlist.contains("AUDIO=", ignoreCase = true)) return emptyList()
         val base = master.substringBefore('?').substringBeforeLast('/') + "/"
         val variants = mutableListOf<Pair<Int, String>>()
         var height = 0

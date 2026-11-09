@@ -286,6 +286,7 @@ class PuhuTVProvider : MainAPI() {
     }
 
     private fun parseVariants(playlist: String, base: String): List<Pair<Int, String>> {
+        if (playlist.contains("TYPE=AUDIO", ignoreCase = true) || playlist.contains("AUDIO=", ignoreCase = true)) return emptyList()
         val variants = mutableListOf<Pair<Int, String>>()
         var quality = 0
         for (line in playlist.lineSequence()) {

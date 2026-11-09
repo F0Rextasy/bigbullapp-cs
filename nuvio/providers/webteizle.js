@@ -1,4 +1,4 @@
-// @provider {"id":"webteizle", "name":"WebteIzle", "types":["movie", "tv"], "domain":"webteizle.info", "formats":["m3u8"], "description":"WebteIzle film/dizi kaynaklari (vidmoly, streamruby HLS; ok.ru/pixel yedek).", "sample":"tt0499549:movie:1:1", "verified":true, "version":"1.0.4"}
+// @provider {"id":"webteizle", "name":"WebteIzle", "types":["movie", "tv"], "domain":"webteizle.info", "formats":["m3u8"], "description":"WebteIzle film/dizi kaynaklari (vidmoly, streamruby HLS; ok.ru/pixel yedek).", "sample":"tt0499549:movie:1:1", "verified":true, "version":"1.0.5"}
 /**
  * webteizle — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /hakkinda/<slug> (yoksa /filtre?a=) -> #wip data-id ->
@@ -303,7 +303,14 @@ function play(job, dubbing) {
       return out;
     });
   }
-  if (job.kind === "mp4") return Promise.resolve([row(job.url, "auto", [], dubbing, Boolean(job.hls))]);
+  if (job.kind === "mp4") {
+    if (/pixeldrain\.com/i.test(job.url)) {
+      return fetch(job.url, { headers: { "User-Agent": UA, Range: "bytes=0-0" } })
+        .then(function (r) { return r.ok ? [row(job.url, "auto", [], dubbing, Boolean(job.hls))] : []; })
+        .catch(function () { return []; });
+    }
+    return Promise.resolve([row(job.url, "auto", [], dubbing, Boolean(job.hls))]);
+  }
   return text(job.url, { referer: job.referer }).then(function (page) {
     var hit = playable(page);
     if (!hit) return [];

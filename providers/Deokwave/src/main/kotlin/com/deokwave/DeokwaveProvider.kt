@@ -103,8 +103,8 @@ class DeokwaveProvider : MainAPI() {
         if (!path.startsWith("/anime/")) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()
-            .ifBlank { card.text().trim() }
             .ifBlank { img.attr("alt").trim() }
+            .ifBlank { card.text().trim() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null
@@ -231,7 +231,7 @@ class DeokwaveProvider : MainAPI() {
             }
         }
         val cookieHeader = resp.cookies.entries.joinToString("; ") { "${it.key}=${it.value}" }
-        val streamHeaders = if (cookieHeader.isNotBlank()) mapOf("Cookie" to cookieHeader, "Referer" to watchData) else mapOf("Referer" to watchData)
+        val streamHeaders = uaHeaders + if (cookieHeader.isNotBlank()) mapOf("Cookie" to cookieHeader, "Referer" to watchData) else mapOf("Referer" to watchData)
         loadTokenFlow(watchData, resp.text, resp.cookies) { stream, label, referer -> emit(stream, label, referer, headers = streamHeaders) }
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in media) emit(m.value, "Direct", watchData)
@@ -327,7 +327,7 @@ class DeokwaveProvider : MainAPI() {
                     if (q.isNotBlank()) qs += q
                 }
             }
-            sources += SourceEntry("Deokwave", mainVideoId, qs.ifEmpty { listOf("1080", "720", "480", "360") })
+            sources += SourceEntry("Deokwave", mainVideoId, (qs + listOf("1080", "720", "480", "360")).distinct())
         }
         val headers = uaHeaders + mapOf(
             "Content-Type" to "application/json",

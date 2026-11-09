@@ -320,6 +320,7 @@ class SezonlukdiziProvider : MainAPI() {
                 ) {
                     this.referer = "$apiOrigin/"
                     this.quality = getQualityFromName(label.uppercase())
+                    this.headers = mapOf("User-Agent" to ua, "user-agent" to ua)
                 }
             )
             found = true

@@ -272,7 +272,8 @@ class WebdramaTurkey2Provider : MainAPI() {
     ): Boolean {
         val playlist = runCatching { app.get(masterUrl, referer = referer, headers = browserHeaders).text }
             .getOrNull() ?: return false
-        val variants = VARIANT.findAll(playlist).mapNotNull { match ->
+        val hasAudio = playlist.contains("TYPE=AUDIO", ignoreCase = true) || playlist.contains("AUDIO=", ignoreCase = true)
+        val variants = if (hasAudio) emptyList() else VARIANT.findAll(playlist).mapNotNull { match ->
             val height = RESOLUTION.find(match.groupValues[1])?.groupValues?.get(1)?.toIntOrNull() ?: 0
             val uri = match.groupValues[2].trim()
             if (uri.isEmpty()) return@mapNotNull null

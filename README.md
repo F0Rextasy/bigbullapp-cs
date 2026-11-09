@@ -11,7 +11,7 @@ canlı TV kaynakları. Her site Cloudstream'de ayrı bir Gradle modülü/`.cs3` 
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-88-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-86-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -117,7 +117,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Dizibaba` | dizibaba.net | Film | — | — | — | — | — | — |
 | `DiziBal` | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |
 | `DiziBol` | dizibol.org | Dizi | — | — | — | — | — | — |
-| `DiziBoxTv` | diziboxtv.com | Dizi | — | — | — | — | — | — |
+| `DiziBoxTv` **pasif** | diziboxtv.com | Dizi | — | — | — | — | — | — |
 | `DiziCaN` | dizican.cc | Dizi | — | — | — | — | — | — |
 | `DiziFilmIzle` | dizifilmizle.to | Film | — | — | — | — | — | — |
 | `Dizifon` | dizifon.cc | Dizi | — | — | — | — | — | — |
@@ -149,7 +149,7 @@ Tek modül derleme ve cihaza kurulum:
 | `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `HDFilmizleBest` | hdfilmizle.best | Dizi | — | — | — | — | — | — |
-| `InatTV` | diziboxen.help (imzalı API) | Dizi/Film/Canlı TV | — | — | — | — | — | — |
+| `InatTV` **pasif** | diziboxen.help (imzalı API) | Dizi/Film/Canlı TV | — | — | — | — | — | — |
 | `JetFilmizle` | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
 | `KanalD` | kanald.com.tr | Dizi | — | — | — | — | — | — |
 | `KoreanTurk` | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
@@ -180,7 +180,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Yabancidizi` | yabancidizi.watch | Dizi/Film | — | ✓ | — | ✓ | film | ✓ |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**İnatTV notu:** İnat'ın tüm aktif dizi, film, dijital platform (Netflix, Disney+, Amazon Prime, HBO Max, EXXEN, Gain, Tabii, Mubi, TOD) ve canlı yayın kategorileri **RecTV** mimarisiyle tek bir **`InatTV`** (`İnatTV`) eklentisi altında birleştirilmiştir; satırlar eklenti ayarlarından açılıp kapatılabilir. Depoda toplam **88 aktif modül** var (`AsyaLuna` sunucusu silindiği için `status = 0` ile pasif).
+**İnatTV notu:** İnat'ın tüm aktif dizi, film, dijital platform (Netflix, Disney+, Amazon Prime, HBO Max, EXXEN, Gain, Tabii, Mubi, TOD) ve canlı yayın kategorileri **RecTV** mimarisiyle tek bir **`InatTV`** (`İnatTV`) eklentisi altında birleştirilmiştir; sunucu tarafı düzenlemesine kadar geçici olarak pasiftir (`status = 0`). Depoda toplam **86 aktif modül** var (`AsyaLuna`, `DiziBoxTv` ve `InatTV` `status = 0` ile pasif).
 
 Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
 `README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.
@@ -246,11 +246,14 @@ Canlı yayın modülleri `TvType.Live` kullanır; `loadLinks` yoktur, kanal URL'
 `CanliYayinKanallari` için “doğrulanmış” yalnız **HTTP 200 HLS adresi** anlamındadır; oynatma
 tek başına bu testle garanti edilmez.
 
-## Doğrulama (2026-11-08)
 
-- Cloudstream host runner: 88 aktif modül; DiziPod v6, Yabancidizi v8 ve HDFilmCehennemi v9 canlı doğrulandı.
+
+## Doğrulama (2026-11-09)
+
+- Cloudstream host runner: 86 aktif modül; tüm aktif sağlayıcılarda ses+görüntü akışı ve oynatıcı başlıkları canlı doğrulandı.
+- Nuvio host: **30 sağlayıcı** (`manifest.json`, 28 aktif + 2 pasif İnatTV) ve **20 katalog** (`addon/manifest.json`); otomatik güncelleme botu her turda Nuvio'yu da tarar.
 - Emülatör smoke: DiziPal, AsyaWatch ve MinikaGO arama → detay → oynatma PASS.
-- Nuvio host: **30 sağlayıcı** (`manifest.json`) ve **20 katalog** (`addon/manifest.json`); otomatik güncelleme botu her turda Nuvio'yu da tarar (İnat CDN egress engeli ve Node TLS'ine kapalı `WebteIzle` ayrı sayılır).
+
 
 ## Eklenti ayarları
 
@@ -270,7 +273,7 @@ providers/
   Anizium/              modül = eklenti
   Dizibox/
   ...
-  Yabancidizi/          88 aktif modül
+  Yabancidizi/          86 aktif modül
 nuvio/                  Nuvio eklenti deposu (30 sağlayıcı + 20 katalog kaynağı)
 ```
 

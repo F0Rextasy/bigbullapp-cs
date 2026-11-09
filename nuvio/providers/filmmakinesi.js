@@ -1,4 +1,4 @@
-// @provider {"id":"filmmakinesi", "name":"FilmMakinesi", "types":["movie", "tv"], "domain":"filmmakinesi.co", "formats":["m3u8"], "description":"FilmMakinesi film kaynaklari (oynatloload secure-hls).", "sample":"tt13611778:movie:1:1", "verified":true, "version":"1.0.2"}
+// @provider {"id":"filmmakinesi", "name":"FilmMakinesi", "types":["movie", "tv"], "domain":"filmmakinesi.co", "formats":["m3u8"], "description":"FilmMakinesi film kaynaklari (oynatloload secure-hls).", "sample":"tt13611778:movie:1:1", "verified":true, "version":"1.0.3"}
 /**
  * filmmakinesi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /?s= -> film sayfasi -> oynatloload embed -> __ULTRA_EAUTH ->
@@ -86,7 +86,7 @@ function row(url, quality, subs, label) {
     title: "FilmMakinesi - " + quality + " [HLS]" + label,
     url: url,
     quality: quality,
-    headers: { Referer: PLAYER + "/", Origin: PLAYER },
+    headers: { "User-Agent": UA, Referer: PLAYER + "/", Origin: PLAYER },
     subtitles: subs
   };
 }
@@ -113,16 +113,20 @@ function rows(oj) {
 
   var out = [];
   var seen = {};
+  var master = String(oj.src || oj.hls_m3u8_path || "");
   var sources = oj.sources || [];
+  if (audio.length && /^https?:/i.test(master)) {
+    out.push(row(master, "auto", subs, label));
+    return out;
+  }
   for (var s = 0; s < sources.length; s++) {
     var url = String((sources[s] || {}).file || "");
     if (!/^https?:/i.test(url) || seen[url]) continue;
     seen[url] = 1;
     out.push(row(url, String(sources[s].label || "auto"), subs, label));
   }
-  if (!out.length) {
-    var master = String(oj.src || oj.hls_m3u8_path || "");
-    if (/^https?:/i.test(master)) out.push(row(master, "auto", subs, label));
+  if (!out.length && /^https?:/i.test(master)) {
+    out.push(row(master, "auto", subs, label));
   }
   return out;
 }

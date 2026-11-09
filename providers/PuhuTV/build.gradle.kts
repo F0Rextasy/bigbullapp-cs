@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "PuhuTV — Yerli diziler, puhutv Orijinal yapımlar, filmler ve belgeseller"

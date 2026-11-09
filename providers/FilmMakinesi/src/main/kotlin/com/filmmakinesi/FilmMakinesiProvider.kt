@@ -169,8 +169,19 @@ class FilmMakinesiProvider : MainAPI() {
         }.getOrNull() ?: return false
 
         var found = false
+        val master = info.optString("src").trim()
+        val hasAudioTracks = (info.optJSONArray("audio_tracks")?.length() ?: 0) > 0
         val sources = info.optJSONArray("sources")
-        if (sources != null && sources.length() > 0) {
+        if (master.isNotBlank() && (hasAudioTracks || sources == null || sources.length() == 0)) {
+            callback(
+                newExtractorLink(name, "$name Auto", master, ExtractorLinkType.M3U8) {
+                    this.referer = "$EMBED_HOST/"
+                    this.headers = uaHeaders + mapOf("Origin" to EMBED_HOST)
+                    this.quality = Qualities.Unknown.value
+                }
+            )
+            found = true
+        } else if (sources != null && sources.length() > 0) {
             for (i in 0 until sources.length()) {
                 val source = sources.optJSONObject(i) ?: continue
                 val file = source.optString("file").trim().takeIf { it.isNotBlank() } ?: continue
@@ -178,20 +189,8 @@ class FilmMakinesiProvider : MainAPI() {
                 callback(
                     newExtractorLink(name, "$name $label", file, ExtractorLinkType.M3U8) {
                         this.referer = "$EMBED_HOST/"
-                        this.headers = mapOf("Origin" to EMBED_HOST)
+                        this.headers = uaHeaders + mapOf("Origin" to EMBED_HOST)
                         this.quality = qualityOf(label)
-                    }
-                )
-                found = true
-            }
-        } else {
-            val master = info.optString("src").trim()
-            if (master.isNotBlank()) {
-                callback(
-                    newExtractorLink(name, "$name Auto", master, ExtractorLinkType.M3U8) {
-                        this.referer = "$EMBED_HOST/"
-                        this.headers = mapOf("Origin" to EMBED_HOST)
-                        this.quality = Qualities.Unknown.value
                     }
                 )
                 found = true

@@ -95,7 +95,10 @@ private val HLS_NAME = Regex("""NAME="(\d{3,4})p?"""", RegexOption.IGNORE_CASE)
 
 /** HLS master playlist içindeki #EXT-X-STREAM-INF kalite varyantlarını (yükseklik px, tam URL) olarak çıkarır. */
 fun parseHlsVariants(masterUrl: String, m3u8Text: String): List<Pair<Int, String>> {
-    if (!m3u8Text.contains("#EXT-X-STREAM-INF")) return emptyList()
+    if (!m3u8Text.contains("#EXT-X-STREAM-INF") ||
+        m3u8Text.contains("TYPE=AUDIO", ignoreCase = true) ||
+        m3u8Text.contains("AUDIO=", ignoreCase = true)
+    ) return emptyList()
     val base = runCatching { URI(masterUrl.trim()) }.getOrNull() ?: return emptyList()
     val lines = m3u8Text.lineSequence().map { it.trim() }.filter { it.isNotEmpty() }.toList()
     val out = ArrayList<Pair<Int, String>>()
@@ -137,29 +140,47 @@ fun pichiveGateNonce(html: String): String? {
     val n = gate.groupValues[1]
     val bits = gate.groupValues[2].toIntOrNull() ?: 12
     val md = MessageDigest.getInstance("SHA-256")
-    fun first(msg: String): Long {
+    fun wordAt(msg: String, idx: Int): Long {
         val d = md.digest(msg.toByteArray(Charsets.UTF_8))
-        return ((d[0].toLong() and 0xff) shl 24) or ((d[1].toLong() and 0xff) shl 16) or
-            ((d[2].toLong() and 0xff) shl 8) or (d[3].toLong() and 0xff)
+        val o = (idx.coerceIn(0, 7)) * 4
+        return ((d[o].toLong() and 0xff) shl 24) or ((d[o + 1].toLong() and 0xff) shl 16) or
+            ((d[o + 2].toLong() and 0xff) shl 8) or (d[o + 3].toLong() and 0xff)
     }
-    val custom = html.contains("NP_GATE=") || html.contains("NP_GATE =")
-    if (!custom) {
-        for (i in 0 until 50_000_000) if (first("$n:$i") ushr (32 - bits) == 0L) return i.toString()
+    val fn = Regex("""window\.NP_GATE\s*=\s*function\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*\{([\s\S]*?)\};""").find(html)
+    if (fn == null) {
+        for (i in 0 until 50_000_000) if (wordAt("$n:$i", 0) ushr (32 - bits) == 0L) return i.toString()
         return null
     }
-    val codes = Regex("""String\.fromCharCode\(([\d,\s]+)\)""").find(html)?.groupValues?.get(1)
-        ?.split(',')?.map { it.trim().toInt().toChar() }?.joinToString("") ?: return null
-    val mask = Regex("""&\s*(\d+)\s*\)\s*===\s*0""").find(html)?.groupValues?.get(1)?.toLongOrNull() ?: return null
+    val nVar = fn.groupValues[1]
+    val body = fn.groupValues[3]
+    val cm = Regex("""var\s+(\w+)\s*=\s*String\.fromCharCode\(([\d,\s]+)\)""").find(body) ?: return null
+    val saltVar = cm.groupValues[1]
+    val salt = cm.groupValues[2].split(',').map { it.trim().toInt().toChar() }.joinToString("")
+    val nonceVar = Regex("""var\s+(\w+)\s*=\s*\w+\.toString\(36\)""").find(body)?.groupValues?.get(1) ?: return null
+    val im = Regex("""\(\s*\w+\(([^)]+)\)\[(\d+)\]\s*&\s*(\d+)\s*\)\s*===\s*0""").find(body) ?: return null
+    val parts = im.groupValues[1].split('+').map { it.trim() }
+    val wordIdx = im.groupValues[2].toIntOrNull() ?: 0
+    val mask = im.groupValues[3].toLongOrNull() ?: return null
     for (i in 0 until 50_000_000) {
         val nonce = java.lang.Long.toString(i.toLong(), 36)
-        if (first("$codes$n.$nonce") and mask == 0L) return nonce
+        val msg = buildString {
+            for (p in parts) {
+                when (p) {
+                    nVar -> append(n)
+                    saltVar -> append(salt)
+                    nonceVar -> append(nonce)
+                    else -> append(p.trim('\'', '"'))
+                }
+            }
+        }
+        if (wordAt(msg, wordIdx) and mask == 0L) return nonce
     }
     return null
 }
 
 /** `nm.php`/`nsub.php` adresine [pichiveGateNonce] ile bulunan `&p=` imzasını ekler; diğer adresler değişmez. */
 fun pichiveSign(html: String, url: String): String {
-    if (!url.contains("pichive") || !(url.contains("/nm.php") || url.contains("/nsub.php")) || url.contains("&p=")) return url
+    if (!(url.contains("/nm.php") || url.contains("/nsub.php")) || url.contains("&p=")) return url
     val nonce = pichiveGateNonce(html) ?: return url
     return "$url&p=$nonce"
 }

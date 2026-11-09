@@ -1,4 +1,4 @@
-// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.12"}
+// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.13"}
 /**
  * hdfilmcehennemi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /search/?q= JSON -> film page -> hdfilmcehennemi.mobi embed
@@ -250,6 +250,7 @@ function label(width, height) {
 }
 
 function variants(master, playlist) {
+  if (/TYPE=AUDIO|AUDIO=/i.test(String(playlist || ""))) return [];
   var list = [];
   var size = null;
   var lines = String(playlist || "").split(/\r?\n/);

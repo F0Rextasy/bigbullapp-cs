@@ -124,7 +124,8 @@ class DiziboxProvider : MainAPI() {
     override suspend fun load(url: String): LoadResponse? {
         val doc = runCatching { app.get(url, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
-        val title = doc.selectFirst("div.tv-overview h1 a")?.text()?.trim()?.takeIf { it.isNotBlank() }
+        val title = doc.selectFirst("div.tv-overview h1 a, h1 span.tv-title-archive span[itemprop=name], h1 a")
+            ?.text()?.trim()?.takeIf { it.isNotBlank() }
             ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
 
         val episodes = LinkedHashMap<String, Episode>()
@@ -146,6 +147,13 @@ class DiziboxProvider : MainAPI() {
         doc.select("div#seasons-list a").forEach { seasonAnchor ->
             val seasonUrl = fixUrlNull(seasonAnchor.attr("href")) ?: return@forEach
             runCatching { collect(app.get(seasonUrl, headers = uaHeaders).document) }
+        }
+        if (episodes.isEmpty()) {
+            episodes[url] = newEpisode(url) {
+                this.name = doc.selectFirst("h1 span.tv-title-episode")?.text()?.trim()?.ifBlank { null } ?: "1. Bölüm"
+                this.season = Regex("""(\d+)-sezon""").find(url)?.groupValues?.get(1)?.toIntOrNull() ?: 1
+                this.episode = Regex("""(\d+)-bolum""").find(url)?.groupValues?.get(1)?.toIntOrNull() ?: 1
+            }
         }
 
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes.values.toList()) {

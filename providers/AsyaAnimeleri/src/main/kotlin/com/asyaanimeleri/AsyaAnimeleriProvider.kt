@@ -322,11 +322,15 @@ class AsyaAnimeleriProvider : MainAPI() {
     /** GDrive's `/preview` iframe is JS-only; the download endpoint serves the same file as mp4. */
     private suspend fun loadGDrive(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
         val id = Regex("""/file/d/([^/]+)""").find(embed)?.groupValues?.get(1) ?: return false
+        val url = "https://drive.usercontent.google.com/download?id=$id&export=download&confirm=t"
+        val probe = runCatching { app.get(url, headers = mapOf("Range" to "bytes=0-0", "user-agent" to BROWSER_UA)) }.getOrNull() ?: return false
+        val type = probe.headers["content-type"] ?: probe.headers["Content-Type"] ?: ""
+        if (probe.code !in 200..299 || type.startsWith("text/")) return false
         callback.invoke(
             newExtractorLink(
                 name,
                 "GDrive",
-                "https://drive.usercontent.google.com/download?id=$id&export=download&confirm=t",
+                url,
                 ExtractorLinkType.VIDEO,
             )
         )

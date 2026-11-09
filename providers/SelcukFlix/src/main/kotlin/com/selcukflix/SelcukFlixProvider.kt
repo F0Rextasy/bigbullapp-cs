@@ -299,7 +299,7 @@ class SelcukFlixProvider : MainAPI() {
         config.optJSONArray("subtitles").objects().forEach { track ->
             val url = track.optString("url").takeIf { it.startsWith("http") }?.let { pichiveSign(playerHtml, it) }
                 ?: track.optString("tok").takeIf { it.isNotEmpty() }
-                    ?.let { "${ORIGIN.find(playerUrl)?.value.orEmpty()}/nsub.php?v=$it" }
+                    ?.let { pichiveSign(playerHtml, "${ORIGIN.find(playerUrl)?.value.orEmpty()}/nsub.php?v=$it") }
                 ?: return@forEach
             val lang = track.optString("label").trim().ifEmpty { track.optString("lang").trim() }
                 .ifEmpty { "Altyazı" }
@@ -369,7 +369,10 @@ class SelcukFlixProvider : MainAPI() {
     }
 
     private fun parseVariants(playlist: String): List<Pair<Int, String>> {
-        if (!playlist.startsWith("#EXTM3U")) return emptyList()
+        if (!playlist.startsWith("#EXTM3U") ||
+            playlist.contains("TYPE=AUDIO", ignoreCase = true) ||
+            playlist.contains("AUDIO=", ignoreCase = true)
+        ) return emptyList()
         val variants = mutableListOf<Pair<Int, String>>()
         var height: Int? = null
         for (raw in playlist.lineSequence()) {
@@ -390,6 +393,7 @@ class SelcukFlixProvider : MainAPI() {
         newExtractorLink(name, label, url, ExtractorLinkType.M3U8) {
             this.referer = referer
             this.quality = quality
+            this.headers = uaHeaders
         }
 
     // ------------------------------------------------------------------ ortak

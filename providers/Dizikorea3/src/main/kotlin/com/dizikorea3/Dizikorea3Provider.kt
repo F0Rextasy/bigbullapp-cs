@@ -217,15 +217,35 @@ class Dizikorea3Provider : MainAPI() {
 
         var found = false
         embeds.forEach { embed ->
-            val ok = if (embed.contains("playerdkorea") || embed.contains("playerkorea")) {
-                loadPlayerDkorea(embed, linkCallback)
-            } else {
-                loadExtractor(embed, "$mainUrl/", subtitleFilter, linkCallback)
+            val ok = when {
+                embed.contains("playerdkorea") || embed.contains("playerkorea") ->
+                    loadPlayerDkorea(embed, linkCallback)
+                embed.contains("vidmoly") ->
+                    loadVidmoly(embed, linkCallback)
+                else ->
+                    loadExtractor(embed, "$mainUrl/", subtitleFilter, linkCallback)
             }
             if (ok) found = true
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
         return found
+    }
+
+    private suspend fun loadVidmoly(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
+        val target = embed.replace(Regex("""vidmoly\.(?:to|me|biz)"""), "vidmoly.net")
+        val html = runCatching {
+            app.get(target, referer = "$mainUrl/", headers = uaHeaders + mapOf("Sec-Fetch-Dest" to "iframe")).text
+        }.getOrNull() ?: return false
+        val m3u8 = Regex("""file\s*:\s*["'](https?://[^"']+\.m3u8[^"']*)["']""").find(html)?.groupValues?.get(1)
+            ?: return false
+        callback.invoke(
+            newExtractorLink(name, "VidMoly", m3u8, ExtractorLinkType.M3U8) {
+                this.referer = "https://vidmoly.net/"
+                this.quality = Qualities.Unknown.value
+                this.headers = uaHeaders
+            }
+        )
+        return true
     }
 
     /**

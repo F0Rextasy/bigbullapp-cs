@@ -219,13 +219,19 @@ class JetFilmizleProvider : MainAPI() {
             .orEmpty()
         var found = false
         if (!hls.isNullOrBlank()) {
-            callback.invoke(
-                newExtractorLink(name, label, hls, ExtractorLinkType.M3U8) {
-                    this.referer = "$worker/"
-                    this.quality = Qualities.Unknown.value
-                }
-            )
-            found = true
+            val hlsOk = runCatching {
+                app.get(hls, headers = uaHeaders, referer = "$worker/").text.trimStart().startsWith("#EXTM3U")
+            }.getOrDefault(false)
+            if (hlsOk) {
+                callback.invoke(
+                    newExtractorLink(name, label, hls, ExtractorLinkType.M3U8) {
+                        this.referer = "$worker/"
+                        this.quality = Qualities.Unknown.value
+                        this.headers = uaHeaders
+                    }
+                )
+                found = true
+            }
         }
         Regex(""""file"\s*:\s*"([^"]+)"\s*,\s*"label"\s*:\s*"([^"]*)"""").findAll(mp4).forEach { match ->
             val url = match.groupValues[1].replace("\\/", "/")

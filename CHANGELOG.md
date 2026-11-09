@@ -5,6 +5,14 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.30] - 2026-11-09
+
+### Düzeltildi
+- **Görüntü Var Ses Yok Sorunu**: SelçukFlix, DiziPal, FilmMakinesi, PuhuTV, StarTV, TLC ve WebdramaTurkey2 başta olmak üzere ayrı ses kanalı kullanan dizi ve filmlerde videonun sessiz oynaması sorunu hem Cloudstream hem Nuvio tarafında tamamen giderildi.
+- **Açılmayan Videolar ve Sunucu İmzaları**: Dizilla, Sezonlukdizi, Webteİzle, Dizikorea3, JetFilmizle, AsyaAnimeleri ve Deokwave üzerinde bazı bölümlerin açılmaması veya kırık kaynak seçmesi sorunu düzeltildi; altyazıların yüklenmeme hatası giderildi.
+- **Dizibox Ana Sayfa**: Ana sayfadaki son bölümlere tıklandığında detay sayfasının açılmaması sorunu çözüldü.
+- **İnatTV ve DiziBoxTv**: İnatTV (Cloudstream ve Nuvio) ile sunucusu kapanan DiziBoxTv geçici olarak pasife alındı.
+
 ## [1.6.29] - 2026-11-09
 
 ### Düzeltildi

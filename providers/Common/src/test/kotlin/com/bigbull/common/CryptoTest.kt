@@ -73,4 +73,12 @@ class CryptoTest {
             evpMd5AesCbcDecrypt(ct, "bePlayerHash", saltHex, ivHex),
         )
     }
+
+    @Test
+    fun parseHlsVariantsSkipsDemuxedAudioMasters() {
+        val muxed = "#EXTM3U\n#EXT-X-STREAM-INF:RESOLUTION=1280x720\n720/index.m3u8"
+        assertEquals(listOf(720 to "https://cdn.example/720/index.m3u8"), parseHlsVariants("https://cdn.example/master.m3u8", muxed))
+        val demuxed = "#EXTM3U\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",URI=\"a.m3u8\"\n#EXT-X-STREAM-INF:RESOLUTION=1280x720,AUDIO=\"a\"\nv.m3u8"
+        assertEquals(emptyList<Pair<Int, String>>(), parseHlsVariants("https://cdn.example/master.m3u8", demuxed))
+    }
 }

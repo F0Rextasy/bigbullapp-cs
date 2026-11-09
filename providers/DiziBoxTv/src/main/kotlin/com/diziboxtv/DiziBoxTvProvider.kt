@@ -235,14 +235,16 @@ class DiziBoxTvProvider : MainAPI() {
             val playlist = runCatching { app.get(master, headers = uaHeaders, referer = data).text }.getOrNull() ?: ""
             if (playlist.startsWith("#EXTM3U")) {
                 emit(master, "master", data)
-                val lines = playlist.lines()
-                for (i in lines.indices) {
-                    if (!lines[i].startsWith("#EXT-X-STREAM-INF")) continue
-                    val h = Regex("RESOLUTION=\\d+x(\\d+)").find(lines[i])?.groupValues?.get(1)
-                    var j = i + 1
-                    while (j < lines.size && (lines[j].isBlank() || lines[j].startsWith("#"))) j++
-                    if (j < lines.size) {
-                        emit(java.net.URI(master).resolve(lines[j].trim()).toString(), h?.plus("p") ?: "auto", data)
+                if (!playlist.contains("TYPE=AUDIO", ignoreCase = true) && !playlist.contains("AUDIO=", ignoreCase = true)) {
+                    val lines = playlist.lines()
+                    for (i in lines.indices) {
+                        if (!lines[i].startsWith("#EXT-X-STREAM-INF")) continue
+                        val h = Regex("RESOLUTION=\\d+x(\\d+)").find(lines[i])?.groupValues?.get(1)
+                        var j = i + 1
+                        while (j < lines.size && (lines[j].isBlank() || lines[j].startsWith("#"))) j++
+                        if (j < lines.size) {
+                            emit(java.net.URI(master).resolve(lines[j].trim()).toString(), h?.plus("p") ?: "auto", data)
+                        }
                     }
                 }
                 for (s in Regex("#EXT-X-MEDIA:[^\\r\\n]*TYPE=SUBTITLES[^\\r\\n]*").findAll(playlist).take(3)) {

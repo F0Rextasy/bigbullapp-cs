@@ -1,4 +1,4 @@
-// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt42006709:movie:1:1", "description":"İnatTV yerli film kataloğu (imzalı liste + AES çözümleyici, HLS/MP4; 4K film katalogları upstream'de kapatıldı).", "verified":true, "version":"1.0.7"}
+// @provider {"id":"inattvfilmler", "name":"İnatTV Filmler", "types":["movie"], "domain":"inatbox", "formats":["m3u8", "mp4"], "sample":"tt42006709:movie:1:1", "description":"İnatTV yerli film kataloğu (imzalı liste + AES çözümleyici, HLS/MP4; 4K film katalogları upstream'de kapatıldı).", "verified":false, "version":"1.0.8"}
 /**
  * inattvfilmler — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> Inat list -> season/episode -> signed + AES resolve -> HLS/MP4.

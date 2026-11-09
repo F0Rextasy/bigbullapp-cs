@@ -1,4 +1,4 @@
-// @provider {"id":"tlctr", "name":"TLC Türkiye", "types":["tv"], "domain":"tlctv.com.tr", "formats":["m3u8"], "sample":"tt15334452:tv:1:1", "description":"TLC Türkiye program arşivi; bölümler DYG imzalı HLS olarak açılır.", "version":"1.0.4"}
+// @provider {"id":"tlctr", "name":"TLC Türkiye", "types":["tv"], "domain":"tlctv.com.tr", "formats":["m3u8"], "sample":"tt15334452:tv:1:1", "description":"TLC Türkiye program arşivi; bölümler DYG imzalı HLS olarak açılır.", "version":"1.0.5"}
 /**
  * tlctr — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /arama -> program -> ajax episodes -> data-video-code -> DYG redirect -> HLS.
@@ -48,6 +48,7 @@ function norm(value) {
 }
 
 function variants(master, playlist) {
+  if (/TYPE=AUDIO|AUDIO=/i.test(String(playlist || ""))) return [];
   var origin = /^(https?:\/\/[^/]+)/.exec(master)[1];
   var base = master.replace(/[?#].*$/, "").replace(/[^/]*$/, "");
   var out = [], height = 0, lines = String(playlist || "").split("\n");

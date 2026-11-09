@@ -1,4 +1,4 @@
-// @provider {"id":"puhutv", "name":"PuhuTV", "types":["movie","tv"], "domain":"puhutv.com", "formats":["m3u8"], "sample":"tt7920978:tv:1:1", "description":"PuhuTV yerli dizi, puhutv Orijinal yapimlar ve filmler; DYG HLS akislari.", "version":"1.0.1"}
+// @provider {"id":"puhutv", "name":"PuhuTV", "types":["movie","tv"], "domain":"puhutv.com", "formats":["m3u8"], "sample":"tt7920978:tv:1:1", "description":"PuhuTV yerli dizi, puhutv Orijinal yapimlar ve filmler; DYG HLS akislari.", "version":"1.0.2"}
 /**
  * puhutv — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta + Wikidata TR title -> appservice.puhutv.com/search/search
@@ -187,6 +187,7 @@ function findEpisodeWatchSlug(seasonId, wantEp) {
 }
 
 function parseVariants(playlist, masterUrl) {
+  if (/TYPE=AUDIO|AUDIO=/i.test(String(playlist || ""))) return [];
   var lines = String(playlist || "").split(/\r?\n/);
   var out = [];
   var seen = {};

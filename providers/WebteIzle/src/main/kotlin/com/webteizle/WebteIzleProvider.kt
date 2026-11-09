@@ -220,6 +220,7 @@ class WebteIzleProvider : MainAPI() {
             ?.let { raw ->
                 // Site protokol-göreli iframe yazıyor ("//vidmoly.net/embed-x.html").
                 val src = if (raw.startsWith("//")) "https:$raw" else raw
+                if (src.contains("vidmoly") && resolveVidmoly(src, label, callback)) return true
                 return loadExtractor(src, referer, subtitleCallback, callback)
             }
 
@@ -237,22 +238,44 @@ class WebteIzleProvider : MainAPI() {
         val arg = call.groupValues[2]
         // Pixel kodu "indirmeId|ek" biçiminde; doğrudan dosya ucu oynatılabilir.
         if (call.groupValues[1] == "pixel") {
+            val pixelUrl = "https://pixeldrain.com/api/file/${arg.substringBefore('|')}"
+            val code = runCatching { app.get(pixelUrl, headers = uaHeaders + mapOf("Range" to "bytes=0-0")).code }.getOrDefault(0)
+            if (code !in 200..299) return false
             callback(
-                newExtractorLink(name, label, "https://pixeldrain.com/api/file/${arg.substringBefore('|')}",
+                newExtractorLink(name, label, pixelUrl,
                     ExtractorLinkType.VIDEO) {
                     this.quality = Qualities.Unknown.value
                 }
             )
             return true
         }
+        if (call.groupValues[1] == "vidmoly") {
+            return resolveVidmoly("https://vidmoly.net/embed-$arg.html", label, callback)
+        }
         val url = when (call.groupValues[1]) {
-            "vidmoly" -> "https://vidmoly.net/embed-$arg.html"
             "okru" -> "https://ok.ru/videoembed/$arg"
             "filemoon" -> "https://bysezoxexe.com/e/$arg"
             "sruby" -> "https://streamruby.com/$arg.html"
             else -> return false
         }
         return loadExtractor(url, referer, subtitleCallback, callback)
+    }
+
+    private suspend fun resolveVidmoly(embed: String, label: String, callback: (ExtractorLink) -> Unit): Boolean {
+        val target = embed.replace(Regex("""vidmoly\.(?:to|me|biz)"""), "vidmoly.net")
+        val html = runCatching {
+            app.get(target, referer = "$mainUrl/", headers = uaHeaders + mapOf("Sec-Fetch-Dest" to "iframe")).text
+        }.getOrNull() ?: return false
+        val m3u8 = Regex("""file\s*:\s*["'](https?://[^"']+\.m3u8[^"']*)["']""").find(html)?.groupValues?.get(1)
+            ?: return false
+        callback(
+            newExtractorLink(name, label, m3u8, ExtractorLinkType.M3U8) {
+                this.referer = "https://vidmoly.net/"
+                this.quality = Qualities.Unknown.value
+                this.headers = uaHeaders
+            }
+        )
+        return true
     }
 
     /** `?a=` değeri windows-1254 baytlarıyla yüzde kodlanır; UTF-8 arama boş döner. */
