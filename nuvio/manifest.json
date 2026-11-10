@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.32",
+  "version": "1.6.33",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -347,45 +347,6 @@
         "m3u8"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=hdfilmcehennemi.nl&sz=128",
-      "contentLanguage": [
-        "tr"
-      ]
-    },
-    {
-      "id": "inattvdizi",
-      "name": "İnatTV Dizi",
-      "description": "İnatTV yabancı, yerli ve platform dizileri kataloğu (imzalı liste + AES çözümleyici, HLS).",
-      "version": "1.0.6",
-      "author": "bigbull",
-      "supportedTypes": [
-        "tv"
-      ],
-      "filename": "providers/inattvdizi.js",
-      "enabled": false,
-      "formats": [
-        "m3u8"
-      ],
-      "logo": "https://www.google.com/s2/favicons?domain=inatbox&sz=128",
-      "contentLanguage": [
-        "tr"
-      ]
-    },
-    {
-      "id": "inattvfilmler",
-      "name": "İnatTV Filmler",
-      "description": "İnatTV yerli film kataloğu (imzalı liste + AES çözümleyici, HLS/MP4; 4K film katalogları upstream'de kapatıldı).",
-      "version": "1.0.8",
-      "author": "bigbull",
-      "supportedTypes": [
-        "movie"
-      ],
-      "filename": "providers/inattvfilmler.js",
-      "enabled": false,
-      "formats": [
-        "m3u8",
-        "mp4"
-      ],
-      "logo": "https://www.google.com/s2/favicons?domain=inatbox&sz=128",
       "contentLanguage": [
         "tr"
       ]

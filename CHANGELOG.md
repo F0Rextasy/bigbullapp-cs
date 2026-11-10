@@ -5,6 +5,13 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+
+## [1.6.33] - 2026-11-10
+
+### Kaldırıldı
+- **İnatTV / İnatBox**: Upstream 520/imza sorunları nedeniyle Cloudstream modülü ve Nuvio sağlayıcısı bir süreliğine kaldırıldı; sorunlar çözüldüğünde tekrar eklenecek.
+- **SineWix**: Cloudstream modülü bir süreliğine kaldırıldı; sorunlar çözüldüğünde tekrar eklenecek.
+
 ## [1.6.32] - 2026-11-10
 
 ### Düzeltildi

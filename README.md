@@ -149,7 +149,6 @@ Tek modül derleme ve cihaza kurulum:
 | `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `HDFilmizleBest` | hdfilmizle.best | Dizi | — | — | — | — | — | — |
-| `InatTV` **pasif** | diziboxen.help (imzalı API) | Dizi/Film/Canlı TV | — | — | — | — | — | — |
 | `JetFilmizle` | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
 | `KanalD` | kanald.com.tr | Dizi | — | — | — | — | — | — |
 | `KoreanTurk` | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
@@ -180,7 +179,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Yabancidizi` | yabancidizi.watch | Dizi/Film | — | ✓ | — | ✓ | film | ✓ |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**İnatTV notu:** İnat'ın tüm aktif dizi, film, dijital platform (Netflix, Disney+, Amazon Prime, HBO Max, EXXEN, Gain, Tabii, Mubi, TOD) ve canlı yayın kategorileri **RecTV** mimarisiyle tek bir **`InatTV`** (`İnatTV`) eklentisi altında birleştirilmiştir; sunucu tarafı düzenlemesine kadar geçici olarak pasiftir (`status = 0`). Depoda toplam **86 aktif modül** var (`AsyaLuna`, `DiziBoxTv` ve `InatTV` `status = 0` ile pasif).
+**İnatTV / İnatBox notu:** Upstream 520 ve imza sorunları nedeniyle İnatTV (Cloudstream) ve İnatBox (Nuvio) bir süreliğine kaldırıldı; sorunlar çözüldüğünde tekrar eklenecek. **SineWix** de aynı şekilde kaldırıldı. Depoda toplam **85 aktif modül** var (`AsyaLuna` ve `DiziBoxTv` `status = 0` ile pasif).
 
 Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
 `README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.
@@ -197,10 +196,10 @@ Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Reposito
 `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json` →
 **Refresh** → sağlayıcıları tek tek aç. Tam liste: [`nuvio/manifest.json`](nuvio/manifest.json).
 
-**Kapsam**: Uygulama performansını korumak ve kasmayı önlemek amacıyla Nuvio tarafında yalnızca seçilmiş **30 ana sağlayıcı** yayınlanır:
+**Kapsam**: Uygulama performansını korumak ve kasmayı önlemek amacıyla Nuvio tarafında yalnızca seçilmiş **28 ana sağlayıcı** yayınlanır:
 - **Anime (3):** `Anizium`, `AnimeciX`, `AsyaAnimeleri`
-- **Dizi (13):** `Dizibox`, `Dizilla`, `DiziPal`, `SelcukFlix`, `Ddizi`, `WebdramaTurkey2`, `Dizikorea3`, `Sezonlukdizi`, `DiziYou`, `DiziBal`, `İnatTV Dizi`, `DiziMom`, `DiziPod`
-- **Film (9):** `HDFilmCehennemi`, `FullHDFilmizlesene`, `SetFilmIzle`, `YesilCamTv`, `İnatTV Filmler`, `FilmMakinesi`, `WebteIzle`, `FilmModu`, `JetFilmizle`
+- **Dizi (12):** `Dizibox`, `Dizilla`, `DiziPal`, `SelcukFlix`, `Ddizi`, `WebdramaTurkey2`, `Dizikorea3`, `Sezonlukdizi`, `DiziYou`, `DiziBal`, `DiziMom`, `DiziPod`
+- **Film (8):** `HDFilmCehennemi`, `FullHDFilmizlesene`, `SetFilmIzle`, `YesilCamTv`, `FilmMakinesi`, `WebteIzle`, `FilmModu`, `JetFilmizle`
 - **Film & Dizi (2):** `PuhuTV`, `RecTV`
 - **Belgesel & TV (3):** `BelgeselX`, `DMAX`, `TLCtr`
 
@@ -226,8 +225,7 @@ Addon yalnız `catalog` kaynağı sunar: item'lar IMDb id'siyle yazılır, detay
 akışları yukarıdaki plugin sağlayıcıları verir. İçerik günde bir
 `.github/workflows/nuvio-catalog.yml` ile yenilenir; tarifler `nuvio/addon/sources/<id>.json`,
 üretici `node nuvio/addon/build.mjs`. Statik katalog **arama** ve sonsuz kaydırma (`skip`)
-desteklemez; her satır ilk sayfayı gösterir. JS ile render edilen siteler (ör. Anizium) ve
-İnat CDN sağlayıcıları satır üretemez.
+desteklemez; her satır ilk sayfayı gösterir. JS ile render edilen siteler (ör. Anizium) satır üretemez.
 
 Başlık çözümü anahtarsız Cinemeta üzerinden yapılır, TMDB anahtarı gerekmez. Yalnız **sideload**
 edilen Nuvio sürümleri plugin destekler; mağaza sürümlerinde Plugins bölümü yoktur.
@@ -250,8 +248,8 @@ tek başına bu testle garanti edilmez.
 
 ## Doğrulama (2026-11-09)
 
-- Cloudstream host runner: 86 aktif modül; tüm aktif sağlayıcılarda ses+görüntü akışı ve oynatıcı başlıkları canlı doğrulandı.
-- Nuvio host: **30 sağlayıcı** (`manifest.json`, 28 aktif + 2 pasif İnatTV) ve **20 katalog** (`addon/manifest.json`); otomatik güncelleme botu her turda Nuvio'yu da tarar.
+- Cloudstream host runner: 2026-11-09 turunda 86 aktif modül; tüm aktif sağlayıcılarda ses+görüntü akışı ve oynatıcı başlıkları canlı doğrulandı. İnatTV ve SineWix 2026-11-10'da kaldırıldı.
+- Nuvio host: **28 sağlayıcı** (`manifest.json`, 28 aktif) ve **20 katalog** (`addon/manifest.json`); otomatik güncelleme botu her turda Nuvio'yu da tarar.
 - Emülatör smoke: DiziPal, AsyaWatch ve MinikaGO arama → detay → oynatma PASS.
 
 
