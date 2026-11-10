@@ -38,10 +38,13 @@ import javax.crypto.Mac
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
-/** Yabancıdizi — yabancidizi.watch (Next.js RSC + PBKDF2-SHA512/AES-CBC pichive player). */
+/** Yabancıdizi — ybncidizi.com (Next.js RSC + PBKDF2-SHA512/AES-CBC pichive player). */
 class YabancidiziProvider : MainAPI() {
-    override var mainUrl = "https://yabancidizi.watch"
-    private val uaHeaders get() = browserHeaders
+    override var mainUrl = "https://ybncidizi.com"
+    private val uaHeaders = mapOf(
+        "user-agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0",
+        "accept-language" to "tr-TR,tr;q=0.9",
+    )
     override var name = "Yabancıdizi"
     override var lang = "tr"
     override val hasMainPage = true
@@ -287,7 +290,11 @@ class YabancidiziProvider : MainAPI() {
         seenLinks: MutableSet<String>,
         seenSubtitles: MutableSet<String>,
     ): Boolean {
-        val html = app.get(playerUrl, referer = "$mainUrl/", headers = uaHeaders).text
+        val html = listOf("$mainUrl/", "https://selcukflix.app/", "https://dizipal1595.com/")
+            .firstNotNullOfOrNull { ref ->
+                runCatching { app.get(playerUrl, referer = ref, headers = uaHeaders).text }
+                    .getOrNull()?.takeIf { it.contains("window.NP_CONFIG") }
+            } ?: return false
         val config = jsonObjectAfter(html, "window.NP_CONFIG") ?: return false
         val linkName = listOf(this.name, tab.label).filter { it.isNotBlank() }.joinToString(" · ")
         val quality = QUALITY_RE.find(tab.quality)?.value?.toIntOrNull() ?: Qualities.Unknown.value
@@ -301,6 +308,7 @@ class YabancidiziProvider : MainAPI() {
                 newExtractorLink(this.name, linkName, master, ExtractorLinkType.M3U8) {
                     this.referer = playerUrl
                     this.quality = quality
+                    this.headers = uaHeaders
                 }
             )
             found = true
@@ -314,7 +322,7 @@ class YabancidiziProvider : MainAPI() {
                 val subLang = item.optString("label").ifBlank { "Türkçe" }
                 subtitleCallback.invoke(
                     newSubtitleFile(subLang, subUrl) {
-                        this.headers = mapOf("Referer" to playerUrl)
+                        this.headers = uaHeaders + mapOf("Referer" to playerUrl)
                     }
                 )
             }

@@ -8,6 +8,9 @@ sayı arttığında güncelleme sunar.
 
 ## [1.6.33] - 2026-11-10
 
+### Düzeltildi
+- **Yabancidizi v12**: Güncel alan adına (`ybncidizi.com`) taşındı ve pichive oynatıcı Referer/UA doğrulaması güncellendi.
+
 ### Kaldırıldı
 - **İnatTV / İnatBox**: Upstream 520/imza sorunları nedeniyle Cloudstream modülü ve Nuvio sağlayıcısı bir süreliğine kaldırıldı; sorunlar çözüldüğünde tekrar eklenecek.
 - **SineWix**: Cloudstream modülü bir süreliğine kaldırıldı; sorunlar çözüldüğünde tekrar eklenecek.
