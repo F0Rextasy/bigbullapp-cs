@@ -179,7 +179,7 @@ Tek modül derleme ve cihaza kurulum:
 | `Yabancidizi` | yabancidizi.watch | Dizi/Film | — | ✓ | — | ✓ | film | ✓ |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**İnatTV / İnatBox notu:** Upstream 520 ve imza sorunları nedeniyle İnatTV (Cloudstream) ve İnatBox (Nuvio) bir süreliğine kaldırıldı; sorunlar çözüldüğünde tekrar eklenecek. **SineWix** de aynı şekilde kaldırıldı. Depoda toplam **85 aktif modül** var (`AsyaLuna` ve `DiziBoxTv` `status = 0` ile pasif).
+**İnatTV / İnatBox notu:** Upstream 520 ve imza sorunları nedeniyle İnatTV (Cloudstream) ve İnatBox (Nuvio) bir süreliğine kaldırıldı; sorunlar çözüldüğünde tekrar eklenecek. **SineWix** de aynı şekilde kaldırıldı. Depoda toplam **86 aktif modül** var (`AsyaLuna` ve `DiziBoxTv` `status = 0` ile pasif).
 
 Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
 `README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.
