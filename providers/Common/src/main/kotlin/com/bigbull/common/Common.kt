@@ -8,6 +8,10 @@ import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
+import org.json.JSONArray
+import org.json.JSONObject
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 // Tüm modüllerin kopyaladığı tarayıcı kimliği; UA rulajı tek yerden yapılır.
@@ -188,4 +192,62 @@ fun pichiveSign(html: String, url: String): String {
     if (!(url.contains("/nm.php") || url.contains("/nsub.php")) || url.contains("&p=")) return url
     val nonce = pichiveGateNonce(html) ?: return url
     return "$url&p=$nonce"
+}
+
+/**
+ * Sayfadaki JSON-LD `description` alanını okur; FAQ şemasında "... konusu nedir?" cevabını tercih eder.
+ * Meta açıklamaları SEO cümlesi olduğu için içerik özeti gereken yerlerde bu yardımcı kullanılır.
+ */
+fun Document.jsonLdDescription(): String? {
+    val nodes = select("script[type=application/ld+json]").flatMap { element ->
+        runCatching {
+            val raw = element.data().trim()
+            if (raw.startsWith("[")) {
+                val array = JSONArray(raw)
+                (0 until array.length()).mapNotNull { array.optJSONObject(it) }
+            } else {
+                listOf(JSONObject(raw))
+            }
+        }.getOrDefault(emptyList())
+    }.flatMap { it.ldNodes() }
+    nodes.firstOrNull { it.optString("name").contains("konusu nedir", ignoreCase = true) }
+        ?.optJSONObject("acceptedAnswer")?.optString("text")
+        ?.takeIf { it.isNotBlank() }?.let { return cleanJsonLd(it) }
+    for (type in listOf("TVSeries", "Movie", "VideoObject", "CreativeWork", "Article")) {
+        nodes.firstOrNull {
+            it.optString("@type").contains(type, ignoreCase = true) && it.optString("description").isNotBlank()
+        }?.let { return cleanJsonLd(it.optString("description")) }
+    }
+    return nodes.firstOrNull { it.optString("description").isNotBlank() }
+        ?.let { cleanJsonLd(it.optString("description")) }
+}
+
+private fun JSONObject.ldNodes(): List<JSONObject> = buildList {
+    add(this@ldNodes)
+    for (key in listOf("@graph", "mainEntity")) {
+        when (val child = opt(key)) {
+            is JSONObject -> addAll(child.ldNodes())
+            is JSONArray -> for (i in 0 until child.length()) {
+                child.optJSONObject(i)?.let { addAll(it.ldNodes()) }
+            }
+        }
+    }
+}
+
+private fun cleanJsonLd(raw: String): String = Jsoup.parse(raw).text().trim()
+
+/** rapidvid `av('...')` kaynağı: ters base64 -> K9L kaydırması -> base64. */
+fun rapidVidAvDecode(value: String): String? = runCatching {
+    val first = String(
+        android.util.Base64.decode(value.reversed(), android.util.Base64.DEFAULT),
+        Charsets.ISO_8859_1,
+    )
+    String(android.util.Base64.decode(rapidVidShift(first), android.util.Base64.DEFAULT), Charsets.UTF_8)
+}.getOrNull()
+
+internal fun rapidVidShift(value: String): String = buildString(value.length) {
+    val salt = "K9L"
+    value.forEachIndexed { index, char ->
+        append((char.code - (salt[index % salt.length].code % 5 + 1)).toChar())
+    }
 }

@@ -6,6 +6,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 sayı arttığında güncelleme sunar.
 
 
+## [1.6.34] - 2026-11-11
+
+### Düzeltildi
+- **FullHDFilmizlesene v7**: rapidvid oynatıcısının yeni `jwSetup.sources` akışı çözüldü; filmler yeniden açılıyor.
+
 ## [1.6.33] - 2026-11-10
 
 ### Düzeltildi

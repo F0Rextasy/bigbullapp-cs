@@ -5,6 +5,7 @@ import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
+import com.bigbull.common.rapidVidAvDecode
 import com.lagradost.cloudstream3.MainAPI
 import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
@@ -146,7 +147,7 @@ class FullHDFilmizleseneProvider : MainAPI() {
         return found
     }
 
-    /** rapidvid embed -> atomCodecTelemetry h264 HLS master + jwSetup.tracks subtitles. */
+    /** rapidvid embed -> atomCodecTelemetry veya `jwSetup.sources` HLS master + jwSetup.tracks subtitles. */
     private suspend fun resolveAtom(
         embed: String,
         label: String,
@@ -158,8 +159,14 @@ class FullHDFilmizleseneProvider : MainAPI() {
         }.getOrNull() ?: return false
         val telemetry = Regex("""atomCodecTelemetry=(\{.*?\});""", RegexOption.DOT_MATCHES_ALL)
             .find(html)?.groupValues?.get(1)?.let { runCatching { JSONObject(it) }.getOrNull() }
+        val jwSources = Regex("""jwSetup\.sources\s*=\s*\[(.*?)\];""", RegexOption.DOT_MATCHES_ALL)
+            .find(html)?.groupValues?.get(1).orEmpty()
+        val encoded = Regex("""av\('([^']+)'\)""").find(jwSources)?.groupValues?.get(1)
+        val plain = Regex("\"file\"\\s*:\\s*\"([^\"]+)\"").find(jwSources)?.groupValues?.get(1)
         val stream = telemetry?.optString("h264")?.takeIf { it.startsWith("http") }
             ?: telemetry?.optString("av1")?.takeIf { it.startsWith("http") }
+            ?: encoded?.let { rapidVidAvDecode(it) }?.takeIf { it.startsWith("http") }
+            ?: plain?.takeIf { it.startsWith("http") }
             ?: return false
         // The master must reach the player whole (it owns the #EXT-X-MEDIA audio renditions);
         // its widest child variant only names the row and feeds the quality cap setting.
