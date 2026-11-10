@@ -10,6 +10,7 @@ sayı arttığında güncelleme sunar.
 
 ### Düzeltildi
 - **FullHDFilmizlesene v7**: rapidvid oynatıcısının yeni `jwSetup.sources` akışı çözüldü; filmler yeniden açılıyor.
+- **DiziFilmIzle v5**: Arama sonuçlarındaki oyuncu/yönetmen kayıtları elendi, geçersiz 404 detay sayfaları kapatıldı ve açıklama JSON-LD'den okunuyor.
 
 ## [1.6.33] - 2026-11-10
 

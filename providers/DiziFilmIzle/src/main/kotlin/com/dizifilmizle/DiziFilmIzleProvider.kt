@@ -1,5 +1,6 @@
 package com.dizifilmizle
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.evpMd5AesCbcDecrypt
 import com.bigbull.common.posterSrcLazy
@@ -99,7 +100,9 @@ class DiziFilmIzleProvider : MainAPI() {
             val item = results.optJSONObject(index) ?: return@mapNotNull null
             val slug = item.optString("slug").trim().takeIf { it.isNotEmpty() } ?: return@mapNotNull null
             val title = item.optString("title").trim().takeIf { it.isNotEmpty() } ?: return@mapNotNull null
-            val isSeries = item.optString("content_type") == "series"
+            val kind = item.optString("content_type")
+            if (kind == "actor" || kind == "director") return@mapNotNull null
+            val isSeries = kind == "series"
             val href = if (isSeries) "$mainUrl/dizi/$slug" else "$mainUrl/film/$slug"
             if (isSeries) {
                 newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
@@ -149,6 +152,7 @@ class DiziFilmIzleProvider : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse? {
         val resp = app.get(url, headers = uaHeaders)
+        if (resp.code == 404) throw ErrorLoadingException("$name: içerik bulunamadı.")
         val doc = resp.document
         val raw = resp.text
         val title = cleanTitle(
@@ -157,7 +161,8 @@ class DiziFilmIzleProvider : MainAPI() {
                 ?: throw ErrorLoadingException("$name: başlık okunamadı")
         ).ifBlank { throw ErrorLoadingException("$name: başlık okunamadı") }
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
-        val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+        val plot = doc.jsonLdDescription()
+            ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
         val genres = doc.select("[itemprop=genre], a[href*='/tur/'], a[href*='/kategori/']")
             .mapNotNull { it.attr("content").ifBlank { it.text() }.trim().takeIf(String::isNotBlank) }
             .distinct().take(8)
@@ -221,6 +226,7 @@ class DiziFilmIzleProvider : MainAPI() {
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
                 this.referer = referer
+                this.headers = browserHeaders
                 this.quality = quality
             })
             found = true
