@@ -1,8 +1,12 @@
 package com.asyawatch
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.pichiveSign
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.posterSrcLazy
+import com.lagradost.cloudstream3.Actor
+import com.lagradost.cloudstream3.ActorData
+import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -112,8 +116,26 @@ class AsyaWatchProvider : MainAPI() {
             doc.selectFirst("meta[property=og:image]")?.attr("content")
                 ?: ld?.optString("image")?.takeIf { it.startsWith("http") }
         )
-        val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
-            ?.takeIf { it.isNotBlank() }
+        val plot = doc.jsonLdDescription()
+            ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+                ?.takeIf { it.isNotBlank() }
+        val recommendations = doc.select("a.simr[href]").mapNotNull { anchor ->
+            val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
+            val name = anchor.selectFirst("b")?.text()?.trim()?.takeIf { it.isNotBlank() }
+                ?: return@mapNotNull null
+            newTvSeriesSearchResponse(name, href, TvType.TvSeries) {
+                this.posterUrl = fixUrlNull(anchor.selectFirst("img")?.attr("src"))
+            }
+        }.distinctBy { it.url }
+        val actors = ld?.optJSONArray("actor")?.let { array ->
+            (0 until array.length()).mapNotNull { index ->
+                val actor = array.optJSONObject(index) ?: return@mapNotNull null
+                val name = actor.optString("name").trim().takeIf { it.isNotBlank() }
+                    ?: return@mapNotNull null
+                ActorData(Actor(name, actor.optString("image").takeIf { it.startsWith("http") }))
+            }
+        }
+        val score = Score.from10(ld?.optJSONObject("aggregateRating")?.optString("ratingValue"))
         if (url.contains("/dizi/")) {
             val episodeArray = ld?.optJSONObject("containsSeason")?.optJSONArray("episode") ?: JSONArray()
             val episodes = (0 until episodeArray.length()).mapNotNull { index ->
@@ -131,11 +153,17 @@ class AsyaWatchProvider : MainAPI() {
             return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
                 this.plot = plot
+                this.actors = actors
+                this.score = score
+                this.recommendations = recommendations
             }
         }
         return newMovieLoadResponse(title, url, TvType.Movie, url) {
             this.posterUrl = poster
             this.plot = plot
+            this.actors = actors
+            this.score = score
+            this.recommendations = recommendations
         }
     }
 

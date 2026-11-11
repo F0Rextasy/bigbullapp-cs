@@ -6,6 +6,17 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 sayı arttığında güncelleme sunar.
 
 
+## [1.6.35] - 2026-11-11
+
+### Düzeltildi
+- **Film ve dizi açıklamaları düzeltildi**: Birçok sağlayıcıda yanlış görünen özetler artık doğru.
+- **StarTV**: Dizi açıklaması artık site verisinden okunuyor.
+- **FullHDFilmizlesene Nuvio**: rapidvid akışı düzeltildi.
+- **AsyaWatch**: Oyuncular, puan ve benzer diziler eklendi.
+- **DiziPod**: Film fragmanları eklendi.
+- **HDFilmDelisi**: Film süresi eklendi.
+- **UltraFilmizle**: Ana sayfa düzeltildi.
+
 ## [1.6.34] - 2026-11-11
 
 ### Düzeltildi

@@ -1,5 +1,6 @@
 package com.deokwave
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.parseHlsVariants
 import com.bigbull.common.posterSrcLazy
@@ -124,7 +125,7 @@ class DeokwaveProvider : MainAPI() {
         ).ifBlank { throw ErrorLoadingException("$name: başlık okunamadı") }
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
             ?: Regex("""animeBasePoster\s*=\s*['"](https?:[^'"]+)['"]""").find(raw)?.groupValues?.get(1)
-        val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+        val plot = doc.jsonLdDescription()
         val genres = doc.select("[itemprop=genre], a[href*='/tur/'], a[href*='/kategori/']")
             .mapNotNull { it.attr("content").ifBlank { it.text() }.trim().takeIf(String::isNotBlank) }
             .distinct().take(8)

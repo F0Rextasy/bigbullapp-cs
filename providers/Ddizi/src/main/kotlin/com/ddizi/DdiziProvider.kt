@@ -1,5 +1,6 @@
 package com.ddizi
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -82,7 +83,7 @@ class DdiziProvider : MainAPI() {
             ?: doc.title().substringBefore(" izle").trim().takeIf { it.isNotBlank() }
             ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
         val poster = doc.selectFirst("div.dizi-boxpost-cat img")?.let { imageAttr(it) }
-        val plot = doc.selectFirst("meta[name=DESCRIPTION]")?.attr("content")?.trim()?.takeIf { it.isNotBlank() }
+        val plot = doc.jsonLdDescription()
 
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, unique.sortedWith(compareBy({ it.season ?: 0 }, { it.episode ?: 0 }))) {
             this.posterUrl = poster

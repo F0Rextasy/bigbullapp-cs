@@ -1,5 +1,6 @@
 package com.ultrafilmizle
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -55,7 +56,7 @@ class UltraFilmizleProvider : MainAPI() {
     private val streamHeaders get() = browserHeaders + ("Accept" to "*/*")
 
     override val mainPage get() = mainPageOf(
-        "$mainUrl/filmler9/" to "Filmler",
+        "$mainUrl/" to "Filmler",
         "$mainUrl/kategori/aksiyon/" to "Aksiyon",
         "$mainUrl/kategori/aile/" to "Aile",
         "$mainUrl/kategori/animasyon/" to "Animasyon",
@@ -104,8 +105,9 @@ class UltraFilmizleProvider : MainAPI() {
             ?.replace(Regex("""\s+izle$""", RegexOption.IGNORE_CASE), "")
             ?.takeIf { it.isNotEmpty() }
             ?: throw ErrorLoadingException("$name: film başlığı okunamadı. $REPORT_HINT")
-        val description = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
-            ?.takeIf { it.isNotEmpty() }
+        val description = doc.selectFirst("#film-aciklama")?.text()?.trim()?.takeIf { it.isNotEmpty() }
+            ?: doc.jsonLdDescription()
+            ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()?.takeIf { it.isNotEmpty() }
         val year = YEAR.find("$title $description")?.groupValues?.get(1)?.toIntOrNull()
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
         val score = doc.selectFirst(".imdb")?.text()?.let {

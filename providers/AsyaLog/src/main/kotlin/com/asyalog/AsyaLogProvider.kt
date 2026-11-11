@@ -1,5 +1,6 @@
 package com.asyalog
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.Actor
@@ -134,7 +135,7 @@ class AsyaLogProvider : MainAPI() {
         if (episodes.isEmpty()) {
             return newMovieLoadResponse(title, url, TvType.Movie, url) {
                 this.posterUrl = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
-                this.plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+                this.plot = doc.jsonLdDescription()
                 this.tags = doc.select("a[href*='/tur/'], a[href*='/kategori/']").map { it.text() }.distinct().take(8)
                 this.recommendations = recommendations
                 this.actors = actors.ifEmpty { null }
@@ -145,7 +146,7 @@ class AsyaLogProvider : MainAPI() {
 
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
             this.posterUrl = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
-            this.plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+            this.plot = doc.jsonLdDescription()
             this.tags = doc.select("a[href*='/tur/'], a[href*='/kategori/']").map { it.text() }.distinct().take(8)
             this.recommendations = recommendations
             this.actors = actors.ifEmpty { null }

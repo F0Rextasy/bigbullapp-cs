@@ -1,5 +1,6 @@
 package com.sonanime
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -164,10 +165,11 @@ class SonAnimeProvider : MainAPI() {
             }.getOrNull()
             val apiEpisodes = apiRaw?.let { runCatching { org.json.JSONObject(it).optJSONArray("episodes") }.getOrNull() }
             if (apiEpisodes != null && apiEpisodes.length() > 0) {
-                val webTitle = runCatching {
-                    val raw = app.get(url, headers = uaHeaders).text
-                    Regex("<meta property=\"og:title\" content=\"([^\"]+)\"").find(raw)?.groupValues?.get(1)
-                }.getOrNull() ?: slug
+                val page = runCatching { app.get(url, headers = uaHeaders) }.getOrNull()
+                val pageDoc = page?.document
+                val webTitle = page?.let {
+                    Regex("<meta property=\"og:title\" content=\"([^\"]+)\"").find(it.text)?.groupValues?.get(1)
+                } ?: slug
                 val rows = (0 until apiEpisodes.length()).mapNotNull { i ->
                     val e = apiEpisodes.optJSONObject(i) ?: return@mapNotNull null
                     val season = e.optInt("anime_season", 1)
@@ -179,7 +181,17 @@ class SonAnimeProvider : MainAPI() {
                     }
                 }.sortedBy { it.episode ?: 0 }
                 if (rows.isNotEmpty()) {
-                    return newTvSeriesLoadResponse(cleanTitle(webTitle), url, TvType.TvSeries, rows) {}
+                    val rawPlot = pageDoc?.jsonLdDescription()
+                        ?: pageDoc?.selectFirst("meta[name=description]")?.attr("content")?.trim()
+                    return newTvSeriesLoadResponse(cleanTitle(webTitle), url, TvType.TvSeries, rows) {
+                        this.posterUrl = fixUrlNull(pageDoc?.selectFirst("meta[property=og:image]")?.attr("content"))
+                        this.plot = rawPlot?.substringAfter("izle.", rawPlot)?.trim()
+                            ?.takeIf { text -> text.length > 20 } ?: rawPlot
+                        this.year = Regex("""\b(19|20)\d{2}\b""").find(webTitle)?.value?.toIntOrNull()
+                        this.score = Score.from10(
+                            pageDoc?.selectFirst("[itemprop=ratingValue]")?.attr("content")
+                        )
+                    }
                 }
             }
         }

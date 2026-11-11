@@ -1,5 +1,6 @@
 package com.dramadizilerim
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -93,8 +94,8 @@ class DramaDizilerimProvider : MainAPI() {
 
         val info = doc.infoTable()
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
-        val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
-            ?.takeIf { it.isNotEmpty() }
+        val plot = doc.jsonLdDescription()
+            ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()?.takeIf { it.isNotEmpty() }
         // Sitede tür/oyuncu/süre/fragman alanı yok; tek sınıflandırma platform kategorisi.
         val tags = doc.select("a[href^=/kategori/]").map { it.text().trim() }
             .filter { it.isNotEmpty() }.ifEmpty { info["Kategoriler"]?.select("a")?.map { it.text().trim() } ?: emptyList() }

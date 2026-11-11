@@ -99,9 +99,9 @@ Tek modül derleme ve cihaza kurulum:
 | `AsyaBox` | asyabox.co | Dizi | — | — | — | — | — | — |
 | `AsyaDizi` | asyadizi.com | Dizi | — | — | — | — | — | — |
 | `Asyadizileriizle` | asyadizileriizle.com | Dizi | — | — | — | — | — | — |
-| `AsyaLog` | asyalog.co | Asya dizi/film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
+| `AsyaLog` | asyalog.co | Asya dizi/film | ✓ | ✓ | — | — | ✓ | ✓ |
 | `AsyaLuna` **pasif** | asyaluna.com | Dizi | — | — | — | — | — | — |
-| `AsyaWatch` | asyawatch.com | Asya dizi/film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `AsyaWatch` | asyawatch.com | Asya dizi/film | ✓ | ✓ | — | ✓ | — | ✓ |
 | `ATV` | atv.com.tr | Dizi | — | — | — | — | — | — |
 | `BelgeselX` | belgeselx.com | Belgesel | — | — | — | — | — | — |
 | `BirAsyaDizi` | birasyadizi.cx | Dizi | — | — | — | — | — | — |

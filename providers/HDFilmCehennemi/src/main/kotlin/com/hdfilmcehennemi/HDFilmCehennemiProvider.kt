@@ -1,5 +1,6 @@
 package com.hdfilmcehennemi
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -105,7 +106,8 @@ class HDFilmCehennemiProvider : MainAPI() {
 
         return newMovieLoadResponse(title, url, TvType.Movie, url) {
             this.posterUrl = fixUrlNull(doc.selectFirst("div.poster img, figure img, img.lazyload")?.posterSrcLazy())
-            this.plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+            this.plot = doc.jsonLdDescription()
+                ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
             this.year = year
             this.tags = doc.select("a[href*='/kategori/'], a[href*='/category/']").map { it.text().trim() }
                 .filter { it.isNotBlank() }.distinct()

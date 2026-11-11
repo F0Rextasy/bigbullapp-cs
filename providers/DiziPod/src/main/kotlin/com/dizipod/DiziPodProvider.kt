@@ -187,6 +187,8 @@ class DiziPodProvider : MainAPI() {
             ?.text()?.filter { it.isDigit() }?.toIntOrNull()
         val related = doc.select("div.related-movies a.rel-card[href*='/film/']")
             .mapNotNull { it.toSearchCard() }.distinctBy { it.url }
+        val trailer = Regex("""const trailerUrl\s*=\s*'([^']+)'""").find(doc.html())
+            ?.groupValues?.get(1)?.takeIf { it.isNotBlank() }
 
         return newMovieLoadResponse(title, url, TvType.Movie, url) {
             this.posterUrl = fixUrlNull(doc.selectFirst("img.movie-hero__poster")?.posterSrcLazy())
@@ -199,6 +201,7 @@ class DiziPodProvider : MainAPI() {
                 .filter { it.isNotEmpty() }.distinct()
             this.score = scoreOf(doc.selectFirst(".imdb-pill__score")?.text())
             this.recommendations = related
+            trailer?.let { addTrailer("https://www.youtube.com/embed/$it") }
         }
     }
 

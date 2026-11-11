@@ -1,5 +1,6 @@
 package com.dmax
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -73,8 +74,9 @@ class DMAXProvider : MainAPI() {
         val title = doc.selectFirst("h1")?.text()?.trim()?.takeIf { it.isNotEmpty() }
             ?: throw ErrorLoadingException("$name: başlık okunamadı. $REPORT_HINT")
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
-        val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
-            ?.takeIf { it.isNotEmpty() }
+        val plot = doc.jsonLdDescription()
+            ?: doc.selectFirst("div.slide-description")?.text()?.trim()?.takeIf { it.isNotEmpty() }
+            ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()?.takeIf { it.isNotEmpty() }
 
         if (EPISODE.containsMatchIn(pageUrl)) {
             return newMovieLoadResponse(title, pageUrl, TvType.Movie, pageUrl) {

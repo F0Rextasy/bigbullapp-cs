@@ -62,11 +62,13 @@ class StarTVProvider : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse? {
         val seriesUrl = url.substringBefore("/bolumler").trimEnd('/')
-        val doc = app.get(seriesUrl).document
+        val response = app.get(seriesUrl)
+        val doc = response.document
         val title = doc.selectFirst("h1")?.text()?.trim()?.takeIf { it.isNotBlank() }
             ?: throw ErrorLoadingException("$name: dizi adı okunamadı. $REPORT_HINT")
         val poster = doc.selectFirst("meta[property=og:image]")?.attr("content")?.let { fixUrlNull(it) }
-        val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()?.takeIf { it.isNotBlank() }
+        val plot = nextSummary(seriesUrl, response.text)?.takeIf { it.isNotBlank() }
+            ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()?.takeIf { it.isNotBlank() }
         val episodesDoc = app.get("$seriesUrl/bolumler").document
         val episodes = episodesDoc.select("a[href*='/bolumler/']").mapNotNull { episode ->
             val href = fixUrlNull(episode.attr("href")) ?: return@mapNotNull null
@@ -181,6 +183,20 @@ class StarTVProvider : MainAPI() {
         .replace('ı', 'i').replace('ş', 's').replace('ğ', 'g')
         .replace('ü', 'u').replace('ö', 'o').replace('ç', 'c')
 
+
+    /** Next.js verisinde `slug` ile eşleşen dizi nesnesinin `summary` alanını okur. */
+    private fun nextSummary(seriesUrl: String, raw: String): String? {
+        val slug = seriesUrl.substringAfterLast('/')
+        val normalized = raw.replace("\\\"", "\"")
+            .replace("\\u003c", "<").replace("\\u003e", ">").replace("\\u0026", "&")
+        val slugPos = normalized.indexOf("\"slug\":\"$slug\"")
+        if (slugPos < 0) return null
+        val key = "\"summary\":\""
+        val start = normalized.indexOf(key, slugPos).takeIf { it >= 0 }?.plus(key.length) ?: return null
+        val end = normalized.indexOf("\",\"", start)
+        if (end <= start) return null
+        return Jsoup.parse(normalized.substring(start, end)).text().trim().takeIf { it.isNotBlank() }
+    }
     companion object {
         val ROWS = listOf("Diziler", "Programlar")
         private const val UA =

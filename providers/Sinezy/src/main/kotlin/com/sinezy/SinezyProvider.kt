@@ -1,5 +1,6 @@
 package com.sinezy
 
+import com.bigbull.common.jsonLdDescription
 import android.util.Base64
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.parseHlsVariants
@@ -81,8 +82,9 @@ class SinezyProvider : MainAPI() {
         val title = doc.selectFirst("h1")?.text()?.trim()?.removeSuffix(" izle")?.takeIf { it.isNotEmpty() }
             ?: throw ErrorLoadingException("$name: başlık okunamadı. $REPORT_HINT")
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
-        val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
-            ?.takeIf { it.isNotEmpty() }
+        val plot = doc.jsonLdDescription()
+            ?: doc.selectFirst("div.desc, div.yeniscroll")?.text()?.trim()?.takeIf { it.isNotEmpty() }
+            ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()?.takeIf { it.isNotEmpty() }
         return newMovieLoadResponse(title, pageUrl, TvType.Movie, pageUrl) {
             this.posterUrl = poster
             this.plot = plot

@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.34",
+  "version": "1.6.35",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -317,7 +317,7 @@
       "id": "fullhdfilmizlesene",
       "name": "FullHDFilmizlesene",
       "description": "FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.",
-      "version": "1.0.7",
+      "version": "1.0.8",
       "author": "bigbull",
       "supportedTypes": [
         "movie"

@@ -1,5 +1,6 @@
 package com.netfilmizle
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.evpMd5AesCbcDecrypt
 import com.bigbull.common.posterSrcLazy
@@ -80,8 +81,9 @@ class NetFilmizleProvider : MainAPI() {
             ?.replace(Regex("""\s+izle$""", RegexOption.IGNORE_CASE), "")
             ?.takeIf { it.isNotEmpty() }
             ?: throw ErrorLoadingException("$name: film başlığı okunamadı. $REPORT_HINT")
-        val description = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
-            ?.takeIf { it.isNotEmpty() }
+        val description = doc.jsonLdDescription()
+            ?: doc.selectFirst("div.desc, div.yeniscroll")?.text()?.trim()?.takeIf { it.isNotEmpty() }
+            ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()?.takeIf { it.isNotEmpty() }
         val year = YEAR.find("$title $description")?.groupValues?.get(1)?.toIntOrNull()
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
         val score = doc.selectFirst(".imdb")?.text()?.let {

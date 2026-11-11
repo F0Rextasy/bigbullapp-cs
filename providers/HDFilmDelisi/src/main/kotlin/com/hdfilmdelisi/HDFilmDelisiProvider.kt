@@ -1,5 +1,6 @@
 package com.hdfilmdelisi
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.parseHlsVariants
 import com.bigbull.common.posterSrcLazy
@@ -134,7 +135,11 @@ class HDFilmDelisiProvider : MainAPI() {
                 ?: throw ErrorLoadingException("$name: başlık okunamadı")
         ).ifBlank { throw ErrorLoadingException("$name: başlık okunamadı") }
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
-        val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+        val plot = doc.jsonLdDescription()
+            ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+        val duration = Regex(""""duration"\s*:\s*"PT(?:(\d+)H)?(?:(\d+)M)?""").find(raw)?.let { match ->
+            (match.groupValues[1].toIntOrNull() ?: 0) * 60 + (match.groupValues[2].toIntOrNull() ?: 0)
+        }?.takeIf { it > 0 }
         val year = Regex("""\b(19|20)\d{2}\b""").find(title)?.value?.toIntOrNull()
             ?: Regex("""\b(19|20)\d{2}\b""").find(raw)?.value?.toIntOrNull()
         val score = Score.from10(
@@ -165,6 +170,7 @@ class HDFilmDelisiProvider : MainAPI() {
                 this.plot = plot
                 this.year = year
                 this.score = score
+                this.duration = duration
             }
         }
         return newMovieLoadResponse(title, url, TvType.Movie, url) {
@@ -172,6 +178,7 @@ class HDFilmDelisiProvider : MainAPI() {
             this.plot = plot
             this.year = year
             this.score = score
+            this.duration = duration
         }
     }
 

@@ -1,5 +1,6 @@
 package com.tv8
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -74,8 +75,7 @@ class TV8Provider : MainAPI() {
             ?: doc.selectFirst("h1")?.text()?.trim()?.takeIf { it.isNotEmpty() }
             ?: throw ErrorLoadingException("$name: başlık okunamadı. $REPORT_HINT")
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
-        val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
-            ?.takeIf { it.isNotEmpty() }
+        val plot = doc.jsonLdDescription()
 
         if (pageUrl.contains("-video.htm")) {
             return newMovieLoadResponse(title, pageUrl, TvType.Movie, pageUrl) {

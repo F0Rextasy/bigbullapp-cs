@@ -1,5 +1,6 @@
 package com.asyadizileriizle
 
+import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.parseHlsVariants
 import com.bigbull.common.posterSrcLazy
@@ -122,7 +123,7 @@ class AsyadizileriizleProvider : MainAPI() {
                 ?: throw ErrorLoadingException("$name: başlık okunamadı")
         ).ifBlank { throw ErrorLoadingException("$name: başlık okunamadı") }
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
-        val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+        val plot = doc.jsonLdDescription()
         val year = Regex("""\b(19|20)\d{2}\b""").find(title)?.value?.toIntOrNull()
             ?: Regex("""\b(19|20)\d{2}\b""").find(raw)?.value?.toIntOrNull()
         val score = Score.from10(

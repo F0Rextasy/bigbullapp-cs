@@ -1,4 +1,4 @@
-// @provider {"id":"fullhdfilmizlesene", "name":"FullHDFilmizlesene", "types":["movie"], "domain":"fullhdfilmizlesene.now", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.", "verified":true, "version":"1.0.7"}
+// @provider {"id":"fullhdfilmizlesene", "name":"FullHDFilmizlesene", "types":["movie"], "domain":"fullhdfilmizlesene.now", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.", "verified":true, "version":"1.0.8"}
 /**
  * fullhdfilmizlesene — Nuvio provider (bb-nuvio).
  * Flow: TMDB id -> Wikidata -> IMDb -> Cinemeta title -> /arama/<q> -> film page
@@ -55,6 +55,17 @@ function decode(value) {
     }
   }
   return out;
+}
+
+/** rapidvid `av('...')`: ters base64 -> K9L kaydırması -> base64. */
+function avDecode(value) {
+  var first = decode(String(value || "").split("").reverse().join(""));
+  var salt = "K9L";
+  var shifted = "";
+  for (var i = 0; i < first.length; i++) {
+    shifted += String.fromCharCode(first.charCodeAt(i) - (salt.charCodeAt(i % salt.length) % 5 + 1));
+  }
+  return decode(shifted);
 }
 
 /** Sources are stored as base64(rot13(url)); titles as plain base64. */
@@ -200,15 +211,22 @@ function subtitleLang(label) {
 function resolveAtom(embed, label) {
   return text(embed, { referer: BASE + "/" }).then(function (html) {
     var raw = first(/atomCodecTelemetry=(\{[\s\S]*?\});/, html);
-    if (!raw) return null;
-    var telemetry;
-    try {
-      telemetry = JSON.parse(raw);
-    } catch (e) {
-      return null;
+    var telemetry = {};
+    if (raw) {
+      try {
+        telemetry = JSON.parse(raw);
+      } catch (e) {
+        telemetry = {};
+      }
     }
-    var stream = /^http/.test(telemetry.h264 || "") ? telemetry.h264 : /^http/.test(telemetry.av1 || "") ? telemetry.av1 : null;
-    if (!stream) return null;
+    var sources = first(/jwSetup\.sources\s*=\s*(\[[\s\S]*?\]);/, html);
+    var encoded = sources ? first(/av\('([^']+)'\)/, sources) : null;
+    var plain = sources ? first(/"file"\s*:\s*"([^"]+)"/, sources) : null;
+    var stream = /^http/.test(telemetry.h264 || "") ? telemetry.h264
+      : /^http/.test(telemetry.av1 || "") ? telemetry.av1
+      : encoded ? avDecode(encoded)
+      : plain;
+    if (!/^http/.test(stream || "")) return null;
 
     var subs = [];
     var tracks = first(/jwSetup\.tracks\s*=\s*(\[[\s\S]*?\]);/, html);

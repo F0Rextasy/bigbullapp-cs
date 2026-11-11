@@ -1,5 +1,6 @@
 package com.dizigecesi
 
+import com.bigbull.common.jsonLdDescription
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -99,8 +100,8 @@ class DizigecesiProvider : MainAPI() {
                 ?.takeIf { it.isNotEmpty() }
             ?: throw ErrorLoadingException("$name: başlık okunamadı. $REPORT_HINT")
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
-        val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
-            ?.takeIf { it.isNotEmpty() }
+        val plot = doc.jsonLdDescription()
+            ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()?.takeIf { it.isNotEmpty() }
         return newMovieLoadResponse(title, pageUrl, TvType.Movie, pageUrl) {
             this.posterUrl = poster
             this.plot = plot
