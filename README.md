@@ -119,7 +119,7 @@ Tek modül derleme ve cihaza kurulum:
 | `DiziBoxTv` **pasif** | diziboxtv.com | Dizi | — | — | — | — | — | — |
 | `DiziCaN` | dizican.cc | Dizi | — | — | — | — | — | — |
 | `DiziFilmIzle` | dizifilmizle.to | Film | — | — | — | — | — | — |
-| `Dizifon` | dizifon.cc | Dizi | — | — | — | — | — | — |
+| `Dizifon` **pasif** | dizifon.cc (alan adı park) | Dizi | — | — | — | — | — | — |
 | `Dizigecesi` | dizigecesi.com | Film | — | — | — | — | — | — |
 | `Dizigom` | dizigom.news | Film | — | — | — | — | — | — |
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
