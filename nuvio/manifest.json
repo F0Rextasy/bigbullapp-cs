@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.59",
+  "version": "1.6.60",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -455,7 +455,7 @@
       "id": "sezonlukdizi",
       "name": "Sezonlukdizi",
       "description": "SezonlukDizi yabancı dizi arşivi (altyazı/dublaj, Filemoon korumalı HLS).",
-      "version": "1.0.9",
+      "version": "1.0.10",
       "author": "bigbull",
       "supportedTypes": [
         "tv"

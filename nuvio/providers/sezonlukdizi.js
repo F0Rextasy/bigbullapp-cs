@@ -1,4 +1,4 @@
-// @provider {"id":"sezonlukdizi", "name":"Sezonlukdizi", "types":["tv"], "domain":"sezonlukdizi.cc", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"SezonlukDizi yabancı dizi arşivi (altyazı/dublaj, Filemoon korumalı HLS).", "version":"1.0.9"}
+// @provider {"id":"sezonlukdizi", "name":"Sezonlukdizi", "types":["tv"], "domain":"sezonlukdizi.cc", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"SezonlukDizi yabancı dizi arşivi (altyazı/dublaj, Filemoon korumalı HLS).", "version":"1.0.10"}
 /**
  * sezonlukdizi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /ajax/arama.asp -> /bolumler/<slug>.html -> episode page
@@ -889,7 +889,19 @@ function getStreams(tmdbId, mediaType, season, episode) {
       });
     })
     .then(function (rows) {
-      return rows || [];
+      // Ayni master birden cok kalite etiketiyle donebiliyor; URL basina en yuksek kalite kalir.
+      var seen = {}, out = [];
+      for (var i = 0; i < (rows || []).length; i++) {
+        var row = rows[i];
+        if (!row || !row.url) continue;
+        var prev = seen[row.url];
+        if (!prev) { seen[row.url] = row; out.push(row); continue; }
+        if ((parseInt(row.quality, 10) || 0) > (parseInt(prev.quality, 10) || 0)) {
+          out[out.indexOf(prev)] = row;
+          seen[row.url] = row;
+        }
+      }
+      return out;
     })
     .catch(function (e) {
       console.log("[bb-nuvio][sezonlukdizi] " + (e && e.message));
