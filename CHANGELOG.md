@@ -5,6 +5,10 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.53] - 2026-11-12
+
+### Değişti
+- **TV8 v6**, **Dizist v4**: cihaz testinde arama, detay ve oynatma doğrulandı; iki sağlayıcı da etkinleştirildi.
 
 ## [1.6.52] - 2026-11-12
 
