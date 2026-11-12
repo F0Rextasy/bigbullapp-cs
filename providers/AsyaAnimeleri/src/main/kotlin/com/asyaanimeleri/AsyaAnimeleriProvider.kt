@@ -2,6 +2,7 @@ package com.asyaanimeleri
 
 import android.util.Base64
 import com.bigbull.common.posterSrcLazy
+import com.bigbull.common.parseHlsVariants
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -253,6 +254,26 @@ class AsyaAnimeleriProvider : MainAPI() {
         Regex("""(?i)<iframe[^>]*\bsrc\s*=\s*["']?([^"'\s>]+)""").find(html)?.groupValues?.get(1)
     }.getOrNull()
 
+    /** Master is kept whole (it owns the audio renditions); its muxed variants add real heights. */
+    private suspend fun emitHls(label: String, stream: String, referer: String, callback: (ExtractorLink) -> Unit) {
+        callback.invoke(
+            newExtractorLink(name, label, stream, ExtractorLinkType.M3U8) {
+                this.referer = referer
+            }
+        )
+        val playlist = runCatching {
+            app.get(stream, headers = mapOf("user-agent" to BROWSER_UA)).text
+        }.getOrNull().orEmpty()
+        for ((height, variantUrl) in parseHlsVariants(stream, playlist)) {
+            callback.invoke(
+                newExtractorLink(name, "$label ${height}p", variantUrl, ExtractorLinkType.M3U8) {
+                    this.referer = referer
+                    this.quality = height
+                }
+            )
+        }
+    }
+
     /**
      * The embed page carries the whole player config inline:
      * `m.f["v7fbwew"]={"u":{"hls":{"url":"https:\/\/rumble.com\/hls-vod\/<slug>\/playlist.m3u8"}}}`.
@@ -267,11 +288,7 @@ class AsyaAnimeleriProvider : MainAPI() {
         val stream = body.substringAfter("\"hls\":{\"url\":\"", "").substringBefore('"')
             .replace("\\/", "/")
         if (stream.isBlank()) return false
-        callback.invoke(
-            newExtractorLink(name, "Rumble", stream, ExtractorLinkType.M3U8) {
-                this.referer = "https://rumble.com/"
-            }
-        )
+        emitHls("Rumble", stream, "https://rumble.com/", callback)
         return true
     }
 
@@ -290,11 +307,7 @@ class AsyaAnimeleriProvider : MainAPI() {
             ).text
         }.getOrNull() ?: return false
         val stream = JSONObject(body).optString("ondemandHls").takeIf { it.isNotBlank() } ?: return false
-        callback.invoke(
-            newExtractorLink(name, "OK.RU", stream, ExtractorLinkType.M3U8) {
-                this.referer = "https://ok.ru/"
-            }
-        )
+        emitHls("OK.RU", stream, "https://ok.ru/", callback)
         return true
     }
 
