@@ -164,13 +164,14 @@ class SezonlukdiziProvider : MainAPI() {
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
             this.posterUrl = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
             this.plot = doc.selectFirst("#dizidetay div[data-tab=konu] p")?.text()?.trim()
-            this.year = doc.selectFirst("#dizibilgisi .extra.content .right.floated")?.text()?.trim()?.toIntOrNull()
+            this.year = doc.selectFirst("#dizibilgisi span.right.floated")?.text()
+                ?.let { Regex("""(\d{4})""").find(it)?.groupValues?.get(1)?.toIntOrNull() }
             this.tags = doc.select("#dizibilgisi a[href^='/diziler.asp?tur=']")
                 .map { it.text().trim() }
                 .filter { it.isNotEmpty() }
                 .distinct()
-            this.duration = doc.selectFirst("#dizibilgisi span.ui.orange.label")?.text()
-                ?.let { Regex("""(\d+)""").find(it)?.groupValues?.get(1)?.toIntOrNull() }
+            this.duration = doc.selectFirst("#dizibilgisi")?.text()
+                ?.let { Regex("""(\d+)\s*Dk""").find(it)?.groupValues?.get(1)?.toIntOrNull() }
             this.score = doc.selectFirst("#dizidetay a.ui.label.imdb .detail")?.text()?.trim()
                 ?.replace(',', '.')?.toDoubleOrNull()?.let { Score.from10(it) }
             this.actors = cast
@@ -186,7 +187,15 @@ class SezonlukdiziProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
+        // Aynı master birden çok etiketle dönebiliyor (ör. 480p ve 1080p aynı URL):
+        // URL başına tek link, en yüksek kalite etiketiyle verilir.
+        val byUrl = LinkedHashMap<String, ExtractorLink>()
+        val linkCallback: (ExtractorLink) -> Unit = { link ->
+            if (Settings.qualityAllowed(link.quality)) {
+                val previous = byUrl[link.url]
+                if (previous == null || link.quality > previous.quality) byUrl[link.url] = link
+            }
+        }
         val subtitleFilter: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
         val doc = runCatching { app.get(data).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
@@ -236,6 +245,7 @@ class SezonlukdiziProvider : MainAPI() {
                 if (ok) found = true
             }
         }
+        byUrl.values.forEach(callback)
         if (!found) throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
         return found
     }
