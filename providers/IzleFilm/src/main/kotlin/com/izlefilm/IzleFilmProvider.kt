@@ -25,6 +25,7 @@ import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import java.net.URLEncoder
+import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -159,16 +160,10 @@ class IzleFilmProvider : MainAPI() {
         val json = runCatching { JSONObject(body) }.getOrNull() ?: return false
         val source = if (label.isBlank()) "ok.ru" else "ok.ru $label"
 
-        json.optString("hlsManifestUrl").takeIf { it.isNotBlank() }?.let { hls ->
-            callback.invoke(newExtractorLink(name, "$source (HLS)", hls, ExtractorLinkType.M3U8) {
-                this.referer = "https://ok.ru/"
-                this.headers = browserHeaders
-                this.quality = Qualities.Unknown.value
-            })
-            return true
-        }
-
-        val videos = json.optJSONArray("videos") ?: return false
+        // Doğrudan mp4 varyantları önce verilir: ok.ru HLS'i bazı oynatıcılarda Referer
+        // beklediği için cihazda açılmayabiliyor; mp4 yedeği her zaman çalışıyor.
+        val hls = json.optString("hlsManifestUrl").takeIf { it.isNotBlank() }
+        val videos = json.optJSONArray("videos") ?: JSONArray()
         var found = false
         for (index in 0 until videos.length()) {
             val video = videos.optJSONObject(index) ?: continue
@@ -197,6 +192,14 @@ class IzleFilmProvider : MainAPI() {
                     this.quality = quality
                 },
             )
+        }
+        if (hls != null) {
+            callback.invoke(newExtractorLink(name, "$source (HLS)", hls, ExtractorLinkType.M3U8) {
+                this.referer = "https://ok.ru/"
+                this.headers = browserHeaders
+                this.quality = Qualities.Unknown.value
+            })
+            found = true
         }
         return found
     }

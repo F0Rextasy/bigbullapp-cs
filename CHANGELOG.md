@@ -6,6 +6,10 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 sayı arttığında güncelleme sunar.
 
 
+## [1.6.41] - 2026-11-12
+### Düzeltildi
+- **IzleFilm**: ok.ru kaynaklarında doğrudan mp4 akışı öne alındı.
+
 ## [1.6.40] - 2026-11-12
 ### Düzeltildi
 - **Rectv**: Sağlayıcı yeniden doğrulandı.

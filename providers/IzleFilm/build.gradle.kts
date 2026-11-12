@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "IzleFilm — izlefilm.net Full HD Türkçe dublaj/altyazılı film arşivi"
