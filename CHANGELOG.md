@@ -6,6 +6,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 sayı arttığında güncelleme sunar.
 
 
+## [1.6.51] - 2026-11-12
+
+### Değişti
+- **HDFilmizleBest v4**: taban adres https://hdfilmizle.best -> https://www.hdfilmizle.best.
+
 ## [1.6.50] - 2026-11-12
 
 ### Değişti
