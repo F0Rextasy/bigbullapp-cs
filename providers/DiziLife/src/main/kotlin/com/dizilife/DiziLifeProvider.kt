@@ -38,13 +38,13 @@ import java.net.URI
 import java.net.URLEncoder
 
 /**
- * DiziLife — dizi74.life → dizi82.life → dizi84.life (Laravel/Livewire, server-rendered cards).
+ * DiziLife — dizi74.life → dizi82.life → dizi85.life (Laravel/Livewire, server-rendered cards).
  * Episode pages embed a player that serves an obfuscated HTML shell: two reversed base64 strings,
  * the passphrase and an OpenSSL "Salted__" blob, both decrypted with CryptoJS (AES-256-CBC).
  * The decrypted shell holds the HLS master URL.
  */
 class DiziLifeProvider : MainAPI() {
-    override var mainUrl = "https://dizi84.life"
+    override var mainUrl = "https://dizi85.life"
     private val uaHeaders get() = browserHeaders
     override var name = "DiziLife"
     override var lang = "tr"
@@ -92,7 +92,7 @@ class DiziLifeProvider : MainAPI() {
         val title = card.selectFirst("div.font-display")?.text()?.trim().orEmpty()
             .ifBlank { card.selectFirst("img")?.attr("alt")?.trim().orEmpty() }
         if (title.isBlank()) return null
-        val poster = fixUrlNull(card.selectFirst("img")?.attr("src"))
+        val poster = fixUrlNull(card.selectFirst("img")?.let { el -> el.attr("data-src").ifBlank { el.attr("data-lazy-src").ifBlank { el.attr("src") } } })
         return if (href.contains("/film/")) {
             newMovieSearchResponse(title, href, TvType.Movie) { this.posterUrl = poster }
         } else {
@@ -195,13 +195,13 @@ class DiziLifeProvider : MainAPI() {
         val subtitleFilter: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
         val doc = runCatching { app.get(data, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
-        val frames = doc.select("iframe[src]").mapNotNull { fixUrlNull(it.attr("src")) }.distinct()
+        val frames = doc.select("iframe[src]").mapNotNull { fixUrlNull(it.let { el -> el.attr("data-src").ifBlank { el.attr("data-lazy-src").ifBlank { el.attr("src") } } }) }.distinct()
         var found = false
         for (frame in frames) {
             val ok = if (frame.contains("/player/")) {
                 resolvePlayer(data, frame, subtitleFilter, linkCallback)
             } else {
-                runCatching { loadExtractor(frame, data, subtitleFilter, linkCallback) }.getOrDefault(false)
+                runCatching { resolveCustomFallbackEmbed(frame, data, subtitleFilter, linkCallback) }.getOrDefault(false)
             }
             if (ok) found = true
         }
@@ -226,6 +226,7 @@ class DiziLifeProvider : MainAPI() {
             newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
                 this.referer = playerUrl
                 this.quality = Qualities.Unknown.value
+                this.headers = uaHeaders
             }
         )
 
@@ -271,5 +272,108 @@ class DiziLifeProvider : MainAPI() {
         val ROWS = listOf("Diziler", "Filmler", "Aksiyon", "Romantik", "Bilim Kurgu", "Komedi")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
+    }
+
+    private suspend fun resolveCustomFallbackEmbed(
+        url: String,
+        subtitleCallback: (com.lagradost.cloudstream3.SubtitleFile) -> Unit,
+        callback: (com.lagradost.cloudstream3.utils.ExtractorLink) -> Unit,
+    ): Boolean = resolveCustomFallbackEmbed(url, mainUrl, subtitleCallback, callback)
+
+    private suspend fun resolveCustomFallbackEmbed(
+        url: String,
+        referer: String? = null,
+        subtitleCallback: (com.lagradost.cloudstream3.SubtitleFile) -> Unit,
+        callback: (com.lagradost.cloudstream3.utils.ExtractorLink) -> Unit,
+    ): Boolean {
+        val u = if (url.startsWith("//")) "https:$url" else url
+        val ref = referer ?: "$mainUrl/"
+        val ua = mapOf("User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36")
+        if (u.contains("vixolity.com", ignoreCase = true)) {
+            val html = runCatching { com.lagradost.cloudstream3.app.get(u, referer = ref, headers = ua).text }.getOrNull().orEmpty()
+            for (m in Regex(""""([0-9a-fA-F]{80,})"""").findAll(html)) {
+                val hex = m.groupValues[1]
+                if (hex.length % 2 != 0) continue
+                val step1 = runCatching { ByteArray(hex.length / 2) { i -> hex.substring(i * 2, i * 2 + 2).toInt(16).toByte() }.toString(Charsets.ISO_8859_1) }.getOrNull() ?: continue
+                val step2 = runCatching { String(java.util.Base64.getDecoder().decode(step1.reversed()), Charsets.ISO_8859_1) }.getOrNull() ?: continue
+                for (shift in listOf(3, 1, 2, 4, 5, 6, 7)) {
+                    val shifted = buildString(step2.length) { for (ch in step2) append((ch.code - shift).toChar()) }
+                    val dec = runCatching { String(java.util.Base64.getDecoder().decode(shifted), Charsets.UTF_8) }.getOrNull() ?: continue
+                    val km = Regex(""""(?:kaynak|file|src)"\s*:\s*"([^"]+\.m3u8[^"]*)"""").find(dec)
+                    if (km != null) {
+                        val streamUrl = km.groupValues[1].replace("\\/", "/")
+                        val origin = runCatching { val p = java.net.URI(u); "${p.scheme}://${p.host}" }.getOrDefault("https://pl.vixolity.com")
+                        callback(com.lagradost.cloudstream3.utils.newExtractorLink(name, "$name [Vixolity]", streamUrl, com.lagradost.cloudstream3.utils.ExtractorLinkType.M3U8) {
+                            this.referer = "$origin/"
+                            this.quality = com.lagradost.cloudstream3.utils.Qualities.Unknown.value
+                            this.headers = ua + mapOf("Origin" to origin)
+                        })
+                        return true
+                    }
+                }
+            }
+        }
+        if (u.contains("videopark.top", ignoreCase = true)) {
+            val html = runCatching { com.lagradost.cloudstream3.app.get(u, referer = ref, headers = ua).text }.getOrNull().orEmpty()
+            val vid = Regex("""VIDEO_ID\s*=\s*"([^"]+)"""").find(html)?.groupValues?.get(1).orEmpty()
+            val worker = Regex("""WORKER_URL\s*=\s*"([^"]+)"""").find(html)?.groupValues?.get(1).orEmpty()
+            if (vid.isNotEmpty() && worker.isNotEmpty()) {
+                val mp4 = "${worker.trimEnd('/')}/v/$vid?q=1080"
+                callback(com.lagradost.cloudstream3.utils.newExtractorLink(name, "$name [VIP]", mp4, com.lagradost.cloudstream3.utils.ExtractorLinkType.VIDEO) {
+                    this.referer = "${worker.trimEnd('/')}/"
+                    this.quality = com.lagradost.cloudstream3.utils.Qualities.P1080.value
+                    this.headers = ua
+                })
+                return true
+            }
+            if (vid.isNotEmpty() && (u.contains("/apollo/") || u.contains("/go/"))) {
+                val m3u8 = "https://videopark.top/apollo/get_video.php?id=$vid"
+                callback(com.lagradost.cloudstream3.utils.newExtractorLink(name, "$name [Apollo]", m3u8, com.lagradost.cloudstream3.utils.ExtractorLinkType.M3U8) {
+                    this.referer = "https://videopark.top/"
+                    this.quality = com.lagradost.cloudstream3.utils.Qualities.Unknown.value
+                    this.headers = ua
+                })
+                return true
+            }
+        }
+        if (u.contains("playerx.info", ignoreCase = true)) {
+            val hash = u.substringAfterLast("/").substringBefore("?").trim()
+            if (hash.isNotEmpty()) {
+                val json = runCatching {
+                    com.lagradost.cloudstream3.app.post(
+                        "https://playerx.info/api/source/$hash",
+                        referer = u,
+                        headers = ua + mapOf("X-Requested-With" to "XMLHttpRequest"),
+                        data = mapOf("r" to ref, "d" to "playerx.info"),
+                    ).text
+                }.getOrNull().orEmpty()
+                var found = false
+                for (m in Regex(""""file"\s*:\s*"([^"]+)"""").findAll(json)) {
+                    val f = m.groupValues[1].replace("\\/", "/")
+                    if (f.startsWith("http")) {
+                        callback(com.lagradost.cloudstream3.utils.newExtractorLink(name, "$name [PlayerX]", f, if (f.contains(".m3u8")) com.lagradost.cloudstream3.utils.ExtractorLinkType.M3U8 else com.lagradost.cloudstream3.utils.ExtractorLinkType.VIDEO) {
+                            this.referer = "https://playerx.info/"
+                            this.quality = com.lagradost.cloudstream3.utils.Qualities.Unknown.value
+                            this.headers = ua
+                        })
+                        found = true
+                    }
+                }
+                if (found) return true
+            }
+        }
+        if (com.lagradost.cloudstream3.utils.loadExtractor(u, ref, subtitleCallback, callback)) return true
+        val html = runCatching { com.lagradost.cloudstream3.app.get(u, referer = ref, headers = ua).text }.getOrNull().orEmpty().replace("\\/", "/")
+        var foundDirect = false
+        for (m in Regex("""https?://[^"'\s<>]+\.m3u8(?:\?[^"'\s<>]*)?""").findAll(html)) {
+            val m3u8 = com.bigbull.common.pichiveSign(html, m.value)
+            callback(com.lagradost.cloudstream3.utils.newExtractorLink(name, name, m3u8, com.lagradost.cloudstream3.utils.ExtractorLinkType.M3U8) {
+                this.referer = u
+                this.quality = com.lagradost.cloudstream3.utils.Qualities.Unknown.value
+                this.headers = ua
+            })
+            foundDirect = true
+        }
+        return foundDirect
     }
 }
