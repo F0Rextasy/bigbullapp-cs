@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.57",
+  "version": "1.6.58",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -466,6 +466,26 @@
         "m3u8"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=sezonlukdizi.cc&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "sinemetrik",
+      "name": "Sinemetrik",
+      "description": "Sinemetrik film/dizi kaynaklari (kendi player'i, TR altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
+      "filename": "providers/sinemetrik.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=sinemetrik.com&sz=128",
       "contentLanguage": [
         "tr"
       ]

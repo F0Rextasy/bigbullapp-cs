@@ -7,7 +7,7 @@ Cloudstream için `.cs3` eklentileri, Nuvio için plugin deposu + iki katalog ad
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-91-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-92-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -41,7 +41,7 @@ Nuvio plugin deposu: `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/
 
 | İş | Sağlayan |
 |---|---|
-| Film/dizi arama ve oynatma | Plugin deposu (28 sağlayıcı) |
+| Film/dizi arama ve oynatma | Plugin deposu (29 sağlayıcı) |
 | Film/dizi detayı: özet, kadro, bölümler | **Cinemeta** |
 | Ana sayfada film/dizi satırları | **BigBull TR Katalog** addon'u |
 | Canlı TV satırları ve kanal oynatma | **BigBull Canlı TV** addon'u |
@@ -195,6 +195,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Sezonlukdizi` | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
 | `ShowTV` | showtv.com.tr | Dizi | — | — | — | — | — | — |
 | `SinemaCX` | sinemacc.com | Film | — | — | — | ✓ | ✓ | ✓ |
+| `Sinemetrik` | sinemetrik.com | Film/Dizi | ✓ | — | — | ✓ | ✓ | ✓ |
 | `Sinezy` | sinezy.si | Film | — | — | — | — | — | — |
 | `Sinemakolik` | sinemakolik.com | Film | — | — | — | — | — | — |
 | `SonAnime` | sonanime.com | Dizi | — | — | — | — | — | — |
@@ -211,16 +212,16 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Yabancidizi` | ybncidizi.com | Dizi/Film | — | ✓ | — | ✓ | film | ✓ |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**Kapsam notu:** Depoda toplam **91 aktif modül** var; `AsyaLuna`, `DiziBoxTv`, `Dizifon`
+**Kapsam notu:** Depoda toplam **92 aktif modül** var; `AsyaLuna`, `DiziBoxTv`, `Dizifon`
 `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle kaldırıldı; düzeldiğinde
 tekrar eklenir. Bu tablo ve özellik matrisi her sağlayıcı değişikliğinde güncellenir.
 
-## Nuvio sağlayıcıları (28)
+## Nuvio sağlayıcıları (29)
 
 - **Anime (3):** `Anizium`, `AnimeciX`, `AsyaAnimeleri`
 - **Dizi (12):** `Dizibox`, `Dizilla`, `DiziPal`, `SelcukFlix`, `Ddizi`, `WebdramaTurkey2`, `Dizikorea3`, `Sezonlukdizi`, `DiziYou`, `DiziBal`, `DiziMom`, `DiziPod`
 - **Film (8):** `HDFilmCehennemi`, `FullHDFilmizlesene`, `SetFilmIzle`, `YesilCamTv`, `FilmMakinesi`, `WebteIzle`, `FilmModu`, `JetFilmizle`
-- **Film & Dizi (2):** `PuhuTV`, `RecTV`
+- **Film & Dizi (3):** `PuhuTV`, `RecTV`, `Sinemetrik`
 - **Belgesel & TV (3):** `BelgeselX`, `DMAX`, `TLCtr`
 
 ## Geliştiriciler
