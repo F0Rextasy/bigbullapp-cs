@@ -143,7 +143,7 @@ class DizistProvider : MainAPI() {
         val pageUrl = fixUrl(data)
         val page = app.get(pageUrl, headers = browserHeaders).document
         val embed = (page.selectFirst("div.player iframe") ?: page.selectFirst("iframe[src*=iframe.php]"))
-            ?.attr("src")?.trim()?.takeIf { it.isNotEmpty() }?.let { httpsUrl(it) }
+            ?.let { el -> el.attr("data-src").ifBlank { el.attr("data-lazy-src").ifBlank { el.attr("src") } } }?.trim()?.takeIf { it.isNotEmpty() }?.let { httpsUrl(it) }
             ?: throw ErrorLoadingException("$name: oynatıcı iframe bulunamadı. $REPORT_HINT")
         val player = app.get(embed, headers = browserHeaders, referer = pageUrl)
         // pichive `stats.country` ile ülke kısıtlıyor: TR dışı çıkışlarda Cloudflare 403 basar.

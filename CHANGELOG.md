@@ -6,6 +6,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 sayı arttığında güncelleme sunar.
 
 
+## [1.6.42] - 2026-11-12
+
+### Değişti
+- **Dizist v3**: taban adres https://dizist.live -> https://dizist.live.
+
 ## [1.6.41] - 2026-11-12
 ### Düzeltildi
 - **IzleFilm**: ok.ru kaynaklarında doğrudan mp4 akışı öne alındı.
