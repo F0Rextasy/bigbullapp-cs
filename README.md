@@ -106,8 +106,7 @@ Tek modül derleme ve cihaza kurulum:
 | `BelgeselX` | belgeselx.com | Belgesel | — | — | — | — | — | — |
 | `BirAsyaDizi` | birasyadizi.cx | Dizi | — | — | — | — | — | — |
 | `CanliDizi` | canlidizi.sbs | Dizi | — | — | — | — | — | — |
-| `CanliTV` | iptv-org TR M3U | Canlı TV | — | — | — | — | — | — |
-| `CanliYayinKanallari` | tabii.com | Canlı TV | — | — | — | — | — | — |
+| `CanliTV` | iptv-org TR M3U + sabit HLS | Canlı TV | — | — | — | — | — | — |
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
 | `CizgiSite` | www.cizgi.site | Dizi | — | — | — | — | — | — |
 | `Ddizi` | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
@@ -213,6 +212,12 @@ Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Reposito
 Repo eklemek sağlayıcıları çalıştırmaz: Plugins ekranında **Enable plugin providers globally** ve
 istediğin sağlayıcıların anahtarı ayrıca açılır.
 
+**Canlı TV (addon)**: Nuvio plugin sözleşmesi yalnız akış verir (`getStreams(tmdbId, …)`), canlı
+kanalın id'si olmadığı için canlı TV **plugin olarak eklenemez**. Buna karşılık Stremio `tv` tipi
+addon (catalog + meta + stream, doğrudan HLS) Nuvio'da çalışıyor: 2026-11-12'de 4 kanallık test
+addonu ile ana sayfada "Canlı TV" satırı, kanal detayı ve oynatma (codec+ses+kare) kanıtlandı.
+159 kanallık üretim addon'u henüz yazılmadı.
+
 **Meta sağlayıcı şart:** Plugin sağlayıcıları yalnız akış verir; film/dizi detayı için Nuvio’da
 **Cinemeta** addon’u da kurulu olmalı. Yoksa “Bu içerik için meta sağlayan eklenti yok” hatası
 çıkar. Cinemeta: `https://v3-cinemeta.strem.io/manifest.json`.
@@ -239,17 +244,16 @@ edilen Nuvio sürümleri plugin destekler; mağaza sürümlerinde Plugins bölü
 
 ## Canlı TV
 
-Canlı yayın modülleri `TvType.Live` kullanır; `loadLinks` yoktur, kanal URL'si doğrudan
-`newLiveStreamLoadResponse` ile verilir.
+Canlı yayın modülü `TvType.Live` kullanır; kanal URL'si `newLiveStreamLoadResponse` ile verilir,
+`loadLinks` doğrudan HLS adresini döndürür.
 
 | Eklenti | Kaynak | Kanal | Not |
 |---|---|---|---|
-| `CanliTV` | iptv-org TR M3U | 172 | 5 ana grup + arama; M3U listesi her gün güncellenir |
-| `CanliYayinKanallari` | sabit HLS | 46 | 403/404 veren 7 kayıt çıkarıldı |
+| `CanliTV` | seçilmiş HLS + iptv-org TR M3U | 159 | Tek canlı TV sağlayıcısı; 45 seçilmiş HLS adresi + iptv-org listesi, 20 kanalın adresi yedek kaynakla değiştirildi, 26 ölü kayıt ayıklandı; 7 satır + arama |
 | `TLCtr` | TLC | 1 | TLC Canlı; 720/480/360 HLS adresleri HTTP 200 |
 
-`CanliYayinKanallari` için “doğrulanmış” yalnız **HTTP 200 HLS adresi** anlamındadır; oynatma
-tek başına bu testle garanti edilmez.
+`CanliTV` içinde “doğrulanmış” yalnız **HTTP 200 HLS adresi** anlamındadır; oynatma tek başına bu
+testle garanti edilmez. Yeni canlı kanal `CanliTV` içine eklenir, ayrı modül açılmaz.
 
 
 

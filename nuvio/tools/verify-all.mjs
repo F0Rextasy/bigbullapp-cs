@@ -3,8 +3,9 @@
  * Re-verifies every shipped provider against the live site using the sample
  * recorded in its `// @provider` header (`sample: "imdbId:type:season:episode"`).
  *
- *   node nuvio/tools/verify-all.mjs           # all providers, sequential
- *   node nuvio/tools/verify-all.mjs diziyou   # one provider
+ *   node nuvio/tools/verify-all.mjs                 # all providers, 6 parallel
+ *   node nuvio/tools/verify-all.mjs --jobs 12       # more parallel
+ *   node nuvio/tools/verify-all.mjs diziyou         # one provider
  *
  * Prints a PASS/FAIL table; exit code 1 if any provider returns no stream.
  */
@@ -15,7 +16,10 @@ import vm from "node:vm";
 
 const root = path.resolve(import.meta.dirname, "..");
 const providersDir = path.join(root, "providers");
-const only = process.argv[2];
+const argv = process.argv.slice(2);
+const jobsAt = argv.indexOf("--jobs");
+const jobs = Math.max(1, Number(jobsAt >= 0 ? argv[jobsAt + 1] : process.env.NUVIO_VERIFY_JOBS || 6) || 6);
+const only = argv.find((a, i) => !a.startsWith("--") && i !== jobsAt + 1);
 const curlBin = process.platform === "win32" ? "curl.exe" : "curl";
 
 /** Fallback when Cloudflare/CDN blocks Node/undici's TLS JA3 with 403 while curl/Android works (AGENTS.md). */
@@ -46,18 +50,11 @@ function curlFallback(url, options = {}) {
   }
 }
 
-const rows = [];
-for (const file of fs.readdirSync(providersDir).sort()) {
-  if (!file.endsWith(".js")) continue;
-  const id = path.basename(file, ".js");
-  if (only && only !== id) continue;
+async function verify(id, file) {
   const code = fs.readFileSync(path.join(providersDir, file), "utf8");
   const head = code.split("\n").slice(0, 12).join("\n");
   const meta = JSON.parse(head.match(/^\/\/\s*@provider\s+(\{.*\})\s*$/m)[1]);
-  if (!meta.sample) {
-    rows.push({ id, ok: false, note: "no sample in header" });
-    continue;
-  }
+  if (!meta.sample) return { id, ok: false, note: "no sample in header" };
   const [imdbId, type, season, episode] = meta.sample.split(":");
   const module = { exports: {} };
   const controller = new AbortController();
@@ -159,11 +156,24 @@ for (const file of fs.readdirSync(providersDir).sort()) {
   } finally {
     clearTimeout(timer);
   }
-  rows.push({ id, ok, note });
+  return { id, ok, note };
 }
+
+const files = fs.readdirSync(providersDir).sort().filter((f) => f.endsWith(".js") && (!only || path.basename(f, ".js") === only));
+const rows = new Array(files.length);
+let next = 0;
+const started = Date.now();
+await Promise.all(
+  Array.from({ length: Math.min(jobs, files.length) }, async () => {
+    while (next < files.length) {
+      const i = next++;
+      rows[i] = await verify(path.basename(files[i], ".js"), files[i]);
+    }
+  }),
+);
 
 const width = Math.max(...rows.map((r) => r.id.length), 4);
 for (const r of rows) console.log(`${r.ok ? "PASS" : "FAIL"} ${r.id.padEnd(width)} ${r.note}`);
 const failed = rows.filter((r) => !r.ok).length;
-console.log(`\n${rows.length - failed}/${rows.length} passed`);
+console.log(`\n${rows.length - failed}/${rows.length} passed in ${((Date.now() - started) / 1000).toFixed(1)}s (jobs=${jobs})`);
 process.exit(failed ? 1 : 0);

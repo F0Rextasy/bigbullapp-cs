@@ -6,8 +6,16 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 sayı arttığında güncelleme sunar.
 
 
-## [1.6.42] - 2026-11-12
+## [1.6.43] - 2026-11-12
+### Eklendi
+- **CanliTV**: Canlı Yayın Kanalları'ndaki seçilmiş kanallar eklendi; tek sağlayıcıda 159 kanal.
+### Düzeltildi
+- **CanliTV**: 20 kanalın ölü adresi yedek kaynakla değiştirildi, 26 kanal kaldırıldı; TV8, Star TV ve Show TV yeniden açıldı.
+- **IzleFilm**: Sağlayıcı yeniden doğrulandı ve yayında.
+### Kaldırıldı
+- **CanliYayinKanallari**: Kanalları CanliTV'ye taşındı.
 
+## [1.6.42] - 2026-11-12
 ### Değişti
 - **Dizist v3**: taban adres https://dizist.live -> https://dizist.live.
 

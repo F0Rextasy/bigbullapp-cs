@@ -1,9 +1,9 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "IzleFilm — izlefilm.net Full HD Türkçe dublaj/altyazılı film arşivi"
     authors = listOf("F0Rextasy")
-    status = 3
+    status = 1
     tvTypes = listOf("Movie")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=izlefilm.net&sz=%size%"

@@ -1,7 +1,7 @@
-version = 4
+version = 6
 
 cloudstream {
-    description = "CanliTV — iptv-org Türkiye canlı TV listesi (ulusal, haber, spor, çocuk, müzik)"
+    description = "CanliTV — Türkçe canlı TV: seçilmiş HLS kanalları + iptv-org Türkiye listesi"
     authors = listOf("F0Rextasy")
     status = 1
     tvTypes = listOf("Live")

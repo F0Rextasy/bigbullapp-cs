@@ -9,6 +9,6 @@ class CanliTVPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(CanliTVProvider())
-        this.openSettings = { Settings.showDialog(it, "CanliTV Ayarları", CanliTVProvider.ROWS) }
+        this.openSettings = { Settings.showDialog(it, "CanliTV Ayarları", CanliTVProvider.ROWS.map { row -> row.first }) }
     }
 }
