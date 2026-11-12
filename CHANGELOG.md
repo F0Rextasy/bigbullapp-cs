@@ -6,6 +6,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 sayı arttığında güncelleme sunar.
 
 
+## [1.6.47] - 2026-11-12
+
+### Değişti
+- **DiziLife v10**: taban adres https://dizi85.life -> https://dizi85.life.
+
 ## [1.6.46] - 2026-11-12
 ### Kaldırıldı
 - **Dizifon**: Alan adı park edildiği için sağlayıcı devre dışı bırakıldı.

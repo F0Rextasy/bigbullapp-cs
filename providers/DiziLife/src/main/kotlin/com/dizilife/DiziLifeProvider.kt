@@ -45,7 +45,7 @@ import java.net.URLEncoder
  */
 class DiziLifeProvider : MainAPI() {
     override var mainUrl = "https://dizi85.life"
-    private val uaHeaders get() = browserHeaders
+    private val uaHeaders = mapOf("user-agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0", "accept-language" to "tr-TR,tr;q=0.9")
     override var name = "DiziLife"
     override var lang = "tr"
     override val hasMainPage = true
