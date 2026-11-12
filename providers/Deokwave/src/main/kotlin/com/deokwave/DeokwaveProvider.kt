@@ -41,7 +41,7 @@ private fun cleanTitle(raw: String?): String = (raw ?: "")
     .trim().trim('-', '–', '|', ',')
 
 class DeokwaveProvider : MainAPI() {
-    private val uaHeaders get() = browserHeaders
+    private val uaHeaders = mapOf("user-agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0", "accept-language" to "tr-TR,tr;q=0.9")
 
     override var mainUrl = "https://deokwave.com"
     override var name = "Deokwave"

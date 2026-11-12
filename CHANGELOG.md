@@ -6,6 +6,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 sayı arttığında güncelleme sunar.
 
 
+## [1.6.50] - 2026-11-12
+
+### Değişti
+- **Deokwave v8**: taban adres https://deokwave.com -> https://deokwave.com.
+
 ## [1.6.49] - 2026-11-12
 ### Düzeltildi
 - **HDFilmDelisi**: Türkçe altyazı görünmüyordu; oynatıcının HLS olarak sardığı altyazı artık gerçek WEBVTT dosyası olarak veriliyor.
