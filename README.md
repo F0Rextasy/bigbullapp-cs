@@ -33,8 +33,9 @@ canlı TV kaynakları. Her site Cloudstream'de ayrı bir Gradle modülü/`.cs3` 
 > yoktur). Eklentiler yalnız **akış** verir; katalog/meta için **Cinemeta** addon’unu da ekle:
 > `https://v3-cinemeta.strem.io/manifest.json`.
 >
-> **Nuvio katalog (Addons):** Addons → Add Addon:
-> `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json`.
+> **Nuvio addon'ları (Addons → Add Addon):** film/dizi kataloğu
+> `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json`,
+> canlı TV `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json`.
 
 ## Kısa kod
 
@@ -213,10 +214,10 @@ Repo eklemek sağlayıcıları çalıştırmaz: Plugins ekranında **Enable plug
 istediğin sağlayıcıların anahtarı ayrıca açılır.
 
 **Canlı TV (addon)**: Nuvio plugin sözleşmesi yalnız akış verir (`getStreams(tmdbId, …)`), canlı
-kanalın id'si olmadığı için canlı TV **plugin olarak eklenemez**. Buna karşılık Stremio `tv` tipi
-addon (catalog + meta + stream, doğrudan HLS) Nuvio'da çalışıyor: 2026-11-12'de 4 kanallık test
-addonu ile ana sayfada "Canlı TV" satırı, kanal detayı ve oynatma (codec+ses+kare) kanıtlandı.
-159 kanallık üretim addon'u henüz yazılmadı.
+kanalın id'si olmadığı için canlı TV **plugin olarak eklenemez**. Bu iş için ayrı **BigBull Canlı TV**
+addon'u var (`nuvio/addon-live`, Stremio `tv` tipi: catalog + meta + stream): 8 satır, 172 kanal,
+akışlarda `behaviorHints.isLive`. Aynı addon'un oynatması cihazda kanıtlandı (HT Spor canlı yayın:
+AAC ses + kare + 4 dk ilerleme); film/dizi satırları ayrı `nuvio/addon` addon'unda kalır.
 
 **Meta sağlayıcı şart:** Plugin sağlayıcıları yalnız akış verir; film/dizi detayı için Nuvio’da
 **Cinemeta** addon’u da kurulu olmalı. Yoksa “Bu içerik için meta sağlayan eklenti yok” hatası
@@ -266,7 +267,7 @@ testle garanti edilmez. Yeni canlı kanal `CanliTV` içine eklenir, ayrı modül
 ## Doğrulama (2026-11-09)
 
 - Cloudstream host runner: 2026-11-09 turunda 86 aktif modül; tüm aktif sağlayıcılarda ses+görüntü akışı ve oynatıcı başlıkları canlı doğrulandı. İnatTV ve SineWix 2026-11-10'da kaldırıldı.
-- Nuvio host: **28 sağlayıcı** (`manifest.json`, 28 aktif) ve **20 katalog** (`addon/manifest.json`); otomatik güncelleme botu her turda Nuvio'yu da tarar.
+- Nuvio host: **28 sağlayıcı** (`manifest.json`) + **20 film/dizi kataloğu** (`addon/manifest.json`) + **8 canlı satır / 172 kanal** (`addon-live/manifest.json`); otomatik güncelleme botu her turda Nuvio'yu da tarar.
 - Emülatör smoke: DiziPal, AsyaWatch ve MinikaGO arama → detay → oynatma PASS.
 
 

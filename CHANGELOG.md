@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.56] - 2026-11-12
+
+### Değişti
+- README'deki Nuvio canlı TV bilgisi ayrı addon yapısına göre güncellendi.
+
 ## [1.6.55] - 2026-11-12
 
 ### Değişti

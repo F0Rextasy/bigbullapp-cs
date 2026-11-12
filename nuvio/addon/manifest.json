@@ -1,6 +1,6 @@
 {
   "id": "org.bigbull.trcatalog",
-  "version": "1.6.55",
+  "version": "1.6.56",
   "name": "BigBull TR Katalog",
   "description": "Cloudstream sağlayıcılarının film ve dizi listeleri. Katalog verir; meta ve akışı Cinemeta ile BigBull Nuvio eklentileri sağlar; canlı TV ayrı addon'dadır.",
   "resources": [
