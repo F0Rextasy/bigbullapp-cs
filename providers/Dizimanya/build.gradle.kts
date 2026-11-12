@@ -1,5 +1,5 @@
 // Use an integer for version numbers
-version = 1
+version = 2
 
 cloudstream {
     description = "Dizimanya — Türkçe altyazılı yabancı dizi izle"
@@ -12,7 +12,7 @@ cloudstream {
      * 2: Slow
      * 3: Beta-only
      **/
-    status = 3
+    status = 1
 
     tvTypes = listOf("TvSeries")
     language = "tr"

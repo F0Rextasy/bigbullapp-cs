@@ -100,21 +100,24 @@ class DizimanyaProvider : MainAPI() {
     override suspend fun load(url: String): LoadResponse? {
         val doc = runCatching { app.get(url, headers = uaHeaders).document }.getOrNull()
             ?: throw ErrorLoadingException("$name: dizi sayfası yüklenemedi. $REPORT_HINT")
-        val title = doc.selectFirst("div#content h1")?.text()?.trim()
-            ?.replace(TITLE_SUFFIX, "")?.trim()?.takeIf { it.isNotEmpty() }
+        val title = doc.selectFirst("div#content h1, h1")?.text()?.trim()
+            ?.replace(TITLE_SUFFIX, "")?.removeSuffix(" izle")?.trim()?.takeIf { it.isNotEmpty() }
             ?: throw ErrorLoadingException("$name: dizi bilgisi okunamadı. $REPORT_HINT")
 
-        val episodes = doc.select("div.bolumust").mapNotNull { box ->
-            val href = fixUrlNull(box.selectFirst("a[href]")?.attr("href")) ?: return@mapNotNull null
-            val label = box.selectFirst("div.baslik")?.text()?.trim().orEmpty()
+        // Bölüm bağlantıları `/<dizi>-<S>-sezon-<E>-bolum/` biçiminde; sezon listesi varsa
+        // hepsi, yoksa künyedeki "İlk/Son Bölüm" düğmeleri gelir.
+        val episodes = doc.select("a[href*='-bolum/']").mapNotNull { anchor ->
+            val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
+            if (!EPISODE_SLUG.containsMatchIn(href)) return@mapNotNull null
+            val season = SEASON_IN_URL.find(href)?.groupValues?.get(1)?.toIntOrNull()
+            val number = EPISODE_IN_URL.find(href)?.groupValues?.get(1)?.toIntOrNull()
+            val label = anchor.text().trim().takeIf { it.isNotEmpty() }
             newEpisode(href) {
-                this.name = label.ifEmpty { null }
-                this.season = SEASON_IN_TEXT.find(label)?.groupValues?.get(1)?.toIntOrNull()
-                    ?: SEASON_IN_URL.find(href)?.groupValues?.get(1)?.toIntOrNull()
-                this.episode = EPISODE_IN_TEXT.find(label)?.groupValues?.get(1)?.toIntOrNull()
-                    ?: EPISODE_IN_URL.find(href)?.groupValues?.get(1)?.toIntOrNull()
+                this.name = label
+                this.season = season
+                this.episode = number
             }
-        }.distinctBy { it.data }
+        }.distinctBy { it.data }.sortedWith(compareBy({ it.season ?: 0 }, { it.episode ?: 0 }))
         if (episodes.isEmpty()) {
             // Bölüm adresi doğrudan açılırsa dizi sayfasına indirgenir.
             val slug = EPISODE_SLUG.find(url)?.groupValues?.get(1)

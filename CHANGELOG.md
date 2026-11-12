@@ -6,6 +6,10 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 sayı arttığında güncelleme sunar.
 
 
+## [1.6.37] - 2026-11-12
+### Düzeltildi
+- **Dizimanya**: Dizi detayı ve bölüm listesi yeniden çalışıyor.
+
 ## [1.6.36] - 2026-11-11
 ### Eklendi
 - **DiziSol**, **Dizimanya**, **Dizist**, **IzleFilm**, **RoketDizi**, **TrDiziIzle**, **TurkAnimeTV** sağlayıcıları eklendi.
