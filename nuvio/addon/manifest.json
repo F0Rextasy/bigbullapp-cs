@@ -1,16 +1,62 @@
 {
   "id": "org.bigbull.trcatalog",
-  "version": "1.6.53",
+  "version": "1.6.54",
   "name": "BigBull TR Katalog",
-  "description": "Cloudstream sağlayıcılarının güncel listeleri. Katalog verir; meta ve akışı Cinemeta ile BigBull Nuvio eklentileri sağlar.",
+  "description": "Cloudstream sağlayıcılarının güncel listeleri ve canlı TV kanalları. Film/dizi meta ve akışını Cinemeta ile BigBull Nuvio eklentileri sağlar; canlı kanallar bu addon'dan oynar.",
   "resources": [
-    "catalog"
+    "catalog",
+    "meta",
+    "stream"
   ],
   "types": [
     "movie",
-    "series"
+    "series",
+    "tv"
+  ],
+  "idPrefixes": [
+    "bb-"
   ],
   "catalogs": [
+    {
+      "type": "tv",
+      "id": "canlitv",
+      "name": "Canlı TV"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-general",
+      "name": "Canlı TV · Ulusal"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-news",
+      "name": "Canlı TV · Haber"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-sports",
+      "name": "Canlı TV · Spor"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-kids",
+      "name": "Canlı TV · Çocuk"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-music",
+      "name": "Canlı TV · Müzik"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-documentary",
+      "name": "Canlı TV · Belgesel"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-religious",
+      "name": "Canlı TV · Dini"
+    },
     {
       "type": "series",
       "id": "animecix",

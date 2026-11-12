@@ -14,13 +14,15 @@
  *     "limit": 40 }
  *
  * Başlıklar Cinemeta aramasıyla IMDb id'sine çevrilir; meta/akışı Cinemeta ve
- * nuvio plugin'leri verir, addon yalnız katalog sunar.
+ * nuvio plugin'leri verir. Canlı TV satırlarını live.mjs üretir: kanal kataloğu,
+ * meta ve `isLive` akışı doğrudan bu addon'dan gelir.
  *
- * Kullanım: node nuvio/addon/build.mjs [--check] [id ...]
+ * Kullanım: node nuvio/addon/build.mjs [--check] [--live-only] [id ...]
  */
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync, rmSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildLive } from "./live.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SRC = join(HERE, "sources");
@@ -39,6 +41,7 @@ function repoVersion() {
 
 const argv = process.argv.slice(2);
 const check = argv.includes("--check");
+const liveOnly = argv.includes("--live-only");
 const only = argv.filter((a) => !a.startsWith("--"));
 
 const cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, "utf8")) : {};
@@ -101,7 +104,7 @@ async function resolve(type, title) {
 }
 
 const written = [];
-for (const rc of recipes) {
+for (const rc of liveOnly ? [] : recipes) {
   let items;
   try {
     const html = await get(rc.url, rc.headers);
@@ -192,16 +195,21 @@ if (!check) {
     }
   }
   all.sort((a, b) => a.name.localeCompare(b.name, "tr"));
+  const live = await buildLive();
   const manifest = {
     id: ADDON_ID,
     version: repoVersion(),
     name: "BigBull TR Katalog",
     description:
-      "Cloudstream sağlayıcılarının güncel listeleri. Katalog verir; meta ve akışı Cinemeta ile BigBull Nuvio eklentileri sağlar.",
-    resources: ["catalog"],
-    types: ["movie", "series"],
-    catalogs: all.map((c) => ({ type: c.type, id: c.id, name: c.name })),
+      "Cloudstream sağlayıcılarının güncel listeleri ve canlı TV kanalları. Film/dizi meta ve akışını Cinemeta ile BigBull Nuvio eklentileri sağlar; canlı kanallar bu addon'dan oynar.",
+    resources: ["catalog", "meta", "stream"],
+    types: ["movie", "series", "tv"],
+    idPrefixes: ["bb-"],
+    catalogs: [
+      ...live.catalogs,
+      ...all.map((c) => ({ type: c.type, id: c.id, name: c.name })),
+    ],
   };
   writeFileSync(join(HERE, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
-  console.log(`manifest: ${all.length} katalog`);
+  console.log(`manifest: ${all.length + live.catalogs.length} katalog (${live.count} canlı kanal)`);
 }

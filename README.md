@@ -231,10 +231,13 @@ sunucusuz bir **katalog addon'u** var:
    `https://v3-cinemeta.strem.io/manifest.json`
 1. Nuvio → **Settings → Content & Discovery → Addons → Add Addon**
 2. `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json`
-3. **Install Addon** → ana sayfada seçili sağlayıcıların satırları ile **"Tümü - Filmler"** ve **"Tümü - Diziler"** satırları görünür.
+3. **Install Addon** → ana sayfada **Canlı TV** satırları, seçili sağlayıcıların satırları ile **"Tümü - Filmler"** ve **"Tümü - Diziler"** görünür.
 
-Addon yalnız `catalog` kaynağı sunar: item'lar IMDb id'siyle yazılır, detay meta'sını Cinemeta,
-akışları yukarıdaki plugin sağlayıcıları verir. İçerik günde bir
+Addon `catalog` yanında **canlı TV** için `meta` + `stream` kaynaklarını da sunar: `Canlı TV` ve
+yedi tür satırı (Ulusal, Haber, Spor, Çocuk, Müzik, Belgesel, Dini) doğrudan addon'dan oynar;
+kanal listesi Cloudstream `CanliTV` kaynağından (`STATIC` + iptv-org + `OVERRIDES`/`SKIP`) üretilir
+(`nuvio/addon/live.mjs`), her akış `behaviorHints.isLive` taşır. Film/dizi item'ları IMDb id'siyle
+yazılır, detay meta'sını Cinemeta, akışları yukarıdaki plugin sağlayıcıları verir. İçerik günde bir
 `.github/workflows/nuvio-catalog.yml` ile yenilenir; tarifler `nuvio/addon/sources/<id>.json`,
 üretici `node nuvio/addon/build.mjs`. Statik katalog **arama** ve sonsuz kaydırma (`skip`)
 desteklemez; her satır ilk sayfayı gösterir. JS ile render edilen siteler (ör. Anizium) satır üretemez.
