@@ -1,91 +1,116 @@
-# BigBullApp — Cloudstream + Nuvio (bigbullapp-cs-nuvio)
+# BigBullApp — Cloudstream + Nuvio
 
-[Cloudstream](https://github.com/recloudstream/cloudstream) ve
-[Nuvio](https://github.com/NuvioMedia/NuvioMobile) için Türkçe film, dizi, anime, çizgi film ve
-canlı TV kaynakları. Her site Cloudstream'de ayrı bir Gradle modülü/`.cs3` eklentisi, Nuvio'da
-`nuvio/providers/` altında ayrı bir plugin dosyasıdır. Nuvio resmi istemcileri:
-[NuvioMobile](https://github.com/NuvioMedia/NuvioMobile) ve
-[NuvioTV](https://github.com/NuvioMedia/NuvioTV).
+Türkçe film, dizi, anime, çizgi film ve canlı TV kaynakları.
+Cloudstream için `.cs3` eklentileri, Nuvio için plugin deposu + iki katalog addon'u.
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.3-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org)
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-86-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-91-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
-> **Kurulum:** Cloudstream → **Ayarlar → Eklentiler → Depo Ekle**:
->
-> ```
-> https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/repo.json
-> ```
->
-> Kısa kod: **`bigbullapp`** — Depo Ekle alanına yazabilirsin.
->
-> **Nuvio:** Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Repository**:
->
-> ```
-> https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json
-> ```
->
-> Yalnız **sideload** edilen Nuvio sürümleri eklenti destekler (mağaza sürümlerinde bu bölüm
-> yoktur). Eklentiler yalnız **akış** verir; katalog/meta için **Cinemeta** addon’unu da ekle:
-> `https://v3-cinemeta.strem.io/manifest.json`.
->
-> **Nuvio addon'ları (Addons → Add Addon):** film/dizi kataloğu
-> `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json`,
-> canlı TV `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json`.
+## Hızlı kurulum
 
-## Kısa kod
+### Cloudstream (film, dizi, anime, canlı TV)
 
-`bigbullapp`
+1. **Ayarlar → Eklentiler → Depo Ekle**
+2. Adres: `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/repo.json`
+   — ya da kısa kod: **`bigbullapp`**
+3. Depoyu ekle → istediğin eklentiyi **İndir**
+4. **Ayarlar → Extensions** listesinden sağlayıcıları aç
 
-Cloudstream kısa kodları `cutt.ly/<kod>` yönlendirmesiyle çözer. `cutt.ly/bigbullapp` →
-`repo.json` yönlendirmesi tanımlı; **Depo Ekle** alanına `bigbullapp` yazman yeterli. Kısa kod
-bazı ISS'lerde engelli olabileceği için alternatif olarak tam URL de kullanılabilir.
+### Nuvio (film/dizi + canlı TV)
+
+Nuvio'da plugin desteği yalnız **sideload** sürümlerde vardır (mağaza sürümünde Plugins bölümü yok).
+
+1. **Ayarlar → Content & Discovery → Plugins → Add Repository → Refresh → Enable plugin providers globally**
+2. İstediğin sağlayıcıları tek tek aç
+3. **Addons → Add Addon** ile aşağıdaki üç adresi ekle:
+
+| Ne için | Adres |
+|---|---|
+| Detay/meta (zorunlu) | `https://v3-cinemeta.strem.io/manifest.json` |
+| Ana sayfa film/dizi satırları | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json` |
+| Canlı TV (8 satır, 172 kanal) | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json` |
+
+Nuvio plugin deposu: `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json`
+
+## Nuvio'da hangi parça ne yapar
+
+| İş | Sağlayan |
+|---|---|
+| Film/dizi arama ve oynatma | Plugin deposu (28 sağlayıcı) |
+| Film/dizi detayı: özet, kadro, bölümler | **Cinemeta** |
+| Ana sayfada film/dizi satırları | **BigBull TR Katalog** addon'u |
+| Canlı TV satırları ve kanal oynatma | **BigBull Canlı TV** addon'u |
+
+**Cinemeta neden gerekli?** Katalog addon'u yalnız liste verir (isim, poster, IMDb id'si). Detay
+sayfasını Cinemeta, akışları pluginler verir. Canlı TV addon'u kendi meta'sını taşıdığı için canlı
+kanallar için Cinemeta şart değildir. Canlı TV plugin olarak eklenemez: plugin sözleşmesi yalnız
+film/dizi akışı döndürür, kanal kimliği taşımaz.
+
+## Kurulumdan sonra 5 kontrol
+
+1. Depo listelendi mi?
+2. Cloudstream'de sağlayıcılar **Extensions** ekranından açıldı mı?
+3. Nuvio'da **Enable plugin providers globally** açık mı?
+4. Cinemeta ve iki addon eklendi mi?
+5. Ana sayfa satırları eksikse Nuvio'yu tamamen kapatıp aç; addonları **Refresh** et.
+
+## Sık sorulanlar
+
+**Yayın açılmıyor / arama boş dönüyor.** Kaynak site değişmiş olabilir; güncellemeyi bekle veya
+[issue aç](https://github.com/F0Rextasy/bigbullapp-cs/issues). Tek bir sağlayıcı bozuksa diğerleri
+çalışmaya devam eder.
+
+**Nuvio: "Bu içerik için meta sağlayan eklenti yok".** Cinemeta addon'u kurulu değil.
+
+**Nuvio: ana sayfa satırları eksik/eski.** Addon → **Refresh**; olmazsa uygulamayı tamamen kapatıp
+aç. Nuvio addon manifestini önbelleğe alır.
+
+**Canlı kanal açılmıyor.** Kanal listesi günlük taranır; ölü kanallar ayıklanır, bölgesel kilitli
+yayınlar açılmaz. Kanal adını bildir.
+
+**Altyazı yok.** Eklenti ayarından **Altyazı dili**ni kontrol et (`Türkçe` seçiliyken yalnız Türkçe
+altyazı geçer). Kaynakta altyazı yoksa üretilmez.
+
+**Kalite düşük görünüyor.** Eklenti ayarından **Kalite üst sınırı**nı kontrol et; kaynak daha
+yüksekse gizlenir.
+
+**Nuvio'da Plugins bölümü yok.** Mağaza sürümü kullanıyorsun; plugin yalnız sideload sürümde var.
+
+**Android TV / TV Box.** Cloudstream ve NuvioTV'de aynı adresler kullanılır; kumanda ile
+**Add Repository** alanına yukarıdaki URL'yi yaz.
+
+**Hata bildirimi.** [GitHub issue](https://github.com/F0Rextasy/bigbullapp-cs/issues) veya
+[Telegram](https://t.me/bigbull_app). Hangi sağlayıcı, hangi içerik ve ne olduğunu yaz.
 
 ## Özellikler
 
-- Arama → detay → bölüm → oynatma akışı; site destekliyorsa **sayfalama**
-- **Öneriler**, **fragman**, **oyuncu**, **süre**, **puan**, **bölüm özeti** — yalnızca sitede
-  gerçekten varsa, asla uydurulmaz
-- Altyazı (VTT) ve kalite etiketleri (`Qualities.*`)
+- Arama → detay → bölüm → oynatma; site destekliyorsa sayfalama
+- Öneriler, fragman, kadro, süre, puan, bölüm özeti — yalnız sitede gerçekten varsa
+- Altyazı (VTT) ve kalite etiketleri
 - Anime sitelerinde `TvType.Anime`
-- Hata durumunda boş ekran yerine açıklayıcı mesaj ve
-  [issue bağlantısı](https://github.com/F0Rextasy/bigbullapp-cs/issues)
-- Windows / Linux fark etmeksizin Gradle wrapper ile tek komut derleme
+- Hata durumunda boş ekran yerine açıklayıcı mesaj ve issue bağlantısı
 
-## Kaynaktan derleme
+## Eklenti ayarları
 
-Gereksinimler: **JDK 17**, **Android SDK 35** (`platforms;android-35`, `build-tools;35.0.0`).
+Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extensions → eklenti → dişli**):
 
-```bash
-# Windows
-set JAVA_HOME=C:\Program Files\Microsoft\jdk-17.0.18.8-hotspot
-set ANDROID_HOME=C:\Android\Sdk
-gradlew.bat make makePluginsJson
+- **Kalite üst sınırı**: Sınırsız / 1080p / 720p / 480p / 360p
+- **Altyazı dili**: Tümü / Türkçe / İngilizce / Kapalı
 
-# Linux / macOS
-JAVA_HOME=/path/to/jdk17 ./gradlew make makePluginsJson
-```
+## Canlı TV
 
-`local.properties` (repoya girmez):
+- **Cloudstream:** tek sağlayıcı `CanliTV` — 159 kanal (seçilmiş HLS + iptv-org). "Doğrulanmış"
+  yalnız HTTP 200 HLS adresi demektir; oynatma garantisi değildir.
+- **Nuvio:** `BigBull Canlı TV` addon'u — 8 satır, 172 kanal, doğrudan HLS. Kanal listesi Cloudstream
+  `CanliTV` kaynağından üretilir; ölü kanallar ayıklanır.
+- Yeni kanal önerisi için site/kanal adını issue olarak bırak.
 
-```properties
-sdk.dir=C\:\\Android\\Sdk
-```
-
-Çıktılar: `providers/<Modül>/build/<Modül>.cs3` ve `build/plugins.json`.
-
-Tek modül derleme ve cihaza kurulum:
-
-```bash
-./gradlew Dizibox:make
-./gradlew Dizibox:deployWithAdb   # Android 11+: All files access izni
-```
-
-## Eklentiler
+## Desteklenen Cloudstream eklentileri
 
 `✓` var · `—` sitede yok · `film` yalnız filmlerde
 
@@ -186,120 +211,46 @@ Tek modül derleme ve cihaza kurulum:
 | `Yabancidizi` | ybncidizi.com | Dizi/Film | — | ✓ | — | ✓ | film | ✓ |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**İnatTV / İnatBox notu:** Upstream 520 ve imza sorunları nedeniyle İnatTV (Cloudstream) ve İnatBox (Nuvio) bir süreliğine kaldırıldı; sorunlar çözüldüğünde tekrar eklenecek. **SineWix** de aynı şekilde kaldırıldı. Depoda toplam **91 aktif modül** var (`AsyaLuna`, `DiziBoxTv` ve `Dizifon` `status = 0` ile pasif).
+**Kapsam notu:** Depoda toplam **91 aktif modül** var; `AsyaLuna`, `DiziBoxTv`, `Dizifon`
+`status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle kaldırıldı; düzeldiğinde
+tekrar eklenir. Bu tablo ve özellik matrisi her sağlayıcı değişikliğinde güncellenir.
 
-Bu tablo ve özellik matrisi **her zaman güncel tutulur**: her sağlayıcı değişikliğinde
-`README.md`, `CHANGELOG.md` ve modül sürümü birlikte güncellenir.
+## Nuvio sağlayıcıları (28)
 
-## Nuvio
-
-Nuvio eklentileri cihazda (QuickJS) çalışır; depo `nuvio/manifest.json` dosyasıdır ve GitHub raw
-üzerinden yayınlanır. Her sağlayıcı `nuvio/providers/<id>.js` **tek dosyasıdır** — derleme adımı
-yoktur, Nuvio'nun indirdiği dosya depodaki dosyanın aynısıdır.
-
-Nuvio ana repo: <https://github.com/NuvioMedia/NuvioMobile>
-
-Ekleme: Nuvio → **Ayarlar → Content & Discovery → Plugins → Add Repository** →
-`https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json` →
-**Refresh** → sağlayıcıları tek tek aç. Tam liste: [`nuvio/manifest.json`](nuvio/manifest.json).
-
-**Kapsam**: Uygulama performansını korumak ve kasmayı önlemek amacıyla Nuvio tarafında yalnızca seçilmiş **28 ana sağlayıcı** yayınlanır:
 - **Anime (3):** `Anizium`, `AnimeciX`, `AsyaAnimeleri`
 - **Dizi (12):** `Dizibox`, `Dizilla`, `DiziPal`, `SelcukFlix`, `Ddizi`, `WebdramaTurkey2`, `Dizikorea3`, `Sezonlukdizi`, `DiziYou`, `DiziBal`, `DiziMom`, `DiziPod`
 - **Film (8):** `HDFilmCehennemi`, `FullHDFilmizlesene`, `SetFilmIzle`, `YesilCamTv`, `FilmMakinesi`, `WebteIzle`, `FilmModu`, `JetFilmizle`
 - **Film & Dizi (2):** `PuhuTV`, `RecTV`
 - **Belgesel & TV (3):** `BelgeselX`, `DMAX`, `TLCtr`
 
-Repo eklemek sağlayıcıları çalıştırmaz: Plugins ekranında **Enable plugin providers globally** ve
-istediğin sağlayıcıların anahtarı ayrıca açılır.
+## Geliştiriciler
 
-**Canlı TV (addon)**: Nuvio plugin sözleşmesi yalnız akış verir (`getStreams(tmdbId, …)`), canlı
-kanalın id'si olmadığı için canlı TV **plugin olarak eklenemez**. Bu iş için ayrı **BigBull Canlı TV**
-addon'u var (`nuvio/addon-live`, Stremio `tv` tipi: catalog + meta + stream): 8 satır, 172 kanal,
-akışlarda `behaviorHints.isLive`. Aynı addon'un oynatması cihazda kanıtlandı (HT Spor canlı yayın:
-AAC ses + kare + 4 dk ilerleme); film/dizi satırları ayrı `nuvio/addon` addon'unda kalır.
+```bash
+# Windows
+set JAVA_HOME=C:\Program Files\Microsoft\jdk-17.0.18.8-hotspot
+set ANDROID_HOME=C:\Android\Sdk
+gradlew.bat make makePluginsJson
 
-**Meta sağlayıcı şart:** Plugin sağlayıcıları yalnız akış verir; film/dizi detayı için Nuvio’da
-**Cinemeta** addon’u da kurulu olmalı. Yoksa “Bu içerik için meta sağlayan eklenti yok” hatası
-çıkar. Cinemeta: `https://v3-cinemeta.strem.io/manifest.json`.
-
-### Ana sayfa satırları (iki ayrı addon)
-
-Plugin'ler yalnız **akış** verir; Nuvio ana sayfasına satır koyamazlar. Satırlar için iki ayrı,
-sunucusuz addon var:
-
-| Addon | Manifest | Ne verir |
-|---|---|---|
-| **BigBull TR Katalog** | `…/master/nuvio/addon/manifest.json` | Film/dizi satırları (`catalog`); meta Cinemeta, akış plugin'ler |
-| **BigBull Canlı TV** | `…/master/nuvio/addon-live/manifest.json` | 8 canlı TV satırı, 172 kanal (`catalog`+`meta`+`stream`, `isLive`) |
-
-0. Önce **Addons → Add Addon** ile Cinemeta'yı ekle: `https://v3-cinemeta.strem.io/manifest.json`
-1. Nuvio → **Settings → Content & Discovery → Addons → Add Addon**
-2. Yukarıdaki iki manifest URL'sini ayrı ayrı ekle → **Install Addon**
-3. Ana sayfada film/dizi satırları ile **Canlı TV** ve yedi tür satırı (Ulusal, Haber, Spor, Çocuk,
-   Müzik, Belgesel, Dini) birlikte görünür.
-
-Canlı kanallar Cloudstream `CanliTV` kaynağından (`STATIC` + iptv-org + `OVERRIDES`/`SKIP`) üretilir
-(`node nuvio/addon-live/build.mjs`), her akış `behaviorHints.isLive` taşır. Film/dizi item'ları IMDb
-id'siyle yazılır, detay meta'sını Cinemeta, akışları yukarıdaki plugin sağlayıcıları verir. İçerik günde
-bir `.github/workflows/nuvio-catalog.yml` ile yenilenir (katalog: `nuvio/addon/sources/<id>.json`,
-üretici `node nuvio/addon/build.mjs`). Statik katalog **arama** ve sonsuz kaydırma (`skip`)
-desteklemez; her satır ilk sayfayı gösterir. JS ile render edilen siteler (ör. Anizium) satır üretemez.
-
-Başlık çözümü anahtarsız Cinemeta üzerinden yapılır, TMDB anahtarı gerekmez. Yalnız **sideload**
-edilen Nuvio sürümleri plugin destekler; mağaza sürümlerinde Plugins bölümü yoktur.
-
-## Canlı TV
-
-Canlı yayın modülü `TvType.Live` kullanır; kanal URL'si `newLiveStreamLoadResponse` ile verilir,
-`loadLinks` doğrudan HLS adresini döndürür.
-
-| Eklenti | Kaynak | Kanal | Not |
-|---|---|---|---|
-| `CanliTV` | seçilmiş HLS + iptv-org TR M3U | 159 | Tek canlı TV sağlayıcısı; 45 seçilmiş HLS adresi + iptv-org listesi, 20 kanalın adresi yedek kaynakla değiştirildi, 26 ölü kayıt ayıklandı; 7 satır + arama |
-| `TLCtr` | TLC | 1 | TLC Canlı; 720/480/360 HLS adresleri HTTP 200 |
-
-`CanliTV` içinde “doğrulanmış” yalnız **HTTP 200 HLS adresi** anlamındadır; oynatma tek başına bu
-testle garanti edilmez. Yeni canlı kanal `CanliTV` içine eklenir, ayrı modül açılmaz.
-
-
-
-## Doğrulama (2026-11-09)
-
-- Cloudstream host runner: 2026-11-09 turunda 86 aktif modül; tüm aktif sağlayıcılarda ses+görüntü akışı ve oynatıcı başlıkları canlı doğrulandı. İnatTV ve SineWix 2026-11-10'da kaldırıldı.
-- Nuvio host: **28 sağlayıcı** (`manifest.json`) + **20 film/dizi kataloğu** (`addon/manifest.json`) + **8 canlı satır / 172 kanal** (`addon-live/manifest.json`); otomatik güncelleme botu her turda Nuvio'yu da tarar.
-- Emülatör smoke: DiziPal, AsyaWatch ve MinikaGO arama → detay → oynatma PASS.
-
-
-## Eklenti ayarları
-
-Her sağlayıcının kendi ayar ekranı vardır (**Ayarlar → Extensions → eklenti → dişli**):
-
-- **Kalite üst sınırı**: Sınırsız / 1080p / 720p / 480p / 360p. Kaynak daha yüksekse gizlenir.
-- **Altyazı dili**: Tümü / Türkçe / İngilizce / Kapalı.
-
-Tercihler `bigbull_<modül>` altında saklanır; canlı TV modüllerinde uygulanmaz.
-
-## Depo yapısı
-
-```
-build.gradle.kts        ortak Android/Kotlin + Cloudstream yapılandırması
-settings.gradle.kts     providers/ altındaki her modülü otomatik dahil eder
-providers/
-  Anizium/              modül = eklenti
-  Dizibox/
-  ...
-  Yabancidizi/          91 aktif modül
-nuvio/                  Nuvio eklenti deposu (30 sağlayıcı + 20 katalog kaynağı)
+# Linux / macOS
+JAVA_HOME=/path/to/jdk17 ./gradlew make makePluginsJson
 ```
 
-## Geliştirme
+Çıktılar: `providers/<Modül>/build/<Modül>.cs3` ve `build/plugins.json`.
+Tek modül: `./gradlew Dizibox:make` · cihaza kurulum: `./gradlew Dizibox:deployWithAdb`
 
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) — yeni eklenti, kod kuralları, doğrulama zorunluluğu
+```
+providers/<Modül>/        Cloudstream modülü (.cs3)
+nuvio/providers/<id>.js   Nuvio plugin'i (tek dosya)
+nuvio/addon/              Film/dizi satırları addon'u
+nuvio/addon-live/         Canlı TV addon'u
+```
+
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — yeni eklenti, kod kuralları, doğrulama
 - [`CHANGELOG.md`](CHANGELOG.md) — sürüm notları
+- `AGENTS.md` — ajan/otomasyon notları
 
-Sürümleme: her modülün `build.gradle.kts` içindeki `version` alanı artmadıkça Cloudstream
-güncelleme göstermez. Davranış değişikliği = sürüm artışı + changelog kaydı.
+Davranış değişikliği = modül `version` artışı + CHANGELOG kaydı. Sürüm artmadan Cloudstream
+güncelleme göstermez.
 
 ## Yasal
 
