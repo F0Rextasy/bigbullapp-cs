@@ -59,3 +59,5 @@ AGENTS.md
 # local bot tooling (never publish; live under ~/.omp or tools/)
 /apktool.jar
 /no
+# local bot/telegram tooling
+/tools/
