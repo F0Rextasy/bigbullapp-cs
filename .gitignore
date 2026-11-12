@@ -61,3 +61,9 @@ AGENTS.md
 /no
 # local bot/telegram tooling
 /tools/
+# agent/bench tarama artıkları (repoya girmesin)
+/.probe/
+/bench-*.json
+/candidates-*.json
+/run-all-*.json
+/sweep-*
