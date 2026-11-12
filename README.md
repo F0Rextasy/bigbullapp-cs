@@ -125,7 +125,10 @@ Tek modül derleme ve cihaza kurulum:
 | `Dizigom` | dizigom.news | Film | — | — | — | — | — | — |
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi84.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
+| `Dizimanya` | dizimanya.com | Dizi | — | — | — | — | — | ✓ |
 | `Dizirella` | dizirella.one | Dizi | — | — | — | — | — | — |
+| `DiziSol` | dizisol.com | Film/Dizi | ✓ | — | — | — | ✓ | — |
+| `Dizist` | dizist.live | Dizi | — | — | — | — | — | ✓ |
 | `DiziYou` | diziyou.one | Dizi | — | — | ✓ | ✓ | — | ✓ |
 | `Diziasia` | diziasia.com | Asya dizi | ✓ | ✓ | — | — | — | — |
 | `Dizibox` | dizibox.live | Dizi | — | — | ✓ | ✓ | — | ✓ |
@@ -149,6 +152,7 @@ Tek modül derleme ve cihaza kurulum:
 | `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `HDFilmizleBest` | hdfilmizle.best | Dizi | — | — | — | — | — | — |
+| `IzleFilm` | izlefilm.net | Film | ✓ | — | — | — | ✓ | ✓ |
 | `JetFilmizle` | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
 | `KanalD` | kanald.com.tr | Dizi | — | — | — | — | — | — |
 | `KoreanTurk` | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
@@ -159,7 +163,8 @@ Tek modül derleme ve cihaza kurulum:
 | `NetFilmizle` | netfilmizle.com | Film | — | — | — | — | — | — |
 | `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
 | `PuhuTV` | puhutv.com | Dizi/Film | ✓ | — | — | ✓ | film | — |
-| `RecTV` | a.psrectv80.xyz (imzalı API) | Film/Dizi | ✓ | — | — | — | ✓ | ✓ |
+| `Rectv` | a.psrectv80.xyz (imzalı API) | Film/Dizi | ✓ | — | — | — | ✓ | ✓ |
+| `RoketDizi` | roketdizi.live | Dizi | ✓ | — | — | — | — | — |
 | `SelcukFlix` | selcukflix.app | Dizi/Film | — | — | — | — | ✓ | ✓ |
 | `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `Sezonlukdizi` | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
@@ -170,6 +175,8 @@ Tek modül derleme ve cihaza kurulum:
 | `SonAnime` | sonanime.com | Dizi | — | — | — | — | — | — |
 | `StarTV` | startv.com.tr | Dizi | — | — | — | — | — | — |
 | `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
+| `TrDiziIzle` | trdiziizle.tv | Dizi | ✓ | — | — | — | — | — |
+| `TurkAnimeTV` | turkanime.live | Anime | ✓ | — | — | — | — | — |
 | `TurkceDizi` | turkcedizi.com | Film | — | — | — | — | — | ✓ |
 | `TV8` | tv8.com.tr | Dizi | — | — | — | — | — | — |
 | `UltraFilmizle` | ufilmizle.com | Film | — | — | — | — | — | — |
