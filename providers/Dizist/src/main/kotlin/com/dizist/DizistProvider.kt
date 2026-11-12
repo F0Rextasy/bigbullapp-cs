@@ -95,6 +95,17 @@ class DizistProvider : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse? {
         val pageUrl = fixUrl(url)
+        // Ana sayfadaki "Son Eklenen Bölümler" kartları doğrudan bölüm adresidir;
+        // bölüm sayfası dizi künyesi taşımaz, aynı dizinin sayfasına indirgenir.
+        if (pageUrl.contains("/izle/")) {
+            // Bölüm adresinden dizi slug'ı türetmek her zaman tutmuyor (ör. uzun İngilizce adlar
+            // sitede kısaltılmış slug taşıyor); bölüm sayfasındaki dizi bağlantısı esas alınır.
+            val episodeDoc = runCatching { app.get(pageUrl, headers = browserHeaders).document }.getOrNull()
+            val seriesLink = episodeDoc?.selectFirst("a[href*='/dizi/']")?.attr("href")
+            if (!seriesLink.isNullOrBlank()) return load(fixUrl(seriesLink))
+            val slug = pageUrl.substringAfter("/izle/").substringBefore('?').replace(EPISODE_SUFFIX, "")
+            if (slug.isNotBlank()) return load("$mainUrl/dizi/$slug/")
+        }
         val doc = runCatching { app.get(pageUrl, headers = browserHeaders).document }.getOrNull()
             ?: throw ErrorLoadingException("$name: dizi sayfası yüklenemedi. $REPORT_HINT")
         val schema = doc.seriesSchema()

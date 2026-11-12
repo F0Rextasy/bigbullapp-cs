@@ -1,9 +1,9 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "Dizist — dizist.live (Türkçe altyazılı yabancı dizi)"
     authors = listOf("F0Rextasy")
-    status = 1
+    status = 3
     tvTypes = listOf("TvSeries")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=dizist.live&sz=%size%"
