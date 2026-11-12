@@ -1,7 +1,5 @@
 package com.hdfilmizlebest
 
-import com.bigbull.common.browserHeaders
-import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -32,6 +30,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.nodes.Document
 
+private fun org.jsoup.nodes.Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 private fun asciiFold(value: String): String = value
     .replace('ı', 'i').replace('İ', 'I')
     .replace('ş', 's').replace('Ş', 'S')
@@ -49,7 +50,11 @@ private fun cleanTitle(raw: String?): String = (raw ?: "")
     .trim().trim('-', '–', '|', ',')
 
 class HDFilmizleBestProvider : MainAPI() {
-    private val uaHeaders get() = browserHeaders
+    private val uaHeaders = mapOf(
+        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+            "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+        "Accept-Language" to "tr-TR,tr;q=0.9",
+    )
 
     override var mainUrl = "https://www.hdfilmizle.best"
     override var name = "HDFilmizleBest"
@@ -60,38 +65,43 @@ class HDFilmizleBestProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Aksiyon" -> "https://www.hdfilmizle.best/tur/aksiyon/"
-            "Aile" -> "https://www.hdfilmizle.best/tur/aile/"
-            "Belgesel" -> "https://www.hdfilmizle.best/tur/belgesel/"
-            "Bilim Kurgu" -> "https://www.hdfilmizle.best/tur/bilim-kurgu/"
-            "Dram" -> "https://www.hdfilmizle.best/tur/dram/"
-            "Fantastik" -> "https://www.hdfilmizle.best/tur/fantastik/"
-            "Gerilim" -> "https://www.hdfilmizle.best/tur/gerilim/"
-            "Komedi" -> "https://www.hdfilmizle.best/tur/komedi/"
-            "Korku" -> "https://www.hdfilmizle.best/tur/korku/"
-            "Macera" -> "https://www.hdfilmizle.best/tur/macera/"
-            "Romantik" -> "https://www.hdfilmizle.best/tur/romantik/"
-            "Suç" -> "https://www.hdfilmizle.best/tur/suc/"
-            "Eski Filmler" -> "https://www.hdfilmizle.best/eski-filmler/"
-            "Çin" -> "https://www.hdfilmizle.best/ulke/cin/"
-            "Güney Kore" -> "https://www.hdfilmizle.best/ulke/guney-kore/"
-            "Japonya" -> "https://www.hdfilmizle.best/ulke/japonya/"
-            "Tayland" -> "https://www.hdfilmizle.best/ulke/tayland/"
-            "Yerli Filmler" -> "https://www.hdfilmizle.best/yerli-filmler/"
-            "Seri Filmler" -> "https://www.hdfilmizle.best/seri-filmler/"
-            "Netflix" -> "https://www.hdfilmizle.best/kanal/netflix/"
-            "Prime Video" -> "https://www.hdfilmizle.best/kanal/prime-video/"
-            "Disney" -> "https://www.hdfilmizle.best/kanal/disney/"
-            "HBO" -> "https://www.hdfilmizle.best/kanal/hbo/"
-            "Animasyon" -> "https://www.hdfilmizle.best/tur/animasyon/"
-            "Biyografi" -> "https://www.hdfilmizle.best/tur/biyografi/"
+            "Aksiyon" -> "$mainUrl/tur/aksiyon/"
+            "Aile" -> "$mainUrl/tur/aile/"
+            "Belgesel" -> "$mainUrl/tur/belgesel/"
+            "Bilim Kurgu" -> "$mainUrl/tur/bilim-kurgu/"
+            "Dram" -> "$mainUrl/tur/dram/"
+            "Fantastik" -> "$mainUrl/tur/fantastik/"
+            "Gerilim" -> "$mainUrl/tur/gerilim/"
+            "Komedi" -> "$mainUrl/tur/komedi/"
+            "Korku" -> "$mainUrl/tur/korku/"
+            "Macera" -> "$mainUrl/tur/macera/"
+            "Romantik" -> "$mainUrl/tur/romantik/"
+            "Suç" -> "$mainUrl/tur/suc/"
+            "Eski Filmler" -> "$mainUrl/eski-filmler/"
+            "Çin" -> "$mainUrl/ulke/cin/"
+            "Güney Kore" -> "$mainUrl/ulke/guney-kore/"
+            "Japonya" -> "$mainUrl/ulke/japonya/"
+            "Tayland" -> "$mainUrl/ulke/tayland/"
+            "Yerli Filmler" -> "$mainUrl/yerli-filmler/"
+            "Seri Filmler" -> "$mainUrl/seri-filmler/"
+            "Netflix" -> "$mainUrl/kanal/netflix/"
+            "Prime Video" -> "$mainUrl/kanal/prime-video/"
+            "Disney" -> "$mainUrl/kanal/disney/"
+            "HBO" -> "$mainUrl/kanal/hbo/"
+            "Aksiyon" -> "$mainUrl/tur/aksiyon/"
+            "Aile" -> "$mainUrl/tur/aile/"
+            "Animasyon" -> "$mainUrl/tur/animasyon/"
+            "Belgesel" -> "$mainUrl/tur/belgesel/"
+            "Bilim Kurgu" -> "$mainUrl/tur/bilim-kurgu/"
+            "Biyografi" -> "$mainUrl/tur/biyografi/"
+            "Dram" -> "$mainUrl/tur/dram/"
             else -> mainUrl
         })
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
 
-            if (request.name in ROWS) {
+            if (request.name in listOf("Aksiyon", "Aile", "Belgesel", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Komedi", "Korku", "Macera", "Romantik", "Suç", "Eski Filmler", "Çin", "Güney Kore", "Japonya", "Tayland", "Yerli Filmler", "Seri Filmler", "Netflix", "Prime Video", "Disney", "HBO", "Aksiyon", "Aile", "Animasyon", "Belgesel", "Bilim Kurgu", "Biyografi", "Dram")) {
                 if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
                 val doc = app.get(request.data, headers = uaHeaders).document
                 return newHomePageResponse(request.name, cards(doc), hasNext = false)
@@ -100,34 +110,28 @@ class HDFilmizleBestProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf(
-            "Aksiyon", "Aile", "Animasyon", "Belgesel", "Bilim Kurgu", "Biyografi", "Dram",
-            "Fantastik", "Gerilim", "Komedi", "Korku", "Macera", "Romantik", "Suç",
-            "Eski Filmler", "Yerli Filmler", "Seri Filmler", "Çin", "Güney Kore",
-            "Japonya", "Tayland", "Netflix", "Prime Video", "Disney", "HBO",
-        )
+        val ROWS = listOf("Aksiyon", "Aile", "Belgesel", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Komedi", "Korku", "Macera", "Romantik", "Suç", "Eski Filmler", "Çin", "Güney Kore", "Japonya", "Tayland", "Yerli Filmler", "Seri Filmler", "Netflix", "Prime Video", "Disney", "HBO", "Aksiyon", "Aile", "Animasyon", "Belgesel", "Bilim Kurgu", "Biyografi", "Dram")
     }
 
-    private val pathPrefixes = listOf("/film/", "/seri-filmler/")
+    private val pathPrefixes = listOf("/film/", "/seri-filmler/", "/ulke/", "/yil/")
 
     override suspend fun search(query: String): List<SearchResponse> {
         val q = if (false) asciiFold(query) else query
-        val url = "https://www.hdfilmizle.best/?s={q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
+        val url = "$mainUrl/search/{q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
         return cards(app.get(url, headers = uaHeaders).document, q)
     }
 
     private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
-        if (listOf("/film/", "/seri-filmler/").none { path.startsWith(it) }) return@mapNotNull null
+        if (listOf("/film/", "/seri-filmler/", "/ulke/", "/yil/").none { path.startsWith(it) }) return@mapNotNull null
         
-        if (path == "/" || path.trim('/') == "seri-filmler" || path.contains("login") || path.contains("uye-ol") ||
+        if (path.trim('/').length < 4 || path.contains("login") || path.contains("uye-ol") ||
             path.contains("/giris") || href.contains("?ara=") || href.contains("sirala=")) return@mapNotNull null
-        val img = card.selectFirst("img") ?: return@mapNotNull null
-        val title = card.attr("data-title").trim()
-            .ifBlank { card.attr("title").trim() }
-            .ifBlank { img.attr("alt").trim() }
+        val img = card.selectFirst("img")
+        val title = card.attr("title").trim()
             .ifBlank { card.text().trim() }
+            .ifBlank { img?.attr("alt")?.trim().orEmpty() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
         if (query != null && !title.contains(query, ignoreCase = true) &&
             !href.contains(query, ignoreCase = true)) return@mapNotNull null
@@ -143,7 +147,7 @@ class HDFilmizleBestProvider : MainAPI() {
                 posterUrl = fixUrlNull(img?.posterSrcLazy())
             }
         }
-    }.distinctBy { it.url }
+    }.distinctBy { it.url }.sortedBy { if (it.type == TvType.TvSeries) 0 else 1 }
 
     override suspend fun load(url: String): LoadResponse? {
         val pageUrl = if (url.contains("?")) url else url.trimEnd('/') + "/"
@@ -169,13 +173,16 @@ class HDFilmizleBestProvider : MainAPI() {
         val slug = basePath.trim('/').split('/').lastOrNull().orEmpty()
         val slugBase = slug.removeSuffix("-izle").removeSuffix("-film-izle")
         val episodes = doc.select("a[href]").mapNotNull { anchor ->
-            val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
-            val path = href.substringAfter(mainUrl).substringBefore('?')
-            if (!Regex("""(?:bolum|episode)""", RegexOption.IGNORE_CASE).containsMatchIn(path)) return@mapNotNull null
-            val number = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
-                .find(path)?.groupValues?.getOrNull(2)?.toIntOrNull()
-                ?: Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
-                ?: Regex("""(\d+)[-_]bolum""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
+            val rawHref = anchor.attr("href").substringBefore('#').trim()
+            val href = fixUrlNull(rawHref) ?: return@mapNotNull null
+            val pathAndQuery = href.substringAfter(mainUrl).substringBefore('#')
+            val path = pathAndQuery.substringBefore('?')
+            if (path.contains("/admin/") || path.contains("/wp-admin/")) return@mapNotNull null
+            if (!Regex("""(?:bolum|episode)""", RegexOption.IGNORE_CASE).containsMatchIn(pathAndQuery)) return@mapNotNull null
+            val number = Regex("""(?:sezon|season)[-_ /=]?(\d+).*?(?:bolum|episode)[-_ /=]?([0-9]*)""")
+                .find(pathAndQuery)?.groupValues?.getOrNull(2)?.toIntOrNull()
+                ?: Regex("""(?:bolum|episode)[-_ /=]?(\d+)""").find(pathAndQuery)?.groupValues?.getOrNull(1)?.toIntOrNull()
+                ?: Regex("""(\d+)[-_]bolum""").find(pathAndQuery)?.groupValues?.getOrNull(1)?.toIntOrNull()
             newEpisode(href) {
                 this.name = anchor.text().trim().ifBlank { "Bölüm $number" }
                 this.episode = number
@@ -213,7 +220,8 @@ class HDFilmizleBestProvider : MainAPI() {
         val seen = mutableSetOf<String>()
         suspend fun emit(stream: String, label: String, referer: String) {
             if (!stream.startsWith("http") || !seen.add(stream)) return
-            val type = if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+            val isM3u8 = stream.contains(".m3u8") || stream.contains("/vs/") || stream.endsWith(".gif")
+            val type = if (isM3u8) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
             val quality = getQualityFromName(label)
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
@@ -222,12 +230,36 @@ class HDFilmizleBestProvider : MainAPI() {
             })
             found = true
         }
+        fun decodeVixolity(html: String): String? {
+            val m = Regex("""\}\)\('([0-9a-f]+)',\s*(\d+)\)""").find(html) ?: return null
+            return runCatching {
+                val rev = String(m.groupValues[1].chunked(2).map { it.toInt(16).toByte() }.toByteArray(), Charsets.ISO_8859_1).reversed()
+                val shifted = String(java.util.Base64.getDecoder().decode(rev), Charsets.ISO_8859_1)
+                    .map { (it.code - m.groupValues[2].toInt()).toChar() }.joinToString("")
+                val code = String(java.util.Base64.getDecoder().decode(shifted), Charsets.UTF_8)
+                Regex(""""kaynak"\s*:\s*"([^"]+)"""").find(code)?.groupValues?.get(1)?.replace("\\/", "/")
+            }.getOrNull()
+        }
         
         loadHdf(data, subtitleCallback) { stream, label, referer -> emit(stream, label, referer) }
-        val known = listOf<String>()
-        for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
-        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
+        
+        
+        
+        
+        
+
+        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
+        val openPlayers = Regex("""openPlayer\(\s*['"](https?://[^'"]+)['"]""").findAll(text)
+            .map { it.groupValues[1] }.distinct().toList()
+        for (op in openPlayers) {
+            val vid = Regex("""[?&]v=([A-Za-z0-9_-]+)""").find(op)?.groupValues?.get(1)
+            val origin = Regex("""^(https?://[^/]+)""").find(op)?.groupValues?.get(1)
+            if (vid != null && origin != null) {
+                emit("$origin/source2.php?v=$vid.m3u8", "Player", "$origin/")
+            }
+            if (loadExtractor(op, data, subtitleCallback, callback)) found = true
+        }
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
             .findAll(text).map { it.groupValues[1] }.toList()
         for (embed in embeds) {
@@ -239,13 +271,16 @@ class HDFilmizleBestProvider : MainAPI() {
                 continue
             }
             val inner = runCatching { app.get(absolute, headers = uaHeaders, referer = data).text }.getOrNull() ?: continue
-            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(inner)
+            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(inner)
             for (m in innerMedia) emit(m.value, "Embed", absolute)
         }
-        val frames = resp.document.select("iframe").mapNotNull {
+        val domFrames = resp.document.select("iframe").mapNotNull {
             val raw = it.attr("src").ifBlank { it.attr("data-src") }.ifBlank { it.attr("vdo-src") }
             fixUrlNull(raw)
-        }.distinct()
+        }
+        val regexFrames = Regex("""<iframe\b[^>]*?\b(?:src|data-src|vdo-src)\s*=\s*["']([^"']+)["']""", RegexOption.IGNORE_CASE)
+            .findAll(text).mapNotNull { fixUrlNull(it.groupValues[1]) }.toList()
+        val frames = (domFrames + regexFrames).distinct()
         for (frame in frames) {
             if (frame.contains(".mp4") || frame.contains(".m3u8")) {
                 emit(frame, "Embed", data)
@@ -253,8 +288,9 @@ class HDFilmizleBestProvider : MainAPI() {
             }
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
+                decodeVixolity(inner)?.let { emit(it, "Vixolity", "https://pl.vixolity.com/") }
                 val innerText = inner.replace("\\/", "/")
-                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(innerText)) {
+                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(innerText)) {
                     emit(m.value, "Embed", frame)
                 }
                 for (sub in Regex("""<iframe[^>]+(?:src|data-src)="([^"]+)""").findAll(innerText)) {
@@ -264,9 +300,9 @@ class HDFilmizleBestProvider : MainAPI() {
             }
             if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
-        val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
+        val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in subs) {
-            if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))
+            if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(newSubtitleFile("tr", m.value))
         }
         if (!found && frames.isEmpty() && embeds.isEmpty() && media.none()) {
             throw ErrorLoadingException("$name: oynatılabilir akış yok")
@@ -309,5 +345,9 @@ class HDFilmizleBestProvider : MainAPI() {
             }
         }
     }
+
+
+
+
 
 }

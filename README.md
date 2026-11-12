@@ -150,7 +150,7 @@ Tek modül derleme ve cihaza kurulum:
 | `HDFilmDelisi` | hdfilmdelisi1.com | Film | ✓ | — | — | — | ✓ | ✓ |
 | `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `HDFilmizleBest` | hdfilmizle.best | Dizi | — | — | — | — | — | — |
+| `HDFilmizleBest` | hdfilmizle.best | Film | — | — | — | — | — | — |
 | `IzleFilm` | izlefilm.net | Film | ✓ | — | — | — | ✓ | ✓ |
 | `JetFilmizle` | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
 | `KanalD` | kanald.com.tr | Dizi | — | — | — | — | — | — |
