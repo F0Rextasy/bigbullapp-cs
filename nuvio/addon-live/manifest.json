@@ -1,0 +1,59 @@
+{
+  "id": "org.bigbull.canlitv",
+  "version": "1.6.55",
+  "name": "BigBull Canlı TV",
+  "description": "Türkçe canlı TV kanalları (Cloudstream CanliTV kaynaklarından). Akışlar doğrudan HLS'dir.",
+  "resources": [
+    "catalog",
+    "meta",
+    "stream"
+  ],
+  "types": [
+    "tv"
+  ],
+  "idPrefixes": [
+    "bb-"
+  ],
+  "catalogs": [
+    {
+      "type": "tv",
+      "id": "canlitv",
+      "name": "Canlı TV"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-general",
+      "name": "Canlı TV · Ulusal"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-news",
+      "name": "Canlı TV · Haber"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-sports",
+      "name": "Canlı TV · Spor"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-kids",
+      "name": "Canlı TV · Çocuk"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-music",
+      "name": "Canlı TV · Müzik"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-documentary",
+      "name": "Canlı TV · Belgesel"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-religious",
+      "name": "Canlı TV · Dini"
+    }
+  ]
+}

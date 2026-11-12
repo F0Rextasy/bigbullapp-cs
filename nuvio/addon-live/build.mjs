@@ -1,16 +1,18 @@
 /**
- * Canlı TV bölümünü statik Stremio/Nuvio addon'una ekler.
+ * BigBull Canlı TV — ayrı Stremio/Nuvio addon'u.
  *
  * Girdi:  providers/CanliTV/.../CanliTVProvider.kt  (STATIC, OVERRIDES, SKIP, ROWS)
  *         https://iptv-org.github.io/iptv/countries/tr.m3u  (canlı liste)
- * Çıktı:  nuvio/addon/catalog/tv/<satır>.json
- *         nuvio/addon/meta/tv/<id>.json
- *         nuvio/addon/stream/tv/<id>.json
+ * Çıktı:  nuvio/addon-live/manifest.json
+ *         nuvio/addon-live/catalog/tv/<satır>.json
+ *         nuvio/addon-live/meta/tv/<id>.json
+ *         nuvio/addon-live/stream/tv/<id>.json
  *
- * Kanallar Cloudstream CanliTV ile aynı kuralla birleşir: STATIC önce gelir,
- * iptv-org aynı adı taşıyan kaydı ezmez; SKIP atılır, OVERRIDES adresi değiştirir.
- * Nuvio canlı TV'yi yalnız addon yolundan (catalog+meta+stream, isLive) oynatır;
- * plugin `getStreams` sözleşmesinde kanal yoktur.
+ * Film/dizi kataloğu `nuvio/addon` addon'unda kalır; bu addon yalnız canlı TV
+ * satırlarını ve `behaviorHints.isLive` akışlarını sunar. Nuvio canlı TV'yi
+ * yalnız addon yolundan oynatır; plugin `getStreams` sözleşmesinde kanal yoktur.
+ *
+ * Kullanım: node nuvio/addon-live/build.mjs
  */
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -20,10 +22,17 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const PROVIDER = join(HERE, "..", "..", "providers", "CanliTV", "src", "main", "kotlin", "com", "canlitv", "CanliTVProvider.kt");
 const IPTV = "https://iptv-org.github.io/iptv/countries/tr.m3u";
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
+const ADDON_ID = "org.bigbull.canlitv";
 const ROW_ID = "canlitv";
 const STREAM_NAME = "BigBull Canlı TV";
-
 const FOLD = { ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u", â: "a", î: "i", û: "u" };
+
+// Depo sürümü tek yerde: CHANGELOG'un en üst başlığı (cloudstream ile aynı).
+function repoVersion() {
+  const log = readFileSync(join(HERE, "..", "..", "CHANGELOG.md"), "utf8");
+  const m = /^## \[(\d+\.\d+\.\d+)\]/m.exec(log);
+  return m ? m[1] : "1.0.0";
+}
 
 function keyOf(name) {
   return String(name)
@@ -113,7 +122,7 @@ async function fetchPlaylist(consts) {
 
 const writeJson = (path, value) => writeFileSync(path, JSON.stringify(value) + "\n");
 
-export async function buildLive() {
+async function main() {
   const { consts, rows, skip, overrides, statics } = parseProvider();
   const dynamic = await fetchPlaylist(consts);
   const dynamicLogo = new Map(
@@ -190,10 +199,19 @@ export async function buildLive() {
   for (const f of readdirSync(catalogDir)) {
     if (!rowIds.has(f.replace(/\.json$/, ""))) rmSync(join(catalogDir, f));
   }
-  console.log(`canlı tv: ${live.length} kanal, ${catalogs.length} satır`);
-  return { catalogs, count: live.length };
+
+  const manifest = {
+    id: ADDON_ID,
+    version: repoVersion(),
+    name: "BigBull Canlı TV",
+    description: "Türkçe canlı TV kanalları (Cloudstream CanliTV kaynaklarından). Akışlar doğrudan HLS'dir.",
+    resources: ["catalog", "meta", "stream"],
+    types: ["tv"],
+    idPrefixes: ["bb-"],
+    catalogs,
+  };
+  writeFileSync(join(HERE, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
+  console.log(`canlı tv: ${live.length} kanal, ${catalogs.length} satır, manifest ${manifest.version}`);
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  buildLive();
-}
+await main();

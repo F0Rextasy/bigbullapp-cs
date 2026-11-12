@@ -222,24 +222,27 @@ addonu ile ana sayfada "Canlı TV" satırı, kanal detayı ve oynatma (codec+ses
 **Cinemeta** addon’u da kurulu olmalı. Yoksa “Bu içerik için meta sağlayan eklenti yok” hatası
 çıkar. Cinemeta: `https://v3-cinemeta.strem.io/manifest.json`.
 
-### Ana sayfa satırları (katalog addon'u)
+### Ana sayfa satırları (iki ayrı addon)
 
-Plugin'ler yalnız **akış** verir; Nuvio ana sayfasına satır koyamazlar. Satırlar için ayrı,
-sunucusuz bir **katalog addon'u** var:
+Plugin'ler yalnız **akış** verir; Nuvio ana sayfasına satır koyamazlar. Satırlar için iki ayrı,
+sunucusuz addon var:
 
-0. Önce **Addons → Add Addon** ile Cinemeta’yı ekle:
-   `https://v3-cinemeta.strem.io/manifest.json`
+| Addon | Manifest | Ne verir |
+|---|---|---|
+| **BigBull TR Katalog** | `…/master/nuvio/addon/manifest.json` | Film/dizi satırları (`catalog`); meta Cinemeta, akış plugin'ler |
+| **BigBull Canlı TV** | `…/master/nuvio/addon-live/manifest.json` | 8 canlı TV satırı, 172 kanal (`catalog`+`meta`+`stream`, `isLive`) |
+
+0. Önce **Addons → Add Addon** ile Cinemeta'yı ekle: `https://v3-cinemeta.strem.io/manifest.json`
 1. Nuvio → **Settings → Content & Discovery → Addons → Add Addon**
-2. `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json`
-3. **Install Addon** → ana sayfada **Canlı TV** satırları, seçili sağlayıcıların satırları ile **"Tümü - Filmler"** ve **"Tümü - Diziler"** görünür.
+2. Yukarıdaki iki manifest URL'sini ayrı ayrı ekle → **Install Addon**
+3. Ana sayfada film/dizi satırları ile **Canlı TV** ve yedi tür satırı (Ulusal, Haber, Spor, Çocuk,
+   Müzik, Belgesel, Dini) birlikte görünür.
 
-Addon `catalog` yanında **canlı TV** için `meta` + `stream` kaynaklarını da sunar: `Canlı TV` ve
-yedi tür satırı (Ulusal, Haber, Spor, Çocuk, Müzik, Belgesel, Dini) doğrudan addon'dan oynar;
-kanal listesi Cloudstream `CanliTV` kaynağından (`STATIC` + iptv-org + `OVERRIDES`/`SKIP`) üretilir
-(`nuvio/addon/live.mjs`), her akış `behaviorHints.isLive` taşır. Film/dizi item'ları IMDb id'siyle
-yazılır, detay meta'sını Cinemeta, akışları yukarıdaki plugin sağlayıcıları verir. İçerik günde bir
-`.github/workflows/nuvio-catalog.yml` ile yenilenir; tarifler `nuvio/addon/sources/<id>.json`,
-üretici `node nuvio/addon/build.mjs`. Statik katalog **arama** ve sonsuz kaydırma (`skip`)
+Canlı kanallar Cloudstream `CanliTV` kaynağından (`STATIC` + iptv-org + `OVERRIDES`/`SKIP`) üretilir
+(`node nuvio/addon-live/build.mjs`), her akış `behaviorHints.isLive` taşır. Film/dizi item'ları IMDb
+id'siyle yazılır, detay meta'sını Cinemeta, akışları yukarıdaki plugin sağlayıcıları verir. İçerik günde
+bir `.github/workflows/nuvio-catalog.yml` ile yenilenir (katalog: `nuvio/addon/sources/<id>.json`,
+üretici `node nuvio/addon/build.mjs`). Statik katalog **arama** ve sonsuz kaydırma (`skip`)
 desteklemez; her satır ilk sayfayı gösterir. JS ile render edilen siteler (ör. Anizium) satır üretemez.
 
 Başlık çözümü anahtarsız Cinemeta üzerinden yapılır, TMDB anahtarı gerekmez. Yalnız **sideload**

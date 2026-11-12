@@ -14,6 +14,7 @@ on:
       - "nuvio/providers/**"
       - "nuvio/addon/sources/**"
       - "nuvio/addon/build.mjs"
+      - "nuvio/addon-live/**"
 
 permissions:
   contents: write
@@ -30,12 +31,13 @@ jobs:
         run: |
           node nuvio/tools/build-manifest.mjs
           node nuvio/addon/build.mjs
+          node nuvio/addon-live/build.mjs
       - name: Değişiklik varsa commit
         run: |
-          if [ -n "$(git status --porcelain nuvio/manifest.json nuvio/addon)" ]; then
+          if [ -n "$(git status --porcelain nuvio/manifest.json nuvio/addon nuvio/addon-live)" ]; then
             git config user.name "F0Rextasy"
             git config user.email "99847357+F0Rextasy@users.noreply.github.com"
-            git add nuvio/manifest.json nuvio/addon
+            git add nuvio/manifest.json nuvio/addon nuvio/addon-live
             git commit -m "Nuvio katalog listeleri güncellendi"
             BRANCH="${GITHUB_REF_NAME:-master}"
             git pull --rebase origin "$BRANCH" && git push origin "HEAD:$BRANCH" \
