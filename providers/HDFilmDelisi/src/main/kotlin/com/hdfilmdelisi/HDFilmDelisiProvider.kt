@@ -195,6 +195,21 @@ class HDFilmDelisiProvider : MainAPI() {
         }.getOrNull()
     }
 
+    /**
+     * Vixolity altyazıyı HLS olarak sarar: `sub_tr.gif` → `#EXTM3U` → tek segment (`sub_tr.jpg`,
+     * içeriği `WEBVTT`). Oynatıcı playlist'i altyazı olarak parse edemediği için segmenti ver.
+     */
+    private suspend fun vixolitySubtitleFile(url: String, referer: String): SubtitleFile? {
+        if (!url.contains("/vtt/")) return SubtitleFile("tr", url)
+        val body = runCatching { app.get(url, headers = uaHeaders, referer = referer).text }.getOrNull() ?: return null
+        if (!body.startsWith("#EXTM3U")) return SubtitleFile("tr", url).takeIf { body.contains("WEBVTT") }
+        val segments = body.lineSequence().map { it.trim() }.filter { it.isNotEmpty() && !it.startsWith("#") }.toList()
+        // Çok segmentli altyazı tek dosyaya birleştirilemez (barındırma yok); eksik altyazı verme.
+        if (segments.size != 1) return null
+        val segment = runCatching { java.net.URI(url).resolve(segments[0]).toString() }.getOrNull() ?: return null
+        return SubtitleFile("tr", segment)
+    }
+
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
@@ -235,10 +250,11 @@ class HDFilmDelisiProvider : MainAPI() {
                     for (sub in Regex("""#EXT-X-MEDIA:[^\r\n]*TYPE=SUBTITLES[^\r\n]*""").findAll(playlist)) {
                         val uri = Regex("""URI="([^"]+)"""").find(sub.value)?.groupValues?.get(1) ?: continue
                         val langCode = Regex("""LANGUAGE="([^"]+)"""").find(sub.value)?.groupValues?.get(1)?.lowercase() ?: "tr"
-                        if (Settings.subtitleAllowed(langCode)) {
-                            val subUrl = runCatching { java.net.URI(m).resolve(uri).toString() }.getOrDefault(uri)
-                            subtitleCallback.invoke(SubtitleFile(langCode, subUrl))
-                        }
+                        if (!Settings.subtitleAllowed(langCode)) continue
+                        val subName = Regex("""NAME="([^"]+)"""").find(sub.value)?.groupValues?.get(1)?.trim()
+                            ?.takeIf { it.isNotEmpty() } ?: langCode
+                        val subUrl = runCatching { java.net.URI(m).resolve(uri).toString() }.getOrDefault(uri)
+                        vixolitySubtitleFile(subUrl, vixRef)?.let { subtitleCallback.invoke(SubtitleFile(subName, it.url)) }
                     }
                 }
                 continue
