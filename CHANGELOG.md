@@ -6,6 +6,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 sayı arttığında güncelleme sunar.
 
 
+## [1.6.44] - 2026-11-12
+
+### Değişti
+- **Deokwave v7**: taban adres https://deokwave.com -> https://deokwave.com.
+
 ## [1.6.43] - 2026-11-12
 ### Eklendi
 - **CanliTV**: Canlı Yayın Kanalları'ndaki seçilmiş kanallar eklendi; tek sağlayıcıda 159 kanal.
