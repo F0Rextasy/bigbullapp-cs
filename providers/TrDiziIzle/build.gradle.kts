@@ -1,9 +1,9 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "TrDiziIzle — trdiziizle.tv (Türkçe dizi arşivi, son bölümler, IMDb sıralı liste)"
     authors = listOf("F0Rextasy")
-    status = 1
+    status = 0
     tvTypes = listOf("TvSeries")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=trdiziizle.tv&sz=%size%"
