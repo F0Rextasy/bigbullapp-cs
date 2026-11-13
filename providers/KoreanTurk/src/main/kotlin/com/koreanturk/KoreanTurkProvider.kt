@@ -136,7 +136,7 @@ class KoreanTurkProvider : MainAPI() {
         val doc = runCatching { app.get(data, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
 
-        val playerUrl = fixUrlNull(doc.selectFirst("div.video-content iframe")?.attr("src"))
+        val playerUrl = fixUrlNull(doc.selectFirst("div.video-content iframe")?.let { el -> el.attr("data-src").ifBlank { el.attr("data-lazy-src").ifBlank { el.attr("src") } } })
             ?: throw ErrorLoadingException("$name: oynatıcı bulunamadı. $REPORT_HINT")
 
         // player.html?v=2&video=%2Fstorage%2F...%2Fname.m3u8[&subtitle=...]
@@ -177,6 +177,7 @@ class KoreanTurkProvider : MainAPI() {
             newExtractorLink(name, name, "$playerOrigin$videoPath", ExtractorLinkType.M3U8) {
                 this.referer = playerUrl
                 this.quality = Qualities.Unknown.value
+                this.headers = uaHeaders
             }
         )
         return true

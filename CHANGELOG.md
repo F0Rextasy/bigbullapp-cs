@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.63] - 2026-11-13
+
+### Değişti
+- **KoreanTurk v6**: taban adres https://koreanturk.tv -> https://koreanturk.tv.
+
 ## [1.6.62] - 2026-11-13
 ### Düzeltildi
 - Dizist aramasında oturum çerezi boş geldiğinde "Unauthorized" alınıyordu; çerez boşsa istek
