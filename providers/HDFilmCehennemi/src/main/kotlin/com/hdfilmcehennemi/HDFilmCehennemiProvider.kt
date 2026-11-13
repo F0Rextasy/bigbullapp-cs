@@ -127,9 +127,31 @@ class HDFilmCehennemiProvider : MainAPI() {
         val doc = runCatching { app.get(data, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
 
-        val embeds = doc.select("div.video-container iframe[data-src], div.video-container iframe[src]")
-            .mapNotNull { fixUrlNull(it.attr("data-src").ifBlank { it.attr("src") }) }
+        // Iframe src doğrudan 404 döner: player, /video/<id>/ AJAX yanıtından tazelenir.
+        val ajaxEmbeds = doc.select("button[data-video]").mapNotNull { it.attr("data-video").takeIf(String::isNotBlank) }
             .distinct()
+            .mapNotNull { id ->
+                val ajax = "$mainUrl/video/$id/"
+                runCatching {
+                    val body = app.get(
+                        ajax,
+                        referer = data,
+                        headers = uaHeaders + ("X-Requested-With" to "fetch"),
+                    ).text
+                    val html = Regex(""""html"\s*:\s*"((?:[^"\\]|\\.)*)"""")
+                        .find(body)?.groupValues?.get(1)
+                        ?.replace("\\/", "/")?.replace("\\\"", "\"")
+                        ?: body
+                    Regex("""<iframe[^>]*(?:data-src|src)="([^"]+)"""")
+                        .find(html)?.groupValues?.get(1)
+                        ?.let { fixUrlNull(it) }
+                        ?.let { Embed(it, ajax) }
+                }.getOrNull()
+            }
+        val plainEmbeds = doc.select("div.video-container iframe[data-src], div.video-container iframe[src]")
+            .mapNotNull { fixUrlNull(it.attr("data-src").ifBlank { it.attr("src") }) }
+            .map { Embed(it, "$mainUrl/") }
+        val embeds = (ajaxEmbeds + plainEmbeds).distinctBy { it.url }
         if (embeds.isEmpty()) throw ErrorLoadingException("$name: oynatıcı bulunamadı. $REPORT_HINT")
 
         var found = false
@@ -142,13 +164,24 @@ class HDFilmCehennemiProvider : MainAPI() {
         return found
     }
 
-    /** Self-hosted embed (hdfilmcehennemi.mobi) with rotating split-token / packed array -> jwplayer HLS. */
+    private data class Embed(val url: String, val referer: String)
+
+    /** Kendi barındırdığı embed; doğru Referer + Sec-Fetch-Dest olmadan 404 döner. */
     private suspend fun resolveEmbed(
-        embedUrl: String,
+        embedRef: Embed,
         callback: (ExtractorLink) -> Unit,
         subtitleCallback: (SubtitleFile) -> Unit,
     ): Boolean {
-        val embed = app.get(embedUrl, referer = "$mainUrl/", headers = uaHeaders).text
+        val embedUrl = embedRef.url
+        val embed = app.get(
+            embedUrl,
+            referer = embedRef.referer,
+            headers = uaHeaders + mapOf(
+                "Sec-Fetch-Dest" to "iframe",
+                "Sec-Fetch-Mode" to "navigate",
+                "Sec-Fetch-Site" to "cross-site",
+            ),
+        ).text
         val host = Regex("""https?://([^/]+)""").find(embedUrl)?.groupValues?.get(1) ?: return false
         val candidates = decodeEmbedCandidates(embed, host)
         val stream = candidates.firstOrNull { url ->

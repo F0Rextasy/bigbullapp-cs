@@ -1,4 +1,4 @@
-// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.13"}
+// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.14"}
 /**
  * hdfilmcehennemi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /search/?q= JSON -> film page -> hdfilmcehennemi.mobi embed
@@ -309,10 +309,48 @@ function readSubtitles(html) {
   return out;
 }
 
+/** Film sayfasındaki player seçenekleri; iframe doğrudan 404 verdiği için /video/<id>/ üzerinden tazelenir. */
+function embedFrom(page, filmUrl) {
+  var raw = String(page || "").replace(/\\\//g, "/");
+  var ids = [];
+  var re = /data-video="(\d+)"/g;
+  var m;
+  while ((m = re.exec(raw)) !== null) if (ids.indexOf(m[1]) < 0) ids.push(m[1]);
+  var chain = Promise.resolve(null);
+  ids.forEach(function (id) {
+    chain = chain.then(function (found) {
+      if (found) return found;
+      var ajax = BASE + "/video/" + id + "/";
+      return text(ajax, { referer: filmUrl, headers: { "X-Requested-With": "fetch", Accept: "application/json" } })
+        .then(function (body) {
+          var inner = "";
+          try { inner = (JSON.parse(body).data || {}).html || ""; } catch (e) { inner = body; }
+          var src = first(/<iframe[^>]*(?:data-src|src)="([^"]+)"/, String(inner).replace(/\\\//g, "/"));
+          return src ? { url: src, referer: ajax } : null;
+        })
+        .catch(function () { return null; });
+    });
+  });
+  return chain.then(function (found) {
+    if (found) return found;
+    var src = first(/<iframe[^>]*(?:data-src|src)="([^"]+)"/, raw);
+    return src ? { url: src, referer: filmUrl || BASE + "/" } : null;
+  });
+}
+/** Embed yalnız doğru Referer + Sec-Fetch-Dest ile 200 döner; aksi halde 404. */
+function embedHeaders(embed) {
+  return {
+    Referer: embed.referer,
+    Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Sec-Fetch-Dest": "iframe",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "cross-site",
+  };
+}
 function attempt(embed, html, tries) {
-  return pick(candidates(html, host(embed)), embed, embed, 0, readSubtitles(html)).then(function (rows) {
+  return pick(candidates(html, host(embed.url)), embed.url, embed.url, 0, readSubtitles(html)).then(function (rows) {
     if ((rows && rows.length) || tries <= 1) return rows || [];
-    return text(embed, { referer: BASE + "/" }).then(function (fresh) {
+    return text(embed.url, { referer: embed.referer, headers: embedHeaders(embed) }).then(function (fresh) {
       return attempt(embed, fresh, tries - 1);
     });
   });
@@ -340,7 +378,9 @@ function getStreams(tmdbId, mediaType) {
           var title = first(/<img[^>]*alt="([^"]*)"/, rows[i]) || "";
           var titleNorm = norm(title.replace(/&[a-z]+;/gi, " "));
           if (want && titleNorm === want) return href;
-          if (want && titleNorm.indexOf(want + " ") === 0 && !fallback) fallback = href;
+          // Site basliklari "TR ad - Orijinal ad" biciminde; orijinal ad sonda da gelebilir.
+          if (want && (titleNorm.indexOf(want + "-") === 0 || titleNorm.slice(-(want.length + 1)) === "-" + want)) return href;
+          if (want && ("-" + titleNorm + "-").indexOf("-" + want + "-") >= 0 && !fallback) fallback = href;
         }
         return fallback;
       });
@@ -352,10 +392,12 @@ function getStreams(tmdbId, mediaType) {
     })
     .then(function (page) {
       if (!page) return null;
-      var raw = String(page).replace(/\\\//g, "/");
-      embed = first(/<iframe[^>]*(?:data-src|src)="([^"]+)"/, raw);
+      return embedFrom(page, filmUrl);
+    })
+    .then(function (found) {
+      embed = found;
       if (!embed) return null;
-      return text(embed, { referer: BASE + "/" });
+      return text(embed.url, { referer: embed.referer, headers: embedHeaders(embed) });
     })
     .then(function (player) {
       if (!player) return [];
@@ -371,7 +413,7 @@ function getStreams(tmdbId, mediaType) {
             title: "HDFilmCehennemi - " + row.quality + " [HLS]",
             url: row.url,
             quality: row.quality,
-            headers: { "User-Agent": UA, Referer: embed, Origin: origin(embed) + "/" },
+            headers: { "User-Agent": UA, Referer: embed.url, Origin: origin(embed.url) + "/" },
             subtitles: row.subtitles
           });
         }

@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.63",
+  "version": "1.6.64",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -336,7 +336,7 @@
       "id": "hdfilmcehennemi",
       "name": "HDFilmCehennemi",
       "description": "HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.",
-      "version": "1.0.13",
+      "version": "1.0.14",
       "author": "bigbull",
       "supportedTypes": [
         "movie"

@@ -5,6 +5,12 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.64] - 2026-11-13
+
+### Düzeltildi
+- HDFilmCehennemi oynatıcısı onarıldı: film sayfasındaki player seçeneği `/video/<id>/` üzerinden tazeleniyor ve embed doğru `Referer` + `Sec-Fetch-Dest` başlıklarıyla açılıyor (Cloudstream ve Nuvio).
+- HDFilmCehennemi aramasında "TR ad - Orijinal ad" biçimindeki başlıklar eşleşiyor.
+
 ## [1.6.63] - 2026-11-13
 
 ### Değişti
