@@ -205,23 +205,30 @@ class DizistProvider : MainAPI() {
     private suspend fun searchContent(term: String): String = try {
         // 403 koruma yanıtı normaldir; çerezleri taşır (NiceHttp hata kodunda fırlatmaz).
         val boot = app.get("$mainUrl$BOOT_PATH", headers = browserHeaders)
-        val cookies = boot.cookies
-        val pageHtml = app.get("$mainUrl$TOKEN_PATH", headers = browserHeaders, cookies = cookies).text
+        // Cihazda 403 yanıtı boş çerez dönebiliyor; boş map geçmek oturumu sıfırladığı için
+        // o durumda çerez parametresi hiç verilmez (2026-11-13: emülatörde Unauthorized).
+        val cookies = boot.cookies.takeIf { it.isNotEmpty() }
+        val pageHtml = if (cookies == null) {
+            app.get("$mainUrl$TOKEN_PATH", headers = browserHeaders).text
+        } else {
+            app.get("$mainUrl$TOKEN_PATH", headers = browserHeaders, cookies = cookies).text
+        }
         val cKey = tokenOf(pageHtml, CKEY) ?: throw ErrorLoadingException(JETON_HINT)
         val cValue = tokenOf(pageHtml, CVALUE) ?: throw ErrorLoadingException(JETON_HINT)
         val appCKey = tokenOf(pageHtml, APCKEY) ?: throw ErrorLoadingException(JETON_HINT)
-        app.post(
-            "$mainUrl/bg/searchcontent",
-            headers = browserHeaders + mapOf(
-                "accept" to "application/json, text/javascript, */*; q=0.01",
-                "origin" to mainUrl,
-                "referer" to "$mainUrl$TOKEN_PATH",
-                "x-requested-with" to "XMLHttpRequest",
-                "x-global-ckey" to appCKey,
-            ),
-            cookies = cookies,
-            data = mapOf("cKey" to cKey, "cValue" to cValue, "searchTerm" to term),
-        ).text
+        val postHeaders = browserHeaders + mapOf(
+            "accept" to "application/json, text/javascript, */*; q=0.01",
+            "origin" to mainUrl,
+            "referer" to "$mainUrl$TOKEN_PATH",
+            "x-requested-with" to "XMLHttpRequest",
+            "x-global-ckey" to appCKey,
+        )
+        val body = mapOf("cKey" to cKey, "cValue" to cValue, "searchTerm" to term)
+        if (cookies == null) {
+            app.post("$mainUrl/bg/searchcontent", headers = postHeaders, data = body).text
+        } else {
+            app.post("$mainUrl/bg/searchcontent", headers = postHeaders, cookies = cookies, data = body).text
+        }
     } catch (e: ErrorLoadingException) {
         throw e
     } catch (e: Exception) {

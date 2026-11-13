@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.62] - 2026-11-13
+### Düzeltildi
+- Dizist aramasında oturum çerezi boş geldiğinde "Unauthorized" alınıyordu; çerez boşsa istek
+  çerez parametresi olmadan tekrarlanıyor (emülatörde arama artık sonuç döndürüyor).
+
 ## [1.6.61] - 2026-11-13
 ### Düzeltildi
 - HDFilmizleBest'te ana sayfa satırlarındaki mükerrer kategoriler ve menü bağlantılarından gelen
