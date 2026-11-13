@@ -5331,5 +5331,40 @@
   "id": "tt24218224",
   "poster": "https://images.metahub.space/poster/medium/tt24218224/img"
  },
- "movie|de gaulle liberte": null
+ "movie|de gaulle liberte": null,
+ "series|abi": {
+  "id": "tt1691159",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzU4MjdlNTQtMjk2Zi00Mzk0LTljODQtMjM0NGJhY2ZlYmRhXkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "series|arafta": {
+  "id": "tt39013436",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzgyMjZhZjEtODJkMi00NzlhLWEzNTYtOGQ5YmRlM2EwNWQxXkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "series|arka sokaklar": null,
+ "series|ayni ya mur altinda": null,
+ "series|ayrilik da sevdaya dahil": null,
+ "series|cennetin ocuklari": {
+  "id": "tt1586787",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTBiOGExNzMtZmU2Yi00MDU0LWJkYTctZGJhZjQwZjFhYWExXkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "series|daha": {
+  "id": "tt42764103",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDQ1N2FlZGUtYmZiMC00NTdjLTk2ZjAtMmZlZjllMzM1NDg0XkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "series|e ref r ya": null,
+ "series|g n l s z m": null,
+ "series|kiskanmak": null,
+ "series|sahtekarlar": {
+  "id": "tt38689878",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGI5NzgyMzctYTk2NS00NGNkLWJlNmUtNjc1MjE0ZjUxNDc1XkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "series|sir a saray": null,
+ "series|survivor 2026": {
+  "id": "tt38990552",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWFmOTYzNGUtYmZhYS00MGMyLWE4MjMtMWVjMzkxZDdiNWFjXkEyXkFqcGc@._V1_SX250.jpg"
+ },
+ "series|zerhun": {
+  "id": "tt38972955",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzg2YTg0MGQtNmZmNS00OTRiLTg0MzAtMDViMWU4ZGIwMDdjXkEyXkFqcGc@._V1_SX250.jpg"
+ }
 }
