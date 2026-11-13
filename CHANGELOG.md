@@ -5,6 +5,16 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.61] - 2026-11-13
+### Düzeltildi
+- HDFilmizleBest'te ana sayfa satırlarındaki mükerrer kategoriler ve menü bağlantılarından gelen
+  görselsiz kartlar giderildi; arama sonuçlarında başlıklara puan/yıl/süre metni karışmıyor.
+- FullHDFilmizlesene'de aynı filmleri gösteren mükerrer "Son Eklenenler" satırı kaldırıldı,
+  yerine Yerli Filmler ve Aksiyon satırları eklendi.
+- Dizist aramasında oturum jetonu bayatlayınca çıkan "Unauthorized" hatası taze oturumla
+  yeniden denemeyle giderildi.
+- Nuvio Ddizi doğrulama örneği yayında olan bir bölümle güncellendi.
+
 ## [1.6.60] - 2026-11-13
 
 ### Düzeltildi

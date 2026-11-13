@@ -40,15 +40,9 @@ class FullHDFilmizleseneProvider : MainAPI() {
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.Movie)
 
-    override val mainPage get() = ROWS.mapNotNull { name ->
+    override val mainPage get() = ROWS.mapNotNull { (name, path) ->
         if (!Settings.rowEnabled(name)) return@mapNotNull null
-        when (name) {
-            "Son Eklenenler" -> MainPageData(name, "$mainUrl/yeni-filmler/SAYFA")
-            "En Çok İzlenenler" -> MainPageData(name, "$mainUrl/en-cok-izlenen-filmler/SAYFA")
-            "Türkçe Dublaj" -> MainPageData(name, "$mainUrl/filmizle/turkce-dublaj-filmler-1/SAYFA")
-            "Türkçe Altyazı" -> MainPageData(name, "$mainUrl/filmizle/turkce-altyazili-filmler-1/SAYFA")
-            else -> null
-        }
+        MainPageData(name, mainUrl + path)
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
@@ -217,12 +211,20 @@ class FullHDFilmizleseneProvider : MainAPI() {
     }
 
     companion object {
-        /** Homepage rows in display order; all map to live listing pages. */
-        val ROWS = listOf(
-            "Son Eklenenler",
-            "En Çok İzlenenler",
-            "Türkçe Dublaj",
-            "Türkçe Altyazı",
+        /**
+         * Ana sayfa satırları. "Son Eklenenler" (`/yeni-filmler/N`) site tarafında ana sayfaya
+         * yönleniyor ve "Türkçe Altyazı" listesiyle birebir aynı kartları veriyordu; yerine
+         * gerçekten farklı kategoriler kondu (2026-11-13 doğrulandı).
+         */
+        /** Ayar diyaloğu satır adları; ROWS ile aynı sırada. */
+        val rowNames: List<String> get() = ROWS.keys.toList()
+
+        private val ROWS = linkedMapOf(
+            "En Çok İzlenenler" to "/en-cok-izlenen-filmler/SAYFA",
+            "Türkçe Dublaj" to "/filmizle/turkce-dublaj-filmler-1/SAYFA",
+            "Türkçe Altyazı" to "/filmizle/turkce-altyazili-filmler-1/SAYFA",
+            "Yerli Filmler" to "/filmizle/yerli-filmler/SAYFA",
+            "Aksiyon" to "/filmizle/aksiyon-filmleri/SAYFA",
         )
     }
 }

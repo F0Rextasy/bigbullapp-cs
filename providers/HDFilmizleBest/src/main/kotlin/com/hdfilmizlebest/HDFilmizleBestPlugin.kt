@@ -9,6 +9,6 @@ class HDFilmizleBestPlugin : Plugin() {
     override fun load(context: Context) {
         Settings.init(context)
         registerMainAPI(HDFilmizleBestProvider())
-        this.openSettings = { Settings.showDialog(it, "HDFilmizleBest Ayarları", HDFilmizleBestProvider.ROWS) }
+        this.openSettings = { Settings.showDialog(it, "HDFilmizleBest Ayarları", HDFilmizleBestProvider.rowNames) }
     }
 }

@@ -80,17 +80,22 @@ class DizistProvider : MainAPI() {
         val term = query.trim()
         // Site araması 3 karakterden kısa terimleri hiç göndermiyor.
         if (term.length < MIN_TERM || page > 1) return newSearchResponseList(emptyList(), false)
-        val body = searchContent(term)
-        val data = runCatching { JSONObject(body).optJSONObject("data") }.getOrNull()
-            ?: throw ErrorLoadingException("$name: arama yanıtı okunamadı. $REPORT_HINT")
-        if (!data.optBoolean("state")) {
-            val message = data.optString("message").trim().ifEmpty { "bilinmeyen hata" }
-            throw ErrorLoadingException("$name: arama başarısız ($message). $REPORT_HINT")
+        // Jeton/oturum bayatlayınca site `state:false` + "Unauthorized" döndürüyor; taze
+        // çerezle bir kez daha denenir (2026-11-13: taramalarda ara ara 401).
+        var message = "bilinmeyen hata"
+        repeat(2) {
+            val body = searchContent(term)
+            val data = runCatching { JSONObject(body).optJSONObject("data") }.getOrNull()
+                ?: throw ErrorLoadingException("$name: arama yanıtı okunamadı. $REPORT_HINT")
+            if (data.optBoolean("state")) {
+                val rows = data.optJSONArray("result") ?: JSONArray()
+                val items = (0 until rows.length()).mapNotNull { index -> rows.optJSONObject(index)?.toSearchCard() }
+                    .distinctBy { it.url }
+                return newSearchResponseList(items, false)
+            }
+            message = data.optString("message").trim().ifEmpty { "bilinmeyen hata" }
         }
-        val rows = data.optJSONArray("result") ?: JSONArray()
-        val items = (0 until rows.length()).mapNotNull { index -> rows.optJSONObject(index)?.toSearchCard() }
-            .distinctBy { it.url }
-        return newSearchResponseList(items, false)
+        throw ErrorLoadingException("$name: arama başarısız ($message). $REPORT_HINT")
     }
 
     override suspend fun load(url: String): LoadResponse? {

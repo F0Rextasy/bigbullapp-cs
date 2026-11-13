@@ -33,14 +33,6 @@ import org.jsoup.nodes.Document
 private fun org.jsoup.nodes.Element.posterSrcLazy(): String? =
     attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
 
-private fun asciiFold(value: String): String = value
-    .replace('ı', 'i').replace('İ', 'I')
-    .replace('ş', 's').replace('Ş', 'S')
-    .replace('ğ', 'g').replace('Ğ', 'G')
-    .replace('ü', 'u').replace('Ü', 'U')
-    .replace('ö', 'o').replace('Ö', 'O')
-    .replace('ç', 'c').replace('Ç', 'C')
-
 private fun cleanTitle(raw: String?): String = (raw ?: "")
     .replace(Regex("""\s*\|.*$"""), "")
     .replace(Regex("""\s*[-–]\s*(?:HDFilm|Film|Dizi|Full).*$""", RegexOption.IGNORE_CASE), "")
@@ -62,92 +54,92 @@ class HDFilmizleBestProvider : MainAPI() {
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
 
     override val hasMainPage = true
-    override val mainPage get() = ROWS.mapNotNull { rowName ->
+    override val mainPage get() = ROWS.mapNotNull { (rowName, path) ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
-        MainPageData(rowName, when (rowName) {
-            "Aksiyon" -> "$mainUrl/tur/aksiyon/"
-            "Aile" -> "$mainUrl/tur/aile/"
-            "Belgesel" -> "$mainUrl/tur/belgesel/"
-            "Bilim Kurgu" -> "$mainUrl/tur/bilim-kurgu/"
-            "Dram" -> "$mainUrl/tur/dram/"
-            "Fantastik" -> "$mainUrl/tur/fantastik/"
-            "Gerilim" -> "$mainUrl/tur/gerilim/"
-            "Komedi" -> "$mainUrl/tur/komedi/"
-            "Korku" -> "$mainUrl/tur/korku/"
-            "Macera" -> "$mainUrl/tur/macera/"
-            "Romantik" -> "$mainUrl/tur/romantik/"
-            "Suç" -> "$mainUrl/tur/suc/"
-            "Eski Filmler" -> "$mainUrl/eski-filmler/"
-            "Çin" -> "$mainUrl/ulke/cin/"
-            "Güney Kore" -> "$mainUrl/ulke/guney-kore/"
-            "Japonya" -> "$mainUrl/ulke/japonya/"
-            "Tayland" -> "$mainUrl/ulke/tayland/"
-            "Yerli Filmler" -> "$mainUrl/yerli-filmler/"
-            "Seri Filmler" -> "$mainUrl/seri-filmler/"
-            "Netflix" -> "$mainUrl/kanal/netflix/"
-            "Prime Video" -> "$mainUrl/kanal/prime-video/"
-            "Disney" -> "$mainUrl/kanal/disney/"
-            "HBO" -> "$mainUrl/kanal/hbo/"
-            "Aksiyon" -> "$mainUrl/tur/aksiyon/"
-            "Aile" -> "$mainUrl/tur/aile/"
-            "Animasyon" -> "$mainUrl/tur/animasyon/"
-            "Belgesel" -> "$mainUrl/tur/belgesel/"
-            "Bilim Kurgu" -> "$mainUrl/tur/bilim-kurgu/"
-            "Biyografi" -> "$mainUrl/tur/biyografi/"
-            "Dram" -> "$mainUrl/tur/dram/"
-            else -> mainUrl
-        })
+        MainPageData(rowName, path)
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-
-            if (request.name in listOf("Aksiyon", "Aile", "Belgesel", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Komedi", "Korku", "Macera", "Romantik", "Suç", "Eski Filmler", "Çin", "Güney Kore", "Japonya", "Tayland", "Yerli Filmler", "Seri Filmler", "Netflix", "Prime Video", "Disney", "HBO", "Aksiyon", "Aile", "Animasyon", "Belgesel", "Bilim Kurgu", "Biyografi", "Dram")) {
-                if (page > 1) return newHomePageResponse(request.name, emptyList(), hasNext = false)
-                val doc = app.get(request.data, headers = uaHeaders).document
-                return newHomePageResponse(request.name, cards(doc), hasNext = false)
-            }
-            return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        val doc = runCatching {
+            app.get(mainUrl + request.data.replace(PAGE, page.toString()), headers = uaHeaders).document
+        }.getOrNull() ?: return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        val items = cards(doc)
+        val hasNext = items.isNotEmpty() && doc.selectFirst(
+            "a[href*='page=${page + 1}'], a[href*='?page=${page + 1}']"
+        ) != null
+        return newHomePageResponse(request.name, items, hasNext = hasNext)
     }
-
-    companion object {
-        val ROWS = listOf("Aksiyon", "Aile", "Belgesel", "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Komedi", "Korku", "Macera", "Romantik", "Suç", "Eski Filmler", "Çin", "Güney Kore", "Japonya", "Tayland", "Yerli Filmler", "Seri Filmler", "Netflix", "Prime Video", "Disney", "HBO", "Aksiyon", "Aile", "Animasyon", "Belgesel", "Bilim Kurgu", "Biyografi", "Dram")
-    }
-
-    private val pathPrefixes = listOf("/film/", "/seri-filmler/", "/ulke/", "/yil/")
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val q = if (false) asciiFold(query) else query
-        val url = "$mainUrl/search/{q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
-        return cards(app.get(url, headers = uaHeaders).document, q)
+        val term = query.trim()
+        if (term.isEmpty()) return emptyList()
+        val doc = app.get(
+            "$mainUrl/search/" + java.net.URLEncoder.encode(term, "UTF-8"),
+            headers = uaHeaders,
+        ).document
+        return cards(doc).filter {
+            it.name.contains(term, true) || it.url.contains(term.replace(' ', '-'), true)
+        }
     }
 
-    private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
-        val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
-        val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
-        if (listOf("/film/", "/seri-filmler/", "/ulke/", "/yil/").none { path.startsWith(it) }) return@mapNotNull null
-        
-        if (path.trim('/').length < 4 || path.contains("login") || path.contains("uye-ol") ||
-            path.contains("/giris") || href.contains("?ara=") || href.contains("sirala=")) return@mapNotNull null
-        val img = card.selectFirst("img")
-        val title = card.attr("title").trim()
-            .ifBlank { card.text().trim() }
-            .ifBlank { img?.attr("alt")?.trim().orEmpty() }
-            .takeIf { it.isNotBlank() } ?: return@mapNotNull null
-        if (query != null && !title.contains(query, ignoreCase = true) &&
-            !href.contains(query, ignoreCase = true)) return@mapNotNull null
-        val hrefLower = href.lowercase()
-        val isSeries = hrefLower.contains("/dizi/") || hrefLower.contains("/seri/") ||
-            hrefLower.contains("/anime/") || hrefLower.contains("/series/")
-        if (isSeries) {
-            newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-                posterUrl = fixUrlNull(img?.posterSrcLazy())
+    /** Liste kartı yalnız `div.hdf-item-relative > a.item`; menü/tür bağlantıları kart sayılmaz. */
+    private fun cards(doc: Document): List<SearchResponse> = doc.select("div.hdf-item-relative a.item[href]")
+        .mapNotNull { card ->
+            val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
+            val img = card.selectFirst("img.thumbnail") ?: card.selectFirst("img")
+            val title = card.attr("data-title").trim()
+                .ifBlank { img?.attr("alt")?.trim().orEmpty() }
+                .takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            val poster = fixUrlNull(img?.posterSrcLazy())
+            val year = YEAR_IN_SLUG.find(href)?.groupValues?.get(1)?.toIntOrNull()
+            val score = Score.from10(card.attr("data-score"))
+            val isSeries = href.contains("/seri-") || href.contains("/dizi/")
+            if (isSeries) {
+                newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
+                    posterUrl = poster
+                    this.year = year
+                    this.score = score
+                }
+            } else {
+                newMovieSearchResponse(title, href, TvType.Movie) {
+                    posterUrl = poster
+                    this.year = year
+                    this.score = score
+                }
             }
-        } else {
-            newMovieSearchResponse(title, href, TvType.Movie) {
-                posterUrl = fixUrlNull(img?.posterSrcLazy())
-            }
-        }
-    }.distinctBy { it.url }.sortedBy { if (it.type == TvType.TvSeries) 0 else 1 }
+        }.distinctBy { it.url }.sortedBy { if (it.type == TvType.TvSeries) 0 else 1 }
+
+    companion object {
+        private const val PAGE = "PAGE"
+        private val YEAR_IN_SLUG = Regex("""((?:19|20)\d{2})/?$""")
+
+        /** Tür/kanal listeleri `page/N/`, bölüm listeleri `?page=N` ile sayfalanır (2026-11-13). */
+        /** Ayar diyaloğu satır adları; ROWS ile aynı sırada. */
+        val rowNames: List<String> get() = ROWS.keys.toList()
+
+        private val ROWS = linkedMapOf(
+            "Aksiyon" to "/tur/aksiyon/page/PAGE/",
+            "Aile" to "/tur/aile/page/PAGE/",
+            "Animasyon" to "/tur/animasyon/page/PAGE/",
+            "Bilim Kurgu" to "/tur/bilim-kurgu/page/PAGE/",
+            "Biyografi" to "/tur/biyografi/page/PAGE/",
+            "Dram" to "/tur/dram/page/PAGE/",
+            "Fantastik" to "/tur/fantastik/page/PAGE/",
+            "Gerilim" to "/tur/gerilim/page/PAGE/",
+            "Komedi" to "/tur/komedi/page/PAGE/",
+            "Korku" to "/tur/korku/page/PAGE/",
+            "Macera" to "/tur/macera/page/PAGE/",
+            "Romantik" to "/tur/romantik/page/PAGE/",
+            "Suç" to "/tur/suc/page/PAGE/",
+            "Eski Filmler" to "/eski-filmler/?page=PAGE",
+            "Yerli Filmler" to "/yerli-filmler/?page=PAGE",
+            "Seri Filmler" to "/seri-filmler/?page=PAGE",
+            "Netflix" to "/kanal/netflix/page/PAGE/",
+            "Prime Video" to "/kanal/prime-video/page/PAGE/",
+            "Disney" to "/kanal/disney/page/PAGE/",
+            "HBO" to "/kanal/hbo/page/PAGE/",
+        )
+    }
 
     override suspend fun load(url: String): LoadResponse? {
         val pageUrl = if (url.contains("?")) url else url.trimEnd('/') + "/"
