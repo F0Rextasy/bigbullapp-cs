@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.68] - 2026-11-14
+
+### Düzeltildi
+- DiziLife taban adresi `dizi86.life` olarak güncellendi (eski alan adının TLS sertifikası geçersiz).
+
 ## [1.6.67] - 2026-11-14
 
 ### Düzeltildi
