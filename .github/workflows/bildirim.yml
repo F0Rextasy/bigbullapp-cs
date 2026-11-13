@@ -84,8 +84,10 @@ jobs:
           NL=$'\n'
           SECTION=$(awk 'BEGIN { s = 0 } /^## \[/ { s++; next } s == 1 { print }' CHANGELOG.md)
           DETAILS=$(printf '%s\n' "$SECTION" | awk '
-            /^### / { sub(/^### /, ""); print "— " $0; next }
-            /^- / { sub(/^- /, "• "); print }
+            /^### / { sub(/^### /, ""); print "— " $0; bullet = 0; next }
+            /^- / { sub(/^- /, "• "); print; bullet = 1; next }
+            /^[[:space:]]+[^[:space:]]/ && bullet { sub(/^[[:space:]]+/, "  "); print; next }
+            { bullet = 0 }
           ' || true)
           [ -n "$DETAILS" ] && DETAILS="${DETAILS}${NL}"
           [ -z "$DETAILS" ] && DETAILS="• Depo güncellemesi yapıldı.${NL}"
@@ -99,8 +101,6 @@ jobs:
             -e "s/^— (.*)$/— <b><i>\1<\/i><\/b>/" \
             -e "s/\*\*([^*]+)\*\*/<b>\1<\/b>/g" \
             -e "s/\`//g")
-          DETAILS=$(printf '%s' "$DETAILS" | awk '{ total += length($0) + 1; if (total > 3600) { print "• … ve daha fazlası — değişiklik notuna bakın"; exit } print }')
-          DETAILS="${DETAILS}${NL}"
           HEADING=$(grep -m1 '^## \[' CHANGELOG.md || true)
           VERSION=$(printf '%s' "$HEADING" | sed -nE 's/^## \[([^]]+)\].*/\1/p')
           VERSION_LABEL=""
@@ -109,11 +109,47 @@ jobs:
             | sed -E 's/^##[[:space:]]*//; s/[^a-z0-9 -]//g; s/ +/-/g; s/^-+//; s/-+$//')
           LINK="https://github.com/F0Rextasy/bigbullapp-cs/blob/master/CHANGELOG.md"
           [ -n "$ANCHOR" ] && LINK="${LINK}#${ANCHOR}"
-          TEXT=$(printf '<b>🚀 BigBullApp güncellemesi%s</b>%s%s%s%s<a href="%s">→ Güncelleme notu</a>' \
-            "$VERSION_LABEL" "$NL" "$NL" "$DETAILS" "$NL" "$LINK")
-          curl -sf -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
-            --data-urlencode "chat_id=${CHAT}" \
-            --data-urlencode "message_thread_id=${THREAD}" \
-            --data-urlencode "parse_mode=HTML" \
-            --data-urlencode "text=${TEXT}" \
-            --data-urlencode "disable_web_page_preview=true" >/dev/null
+          # Telegram tek mesajda 4096 karakter alır; not kırpılmadan parçalara bölünüp tam gönderilir.
+          DETAILS="$DETAILS" VERSION_LABEL="$VERSION_LABEL" LINK="$LINK" \
+            TOKEN="$TOKEN" CHAT="$CHAT" THREAD="$THREAD" python3 - <<'PY'
+          import os, urllib.parse, urllib.request
+
+          token = os.environ["TOKEN"]; chat = os.environ["CHAT"]; thread = os.environ["THREAD"]
+          label = os.environ["VERSION_LABEL"]; link = os.environ["LINK"]
+          details = os.environ["DETAILS"].rstrip("\n")
+          limit = 3900  # 4096 sınırına HTML varlıkları için pay
+          header = f"<b>🚀 BigBullApp güncellemesi{label}</b>\n\n"
+          footer = f"\n<a href=\"{link}\">→ Güncelleme notu</a>"
+
+          parts, cur = [], ""
+          for line in details.split("\n"):
+              while len(line) > limit:
+                  if cur:
+                      parts.append(cur); cur = ""
+                  parts.append(line[:limit]); line = line[limit:]
+              cand = f"{cur}\n{line}" if cur else line
+              if len(cand) > limit:
+                  parts.append(cur); cur = line
+              else:
+                  cur = cand
+          if cur:
+              parts.append(cur)
+          if not parts:
+              parts = ["• Depo güncellemesi yapıldı."]
+
+          messages = [(header if i == 0 else "") + part for i, part in enumerate(parts)]
+          if len(messages[-1]) + len(footer) <= 4096:
+              messages[-1] += footer
+          else:
+              messages.append(footer.strip())
+
+          for text in messages:
+              data = urllib.parse.urlencode({
+                  "chat_id": chat, "message_thread_id": thread, "parse_mode": "HTML",
+                  "disable_web_page_preview": "true", "text": text,
+              }).encode()
+              req = urllib.request.Request(f"https://api.telegram.org/bot{token}/sendMessage", data=data)
+              with urllib.request.urlopen(req, timeout=30) as resp:
+                  resp.read()
+          print(f"Telegram: {len(messages)} mesaj gönderildi")
+          PY
