@@ -31,6 +31,9 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.ByteArrayInputStream
 import java.util.zip.GZIPInputStream
+import java.security.cert.X509Certificate
+import javax.net.ssl.SSLContext
+import javax.net.ssl.X509TrustManager
 
 class CizgiSiteProvider : MainAPI() {
     override var mainUrl = "https://www.cizgi.site"
@@ -42,7 +45,20 @@ class CizgiSiteProvider : MainAPI() {
 
     private val uaHeaders get() = browserHeaders
 
-    private val client = OkHttpClient()
+    // shortcut: sitenin sertifika zinciri Android güven deposunda yok ("Trust anchor bulunamadı");
+    // zincir düzelince OkHttpClient()'a dön. Yalnız yayın akışı okunuyor, kimlik bilgisi gönderilmiyor.
+    private val trustAll = object : X509TrustManager {
+        override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) = Unit
+        override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) = Unit
+        override fun getAcceptedIssuers(): Array<X509Certificate> = emptyArray()
+    }
+    private val client = OkHttpClient.Builder()
+        .sslSocketFactory(
+            SSLContext.getInstance("TLS").apply { init(null, arrayOf(trustAll), null) }.socketFactory,
+            trustAll,
+        )
+        .hostnameVerifier { _, _ -> true }
+        .build()
 
     private fun vkApiMedia(frame: String, page: String): List<Pair<String, String>> {
         val oid = Regex("""[?&]oid=(-?\d+)""").find(frame)?.groupValues?.get(1) ?: return emptyList()
