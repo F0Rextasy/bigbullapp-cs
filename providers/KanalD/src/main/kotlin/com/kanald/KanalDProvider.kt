@@ -125,7 +125,12 @@ class KanalDProvider : MainAPI() {
         val pageUrl = fixUrl(data)
         val html = runCatching { app.get(pageUrl, headers = headers).text }.getOrNull()
             ?: throw ErrorLoadingException("$name: bölüm sayfası yüklenemedi. $REPORT_HINT")
+        // JSON-LD contentUrl artık göreli ("S11/HLS_VOD/.../index.m3u8"); CDN tabanı sayfadaki
+        // MediaCdnDomainUrl ayarında veriliyor.
+        val relative = CONTENT_URL.find(html)?.groupValues?.get(1)?.replace("\\/", "/")
+        val cdn = CDN_BASE.find(html)?.groupValues?.get(1)?.trimEnd('/') ?: DEFAULT_CDN
         val stream = HLS.find(html)?.groupValues?.get(0)
+            ?: relative?.let { if (it.startsWith("http")) it else "$cdn/${it.trimStart('/')}" }
             ?: throw ErrorLoadingException("$name: HLS adresi bulunamadı. $REPORT_HINT")
         callback(newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
             this.referer = pageUrl
@@ -160,6 +165,9 @@ class KanalDProvider : MainAPI() {
         private val YEAR = Regex("""\b((?:19|20)\d{2})\b""")
         private val EPISODE = Regex("""(\d+)-bolum""")
         private val HLS = Regex("""https?://[^"'\\ ]+\.m3u8[^"'\\ ]*""")
+        private const val DEFAULT_CDN = "https://kanaldvod.duhnet.tv"
+        private val CONTENT_URL = Regex(""""contentUrl"\s*:\s*"([^"]+\.m3u8[^"]*)"""")
+        private val CDN_BASE = Regex("""MediaCdnDomainUrl\s*:\s*"([^"]+)"""")
         private val STATIC = setOf("diziler", "programlar", "yayin-akisi", "canli-yayin", "haber")
     }
 }
