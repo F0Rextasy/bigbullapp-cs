@@ -220,6 +220,7 @@ class AnimelerProvider : MainAPI() {
 
                 frame.contains("ok.ru") || frame.contains("odnoklassniki") -> loadOkRu(frame, linkCallback)
 
+                frame.contains("makisekurisu.site") -> loadMakise(frame, linkCallback)
                 else -> loadExtractor(frame, "$mainUrl/", subCallback, linkCallback)
 
             }
@@ -241,6 +242,11 @@ class AnimelerProvider : MainAPI() {
         for (id in embeddedMail) {
             if (loadMailRu("https://my.mail.ru/video/embed/$id", linkCallback)) found = true
         }
+        val embeddedMakise = Regex("""https?://makisekurisu\.site/embed/[^"'\s<>]+""")
+            .findAll(rawUnescaped).map { it.value }.distinct().take(3)
+        for (embed in embeddedMakise) {
+            if (loadMakise(embed, linkCallback)) found = true
+        }
         val extraEmbeds = Regex("""https?://(?:video\.sibnet\.ru/shell\.php\?videoid=\d+|vidmoly\.[a-z]+/embed-[^"'\s<>]+|gdriveplayer\.[a-z]+/embed[^"'\s<>]+)""")
             .findAll(rawUnescaped).map { it.value }.distinct().take(6)
         for (extra in extraEmbeds) {
@@ -253,6 +259,24 @@ class AnimelerProvider : MainAPI() {
 
     }
 
+
+    /** makisekurisu player: /embed/<id> sayfası, /api/player/v1/videos/<id> master URL'sini verir. */
+    private suspend fun loadMakise(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
+        val id = embed.substringAfterLast("/").substringBefore("?").takeIf { it.isNotBlank() } ?: return false
+        val body = runCatching {
+            app.get(
+                "https://makisekurisu.site/api/player/v1/videos/$id",
+                referer = embed,
+                headers = mapOf("user-agent" to "Mozilla/5.0", "Accept" to "application/json"),
+            ).text
+        }.getOrNull() ?: return false
+        val master = runCatching { JSONObject(body).optString("master") }.getOrNull()
+            ?.takeIf { it.startsWith("http") } ?: return false
+        callback(newExtractorLink(name, name, master, ExtractorLinkType.M3U8) {
+            this.referer = embed
+        })
+        return true
+    }
     private suspend fun loadMailRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
 
         val id = Regex("""/video/embed/(\d+)""").find(embed)?.groupValues?.get(1)
