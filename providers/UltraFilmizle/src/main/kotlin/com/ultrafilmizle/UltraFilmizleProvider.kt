@@ -44,7 +44,7 @@ import org.jsoup.nodes.Element
  */
 
 class UltraFilmizleProvider : MainAPI() {
-    override var mainUrl = "https://ufilmizle.com"
+    override var mainUrl = "https://ultraiz.net"
     override var name = "UltraFilmizle"
     override var lang = "tr"
     override val hasMainPage = true
