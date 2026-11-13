@@ -271,8 +271,9 @@ class CizgimaxProvider : MainAPI() {
                         val embed = if (src.startsWith("http") || src.startsWith("//")) {
                             absolute(src)
                         } else {
-                            app.get(fixUrl(src), referer = data, allowRedirects = false, headers = uaHeaders)
-                                .headers["location"]?.let { absolute(it) }
+                            // Header adı büyük/küçük harf farklı dönebiliyor ("Location").
+                            val h = app.get(fixUrl(src), referer = data, allowRedirects = false, headers = uaHeaders).headers
+                            (h["location"] ?: h["Location"])?.let { absolute(it) }
                         }
                         if (!embed.isNullOrBlank()) loadExtractor(embed, data, subtitleFilter, emit)
                     }
