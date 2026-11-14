@@ -5,5 +5,6 @@
   "url": "https://dizipal1595.com/yabanci-dizi-izle",
   "item": "<a class=\"tc\"[\\s\\S]*?</a>",
   "title": "<span class=\"tt\"[^>]*>([^<]+)</span>",
-  "href": "href=\"([^\"]+)\""
+  "href": "href=\"([^\"]+)\"",
+  "group": ["latest-series"]
 }

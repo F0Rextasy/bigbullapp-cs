@@ -3,7 +3,9 @@
   "name": "SelcukFlix",
   "type": "movie",
   "url": "https://selcukflix.app/film-izle",
-  "item": "<a href=\"/film/[^\"]*\"[^>]*class=\"relative\"[\\s\\S]*?</a>",
-  "title": "<h3[^>]*>([\\s\\S]*?)</h3>",
+  "unescape": true,
+  "item": "\\{\"id\":\"film\\d+\",\"t\":\"[^\"]+\",\"href\":\"/film/[^\"]+\"[\\s\\S]{0,900}?\"img\":\"[^\"]+\"",
+  "title": "\"t\":\"([^\"]+)\"",
+  "poster": "\"img\":\"([^\"]+)\"",
   "limit": 40
 }

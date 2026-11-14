@@ -1,0 +1,13 @@
+{
+  "id": "jetfilmizle",
+  "name": "JetFilmizle",
+  "type": "movie",
+  "url": "https://jetfilmizle.app/filmler/sayfa-1",
+  "item": "<a href=\"https://jetfilmizle\\.app/film/[^\"]+\"[^>]*title=\"[^\"]+\"[\\s\\S]*?<img[^>]+src=\"[^\"]+\"",
+  "title": "title=\"([^\"]+)\"",
+  "strip": "\\s+(?:Full\\s*(?:HD)?\\s*)?(?:Türkçe\\s+Dublaj\\s*)?(?:[İi]zle)$|\\s+Full\\s+HD.*$|\\s+Türkçe\\s+Dublaj.*$",
+  "poster": "src=\"([^\"]+)\"",
+  "group": [
+    "latest-movie"
+  ]
+}

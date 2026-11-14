@@ -5,6 +5,15 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.78] - 2026-11-15
+
+### Eklenen
+- Nuvio ana sayfasına toplu satırlar eklendi: **Son Eklenen Diziler**, **Son Eklenen Filmler**, **Popüler Diziler**.
+- Yeni sağlayıcı satırları: **HDFilmCehennemi**, **JetFilmizle**, **FilmModu**, **DiziMom**; SelcukFlix satırı yenilendi.
+
+### Değişti
+- Katalog addon'u artık Cinemeta kullanmıyor; IMDb kimlikleri IMDb araması ve TVMaze ile çözülüyor.
+
 ## [1.6.77] - 2026-11-15
 
 ### Eklendi

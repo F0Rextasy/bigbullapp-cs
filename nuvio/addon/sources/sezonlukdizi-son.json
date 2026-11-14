@@ -1,0 +1,12 @@
+{
+  "id": "sezonlukdizi-son",
+  "name": "Sezonlukdizi · Son Eklenenler",
+  "type": "series",
+  "url": "https://sezonlukdizi.cc/diziler.asp?siralama_tipi=id",
+  "item": "<a href=\"/diziler/[^\"]*\" class=\"column\"[\\s\\S]*?</a>",
+  "title": "class=\"description\">([^<]+)<",
+  "group": [
+    "latest-series"
+  ],
+  "hidden": true
+}

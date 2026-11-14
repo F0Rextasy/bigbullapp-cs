@@ -1,0 +1,12 @@
+{
+  "id": "dizibox-populer",
+  "name": "Dizibox · Popüler",
+  "type": "series",
+  "url": "https://www.dizibox.live/tum-bolumler/?tip=populer",
+  "item": "<article[^>]*article-episode-card[\\s\\S]*?</article>",
+  "title": "<b class='series-name[^']*'>([^<]+)</b>",
+  "group": [
+    "popular-series"
+  ],
+  "hidden": true
+}

@@ -1,0 +1,12 @@
+{
+  "id": "dizibal-yeni",
+  "name": "DiziBal · Son Eklenenler",
+  "type": "series",
+  "url": "https://dizibal.org/diziler?sirala=yeni",
+  "item": "<div class=\"mt-2\\.5 px-0\\.5\">[\\s\\S]*?</div>",
+  "title": "<h3[^>]*>([^<]+)</h3>",
+  "group": [
+    "latest-series"
+  ],
+  "hidden": true
+}

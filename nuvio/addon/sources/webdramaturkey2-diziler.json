@@ -1,0 +1,12 @@
+{
+  "id": "webdramaturkey2-diziler",
+  "name": "Web Drama Turkey · Diziler",
+  "type": "series",
+  "url": "https://webdramaturkey2.com/diziler",
+  "item": "<div class=\"list-movie\"[\\s\\S]*?class=\"list-title\"[^>]*>[^<]*",
+  "title": "class=\"list-title\"[^>]*>\\s*([^<]+)",
+  "group": [
+    "latest-series"
+  ],
+  "hidden": true
+}

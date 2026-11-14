@@ -27,11 +27,10 @@ Nuvio'da plugin desteği yalnız **sideload** sürümlerde vardır (mağaza sür
 
 1. **Ayarlar → Content & Discovery → Plugins → Add Repository → Refresh → Enable plugin providers globally**
 2. İstediğin sağlayıcıları tek tek aç
-3. **Addons → Add Addon** ile aşağıdaki üç adresi ekle:
+3. **Addons → Add Addon** ile iki adresi ekle:
 
 | Ne için | Adres |
 |---|---|
-| Detay/meta (zorunlu) | `https://v3-cinemeta.strem.io/manifest.json` |
 | Ana sayfa film/dizi satırları | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json` |
 | Canlı TV (8 satır, 172 kanal) | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json` |
 
@@ -42,21 +41,21 @@ Nuvio plugin deposu: `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/
 | İş | Sağlayan |
 |---|---|
 | Film/dizi arama ve oynatma | Plugin deposu (29 sağlayıcı) |
-| Film/dizi detayı: özet, kadro, bölümler | **Cinemeta** |
+| Film/dizi detayı: özet, kadro, bölümler | Nuvio **TMDB Enrichment** (Settings → Integrations) veya kurulu metadata addon'u (AIOMetadata, TMDB) |
 | Ana sayfada film/dizi satırları | **BigBull TR Katalog** addon'u |
 | Canlı TV satırları ve kanal oynatma | **BigBull Canlı TV** addon'u |
 
-**Cinemeta neden gerekli?** Katalog addon'u yalnız liste verir (isim, poster, IMDb id'si). Detay
-sayfasını Cinemeta, akışları pluginler verir. Canlı TV addon'u kendi meta'sını taşıdığı için canlı
-kanallar için Cinemeta şart değildir. Canlı TV plugin olarak eklenemez: plugin sözleşmesi yalnız
-film/dizi akışı döndürür, kanal kimliği taşımaz.
+**Meta kaynağı:** Katalog addon'u yalnız liste verir (isim, poster, IMDb id'si); detay sayfasını
+Nuvio'nun yerleşik TMDB zenginleştirmesi veya kurulu bir metadata addon'u doldurur. Ayrı bir
+"zorunlu" addon yoktur. Canlı TV addon'u kendi meta'sını taşır; canlı TV plugin olarak eklenemez:
+plugin sözleşmesi yalnız film/dizi akışı döndürür, kanal kimliği taşımaz.
 
 ## Kurulumdan sonra 5 kontrol
 
 1. Depo listelendi mi?
 2. Cloudstream'de sağlayıcılar **Extensions** ekranından açıldı mı?
 3. Nuvio'da **Enable plugin providers globally** açık mı?
-4. Cinemeta ve iki addon eklendi mi?
+4. İki katalog addon'u ve bir meta kaynağı (TMDB enrichment veya metadata addon'u) hazır mı?
 5. Ana sayfa satırları eksikse Nuvio'yu tamamen kapatıp aç; addonları **Refresh** et.
 
 ## Sık sorulanlar
@@ -65,7 +64,8 @@ film/dizi akışı döndürür, kanal kimliği taşımaz.
 [issue aç](https://github.com/F0Rextasy/bigbullapp-cs/issues). Tek bir sağlayıcı bozuksa diğerleri
 çalışmaya devam eder.
 
-**Nuvio: "Bu içerik için meta sağlayan eklenti yok".** Cinemeta addon'u kurulu değil.
+**Nuvio: "Bu içerik için meta sağlayan eklenti yok".** Meta kaynağı kapalı: Settings → Integrations
+→ TMDB Enrichment'i aç veya bir metadata addon'u (AIOMetadata/TMDB) ekle.
 
 **Nuvio: ana sayfa satırları eksik/eski.** Addon → **Refresh**; olmazsa uygulamayı tamamen kapatıp
 aç. Nuvio addon manifestini önbelleğe alır.

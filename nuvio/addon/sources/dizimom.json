@@ -1,0 +1,13 @@
+{
+  "id": "dizimom",
+  "name": "DiziMom",
+  "type": "series",
+  "url": "https://ddizimom.net/",
+  "item": "<a href=\"https://ddizimom\\.net/dizi/[^\"]+\" class=\"group block\">[\\s\\S]*?</a>",
+  "title": "alt=\"([^\"]+)\"",
+  "strip": "\\s+Dizi izle$",
+  "poster": "src=\"([^\"]+)\"",
+  "group": [
+    "latest-series"
+  ]
+}
