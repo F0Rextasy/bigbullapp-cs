@@ -34,7 +34,7 @@ import org.jsoup.nodes.Element
 import java.net.URLDecoder
 
 /**
- * DramaDizilerim — dramadizilerim.com (dikey mini dizi / kısa drama arşivi, Türkçe dublaj + altyazı).
+ * DramaDizilerim — dramadizilerim1.com (dikey mini dizi / kısa drama arşivi, Türkçe dublaj + altyazı).
  *
  * Listeler: `/dizi?page=N` katalog, `/drama-izle?page=N` popüler, `/turkce-dublaj-drama?page=N`,
  * platform hub'ları `/p/<platform>?page=N`. Arama `/diziler?q=<sorgu>`.
@@ -44,7 +44,7 @@ import java.net.URLDecoder
  * HLS/MP4 adresini `/api/media?ticket=` olarak verir.
  */
 class DramaDizilerimProvider : MainAPI() {
-    override var mainUrl = "https://dramadizilerim.com"
+    override var mainUrl = "https://dramadizilerim1.com"
     override var name = "DramaDizilerim"
     override var lang = "tr"
     override val hasMainPage = true

@@ -164,7 +164,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `DiziPal` | dizipal1595.com | Dizi/Film | — | ✓ | — | ✓ | ✓ | ✓ |
 | `DiziPod` | dizipod.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `DMAX` | dmax.com.tr | Dizi | — | — | — | — | — | — |
-| `DramaDizilerim` | dramadizilerim.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
+| `DramaDizilerim` | dramadizilerim1.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
 | `FilmEkseni` | filmekseni.vip | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `FilmMakinesi` | filmmakinesi.co | Film | ✓ | — | — | — | ✓ | ✓ |
 | `Filmizyon` | filmizyon.net | Film | — | — | — | — | — | — |
