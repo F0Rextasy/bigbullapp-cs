@@ -14,17 +14,17 @@
     {
       "type": "series",
       "id": "grp-latest-series",
-      "name": "Son Eklenen Diziler"
+      "name": "1 · Son Eklenen Diziler"
     },
     {
       "type": "movie",
       "id": "grp-latest-movie",
-      "name": "Son Eklenen Filmler"
+      "name": "2 · Son Eklenen Filmler"
     },
     {
       "type": "series",
       "id": "grp-popular-series",
-      "name": "Popüler Diziler"
+      "name": "3 · Popüler Diziler"
     },
     {
       "type": "series",
@@ -120,16 +120,6 @@
       "type": "movie",
       "id": "yesilcamtv",
       "name": "Yeşilçam TV"
-    },
-    {
-      "type": "movie",
-      "id": "all",
-      "name": "Tümü - Filmler"
-    },
-    {
-      "type": "series",
-      "id": "all",
-      "name": "Tümü - Diziler"
     }
   ]
 }

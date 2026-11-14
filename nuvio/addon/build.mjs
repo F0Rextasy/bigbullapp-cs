@@ -40,9 +40,9 @@ const MAX_ITEMS = 40;
 
 // Ana ekranda en üstte duran toplu satırlar (tariflerdeki `group` alanıyla beslenir).
 const GROUPS = [
-  { id: "latest-series", type: "series", name: "Son Eklenen Diziler" },
-  { id: "latest-movie", type: "movie", name: "Son Eklenen Filmler" },
-  { id: "popular-series", type: "series", name: "Popüler Diziler" },
+  { id: "latest-series", type: "series", name: "1 · Son Eklenen Diziler" },
+  { id: "latest-movie", type: "movie", name: "2 · Son Eklenen Filmler" },
+  { id: "popular-series", type: "series", name: "3 · Popüler Diziler" },
 ];
 
 // Depo sürümü tek yerde: CHANGELOG'un en üst başlığı (cloudstream ile aynı).
@@ -399,24 +399,10 @@ if (!check) {
       if (!produced.has(t + "/" + gid)) rmSync(join(d, f));
     }
   }
-  // "Tümü" satırları görünür tariflerden birleştirilir (toplu satırlar dahil değil).
-  const all = [];
+  // "Tümü" satırları kaldırıldı; eski dosyalar temizlenir.
   for (const t of ["movie", "series"]) {
-    const metas = [];
-    const seen = new Set();
-    for (const entry of written.filter((w) => w.type === t)) {
-      const file = join(OUT, t, entry.id + ".json");
-      if (!existsSync(file)) continue;
-      for (const row of JSON.parse(readFileSync(file, "utf8")).metas || []) {
-        if (!row || !row.id || !row.name || seen.has(row.id)) continue;
-        seen.add(row.id);
-        metas.push(row);
-      }
-    }
-    if (metas.length) {
-      writeFileSync(join(OUT, t, "all.json"), JSON.stringify({ metas }) + "\n");
-      all.push({ type: t, id: "all", name: t === "movie" ? "Tümü - Filmler" : "Tümü - Diziler", count: metas.length });
-    }
+    const stale = join(OUT, t, "all.json");
+    if (existsSync(stale)) rmSync(stale);
   }
   const manifest = {
     id: ADDON_ID,
@@ -432,7 +418,6 @@ if (!check) {
         .filter((w) => !w.hidden)
         .map((c) => ({ type: c.type, id: c.id, name: c.name }))
         .sort((a, b) => a.name.localeCompare(b.name, "tr")),
-      ...all.map((c) => ({ type: c.type, id: c.id, name: c.name })),
     ],
   };
   writeFileSync(join(HERE, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");

@@ -1,4 +1,4 @@
-// @provider {"id":"belgeselx", "name":"BelgeselX", "types":["tv"], "domain":"belgeselx.com", "formats":["mp4"], "sample":"tt8481358:tv:2:1", "description":"BelgeselX Türkçe belgesel dizileri; ok.ru ve CDN MP4 kaynakları.", "version":"1.0.5"}
+// @provider {"id":"belgeselx", "name":"BelgeselX", "types":["tv"], "domain":"belgeselx.com", "formats":["mp4"], "sample":"tt8481358:tv:2:1", "description":"BelgeselX Türkçe belgesel dizileri; ok.ru ve CDN MP4 kaynakları.", "version":"1.0.6"}
 /**
  * belgeselx — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> sitemap slug -> /belgesel/<slug> episode rows ->
@@ -67,18 +67,20 @@ function candidates(list, title) {
   if (!toks.length) return [];
   var tail = toks[toks.length - 1];
   var want = ROMAN[tail] || (/^\d+$/.test(tail) ? tail : "");
-  var base = want ? toks.slice(0, -1) : toks;
-  if (!base.length) base = toks;
-  var exact = [], loose = [];
+  var base = (want ? toks.slice(0, -1) : toks).join("-");
+  var out = [];
   for (var i = 0; i < list.length; i++) {
-    var slug = list[i], ok = true;
-    for (var k = 0; k < base.length; k++) if (slug.indexOf(base[k]) === -1) { ok = false; break; }
-    if (!ok) continue;
-    var number = want ? new RegExp("[-_/ ]" + want + "$").test(slug) : false;
-    if (number || fold(slug.replace(/-/g, " ")) === fq) exact.push(slug);
-    else loose.push(slug);
+    var slug = list[i];
+    if (fold(slug.replace(/-/g, " ")) === fq) {
+      out.push({ slug: slug, rank: 0 });
+    } else if (want && new RegExp("^" + base + "[-_/ ]" + want + "$").test(slug)) {
+      out.push({ slug: slug, rank: 1 });
+    }
   }
-  return exact.concat(loose).slice(0, 4);
+  out.sort(function (a, b) { return a.rank - b.rank; });
+  var slugs = [];
+  for (var j = 0; j < out.length && j < 4; j++) slugs.push(out[j].slug);
+  return slugs;
 }
 
 function rows(html) {
