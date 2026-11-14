@@ -28,6 +28,11 @@
     },
     {
       "type": "series",
+      "id": "animecix",
+      "name": "AnimeciX"
+    },
+    {
+      "type": "series",
       "id": "asyaanimeleri",
       "name": "Asya Animeleri"
     },
@@ -48,8 +53,18 @@
     },
     {
       "type": "series",
+      "id": "dizibox",
+      "name": "Dizibox"
+    },
+    {
+      "type": "series",
       "id": "dizikorea3",
       "name": "Dizikorea3"
+    },
+    {
+      "type": "series",
+      "id": "dizilla",
+      "name": "Dizilla"
     },
     {
       "type": "series",
@@ -57,9 +72,29 @@
       "name": "DiziMom"
     },
     {
+      "type": "series",
+      "id": "dizipal",
+      "name": "DiziPal"
+    },
+    {
+      "type": "series",
+      "id": "diziyou",
+      "name": "DiziYou"
+    },
+    {
       "type": "movie",
       "id": "filmmodu",
       "name": "FilmModu"
+    },
+    {
+      "type": "movie",
+      "id": "hdfilmcehennemi",
+      "name": "HDFilmCehennemi"
+    },
+    {
+      "type": "movie",
+      "id": "selcukflix",
+      "name": "SelcukFlix"
     },
     {
       "type": "series",
@@ -67,9 +102,19 @@
       "name": "SetFilmIzle"
     },
     {
+      "type": "movie",
+      "id": "setfilmizle-movie",
+      "name": "SetFilmIzle Film"
+    },
+    {
       "type": "series",
       "id": "sezonlukdizi",
       "name": "Sezonlukdizi"
+    },
+    {
+      "type": "series",
+      "id": "webdramaturkey2",
+      "name": "Web Drama Turkey"
     },
     {
       "type": "movie",

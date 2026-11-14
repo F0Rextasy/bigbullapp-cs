@@ -257,6 +257,7 @@ async function mapLimit(items, limit, fn) {
 }
 
 const written = [];
+const failed = [];
 for (const rc of recipes) {
   let items;
   try {
@@ -277,21 +278,32 @@ for (const rc of recipes) {
       seen.add(k);
       const poster = rc.poster ? (new RegExp(rc.poster, "i").exec(b) || [])[1] : undefined;
       const imdb = rc.imdb ? (new RegExp(rc.imdb, "i").exec(b) || [])[1] : undefined;
-      items.push({ title, poster, imdb, href: rc.href ? (new RegExp(rc.href, "i").exec(b) || [])[1] : undefined });
+      const slug = rc.title2 ? (new RegExp(rc.title2, "i").exec(b) || [])[1] : undefined;
+      items.push({
+        title,
+        title2: slug ? slug.replace(/-/g, " ") : undefined,
+        poster,
+        imdb,
+        href: rc.href ? (new RegExp(rc.href, "i").exec(b) || [])[1] : undefined,
+      });
       if (items.length >= (rc.limit || MAX_ITEMS)) break;
     }
   } catch (e) {
     console.error(`! ${rc.id}: ${e.message}`);
+    failed.push(rc);
     continue;
   }
   if (items.length < 8) {
     console.error(`! ${rc.id}: yalnız ${items.length} kart (en az 8 gerekli)`);
+    failed.push(rc);
     continue;
   }
   // Çözümler ağ isteği; sıralı çalıştırmak CI'da dakikalar alıyor.
   const resolved = await mapLimit(items, 8, async (it) => ({
     it,
-    hit: it.imdb ? { id: it.imdb, poster: it.poster || "" } : await resolve(rc.type, it.title),
+    hit: it.imdb
+      ? { id: it.imdb, poster: it.poster || "" }
+      : (await resolve(rc.type, it.title)) || (it.title2 ? await resolve(rc.type, it.title2) : null),
   }));
   const metas = [];
   for (const { it, hit } of resolved) {
@@ -301,6 +313,7 @@ for (const rc of recipes) {
   }
   if (metas.length < 5) {
     console.error(`! ${rc.id}: ${items.length} kart, ${metas.length} IMDb eşleşmesi (en az 5 gerekli)`);
+    failed.push(rc);
     continue;
   }
   if (check) {
@@ -312,6 +325,19 @@ for (const rc of recipes) {
   writeFileSync(join(dir, rc.id + ".json"), JSON.stringify({ metas }) + "\n");
   written.push({ id: rc.id, type: rc.type, name: rc.name, hidden: !!rc.hidden, group: rc.group || [], count: metas.length });
   console.log(`ok ${rc.id} (${rc.type}) ${metas.length}/${items.length}`);
+}
+
+// Geçici hata (site blokajı/ağ) satır silmesin: önceki katalog dosyası manifestte kalır.
+if (!check) {
+  for (const rc of failed) {
+    if (rc.hidden) continue;
+    const file = join(OUT, rc.type, rc.id + ".json");
+    if (!existsSync(file)) continue;
+    const metas = JSON.parse(readFileSync(file, "utf8")).metas || [];
+    if (!metas.length) continue;
+    written.push({ id: rc.id, type: rc.type, name: rc.name, hidden: false, group: rc.group || [], count: metas.length, kept: true });
+    console.log(`~ ${rc.id}: önceki liste korundu (${metas.length})`);
+  }
 }
 
 if (!check) {
