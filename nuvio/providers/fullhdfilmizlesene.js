@@ -1,4 +1,4 @@
-// @provider {"id":"fullhdfilmizlesene", "name":"FullHDFilmizlesene", "types":["movie"], "domain":"fullhdfilmizlesene.now", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.", "verified":true, "version":"1.0.8"}
+// @provider {"id":"fullhdfilmizlesene", "name":"FullHDFilmizlesene", "types":["movie"], "domain":"fullhdfilmizlesene.now", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.", "verified":true, "version":"1.0.9"}
 /**
  * fullhdfilmizlesene — Nuvio provider (bb-nuvio).
  * Flow: TMDB id -> Wikidata -> IMDb -> Cinemeta title -> /arama/<q> -> film page
@@ -149,13 +149,13 @@ function cards(html) {
 /** The site appends the original title ("Başlangıç - Inception"), so rank instead of prefix-only. */
 function pick(list, title, year) {
   var want = norm(title);
-  if (!want) return list[0] || null;
+  if (!want) return null;
   var best = null;
   var top = 0;
   for (var i = 0; i < list.length; i++) {
     var card = list[i];
     var name = norm(card.title);
-    var score = name === want ? 3 : name.indexOf(want) === 0 ? 2 : (" " + name + " ").indexOf(" " + want + " ") !== -1 ? 1 : 0;
+    var score = name === want ? 3 : name.indexOf(want + " ") === 0 ? 2 : (" " + name + " ").indexOf(" " + want + " ") !== -1 ? 1 : 0;
     if (score < 3 && !(score && year && card.year === year)) continue;
     if (year && card.year === year) score += 10;
     if (score > top) {

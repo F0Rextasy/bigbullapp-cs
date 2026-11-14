@@ -41,21 +41,23 @@ Nuvio plugin deposu: `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/
 | İş | Sağlayan |
 |---|---|
 | Film/dizi arama ve oynatma | Plugin deposu (29 sağlayıcı) |
-| Film/dizi detayı: özet, kadro, bölümler | Nuvio **TMDB Enrichment** (Settings → Integrations) veya kurulu metadata addon'u (AIOMetadata, TMDB) |
+| Film/dizi detayı: özet, kadro, bölümler | **Bir metadata addon'u zorunlu**: Cinemeta (`https://v3-cinemeta.strem.io/manifest.json`) veya AIOMetadata/TMDB |
 | Ana sayfada film/dizi satırları | **BigBull TR Katalog** addon'u |
 | Canlı TV satırları ve kanal oynatma | **BigBull Canlı TV** addon'u |
 
-**Meta kaynağı:** Katalog addon'u yalnız liste verir (isim, poster, IMDb id'si); detay sayfasını
-Nuvio'nun yerleşik TMDB zenginleştirmesi veya kurulu bir metadata addon'u doldurur. Ayrı bir
-"zorunlu" addon yoktur. Canlı TV addon'u kendi meta'sını taşır; canlı TV plugin olarak eklenemez:
-plugin sözleşmesi yalnız film/dizi akışı döndürür, kanal kimliği taşımaz.
+**Meta kaynağı (zorunlu):** Katalog addon'u yalnız liste verir (isim, poster, IMDb id'si). Detay
+sayfası, ana sayfa üst afişi (hero) ve oynatma akışı için **en az bir metadata addon'u** gerekir;
+Nuvio'nun yerleşik TMDB zenginleştirmesi tek başına yeterli değildir çünkü eklentiler başlığı
+IMDb id'sinden çözer. Kurulmazsa Nuvio "No addon provides meta for this content" der. Canlı TV
+addon'u kendi meta'sını taşır; canlı TV plugin olarak eklenemez: plugin sözleşmesi yalnız
+film/dizi akışı döndürür, kanal kimliği taşımaz.
 
 ## Kurulumdan sonra 5 kontrol
 
 1. Depo listelendi mi?
 2. Cloudstream'de sağlayıcılar **Extensions** ekranından açıldı mı?
 3. Nuvio'da **Enable plugin providers globally** açık mı?
-4. İki katalog addon'u ve bir meta kaynağı (TMDB enrichment veya metadata addon'u) hazır mı?
+4. İki katalog addon'u ve bir **metadata addon'u** (Cinemeta veya AIOMetadata) hazır mı?
 5. Ana sayfa satırları eksikse Nuvio'yu tamamen kapatıp aç; addonları **Refresh** et.
 
 ## Sık sorulanlar
@@ -64,8 +66,13 @@ plugin sözleşmesi yalnız film/dizi akışı döndürür, kanal kimliği taş�
 [issue aç](https://github.com/F0Rextasy/bigbullapp-cs/issues). Tek bir sağlayıcı bozuksa diğerleri
 çalışmaya devam eder.
 
-**Nuvio: "Bu içerik için meta sağlayan eklenti yok".** Meta kaynağı kapalı: Settings → Integrations
-→ TMDB Enrichment'i aç veya bir metadata addon'u (AIOMetadata/TMDB) ekle.
+**Nuvio: bir dizide tüm sağlayıcılar görünüyor / alakasız video açılıyor.** Katalog addon'unun
+eski listesi önbellekte kalmış olabilir: Addons → **BigBull TR Katalog** → kaldır → manifest
+adresini yeniden ekle → Refresh. Plugin deposunu da **Refresh** et; metadata addon'u kurulu olsun.
+
+**Nuvio: "Bu içerik için meta sağlayan eklenti yok".** Hiç metadata addon'u yok: Cinemeta
+(`https://v3-cinemeta.strem.io/manifest.json`) veya AIOMetadata ekle. Yalnız TMDB Enrichment
+yetmez; eklentiler başlığı IMDb id'sinden çözer.
 
 **Nuvio: ana sayfa satırları eksik/eski.** Addon → **Refresh**; olmazsa uygulamayı tamamen kapatıp
 aç. Nuvio addon manifestini önbelleğe alır.

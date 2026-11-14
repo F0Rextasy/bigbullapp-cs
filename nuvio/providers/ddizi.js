@@ -1,4 +1,4 @@
-// @provider {"id":"ddizi", "name":"Ddizi", "types":["tv"], "domain":"www.ddizi.tel", "formats":["mp4", "m3u8"], "sample":"tt21764074:tv:1:123", "description":"Ddizi yerli dizi arşivi; bölümler jwplayer HLS (tabii) olarak açılır.", "version":"1.0.6"}
+// @provider {"id":"ddizi", "name":"Ddizi", "types":["tv"], "domain":"www.ddizi.tel", "formats":["mp4", "m3u8"], "sample":"tt21764074:tv:1:123", "description":"Ddizi yerli dizi arşivi; bölümler jwplayer HLS (tabii) olarak açılır.", "version":"1.0.7"}
 /**
  * ddizi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> POST /arama/ -> series -> /izle/ episode -> /player/oynat/<hash> -> jwplayer sources.
@@ -42,17 +42,14 @@ function titleOf(id, mediaType) {
 
 function pickSeries(html, title) {
   var re = /<a href="(https:\/\/www\.ddizi\.tel\/diziler\/[^"]+)"[^>]*title="([^"]*)"/g;
-  var wanted = fold(title).split(" ").filter(function (w) {
-    return w.length > 2;
-  });
+  var want = fold(title);
   var best = "";
-  var bestScore = -1;
+  var bestScore = 0;
   var m;
   while ((m = re.exec(html)) !== null) {
     var hay = fold(m[2]);
-    var score = 0;
-    for (var i = 0; i < wanted.length; i++) if (hay.indexOf(wanted[i]) !== -1) score++;
-    if (score === wanted.length && wanted.length && score > bestScore) {
+    var score = hay === want ? 3 : (hay + " ").indexOf(want + " ") === 0 ? 2 : 0;
+    if (score > bestScore) {
       bestScore = score;
       best = m[1];
     }

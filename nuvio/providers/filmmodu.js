@@ -1,4 +1,4 @@
-// @provider {"id":"filmmodu", "name":"FilmModu", "types":["movie"], "domain":"filmmodu.news", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FilmModu Türkçe dublaj/altyazılı film arşivi (pilavyerplay HLS + altyazı).", "version":"1.1.1", "verified":true}
+// @provider {"id":"filmmodu", "name":"FilmModu", "types":["movie"], "domain":"filmmodu.news", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FilmModu Türkçe dublaj/altyazılı film arşivi (pilavyerplay HLS + altyazı).", "version":"1.1.2", "verified":true}
 /**
  * filmmodu — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /ara?q= -> strict card match -> film page -> data-pv slug ->
