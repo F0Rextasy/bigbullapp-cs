@@ -37,7 +37,6 @@ class KoreanTurkProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { name ->
         if (!Settings.rowEnabled(name)) return@mapNotNull null
         when (name) {
-            "Yeni Bölümler" -> MainPageData(name, "$mainUrl/")
             "Dizi Arşivi" -> MainPageData(name, "$mainUrl/dizi-arsivi/")
             "Romantik" -> MainPageData(name, "$mainUrl/dizi-kategori/romantik-dizileri-izle/")
             "Aksiyon" -> MainPageData(name, "$mainUrl/dizi-kategori/aksiyon-dizileri-izle/")
@@ -63,14 +62,16 @@ class KoreanTurkProvider : MainAPI() {
         }
         val doc = app.get(url, headers = uaHeaders).document
         val items = doc.select("div.movie-box, div.episode-box, a.dz-card").mapNotNull { it.toSearchResult() }
-        if (items.isEmpty()) throw ErrorLoadingException("$name: sayfa boş. $REPORT_HINT")
-        return newHomePageResponse(request.name, items, hasNext = true)
+        // Haber satırı süzüldükten sonra boş kalabilir; boş satır hata değil.
+        return newHomePageResponse(request.name, items, hasNext = items.isNotEmpty())
     }
 
     private fun Element.toSearchResult(): SearchResponse? {
         val anchor = selectFirst("div.name a") ?: selectFirst("a[title]") ?: takeIf { hasAttr("href") }
             ?: return null
         val href = fixUrlNull(anchor.attr("href")) ?: return null
+        // Ana sayfa satırlarına haber yazıları da düşüyor; load() bunları çözemiyor.
+        if (href.contains("/haberler/")) return null
         val title = anchor.attr("title").ifBlank { anchor.text() }.trim()
             .ifBlank { selectFirst("span.serietitle")?.text()?.trim().orEmpty() }
         if (title.isBlank()) return null
@@ -185,7 +186,7 @@ class KoreanTurkProvider : MainAPI() {
 
     companion object {
         /** Homepage rows in display order; all map to live listing pages. */
-        val ROWS = listOf("Yeni Bölümler", "Dizi Arşivi", "Romantik", "Aksiyon", "Komedi", "BL",
+        val ROWS = listOf("Dizi Arşivi", "Romantik", "Aksiyon", "Komedi", "BL",
             "Dram", "Fantastik", "Gerilim", "Gizem", "Suç", "Gençlik", "Tarih")
 
         private const val REPORT_HINT =
