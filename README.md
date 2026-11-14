@@ -201,7 +201,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `SonAnime` | sonanime.com | Dizi | — | — | — | — | — | — |
 | `StarTV` | startv.com.tr | Dizi | — | — | — | — | — | — |
 | `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
-| `TrDiziIzle` | trdiziizle.tv | Dizi | ✓ | — | — | — | — | — |
+| `TrDiziIzle` **pasif** | trdiziizle.tv | Dizi | ✓ | — | — | — | — | — |
 | `TurkAnimeTV` | turkanime.live | Anime | ✓ | — | — | — | — | — |
 | `TurkceDizi` | turkcedizi.com | Film | — | — | — | — | — | ✓ |
 | `TV8` **pasif** | tv8.com.tr (bakım) | Dizi | — | — | — | — | — | — |
@@ -213,9 +213,10 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
 **Kapsam notu:** Depoda toplam **90 aktif modül** var; `AsyaLuna`, `DiziBoxTv`, `Dizifon`,
-`TV8` (site bakımı, 2026-11-15) `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream
-sorunları nedeniyle kaldırıldı; düzeldiğinde tekrar eklenir. Bu tablo ve özellik matrisi her
-sağlayıcı değişikliğinde güncellenir.
+`TrDiziIzle` (13 Kasım'da otomatik pasife alındı, site 15 Kasım'da canlı) ve `TV8` (site bakımı,
+2026-11-15) `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle
+kaldırıldı; düzeldiğinde tekrar eklenir. Bu tablo ve özellik matrisi her sağlayıcı
+değişikliğinde güncellenir.
 
 ## Nuvio sağlayıcıları (29)
 
