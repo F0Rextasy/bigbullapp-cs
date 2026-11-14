@@ -5,6 +5,12 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.73] - 2026-11-14
+
+### Düzeltildi
+- DiziFilmIzle yeni BEpeak oynatıcısından HLS akışı alındı.
+- Dizirella Twimg akışlarındaki gereksiz referer kaldırıldı.
+
 ## [1.6.72] - 2026-11-14
 
 ### Düzeltildi
