@@ -150,7 +150,7 @@ class DizimanyaProvider : MainAPI() {
         // Oynatıcı bazen iframe yerine satır içi script olarak geliyor.
         val players = (
             doc.select("div.video-container iframe[src], iframe[src]")
-                .mapNotNull { fixUrlNull(it.attr("src")) } +
+                .mapNotNull { fixUrlNull(it.let { el -> el.attr("data-src").ifBlank { el.attr("data-lazy-src").ifBlank { el.attr("src") } } }) } +
                 EMBED_IN_HTML.findAll(doc.html()).map { it.value }
             ).filter { it.startsWith("http") }.distinct()
 
