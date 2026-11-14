@@ -226,7 +226,9 @@ class DiziFilmIzleProvider : MainAPI() {
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
                 this.referer = referer
-                this.headers = browserHeaders
+                // BEpeak list ucu Accept-Encoding olmayan isteklere 404 döner; oynatıcıya da
+                // gzip başlığı taşı.
+                this.headers = browserHeaders + mapOf("accept-encoding" to "gzip")
                 this.quality = quality
             })
             found = true
@@ -242,6 +244,18 @@ class DiziFilmIzleProvider : MainAPI() {
                 app.get(embed, headers = uaHeaders, referer = data).text
             }.getOrNull() ?: continue
             decryptBePlayer(player)?.let { emit(it, "Vidmixi", embed) }
+            // Yeni BEpeak oynatıcı: JWPlayer "list/<base64>" master HLS ister; Referer iframe
+            // sayfası olmadan "Video Not Found" döner.
+            val listPath = Regex("""["']((?:https?://[^"']+)?/list/[A-Za-z0-9+/=%]{32,})["']""")
+                .find(player)?.groupValues?.get(1)
+            if (listPath != null) {
+                val listUrl = if (listPath.startsWith("http")) listPath
+                else "https://" + java.net.URI(embed).host + "/" + listPath.trimStart('/')
+                val master = runCatching {
+                    app.get(listUrl, headers = uaHeaders, referer = embed).text
+                }.getOrNull().orEmpty()
+                if (master.contains("#EXTM3U")) emit(listUrl, "BEpeak", embed)
+            }
         }
 
         for (m in MEDIA.findAll(text)) emit(m.value, "Direct", data)
