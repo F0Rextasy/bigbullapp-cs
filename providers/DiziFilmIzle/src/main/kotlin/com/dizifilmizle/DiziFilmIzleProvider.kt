@@ -226,9 +226,9 @@ class DiziFilmIzleProvider : MainAPI() {
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
                 this.referer = referer
-                // BEpeak list ucu Accept-Encoding olmayan isteklere 404 döner; oynatıcıya da
-                // gzip başlığı taşı.
-                this.headers = browserHeaders + mapOf("accept-encoding" to "gzip")
+                // Accept-Encoding verilince OkHttp/Cronet gzip'i şeffaf açmaz; gövde ikili
+                // kalıp "not #EXTM3U" olur. Başlıksız istek düz playlist döner (2026-11-15).
+                this.headers = browserHeaders
                 this.quality = quality
             })
             found = true

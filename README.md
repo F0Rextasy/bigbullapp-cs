@@ -7,7 +7,7 @@ Cloudstream için `.cs3` eklentileri, Nuvio için plugin deposu + iki katalog ad
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-92-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-90-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -204,7 +204,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `TrDiziIzle` | trdiziizle.tv | Dizi | ✓ | — | — | — | — | — |
 | `TurkAnimeTV` | turkanime.live | Anime | ✓ | — | — | — | — | — |
 | `TurkceDizi` | turkcedizi.com | Film | — | — | — | — | — | ✓ |
-| `TV8` | tv8.com.tr | Dizi | — | — | — | — | — | — |
+| `TV8` **pasif** | tv8.com.tr (bakım) | Dizi | — | — | — | — | — | — |
 | `UltraFilmizle` | ufilmizle.com | Film | — | — | — | — | — | — |
 | `WebdramaTurkey2` | webdramaturkey2.com | Asya dizi/film | ✓ | — | — | ✓ | ✓ | — |
 | `Weboo` | weboo.com.tr | Dizi | — | — | — | — | — | — |
@@ -212,9 +212,10 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Yabancidizi` | ybncidizi.com | Dizi/Film | — | ✓ | — | ✓ | film | ✓ |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**Kapsam notu:** Depoda toplam **92 aktif modül** var; `AsyaLuna`, `DiziBoxTv`, `Dizifon`
-`status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle kaldırıldı; düzeldiğinde
-tekrar eklenir. Bu tablo ve özellik matrisi her sağlayıcı değişikliğinde güncellenir.
+**Kapsam notu:** Depoda toplam **90 aktif modül** var; `AsyaLuna`, `DiziBoxTv`, `Dizifon`,
+`TV8` (site bakımı, 2026-11-15) `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream
+sorunları nedeniyle kaldırıldı; düzeldiğinde tekrar eklenir. Bu tablo ve özellik matrisi her
+sağlayıcı değişikliğinde güncellenir.
 
 ## Nuvio sağlayıcıları (29)
 
