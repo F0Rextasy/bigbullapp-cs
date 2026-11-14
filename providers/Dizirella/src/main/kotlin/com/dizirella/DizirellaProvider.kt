@@ -182,7 +182,8 @@ class DizirellaProvider : MainAPI() {
             val quality = explicitQuality ?: if (isM3u8) Qualities.Unknown.value else getQualityFromName(label)
             if (Settings.qualityAllowed(quality)) {
                 callback.invoke(newExtractorLink(name, label, stream, type) {
-                    this.referer = referer
+                    // twimg her Referer ile 403 döner; referer'ı yalnız bu host için gönderme.
+                    this.referer = if (stream.contains("video.twimg.com")) "" else referer
                     this.quality = quality
                 })
                 found = true
