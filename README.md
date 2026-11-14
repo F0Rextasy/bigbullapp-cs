@@ -74,6 +74,11 @@ adresini yeniden ekle → Refresh. Plugin deposunu da **Refresh** et; metadata a
 (`https://v3-cinemeta.strem.io/manifest.json`) veya AIOMetadata ekle. Yalnız TMDB Enrichment
 yetmez; eklentiler başlığı IMDb id'sinden çözer.
 
+**Nuvio: satır sırası bozuk / toplu satırlar altta.** Nuvio satır sırasını cihazda kalıcı tutar;
+eski katalog kayıtları (100+) yeni satırları sona atar. **Ayarlar → Home / Katalog düzenle**
+ekranından **Son Eklenen/Popüler** satırlarını en üste sürükle; ya da uygulama verisini temizleyip
+addon'u yeniden ekle (sıra manifestten kurulur). "Tümü" satırları artık üretilmiyor.
+
 **Nuvio: ana sayfa satırları eksik/eski.** Addon → **Refresh**; olmazsa uygulamayı tamamen kapatıp
 aç. Nuvio addon manifestini önbelleğe alır.
 

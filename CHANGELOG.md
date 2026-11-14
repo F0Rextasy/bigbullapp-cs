@@ -5,6 +5,16 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.79] - 2026-11-15
+
+### Düzeltildi
+- **BelgeselX** artık yalnız tam başlık eşleşmesinde akış veriyor; alakasız dizilerde kaynak listesine çıkmıyor.
+- **Ddizi** ve **FullHDFilmizlesene** başlık eşleşmesi kelime sınırına alındı.
+
+### Değişti
+- Nuvio ana sayfasında toplu satırlar **1-2-3** önekiyle en üste alındı; "Tümü" satırları kaldırıldı.
+
+
 ## [1.6.78] - 2026-11-15
 
 ### Eklenen

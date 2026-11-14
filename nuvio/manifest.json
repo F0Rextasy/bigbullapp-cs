@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.78",
+  "version": "1.6.79",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -65,7 +65,7 @@
       "id": "belgeselx",
       "name": "BelgeselX",
       "description": "BelgeselX Türkçe belgesel dizileri; ok.ru ve CDN MP4 kaynakları.",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
