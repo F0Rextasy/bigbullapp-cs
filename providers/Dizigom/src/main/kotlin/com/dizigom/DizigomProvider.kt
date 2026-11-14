@@ -183,7 +183,8 @@ class DizigomProvider : MainAPI() {
         suspend fun emit(stream: String, label: String, referer: String, forcedQuality: Int? = null) {
             val quality = forcedQuality ?: getQualityFromName(label)
             if (!stream.startsWith("http") || !seen.add("$quality|$stream")) return
-            val type = if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+            // Pilavyer stream.php de HLS döner (içerik türü m3u8); VIDEO seçilirse cihaz 3003 veriyor.
+            val type = if (stream.contains(".m3u8") || stream.contains("stream.php")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
                 this.referer = referer
