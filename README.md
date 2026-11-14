@@ -7,7 +7,7 @@ Cloudstream için `.cs3` eklentileri, Nuvio için plugin deposu + iki katalog ad
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-90-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-93-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -142,10 +142,10 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Dizibaba` | dizibaba.net | Film | — | — | — | — | — | — |
 | `DiziBal` | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |
 | `DiziBol` | dizibol.org | Dizi | — | — | — | — | — | — |
-| `DiziBoxTv` **pasif** | diziboxtv.com | Dizi | — | — | — | — | — | — |
+| `DiziBoxTv` | diziboxtv.com | Dizi | — | — | — | — | — | — |
 | `DiziCaN` | dizican.cc | Dizi | — | — | — | — | — | — |
 | `DiziFilmIzle` | dizifilmizle.to | Film | — | — | — | — | — | — |
-| `Dizifon` **pasif** | dizifon.cc (alan adı park) | Dizi | — | — | — | — | — | — |
+| `Dizifon` | dizifon.cc | Dizi | — | — | — | — | — | — |
 | `Dizigecesi` | dizigecesi.com | Film | — | — | — | — | — | — |
 | `Dizigom` | dizigom.news | Film | — | — | — | — | — | — |
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
@@ -201,7 +201,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `SonAnime` | sonanime.com | Dizi | — | — | — | — | — | — |
 | `StarTV` | startv.com.tr | Dizi | — | — | — | — | — | — |
 | `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
-| `TrDiziIzle` **pasif** | trdiziizle.tv | Dizi | ✓ | — | — | — | — | — |
+| `TrDiziIzle` | trdiziizle.tv | Dizi | ✓ | — | — | — | — | — |
 | `TurkAnimeTV` | turkanime.live | Anime | ✓ | — | — | — | — | — |
 | `TurkceDizi` | turkcedizi.com | Film | — | — | — | — | — | ✓ |
 | `TV8` **pasif** | tv8.com.tr (bakım) | Dizi | — | — | — | — | — | — |
@@ -212,10 +212,9 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Yabancidizi` | ybncidizi.com | Dizi/Film | — | ✓ | — | ✓ | film | ✓ |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**Kapsam notu:** Depoda toplam **90 aktif modül** var; `AsyaLuna`, `DiziBoxTv`, `Dizifon`,
-`TrDiziIzle` (13 Kasım'da otomatik pasife alındı, site 15 Kasım'da canlı) ve `TV8` (site bakımı,
-2026-11-15) `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle
-kaldırıldı; düzeldiğinde tekrar eklenir. Bu tablo ve özellik matrisi her sağlayıcı
+**Kapsam notu:** Depoda toplam **93 aktif modül** var; `AsyaLuna` (alan adı ölü) ve `TV8`
+(site bakımı, 2026-11-15) `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları
+nedeniyle kaldırıldı; düzeldiğinde tekrar eklenir. Bu tablo ve özellik matrisi her sağlayıcı
 değişikliğinde güncellenir.
 
 ## Nuvio sağlayıcıları (29)

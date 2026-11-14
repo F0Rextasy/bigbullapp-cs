@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.77] - 2026-11-15
+
+### Eklendi
+- **DiziBoxTv v6**, **TrDiziIzle v3**, **Dizifon v7**: siteler yeniden yayında olduğu için tekrar etkinleştirildi.
+
 ## [1.6.76] - 2026-11-15
 
 ### Düzeltildi
