@@ -1,6 +1,6 @@
 {
   "id": "org.bigbull.canlitv",
-  "version": "1.6.72",
+  "version": "1.6.73",
   "name": "BigBull Canlı TV",
   "description": "Türkçe canlı TV kanalları (Cloudstream CanliTV kaynaklarından). Akışlar doğrudan HLS'dir.",
   "resources": [
