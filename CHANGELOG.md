@@ -5,6 +5,17 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.80] - 2026-11-15
+
+### Düzeltildi
+- **HDFilmCehennemi** filmlerde "bağlantı bulunamadı" hatası giderildi.
+- Nuvio **HDFilmCehennemi** eklentisi doğru filmi eşleştiriyor; Godfather 1-3 karışmıyor.
+- **HDFilmCehennemi** yeni oynatıcı varyantı da çözülüyor.
+
+### Değişti
+- MP4 akışı sunan eklentilerde kalite etiketi **[MP4]** olarak gösteriliyor; Nuvio'da indirme yalnız bu akışlarda çalışır.
+- İndirilemeyen HLS akışları işaretlendi; Nuvio'da sahte küçük dosya yerine "desteklenmeyen format" uyarısı çıkıyor.
+
 ## [1.6.79] - 2026-11-15
 
 ### Düzeltildi

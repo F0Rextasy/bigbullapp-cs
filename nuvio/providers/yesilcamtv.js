@@ -1,4 +1,4 @@
-// @provider {"id":"yesilcamtv", "name":"YesilCamTv", "types":["movie"], "domain":"yesilcamtv.com.tr", "formats":["m3u8", "mp4"], "sample":"tt0297138:movie:1:1", "description":"Yeşilçam TV: klasik Türk filmleri; Rumble HLS kaliteleri ve doğrudan MP4 akışları.", "version":"1.0.8"}
+// @provider {"id":"yesilcamtv", "name":"YesilCamTv", "types":["movie"], "domain":"yesilcamtv.com.tr", "formats":["m3u8", "mp4"], "sample":"tt0297138:movie:1:1", "description":"Yeşilçam TV: klasik Türk filmleri; Rumble HLS kaliteleri ve doğrudan MP4 akışları.", "version":"1.0.10"}
 /**
  * yesilcamtv — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /?s= card -> film page -> rumble embed -> HLS qualities.
@@ -119,14 +119,16 @@ function getStreams(imdbId, mediaType, season, episode) {
       var seen = {};
       var seenQ = {};
       function add(url, quality, referer) {
+        var hls = /\.m3u8|chunklist|\.tar(\?|$)/i.test(url) && !/\.mp4(\?|$)/i.test(url);
+        var marked = hls && url.indexOf("#") === -1 ? url + "#.m3u8" : url;
         if (!/^https?:/.test(url) || seen[url] || seenQ[quality]) return;
         seen[url] = 1;
         seenQ[quality] = 1;
         rows.push({
           name: "yesilcamtv",
-          title: "YesilCamTv - " + quality + (/(\.m3u8|chunklist)/.test(url) ? " [HLS]" : " [MP4]"),
-          url: url,
-          quality: quality,
+          title: "YesilCamTv - " + quality + (hls ? " [HLS]" : " [MP4]"),
+          url: marked,
+          quality: quality + (hls ? "" : " [MP4]"),
           headers: { Referer: referer, "User-Agent": UA },
           subtitles: []
         });

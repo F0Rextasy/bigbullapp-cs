@@ -1,4 +1,4 @@
-// @provider {"id":"belgeselx", "name":"BelgeselX", "types":["tv"], "domain":"belgeselx.com", "formats":["mp4"], "sample":"tt8481358:tv:2:1", "description":"BelgeselX Türkçe belgesel dizileri; ok.ru ve CDN MP4 kaynakları.", "version":"1.0.6"}
+// @provider {"id":"belgeselx", "name":"BelgeselX", "types":["tv"], "domain":"belgeselx.com", "formats":["mp4"], "sample":"tt8481358:tv:2:1", "description":"BelgeselX Türkçe belgesel dizileri; ok.ru ve CDN MP4 kaynakları.", "version":"1.0.7"}
 /**
  * belgeselx — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> sitemap slug -> /belgesel/<slug> episode rows ->
@@ -151,7 +151,7 @@ function push(out, url, quality, referer) {
     name: "belgeselx",
     title: "belgeselx - " + (quality ? quality + "p" : "auto"),
     url: url,
-    quality: quality ? quality + "p" : "",
+    quality: (quality ? quality + "p" : "auto") + (!/\.m3u8/i.test(url) ? " [MP4]" : ""),
     headers: referer ? { Referer: referer } : {},
     subtitles: []
   });

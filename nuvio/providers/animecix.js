@@ -1,4 +1,4 @@
-// @provider {"id":"animecix", "name":"AnimeciX", "types":["tv"], "domain":"animecix.tv", "formats":["mp4"], "sample":"tt12343534:tv:1:1", "description":"AnimeciX Turkce altyazili anime arsivi (MP4 akislari).", "version":"1.0.6"}
+// @provider {"id":"animecix", "name":"AnimeciX", "types":["tv"], "domain":"animecix.tv", "formats":["mp4"], "sample":"tt12343534:tv:1:1", "description":"AnimeciX Turkce altyazili anime arsivi (MP4 akislari).", "version":"1.0.7"}
 /**
  * animecix — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /secure/search/<q> -> /secure/related-videos -> secure/best-video
@@ -155,7 +155,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
           name: "AnimeciX",
           title: "AnimeciX - " + label + (url.indexOf(".m3u8") !== -1 ? " [HLS]" : " [MP4]"),
           url: url,
-          quality: label,
+          quality: label + (url.indexOf(".m3u8") !== -1 ? "" : " [MP4]"),
           headers: { "User-Agent": UA, "Referer": TAU + "/" },
           subtitles: []
         });

@@ -1,4 +1,4 @@
-// @provider {"id":"setfilmizle", "name":"SetFilmIzle", "types":["movie", "tv"], "domain":"setfilmizle.ltd", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"SetFilmIzle Türkçe dublaj/altyazılı film ve dizi arşivi (HLS + altyazı).", "version":"1.0.8"}
+// @provider {"id":"setfilmizle", "name":"SetFilmIzle", "types":["movie", "tv"], "domain":"setfilmizle.ltd", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"SetFilmIzle Türkçe dublaj/altyazılı film ve dizi arşivi (HLS + altyazı).", "version":"1.0.9"}
 /**
  * setfilmizle — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /?s= -> film|dizi page -> admin-ajax get_video_url -> bridge page
@@ -202,6 +202,13 @@ function playerRows(html, pageUrl) {
     });
 }
 
+/** Nuvio yalnız progressive indirir; HLS'yi işaretle ki sahte dosya inmesin (fragment HTTP'de gönderilmez). */
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
+}
+
 /** pageUrl -> admin-ajax stream bridge -> player URL -> HLS rows. */
 function streamsFor(pageUrl) {
   return text(pageUrl)
@@ -264,7 +271,7 @@ function streamsFor(pageUrl) {
             rows.push({
               name: "SetFilmIzle",
               title: "SetFilmIzle - " + item.quality + " [HLS]",
-              url: item.url,
+              url: hlsNoDownload(item.url),
               quality: item.quality,
               headers: { Referer: item.referer, "User-Agent": MOBILE_UA, Accept: "*/*" },
               subtitles: subs

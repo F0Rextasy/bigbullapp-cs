@@ -1,4 +1,4 @@
-// @provider {"id":"anizium", "name":"Anizium", "types":["tv"], "domain":"anizium.co", "formats":["mp4"], "sample":"tt0988824:tv:1:1", "description":"Anizium anime arsivi (Turkce altyazili MP4 akislari).", "version":"1.0.8"}
+// @provider {"id":"anizium", "name":"Anizium", "types":["tv"], "domain":"anizium.co", "formats":["mp4"], "sample":"tt0988824:tv:1:1", "description":"Anizium anime arsivi (Turkce altyazili MP4 akislari).", "version":"1.0.9"}
 /**
  * anizium — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> api.anizium.co/page/search -> /anime/source -> group item mp4 links.
@@ -140,7 +140,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
             name: "Anizium",
             title: label + " - " + (quality ? quality + "p" : "Kaynak") + (url.indexOf(".m3u8") !== -1 ? " [HLS]" : " [MP4]"),
             url: url,
-            quality: quality ? quality + "p" : "auto",
+            quality: (quality ? quality + "p" : "auto") + (url.indexOf(".m3u8") !== -1 ? "" : " [MP4]"),
             headers: { "User-Agent": UA, "Referer": "https://x.anizium.co/" },
             subtitles: subtitles.slice(0, 4)
           });

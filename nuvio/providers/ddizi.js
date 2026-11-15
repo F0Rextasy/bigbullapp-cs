@@ -1,4 +1,4 @@
-// @provider {"id":"ddizi", "name":"Ddizi", "types":["tv"], "domain":"www.ddizi.tel", "formats":["mp4", "m3u8"], "sample":"tt21764074:tv:1:123", "description":"Ddizi yerli dizi arşivi; bölümler jwplayer HLS (tabii) olarak açılır.", "version":"1.0.7"}
+// @provider {"id":"ddizi", "name":"Ddizi", "types":["tv"], "domain":"www.ddizi.tel", "formats":["mp4", "m3u8"], "sample":"tt21764074:tv:1:123", "description":"Ddizi yerli dizi arşivi; bölümler jwplayer HLS (tabii) olarak açılır.", "version":"1.0.8"}
 /**
  * ddizi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> POST /arama/ -> series -> /izle/ episode -> /player/oynat/<hash> -> jwplayer sources.
@@ -90,7 +90,7 @@ function sources(player) {
       name: "ddizi",
       title: "ddizi - " + (m[2] || "Auto") + (/\.m3u8/i.test(url) ? " [HLS]" : " [MP4]"),
       url: url,
-      quality: q ? q[1] + "p" : "auto",
+      quality: (q ? q[1] + "p" : "auto") + (/\.m3u8/i.test(url) ? "" : " [MP4]"),
       headers: {},
       subtitles: []
     });

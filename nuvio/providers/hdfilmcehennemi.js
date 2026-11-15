@@ -1,4 +1,4 @@
-// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.14"}
+// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.17"}
 /**
  * hdfilmcehennemi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /search/?q= JSON -> film page -> hdfilmcehennemi.mobi embed
@@ -52,6 +52,13 @@ function origin(url) {
 function host(url) {
   var m = /^https?:\/\/([^/]+)/.exec(String(url || ""));
   return m ? m[1] : "";
+}
+
+/** Nuvio yalnız progressive indirir; HLS'yi işaretle ki sahte dosya inmesin (fragment HTTP'de gönderilmez). */
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
 }
 
 function titleOf(id, mediaType) {
@@ -198,16 +205,29 @@ function decodePackedParts(seed, ops, parts) {
   return out;
 }
 
+/** Yeni oynatıcı varyantı: tohum = hostname + #d0j[data-*] + createElement('Div').tagName. */
+function domSeed(html) {
+  var m = /getElementById\(\s*['"]([^'"]+)['"]\s*\)\.attributes\[\s*['"]([^'"]+)['"]\s*\]/.exec(String(html || ""));
+  if (!m) return "";
+  var tag = new RegExp('<[^>]+id="' + m[1] + '"[^>]*>', "i").exec(html);
+  if (!tag) return "";
+  var value = new RegExp(m[2] + '="([^"]*)"', "i").exec(tag[0]);
+  if (!value) return "";
+  var tagName = /createElement\(\s*['"]([^'"]+)['"]\s*\)\.tagName/.exec(html);
+  return value[1] + (tagName ? tagName[1].toUpperCase() : "");
+}
+
 /** Every candidate the embed offers; the variable wired into `sources: [{file: <var>}]` goes first. */
 function candidates(html, hostname) {
   var out = [];
+  var seedHost = hostname + domSeed(html);
   var fileVar = first(/sources\s*:\s*\[\s*\{\s*file\s*:\s*([A-Za-z0-9_$]+)/, html);
   var re = /(?:([A-Za-z0-9_$]+)\s*=\s*)?[A-Za-z0-9_$]+\(\s*"((?:[^"\\]|\\.)*)"\s*\.\s*split\(\s*["']([^"'])["']\s*\)\s*\)/g;
   var m;
   while ((m = re.exec(html)) !== null) {
     try {
       var token = m[2].replace(/\\(.)/g, "$1");
-      var url = decodeToken(token.split(m[3]), hostname);
+      var url = decodeToken(token.split(m[3]), seedHost);
       if (/^https?:/i.test(url)) {
         if (fileVar && m[1] === fileVar) out.unshift(url);
         else out.push(url);
@@ -371,16 +391,22 @@ function getStreams(tmdbId, mediaType) {
           rows = JSON.parse(body).results || [];
         } catch (e) {}
         var want = norm(meta.name);
+        var year = String(meta.year || "").slice(0, 4);
         var fallback = null;
         for (var i = 0; i < rows.length; i++) {
           var href = first(/href="([^"]+)"/, rows[i]);
           if (!href) continue;
           var title = first(/<img[^>]*alt="([^"]*)"/, rows[i]) || "";
           var titleNorm = norm(title.replace(/&[a-z]+;/gi, " "));
-          if (want && titleNorm === want) return href;
+          var rowYear = first(/class="year">(\d{4})</, rows[i]) || "";
+          var yearOk = !year || !rowYear || rowYear === year;
+          var exactPart = false;
+          var parts = String(title).split(/\s+-\s+/);
+          for (var p = 0; p < parts.length; p++) if (want && norm(parts[p]) === want) exactPart = true;
+          if (want && yearOk && (titleNorm === want || exactPart)) return href;
           // Site basliklari "TR ad - Orijinal ad" biciminde; orijinal ad sonda da gelebilir.
-          if (want && (titleNorm.indexOf(want + "-") === 0 || titleNorm.slice(-(want.length + 1)) === "-" + want)) return href;
-          if (want && ("-" + titleNorm + "-").indexOf("-" + want + "-") >= 0 && !fallback) fallback = href;
+          if (want && yearOk && (titleNorm.indexOf(want + "-") === 0 || titleNorm.slice(-(want.length + 1)) === "-" + want)) return href;
+          if (want && !fallback && ("-" + titleNorm + "-").indexOf("-" + want + "-") >= 0) fallback = href;
         }
         return fallback;
       });
@@ -411,7 +437,7 @@ function getStreams(tmdbId, mediaType) {
           out.push({
             name: "HDFilmCehennemi",
             title: "HDFilmCehennemi - " + row.quality + " [HLS]",
-            url: row.url,
+            url: hlsNoDownload(row.url),
             quality: row.quality,
             headers: { "User-Agent": UA, Referer: embed.url, Origin: origin(embed.url) + "/" },
             subtitles: row.subtitles

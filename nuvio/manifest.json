@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.79",
+  "version": "1.6.80",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -8,7 +8,7 @@
       "id": "animecix",
       "name": "AnimeciX",
       "description": "AnimeciX Turkce altyazili anime arsivi (MP4 akislari).",
-      "version": "1.0.6",
+      "version": "1.0.7",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -27,7 +27,7 @@
       "id": "anizium",
       "name": "Anizium",
       "description": "Anizium anime arsivi (Turkce altyazili MP4 akislari).",
-      "version": "1.0.8",
+      "version": "1.0.9",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -65,7 +65,7 @@
       "id": "belgeselx",
       "name": "BelgeselX",
       "description": "BelgeselX Türkçe belgesel dizileri; ok.ru ve CDN MP4 kaynakları.",
-      "version": "1.0.6",
+      "version": "1.0.7",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -84,7 +84,7 @@
       "id": "ddizi",
       "name": "Ddizi",
       "description": "Ddizi yerli dizi arşivi; bölümler jwplayer HLS (tabii) olarak açılır.",
-      "version": "1.0.7",
+      "version": "1.0.8",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -336,7 +336,7 @@
       "id": "hdfilmcehennemi",
       "name": "HDFilmCehennemi",
       "description": "HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.",
-      "version": "1.0.14",
+      "version": "1.0.17",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -435,7 +435,7 @@
       "id": "setfilmizle",
       "name": "SetFilmIzle",
       "description": "SetFilmIzle Türkçe dublaj/altyazılı film ve dizi arşivi (HLS + altyazı).",
-      "version": "1.0.8",
+      "version": "1.0.9",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -553,7 +553,7 @@
       "id": "yesilcamtv",
       "name": "YesilCamTv",
       "description": "Yeşilçam TV: klasik Türk filmleri; Rumble HLS kaliteleri ve doğrudan MP4 akışları.",
-      "version": "1.0.8",
+      "version": "1.0.10",
       "author": "bigbull",
       "supportedTypes": [
         "movie"

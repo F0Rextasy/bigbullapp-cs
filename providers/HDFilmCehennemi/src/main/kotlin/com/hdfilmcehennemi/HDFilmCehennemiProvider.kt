@@ -136,7 +136,10 @@ class HDFilmCehennemiProvider : MainAPI() {
                     val body = app.get(
                         ajax,
                         referer = data,
-                        headers = uaHeaders + ("X-Requested-With" to "fetch"),
+                        headers = uaHeaders + mapOf(
+                            "X-Requested-With" to "fetch",
+                            "Accept" to "application/json",
+                        ),
                     ).text
                     val html = Regex(""""html"\s*:\s*"((?:[^"\\]|\\.)*)"""")
                         .find(body)?.groupValues?.get(1)
@@ -177,6 +180,7 @@ class HDFilmCehennemiProvider : MainAPI() {
             embedUrl,
             referer = embedRef.referer,
             headers = uaHeaders + mapOf(
+                "Accept" to "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                 "Sec-Fetch-Dest" to "iframe",
                 "Sec-Fetch-Mode" to "navigate",
                 "Sec-Fetch-Site" to "cross-site",
@@ -219,11 +223,12 @@ class HDFilmCehennemiProvider : MainAPI() {
 
         fun decodeEmbedCandidates(html: String, hostname: String): List<String> {
             val out = mutableListOf<String>()
+            val seedHost = hostname + domSeedSuffix(html)
             val fileVar = Regex("""sources\s*:\s*\[\s*\{\s*file\s*:\s*(\w+)""").find(html)?.groupValues?.get(1)
             val splitRe = Regex("""(?:(\w+)\s*=\s*)?\w+\(\s*"((?:[^"\\]++|\\.)*+)"\s*\.\s*split\(\s*["']([^"'])["']\s*\)\s*\)""")
             for (m in splitRe.findAll(html)) {
                 val token = m.groupValues[2].replace(Regex("""\\(.)"""), "$1")
-                val decoded = decodeC6rbn(token.split(m.groupValues[3]), hostname) ?: continue
+                val decoded = decodeC6rbn(token.split(m.groupValues[3]), seedHost) ?: continue
                 if (decoded.startsWith("http", ignoreCase = true)) {
                     if (fileVar != null && m.groupValues[1] == fileVar) out.add(0, decoded) else out.add(decoded)
                 }
@@ -241,6 +246,18 @@ class HDFilmCehennemiProvider : MainAPI() {
                 }
             }
             return out.distinct()
+        }
+
+        /** Yeni oynatıcı varyantı: tohum = hostname + #d0j[data-*] + createElement('Div').tagName. */
+        private fun domSeedSuffix(html: String): String {
+            val ref = Regex("""getElementById\(\s*['"]([^'"]+)['"]\s*\)\.attributes\[\s*['"]([^'"]+)['"]\s*]""").find(html)
+                ?: return ""
+            val tag = Regex("""<[^>]*\bid=["']${Regex.escape(ref.groupValues[1])}["'][^>]*>""").find(html) ?: return ""
+            val value = Regex("""\b${Regex.escape(ref.groupValues[2])}\s*=\s*["']([^"']*)""")
+                .find(tag.value)?.groupValues?.get(1) ?: return ""
+            val tagName = Regex("""createElement\(\s*['"]([^'"]+)['"]\s*\)\.tagName""")
+                .find(html)?.groupValues?.get(1) ?: ""
+            return value + tagName.uppercase()
         }
 
         /**
