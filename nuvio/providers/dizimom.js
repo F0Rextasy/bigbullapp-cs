@@ -1,4 +1,4 @@
-// @provider {"id":"dizimom", "name":"DiziMom", "types":["tv"], "domain":"ddizimom.net", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"DiziMom yabancı diziler Türkçe dublaj/altyazılı arşivi (pilavyer HLS).", "version":"1.1.1", "verified":true}
+// @provider {"id":"dizimom", "name":"DiziMom", "types":["tv"], "domain":"ddizimom.net", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"DiziMom yabancı diziler Türkçe dublaj/altyazılı arşivi (pilavyer HLS).", "version":"1.1.2", "verified":true}
 /**
  * dizimom — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /ara?q= -> strict card match -> /dizi/<slug> ->
@@ -178,13 +178,20 @@ function playerOf(slug, pageUrl, playerBase) {
       return {
         name: "DiziMom",
         title: "DiziMom - " + (dubs.length ? dubs.join(" / ") : "HLS"),
-        url: stream,
+        url: hlsNoDownload(stream),
         quality: quality,
         headers: { Referer: BASE + "/", "User-Agent": UA },
         subtitles: subs.slice(0, 6)
       };
     });
   });
+}
+
+/** Nuvio yalnız progressive indirir; HLS'yi işaretle ki sahte dosya inmesin (fragment HTTP'de gönderilmez). */
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
 }
 
 function getStreams(tmdbId, mediaType, season, episode) {

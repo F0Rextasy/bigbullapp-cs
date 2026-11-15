@@ -1,4 +1,4 @@
-// @provider {"id":"sinemetrik","name":"Sinemetrik","types":["movie","tv"],"domain":"sinemetrik.com","formats":["m3u8"],"description":"Sinemetrik film/dizi kaynaklari (kendi player'i, TR altyazi).","sample":"tt0468569:movie:1:1","version":"1.0.0","verified":true}
+// @provider {"id":"sinemetrik","name":"Sinemetrik","types":["movie","tv"],"domain":"sinemetrik.com","formats":["m3u8"],"description":"Sinemetrik film/dizi kaynaklari (kendi player'i, TR altyazi).","sample":"tt0468569:movie:1:1","version":"1.0.1","verified":true}
 /**
  * sinemetrik — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /api/search (TMDB slug dogrulamasi) -> film/dizi detayi ->
@@ -57,7 +57,7 @@ function subsOf(d) {
 
 function streamOf(label, d) {
   if (!d || !d.success || !/^https?:/i.test(String(d.stream || ""))) return null;
-  return { name: "Sinemetrik", title: label, url: d.stream, quality: "", headers: { "User-Agent": UA }, subtitles: subsOf(d) };
+  return { name: "Sinemetrik", title: label, url: hlsNoDownload(d.stream), quality: "", headers: { "User-Agent": UA }, subtitles: subsOf(d) };
 }
 
 function resolve(url, label) {
@@ -135,6 +135,13 @@ function episodeStreams(hit, season, episode) {
     }
     return [];
   });
+}
+
+/** Nuvio yalnız progressive indirir; HLS'yi işaretle ki sahte dosya inmesin (fragment HTTP'de gönderilmez). */
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
 }
 
 function getStreams(id, mediaType, season, episode) {

@@ -1,4 +1,4 @@
-// @provider {"id":"dizibox", "name":"Dizibox", "types":["tv"], "domain":"dizibox.live", "formats":["m3u8"], "description":"Dizibox dizi kaynaklari (king.php -> sheila HLS).", "sample":"tt0903747:tv:2:5", "version":"1.0.16"}
+// @provider {"id":"dizibox", "name":"Dizibox", "types":["tv"], "domain":"dizibox.live", "formats":["m3u8"], "description":"Dizibox dizi kaynaklari (king.php -> sheila HLS).", "sample":"tt0903747:tv:2:5", "version":"1.0.17"}
 /**
  * dizibox — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> site search -> series -> episode -> king.php player -> embed -> sheila HLS.
@@ -54,6 +54,13 @@ function sameTitle(have, want) {
   have = f(have);
   want = f(want);
   return !!want && (have === want || have.indexOf(want + " ") === 0);
+}
+
+/** Nuvio yalnız progressive indirir; HLS'yi işaretle ki sahte dosya inmesin (fragment HTTP'de gönderilmez). */
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
 }
 
 function getStreams(tmdbId, mediaType, season, episode) {
@@ -154,7 +161,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
           {
             name: "Dizibox",
             title: "Dizibox - " + quality + " [HLS]",
-            url: stream,
+            url: hlsNoDownload(stream),
             quality: quality,
             headers: { "User-Agent": UA, Referer: embedUrl },
             subtitles: []

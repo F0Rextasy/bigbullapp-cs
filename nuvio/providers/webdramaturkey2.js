@@ -1,4 +1,4 @@
-// @provider {"id":"webdramaturkey2", "name":"WebdramaTurkey2", "types":["movie", "tv"], "domain":"webdramaturkey2.com", "formats":["m3u8"], "sample":"tt29569035:tv:1:1", "description":"WebdramaTurkey2 Kore/Cin/Japon dizileri, filmleri ve animeleri (Turkce altyazili).", "version":"1.0.8"}
+// @provider {"id":"webdramaturkey2", "name":"WebdramaTurkey2", "types":["movie", "tv"], "domain":"webdramaturkey2.com", "formats":["m3u8"], "sample":"tt29569035:tv:1:1", "description":"WebdramaTurkey2 Kore/Cin/Japon dizileri, filmleri ve animeleri (Turkce altyazili).", "version":"1.0.9"}
 /**
  * webdramaturkey2 — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /arama/<q> -> dizi|film page -> episode -> /ajax/embed -> video.php
@@ -71,7 +71,7 @@ function rowsFromPlaylist(masterUrl, playlist, referer) {
     return {
       name: ID,
       title: ID + " - " + (variant.quality || "auto") + " [HLS]",
-      url: variant.url,
+      url: hlsNoDownload(variant.url),
       quality: variant.quality || "auto",
       headers: { Referer: referer },
       subtitles: []
@@ -138,6 +138,13 @@ function trySources(sources, index, referer) {
     .then(function (rows) {
       return rows.length ? rows : trySources(sources, index + 1, referer);
     });
+}
+
+/** Nuvio yalnız progressive indirir; HLS'yi işaretle ki sahte dosya inmesin (fragment HTTP'de gönderilmez). */
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
 }
 
 function getStreams(tmdbId, mediaType, season, episode) {

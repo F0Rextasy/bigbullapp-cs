@@ -1,4 +1,4 @@
-// @provider {"id":"dizibal", "name":"DiziBal", "types":["tv", "movie"], "domain":"dizibal.org", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"DiziBal altyazili yabanci dizi/film arsivi; pilavyer HLS akisi ve altyazilar.", "version":"1.0.7"}
+// @provider {"id":"dizibal", "name":"DiziBal", "types":["tv", "movie"], "domain":"dizibal.org", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"DiziBal altyazili yabanci dizi/film arsivi; pilavyer HLS akisi ve altyazilar.", "version":"1.0.8"}
 /**
  * dizibal — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /ara?q= -> /series/<slug> -> /series/<slug>/season/S/episode/E
@@ -102,7 +102,7 @@ function rowsOf(found, name) {
         {
           name: name,
           title: name + " - " + quality + " [HLS]",
-          url: found.cfg.stream,
+          url: hlsNoDownload(found.cfg.stream),
           quality: quality,
           headers: { Referer: found.playerBase + "/" },
           subtitles: subs
@@ -120,6 +120,13 @@ function sameTitle(have, want) {
   have = f(have);
   want = f(want);
   return !!want && (have === want || have.indexOf(want + " ") === 0);
+}
+
+/** Nuvio yalnız progressive indirir; HLS'yi işaretle ki sahte dosya inmesin (fragment HTTP'de gönderilmez). */
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
 }
 
 function getStreams(tmdbId, mediaType, season, episode) {

@@ -1,4 +1,4 @@
-// @provider {"id":"filmmodu", "name":"FilmModu", "types":["movie"], "domain":"filmmodu.news", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FilmModu Türkçe dublaj/altyazılı film arşivi (pilavyerplay HLS + altyazı).", "version":"1.1.2", "verified":true}
+// @provider {"id":"filmmodu", "name":"FilmModu", "types":["movie"], "domain":"filmmodu.news", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FilmModu Türkçe dublaj/altyazılı film arşivi (pilavyerplay HLS + altyazı).", "version":"1.1.3", "verified":true}
 /**
  * filmmodu — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /ara?q= -> strict card match -> film page -> data-pv slug ->
@@ -123,6 +123,13 @@ function findFilm(title, year) {
     });
 }
 
+/** Nuvio yalnız progressive indirir; HLS'yi işaretle ki sahte dosya inmesin (fragment HTTP'de gönderilmez). */
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
+}
+
 function getStreams(tmdbId, mediaType, season, episode) {
   if (mediaType === "tv") return Promise.resolve([]);
   var pageUrl = null;
@@ -174,7 +181,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
               return [{
                 name: "FilmModu",
                 title: "FilmModu - " + (audios.length ? audios.join(" / ") : "HLS"),
-                url: stream,
+                url: hlsNoDownload(stream),
                 quality: q,
                 headers: { Referer: shell, "User-Agent": UA },
                 subtitles: subs.slice(0, 6)

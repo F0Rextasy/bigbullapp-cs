@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.81] - 2026-11-15
+
+### Değişti
+- İndirilemeyen HLS akışları diğer eklentilerde de işaretlendi; Nuvio'da sahte dosya yerine "desteklenmeyen format" uyarısı çıkıyor.
+
 ## [1.6.80] - 2026-11-15
 
 ### Düzeltildi

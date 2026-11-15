@@ -1,4 +1,4 @@
-// @provider {"id":"dizilla", "name":"Dizilla", "types":["tv"], "domain":"dizilla.la", "formats":["m3u8"], "sample":"tt27497448:tv:1:1", "description":"Dizilla yabanci dizi arsivi (HLS + Turkce altyazi).", "version":"1.0.15"}
+// @provider {"id":"dizilla", "name":"Dizilla", "types":["tv"], "domain":"dizilla.la", "formats":["m3u8"], "sample":"tt27497448:tv:1:1", "description":"Dizilla yabanci dizi arsivi (HLS + Turkce altyazi).", "version":"1.0.16"}
 /**
  * dizilla — Nuvio provider (bb-nuvio).
  * Next.js site: series metadata + episode list live in the JSON-LD blocks, the
@@ -243,6 +243,13 @@ function langOf(label) {
   return LANGS[key] || (key.indexOf("ingiliz") !== -1 ? "en" : "tr");
 }
 
+/** Nuvio yalnız progressive indirir; HLS'yi işaretle ki sahte dosya inmesin (fragment HTTP'de gönderilmez). */
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
+}
+
 function getStreams(tmdbId, mediaType, season, episode) {
   var want = parseInt(season, 10) || 1;
   var wantEp = parseInt(episode, 10) || 1;
@@ -338,7 +345,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
                 rows.push({
                   name: "dizilla",
                   title: name + (height ? " - " + height + "p" : " - HLS"),
-                  url: stream,
+                  url: hlsNoDownload(stream),
                   quality: height ? height + "p" : "auto",
                   headers: { Referer: player.url, "User-Agent": UA },
                   subtitles: subs.slice(0, 6)

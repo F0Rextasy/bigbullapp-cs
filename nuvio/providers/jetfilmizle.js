@@ -1,4 +1,4 @@
-// @provider {"id":"jetfilmizle", "name":"JetFilmizle", "types":["movie"], "domain":"jetfilmizle.app", "formats":["m3u8", "mp4"], "sample":"tt0133093:movie:1:1", "description":"JetFilmizle Türkçe dublaj/altyazılı film arşivi (godrive + videopark).", "version":"1.1.1", "verified":true}
+// @provider {"id":"jetfilmizle", "name":"JetFilmizle", "types":["movie"], "domain":"jetfilmizle.app", "formats":["m3u8", "mp4"], "sample":"tt0133093:movie:1:1", "description":"JetFilmizle Türkçe dublaj/altyazılı film arşivi (godrive + videopark).", "version":"1.1.2", "verified":true}
 /**
  * jetfilmizle — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /arama -> strict card match -> film page (film_id) ->
@@ -106,7 +106,7 @@ function apollo(playerUrl) {
   }).then(function (body) {
     var hls = first(/"hlsUrl"\s*:\s*"([^"]+)"/, body);
     if (!hls) return [];
-    return [{ url: abs(base, hls.replace(/\\\//g, "/")), referer: playerUrl, quality: "auto" }];
+    return [{ url: abs(base, hls.replace(/\\\//g, "/")), referer: playerUrl, quality: "auto", hls: true }];
   });
 }
 
@@ -140,7 +140,7 @@ function generic(playerUrl, referer) {
     var m = first(/"file"\s*:\s*"([^"]+\.(?:m3u8|mp4)[^"]*)"/, html) ||
       first(/https?:\/\/[^"'\s<>]+?\.(?:m3u8|mp4)[^"'\s<>]*/, html);
     var url = m ? m.replace(/\\\//g, "/") : null;
-    if (url) out.push({ url: abs(playerUrl, url), referer: referer, quality: "auto" });
+    if (url) out.push({ url: abs(playerUrl, url), referer: referer, quality: "auto", hls: /\.m3u8/i.test(url) });
     return out;
   });
 }
@@ -150,6 +150,13 @@ function resolvePlayer(playerUrl, referer) {
     : playerUrl.indexOf("videopark.top/go/") !== -1 ? godrive
     : generic;
   return run(playerUrl, referer).catch(function () { return []; });
+}
+
+/** Nuvio yalnız progressive indirir; HLS'yi işaretle ki sahte dosya inmesin (fragment HTTP'de gönderilmez). */
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
 }
 
 function getStreams(tmdbId, mediaType, season, episode) {
@@ -223,7 +230,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
               rows.push({
                 name: "JetFilmizle",
                 title: "JetFilmizle - " + (desc || "Kaynak"),
-                url: found[i].url,
+                url: found[i].hls ? hlsNoDownload(found[i].url) : found[i].url,
                 quality: found[i].quality,
                 headers: { Referer: found[i].referer, "User-Agent": UA },
                 subtitles: []
