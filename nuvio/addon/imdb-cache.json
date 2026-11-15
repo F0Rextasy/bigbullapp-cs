@@ -1521,5 +1521,19 @@
  "movie|yagmur altinda": null,
  "movie|yalanlar ustune": null,
  "movie|gunah tohumu": null,
- "movie|the beach": null
+ "movie|the beach": null,
+ "series|love on the menu": null,
+ "movie|e ek o lum ve ben": null,
+ "movie|l nceye kadar": {
+  "id": "tt0260242",
+  "poster": ""
+ },
+ "movie|gelinlik kizlar": {
+  "id": "tt0297138",
+  "poster": ""
+ },
+ "movie|kumarbaz": {
+  "id": "tt11196036",
+  "poster": ""
+ }
 }
