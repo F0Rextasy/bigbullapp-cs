@@ -2386,5 +2386,13 @@
  "series|us and them": {
   "id": "tt0227966",
   "poster": ""
+ },
+ "series|merry berry love": {
+  "id": "tt38937897",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjA0ODBiYjEtMDIwMi00NDU4LWJkMWMtMGQ5MmMzMDAxOGQzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kidnap game": {
+  "id": "tt42798488",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTQ2MWI0MGYtMWZlOS00MTBhLTkxYzktOWZmMDUyNDZkMGI5XkEyXkFqcGc@._V1_.jpg"
  }
 }
