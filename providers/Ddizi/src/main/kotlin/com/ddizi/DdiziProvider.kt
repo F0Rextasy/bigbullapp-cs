@@ -10,6 +10,7 @@ import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
+import com.lagradost.cloudstream3.amap
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
 import com.lagradost.cloudstream3.fixUrlNull
@@ -47,14 +48,21 @@ class DdiziProvider : MainAPI() {
             emptyList()
         } else if (request.data == "$mainUrl/") {
             val doc = app.get(request.data, headers = uaHeaders).document
+            // Ana sayfa listesi yalnız metin; kapak dizi sayfasındaki ilk bölüm kartından gelir.
             doc.select("ul.list_ a[href*='/diziler/']")
                 .mapNotNull { anchor ->
                     val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
                     val title = anchor.text().trim().ifBlank { anchor.attr("title").removeSuffix(" izle").trim() }
                     if (title.isBlank()) return@mapNotNull null
-                    newTvSeriesSearchResponse(title, href, TvType.TvSeries)
+                    title to href
                 }
-                .distinctBy { it.url }
+                .distinctBy { it.second }
+                .take(HOME_CARD_LIMIT)
+                .amap { (title, href) ->
+                    val poster = runCatching { app.get(href, headers = uaHeaders).document }.getOrNull()
+                        ?.selectFirst("div.dizi-boxpost-cat img")?.let { imageAttr(it) }
+                    newTvSeriesSearchResponse(title, href, TvType.TvSeries) { this.posterUrl = poster }
+                }
         } else {
             app.get(request.data, headers = uaHeaders).document
                 .select("div.dizi-boxpost")
@@ -243,6 +251,7 @@ class DdiziProvider : MainAPI() {
     companion object {
         /** Ana sayfa satırları; ayarlardan kapatılabilir. */
         val ROWS = listOf("Yerli Diziler", "Yabancı Diziler", "Eski Diziler")
+        private const val HOME_CARD_LIMIT = 30
         private val YOUTUBE_ID = Regex("""(?:[?&]v=|youtu\.be/|/embed/|/shorts/)([\w-]{11})""")
         private val SEASON = Regex("""(\d+)\.\s*Sezon""")
         private val EPISODE = Regex("""(\d+)\.\s*Bölüm""")

@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.90] - 2026-11-17
+
+### Düzeltildi
+- **Ddizi v8**: Yerli Diziler ana sayfa kartlarına kapak görselleri eklendi.
+
 ## [1.6.89] - 2026-11-17
 
 ### Düzeltildi

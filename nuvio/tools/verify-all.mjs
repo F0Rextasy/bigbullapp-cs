@@ -19,7 +19,7 @@ const providersDir = path.join(root, "providers");
 const argv = process.argv.slice(2);
 const jobsAt = argv.indexOf("--jobs");
 const jobs = Math.max(1, Number(jobsAt >= 0 ? argv[jobsAt + 1] : process.env.NUVIO_VERIFY_JOBS || 6) || 6);
-const only = argv.find((a, i) => !a.startsWith("--") && i !== jobsAt + 1);
+const only = argv.find((a, i) => !a.startsWith("--") && (jobsAt < 0 || i !== jobsAt + 1));
 const curlBin = process.platform === "win32" ? "curl.exe" : "curl";
 
 /** Fallback when Cloudflare/CDN blocks Node/undici's TLS JA3 with 403 while curl/Android works (AGENTS.md). */
@@ -97,7 +97,7 @@ async function verify(id, file) {
         const u = String(s.url || "");
         if (!u.startsWith("http")) continue;
         const hdrs = { ...(s.headers || {}) };
-        const isM3u8 = /\.m3u8(\?|$)|\/nm\.php|master\.txt|\/sheila\/|\[HLS\]/i.test(u + " " + String(s.title || ""));
+        const isM3u8 = /\.m3u8(\?|$)|#\.m3u8|\/secure-hls\/|\/nm\.php|master\.txt|\/sheila\/|\[HLS\]/i.test(u + " " + String(s.title || ""));
         if (!isM3u8 && !hdrs.Range && !hdrs.range) hdrs.Range = "bytes=0-1023";
         try {
           const r = await timedFetch(u, { method: "GET", headers: hdrs });
