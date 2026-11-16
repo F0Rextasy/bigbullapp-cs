@@ -199,19 +199,27 @@ class DizistProvider : MainAPI() {
     // ---------------------------------------------------------------- arama
 
     /**
-     * `/bg/searchcontent` POST'u: önce oturum çerezi (`/arsiv;x=1` koruma yanıtı PHPSESSID +
-     * CNT bırakır), sonra o oturuma bağlı sayfa jetonları, en son arama isteği.
+     * `/bg/searchcontent` POST'u: önce oturum çerezi (`/arsiv;x=<ts>` önbelleksiz 403 koruma
+     * yanıtı hem PHPSESSID + CNT hem güncel jetonları taşır); jeton yoksa `/arsiv/` üzerinden alır.
      */
     private suspend fun searchContent(term: String): String = try {
         // 403 koruma yanıtı normaldir; çerezleri taşır (NiceHttp hata kodunda fırlatmaz).
-        val boot = app.get("$mainUrl$BOOT_PATH", headers = browserHeaders)
+        val bootPath = "/arsiv;x=${System.currentTimeMillis()}"
+        val boot = app.get("$mainUrl$bootPath", headers = browserHeaders)
         // Cihazda 403 yanıtı boş çerez dönebiliyor; boş map geçmek oturumu sıfırladığı için
         // o durumda çerez parametresi hiç verilmez (2026-11-13: emülatörde Unauthorized).
-        val cookies = boot.cookies.takeIf { it.isNotEmpty() }
-        val pageHtml = if (cookies == null) {
-            app.get("$mainUrl$TOKEN_PATH", headers = browserHeaders).text
-        } else {
-            app.get("$mainUrl$TOKEN_PATH", headers = browserHeaders, cookies = cookies).text
+        var cookies = boot.cookies.takeIf { it.isNotEmpty() }
+        var pageHtml = boot.text
+        var refererPath = bootPath
+        if (tokenOf(pageHtml, CKEY) == null || tokenOf(pageHtml, CVALUE) == null || tokenOf(pageHtml, APCKEY) == null) {
+            val pageResp = if (cookies == null) {
+                app.get("$mainUrl$TOKEN_PATH", headers = browserHeaders)
+            } else {
+                app.get("$mainUrl$TOKEN_PATH", headers = browserHeaders, cookies = cookies)
+            }
+            cookies = ((cookies ?: emptyMap()) + pageResp.cookies).takeIf { it.isNotEmpty() }
+            pageHtml = pageResp.text
+            refererPath = TOKEN_PATH
         }
         val cKey = tokenOf(pageHtml, CKEY) ?: throw ErrorLoadingException(JETON_HINT)
         val cValue = tokenOf(pageHtml, CVALUE) ?: throw ErrorLoadingException(JETON_HINT)
@@ -219,7 +227,7 @@ class DizistProvider : MainAPI() {
         val postHeaders = browserHeaders + mapOf(
             "accept" to "application/json, text/javascript, */*; q=0.01",
             "origin" to mainUrl,
-            "referer" to "$mainUrl$TOKEN_PATH",
+            "referer" to "$mainUrl$refererPath",
             "x-requested-with" to "XMLHttpRequest",
             "x-global-ckey" to appCKey,
         )
@@ -394,7 +402,6 @@ class DizistProvider : MainAPI() {
 
         private const val EPISODE_ROW = "Son Eklenen Bölümler"
         private const val MIN_TERM = 3
-        private const val BOOT_PATH = "/arsiv;x=1"
         private const val TOKEN_PATH = "/arsiv/"
         private const val JETON_HINT =
             "Dizist: arama jetonu okunamadı (site arama formunu değiştirmiş olabilir). " +
