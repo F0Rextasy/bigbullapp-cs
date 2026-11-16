@@ -190,9 +190,10 @@ class HDFilmCehennemiProvider : MainAPI() {
         val candidates = decodeEmbedCandidates(embed, host)
         val stream = candidates.firstOrNull { url ->
             url.startsWith("http") && runCatching {
-                app.get(url, referer = embedUrl, headers = uaHeaders).text.trimStart().startsWith("#EXTM3U")
+                val res = app.get(url, referer = embedUrl, headers = uaHeaders)
+                res.code in 200..299 && res.text.trimStart().startsWith("#EXTM3U")
             }.getOrDefault(false)
-        } ?: candidates.firstOrNull { it.startsWith("http") } ?: return false
+        } ?: return false
 
         // subtitle tracks from jwplayer setup
         Regex("""tracks:\s*\[(.*?)\]\s*,\s*(?:captions|image)""", RegexOption.DOT_MATCHES_ALL).find(embed)?.let { t ->
@@ -208,6 +209,7 @@ class HDFilmCehennemiProvider : MainAPI() {
             newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
                 this.referer = embedUrl
                 this.quality = Qualities.Unknown.value
+                this.headers = uaHeaders
             }
         )
         return true
@@ -221,39 +223,109 @@ class HDFilmCehennemiProvider : MainAPI() {
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
 
-        fun decodeEmbedCandidates(html: String, hostname: String): List<String> {
-            val out = mutableListOf<String>()
-            val seedHost = hostname + domSeedSuffix(html)
-            val fileVar = Regex("""sources\s*:\s*\[\s*\{\s*file\s*:\s*(\w+)""").find(html)?.groupValues?.get(1)
-            val splitRe = Regex("""(?:(\w+)\s*=\s*)?\w+\(\s*"((?:[^"\\]++|\\.)*+)"\s*\.\s*split\(\s*["']([^"'])["']\s*\)\s*\)""")
-            for (m in splitRe.findAll(html)) {
-                val token = m.groupValues[2].replace(Regex("""\\(.)"""), "$1")
-                val decoded = decodeC6rbn(token.split(m.groupValues[3]), seedHost) ?: continue
-                if (decoded.startsWith("http", ignoreCase = true)) {
-                    if (fileVar != null && m.groupValues[1] == fileVar) out.add(0, decoded) else out.add(decoded)
+        private fun unpackPacked(html: String): String {
+            val packRe = Regex(
+                """eval\(function\(p,a,c,k,e,[dr]\)\{[\s\S]*?\}\('((?:[^'\\]++|\\.)*+)',\s*(\d+),\s*(\d+),\s*'((?:[^'\\]++|\\.)*+)'\.split\(['"]\|['"]\)""",
+            )
+            val matches = packRe.findAll(html).toList()
+            if (matches.isEmpty()) return html
+            val escRe = Regex("""\\(.)""")
+            fun unesc(s: String) = escRe.replace(s) { mr ->
+                when (val ch = mr.groupValues[1]) {
+                    "n" -> "\n"
+                    "r" -> "\r"
+                    "t" -> "\t"
+                    else -> ch
                 }
             }
-            val arrRe = Regex("""(?:(\w+)\s*=\s*)?(\w+)\(\[((?:"(?:[^"\\]++|\\.)*+"\s*,?\s*)+)\]\)""")
-            for (m in arrRe.findAll(html)) {
-                val block = functionBlock(html, m.groupValues[2]) ?: functionBlock(html) ?: continue
-                val consts = Regex("""var\s+\w+\s*=\s*"((?:[^"\\]++|\\.)*+)";\s*var\s+\w+\s*=\s*"((?:[^"\\]++|\\.)*+)";""")
-                    .find(block) ?: continue
+            fun encodeBase(n: Int, radix: Int): String {
+                val hi = if (n < radix) "" else encodeBase(n / radix, radix)
+                val lo = n % radix
+                val ch = if (lo > 35) (lo + 29).toChar().toString() else lo.toString(36)
+                return hi + ch
+            }
+            val wordRe = Regex("""\b\w+\b""")
+            val out = StringBuilder(html)
+            for (m in matches) {
+                val payload = unesc(m.groupValues[1])
+                val radix = m.groupValues[2].toIntOrNull() ?: continue
+                val count = m.groupValues[3].toIntOrNull() ?: continue
+                val sym = unesc(m.groupValues[4]).split('|')
+                val dict = HashMap<String, String>(count)
+                for (i in 0 until count) {
+                    val k = encodeBase(i, radix)
+                    dict[k] = sym.getOrNull(i)?.takeIf { it.isNotEmpty() } ?: k
+                }
+                out.append('\n').append(wordRe.replace(payload) { mr -> dict[mr.value] ?: mr.value })
+            }
+            return out.toString()
+        }
+
+        fun decodeEmbedCandidates(html: String, hostname: String): List<String> {
+            val out = mutableListOf<String>()
+            val work = unpackPacked(html)
+            val seedHost = hostname + domSeedSuffix(work)
+            val fileVar = Regex("""sources\s*:\s*\[\s*\{\s*file\s*:\s*(\w+)""").find(work)?.groupValues?.get(1)
+            val sourcesCallFn = Regex("""sources\s*:\s*\[\s*\{\s*file\s*:[\s\S]{0,400}?\breturn\s+([A-Za-z0-9_$]+)\s*\(""").find(work)?.groupValues?.get(1)
+            val escRe = Regex("""\\(.)""")
+            val constRe = Regex("""var\s+\w+\s*=\s*"((?:[^"\\]++|\\.)*+)";\s*var\s+\w+\s*=\s*"((?:[^"\\]++|\\.)*+)";""")
+            fun decodeCall(fnName: String, parts: List<String>, varName: String) {
+                val fnBody = functionBlock(work, fnName)
+                val consts = fnBody?.let { constRe.find(it) }
+                val decoded = if (consts != null) {
+                    decodeObfuscated(consts.groupValues[1], consts.groupValues[2], parts)
+                } else {
+                    decodeC6rbnCall(fnBody, parts, seedHost)
+                } ?: return
+                if (decoded.startsWith("http", ignoreCase = true)) {
+                    val priority = (fileVar != null && varName == fileVar) || (sourcesCallFn != null && fnName == sourcesCallFn)
+                    if (priority) out.add(0, decoded) else out.add(decoded)
+                }
+            }
+            val splitRe = Regex("""(?:(\w+)\s*=\s*)?([A-Za-z0-9_$]+)\(\s*"((?:[^"\\]++|\\.)*+)"\s*\.\s*split\(\s*["']([^"'])["']\s*\)\s*\)""")
+            for (m in splitRe.findAll(work)) {
+                val token = escRe.replace(m.groupValues[3], "$1")
+                decodeCall(m.groupValues[2], token.split(m.groupValues[4]), m.groupValues[1])
+            }
+            val arrRe = Regex("""(?:(\w+)\s*=\s*)?([A-Za-z0-9_$]+)\(\[((?:"(?:[^"\\]++|\\.)*+"\s*,?\s*)+)\]\)""")
+            for (m in arrRe.findAll(work)) {
                 val arr = runCatching { org.json.JSONArray("[" + m.groupValues[3] + "]") }.getOrNull() ?: continue
                 val parts = (0 until arr.length()).map { arr.getString(it) }
-                val decoded = decodeObfuscated(consts.groupValues[1], consts.groupValues[2], parts) ?: continue
-                if (decoded.startsWith("http", ignoreCase = true)) {
-                    if (fileVar != null && m.groupValues[1] == fileVar) out.add(0, decoded) else out.add(decoded)
-                }
+                decodeCall(m.groupValues[2], parts, m.groupValues[1])
             }
             return out.distinct()
         }
 
-        /** Yeni oynatıcı varyantı: tohum = hostname + #d0j[data-*] + createElement('Div').tagName. */
+        private fun decodeC6rbnCall(fnBody: String?, parts: List<String>, seedHost: String): String? {
+            val cM = fnBody?.let { Regex("""(\w+)\s*=\s*\(\1\s*\*\s*(\d+)\s*\+\s*\w+\)\s*%\s*(?!256\b)(\d+)""").find(it) }
+            val pM = fnBody?.let { Regex("""(\w+)\s*=\s*\(\1\s*\*\s*(\d+)\s*\+\s*(\d+)\)\s*%\s*65519""").find(it) }
+            val mM = fnBody?.let { Regex("""(\w+)\s*=\s*\(\1\s*\*\s*(\d+)\s*\+\s*\w+\)\s*%\s*256""").find(it) }
+            val cMul = cM?.groupValues?.get(2)?.toIntOrNull() ?: 37
+            val cMod = cM?.groupValues?.get(3)?.toIntOrNull() ?: 241
+            val shl = fnBody?.let { Regex("""<<\s*(\d+)""").find(it)?.groupValues?.get(1)?.toIntOrNull() } ?: 1
+            val pMul = pM?.groupValues?.get(2)?.toIntOrNull() ?: 97
+            val pAdd = pM?.groupValues?.get(3)?.toIntOrNull() ?: 41
+            val mul = mM?.groupValues?.get(2)?.toIntOrNull() ?: 5
+            val effectiveSeed = if (fnBody != null && "hostname" !in fnBody) "" else seedHost
+            return decodeC6rbn(parts, effectiveSeed, shl, mul, cMul, cMod, pMul, pAdd)
+                ?.takeIf { it.startsWith("http", ignoreCase = true) }
+                ?: decodeC6rbn(parts, effectiveSeed)
+        }
+
+        /** Yeni oynatıcı varyantı: tohum = hostname + #id/[data-*] + createElement('Div').tagName. */
         private fun domSeedSuffix(html: String): String {
-            val ref = Regex("""getElementById\(\s*['"]([^'"]+)['"]\s*\)\.attributes\[\s*['"]([^'"]+)['"]\s*]""").find(html)
-                ?: return ""
-            val tag = Regex("""<[^>]*\bid=["']${Regex.escape(ref.groupValues[1])}["'][^>]*>""").find(html) ?: return ""
-            val value = Regex("""\b${Regex.escape(ref.groupValues[2])}\s*=\s*["']([^"']*)""")
+            val ref = Regex(
+                """(?:getElementById\(\s*['"]([^'"]+)['"]\s*\)|querySelector(?:All)?\(\s*['"](?:#([A-Za-z0-9_-]+)|[^'"]+)['"]\s*\)(?:\[\s*0\s*\])?)\s*\.\s*(?:getAttribute\(\s*['"]([^'"]+)['"]\s*\)|attributes\[\s*['"]([^'"]+)['"]\s*\])""",
+            ).find(html) ?: return ""
+            val elId = ref.groupValues[1].ifEmpty { ref.groupValues[2] }
+            val attr = ref.groupValues[3].ifEmpty { ref.groupValues[4] }
+            val tagPattern = if (elId.isNotEmpty()) {
+                """<[^>]*\bid=["']${Regex.escape(elId)}["'][^>]*>"""
+            } else {
+                """<\w+[^>]*\b${Regex.escape(attr)}\s*=\s*["'][^"']*["'][^>]*>"""
+            }
+            val tag = Regex(tagPattern).find(html) ?: return ""
+            val value = Regex("""\b${Regex.escape(attr)}\s*=\s*["']([^"']*)""")
                 .find(tag.value)?.groupValues?.get(1) ?: return ""
             val tagName = Regex("""createElement\(\s*['"]([^'"]+)['"]\s*\)\.tagName""")
                 .find(html)?.groupValues?.get(1) ?: ""
@@ -265,7 +337,16 @@ class HDFilmCehennemiProvider : MainAPI() {
          * Reverse the interleave, apply per-char operations encoded by the key string,
          * Fisher–Yates-style reshuffle, then XOR stream.
          */
-        fun decodeC6rbn(parts: List<String>, hostname: String): String? {
+        fun decodeC6rbn(
+            parts: List<String>,
+            hostname: String,
+            shl: Int = 1,
+            mul: Int = 5,
+            cMul: Int = 37,
+            cMod: Int = 241,
+            pMul: Int = 97,
+            pAdd: Int = 41,
+        ): String? {
             return runCatching {
                 val arr = parts.toMutableList()
                 val cc3 = arr.size - 2
@@ -280,8 +361,8 @@ class HDFilmCehennemiProvider : MainAPI() {
                 var i1q65 = 0
                 seed.forEachIndexed { v3u, ch ->
                     val ro3 = ch.code
-                    s172 = (s172 * 37 + ro3) % 241
-                    i1q65 = (i1q65 + ((ro3 shl 1) xor v3u)) and 255
+                    s172 = (s172 * cMul + ro3) % cMod
+                    i1q65 = (i1q65 + ((ro3 shl shl) xor v3u)) and 255
                 }
                 val g3l9o = (s172 * 3 + i1q65) % 256
                 val ei422 = (i1q65 % 11) + 5
@@ -293,8 +374,8 @@ class HDFilmCehennemiProvider : MainAPI() {
                         else -> {
                             val shift = (26 - ((kt31r.code - 96) % 26)) % 26
                             body = body.map { c ->
-                                if (c.isLetter()) {
-                                    val base = if (c.isUpperCase()) 'A'.code else 'a'.code
+                                if (c in 'a'..'z' || c in 'A'..'Z') {
+                                    val base = if (c in 'A'..'Z') 'A'.code else 'a'.code
                                     ((c.code - base + shift) % 26 + base).toChar()
                                 } else c
                             }.joinToString("")
@@ -307,8 +388,8 @@ class HDFilmCehennemiProvider : MainAPI() {
                 val n = body.length
                 val perm = IntArray(n)
                 for (v3u in n - 1 downTo 1) {
-                    b8o = (b8o * 97 + 41) % 65519
-                    perm[v3u] = (b8o % (v3u + 1)).toInt()
+                    b8o = (b8o * pMul + pAdd) % 65519
+                    perm[v3u] = b8o % (v3u + 1)
                 }
                 val chars = body.toCharArray()
                 for (v3u in 1 until n) {
@@ -322,7 +403,7 @@ class HDFilmCehennemiProvider : MainAPI() {
                 val out = StringBuilder(n)
                 for (ch in body) {
                     val ro3 = ch.code
-                    pf4 = (pf4 * 5 + ei422) % 256
+                    pf4 = (pf4 * mul + ei422) % 256
                     out.append(((ro3 xor pf4) and 0xFF).toChar())
                     pf4 = (pf4 + ro3) % 256
                 }
@@ -334,7 +415,9 @@ class HDFilmCehennemiProvider : MainAPI() {
 
         private fun functionBlock(html: String, fnName: String? = null): String? {
             val start = if (!fnName.isNullOrBlank()) {
-                html.indexOf("function $fnName(").takeIf { it >= 0 }
+                val esc = Regex.escape(fnName)
+                Regex("""(?:function\s+$esc\s*\(|(?:var|let|const)\s+$esc\s*=\s*function\s*\()""")
+                    .find(html)?.range?.first
             } else {
                 val join = html.indexOf(".join('')")
                 if (join < 0) null else html.lastIndexOf("function ", join).takeIf { it >= 0 }

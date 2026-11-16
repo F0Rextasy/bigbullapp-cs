@@ -1,4 +1,4 @@
-// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.17"}
+// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.18"}
 /**
  * hdfilmcehennemi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /search/?q= JSON -> film page -> hdfilmcehennemi.mobi embed
@@ -82,7 +82,14 @@ function norm(value) {
 }
 
 /** The embed's token decoder (same maths as the site's rotating function). */
-function decodeToken(parts, hostname) {
+function decodeToken(parts, hostname, opts) {
+  var o = opts || {};
+  var shiftBits = o.shl || 1;
+  var mulFactor = o.mul || 5;
+  var cMul = o.cMul || 37;
+  var cMod = o.cMod || 241;
+  var pMul = o.pMul || 97;
+  var pAdd = o.pAdd || 41;
   var arr = parts.slice();
   var cc3 = arr.length - 2;
   if (cc3 < 8) return "";
@@ -94,8 +101,8 @@ function decodeToken(parts, hostname) {
   var mix = 0;
   for (var v = 0; v < seed.length; v++) {
     var ch = seed.charCodeAt(v);
-    s172 = (s172 * 37 + ch) % 241;
-    mix = (mix + ((ch << 1) ^ v)) & 255;
+    s172 = (s172 * cMul + ch) % cMod;
+    mix = (mix + ((ch << shiftBits) ^ v)) & 255;
   }
   var start = (s172 * 3 + mix) % 256;
   var step = (mix % 11) + 5;
@@ -117,7 +124,7 @@ function decodeToken(parts, hostname) {
   var n = body.length;
   var perm = [];
   for (var j = n - 1; j >= 1; j--) {
-    prng = (prng * 97 + 41) % 65519;
+    prng = (prng * pMul + pAdd) % 65519;
     perm[j] = prng % (j + 1);
   }
   var chars = body.split("");
@@ -131,7 +138,7 @@ function decodeToken(parts, hostname) {
   var out = "";
   for (var k = 0; k < chars.length; k++) {
     var byte = chars[k].charCodeAt(0);
-    state = (state * 5 + step) % 256;
+    state = (state * mulFactor + step) % 256;
     out += String.fromCharCode((byte ^ state) & 255);
     state = (state + byte) % 256;
   }
@@ -139,9 +146,10 @@ function decodeToken(parts, hostname) {
 }
 
 function functionBody(html, fnName) {
-  var start = html.indexOf("function " + fnName + "(");
-  if (start < 0) return null;
-  var open = html.indexOf("{", start);
+  var re = new RegExp("(?:function\\s+" + fnName + "\\s*\\(|(?:var|let|const)\\s+" + fnName + "\\s*=\\s*function\\s*\\()");
+  var m = re.exec(String(html || ""));
+  if (!m) return null;
+  var open = html.indexOf("{", m.index);
   if (open < 0) return null;
   var depth = 0;
   for (var i = open; i < html.length; i++) {
@@ -149,7 +157,7 @@ function functionBody(html, fnName) {
     if (ch === "{") depth++;
     else if (ch === "}") {
       depth--;
-      if (depth === 0) return html.slice(start, i + 1);
+      if (depth === 0) return html.slice(m.index, i + 1);
     }
   }
   return null;
@@ -205,48 +213,102 @@ function decodePackedParts(seed, ops, parts) {
   return out;
 }
 
-/** Yeni oynatıcı varyantı: tohum = hostname + #d0j[data-*] + createElement('Div').tagName. */
+/** Yeni oynatıcı varyantı: tohum = hostname + #id/[data-*] + createElement('Div').tagName. */
 function domSeed(html) {
-  var m = /getElementById\(\s*['"]([^'"]+)['"]\s*\)\.attributes\[\s*['"]([^'"]+)['"]\s*\]/.exec(String(html || ""));
+  var m = /(?:getElementById\(\s*['"]([^'"]+)['"]\s*\)|querySelector(?:All)?\(\s*['"](?:#([A-Za-z0-9_-]+)|[^'"]+)['"]\s*\)(?:\[\s*0\s*\])?)\s*\.\s*(?:getAttribute\(\s*['"]([^'"]+)['"]\s*\)|attributes\[\s*['"]([^'"]+)['"]\s*\])/.exec(String(html || ""));
   if (!m) return "";
-  var tag = new RegExp('<[^>]+id="' + m[1] + '"[^>]*>', "i").exec(html);
+  var elId = m[1] || m[2];
+  var attr = m[3] || m[4];
+  var tagRe = elId
+    ? new RegExp('<[^>]*\\bid=["\']' + elId + '["\'][^>]*>', "i")
+    : new RegExp('<\\w+[^>]*\\b' + attr + '\\s*=\\s*["\'][^"\']*["\'][^>]*>', "i");
+  var tag = tagRe.exec(html);
   if (!tag) return "";
-  var value = new RegExp(m[2] + '="([^"]*)"', "i").exec(tag[0]);
+  var value = new RegExp('\\b' + attr + '\\s*=\\s*["\']([^"\']*)', "i").exec(tag[0]);
   if (!value) return "";
   var tagName = /createElement\(\s*['"]([^'"]+)['"]\s*\)\.tagName/.exec(html);
   return value[1] + (tagName ? tagName[1].toUpperCase() : "");
 }
 
+function unpackPacked(html) {
+  var out = String(html || "");
+  var packRe = /eval\(function\(p,a,c,k,e,[dr]\)\{[\s\S]*?\}\('((?:[^'\\]|\\.)*)',\s*(\d+),\s*(\d+),\s*'((?:[^'\\]|\\.)*)'\.split\(['"]\|['"]\)/g;
+  var m;
+  function enc(n, radix) {
+    var hi = n < radix ? "" : enc(Math.floor(n / radix), radix);
+    var lo = n % radix;
+    return hi + (lo > 35 ? String.fromCharCode(lo + 29) : lo.toString(36));
+  }
+  function unesc(s) {
+    return s.replace(/\\(.)/g, function (_, c) {
+      return c === "n" ? "\n" : c === "r" ? "\r" : c === "t" ? "\t" : c;
+    });
+  }
+  while ((m = packRe.exec(html)) !== null) {
+    var payload = unesc(m[1]);
+    var radix = parseInt(m[2], 10);
+    var count = parseInt(m[3], 10);
+    var sym = unesc(m[4]).split("|");
+    if (!radix || !count) continue;
+    var dict = {};
+    for (var i = 0; i < count; i++) {
+      var k = enc(i, radix);
+      dict[k] = sym[i] || k;
+    }
+    out += "\n" + payload.replace(/\b\w+\b/g, function (w) {
+      return Object.prototype.hasOwnProperty.call(dict, w) ? dict[w] : w;
+    });
+  }
+  return out;
+}
+
+function decodeTokenCall(fnBody, parts, seedHost) {
+  var cM = fnBody && /(\w+)\s*=\s*\(\1\s*\*\s*(\d+)\s*\+\s*\w+\)\s*%\s*(?!256\b)(\d+)/.exec(fnBody);
+  var pM = fnBody && /(\w+)\s*=\s*\(\1\s*\*\s*(\d+)\s*\+\s*(\d+)\)\s*%\s*65519/.exec(fnBody);
+  var mM = fnBody && /(\w+)\s*=\s*\(\1\s*\*\s*(\d+)\s*\+\s*\w+\)\s*%\s*256/.exec(fnBody);
+  var opts = {
+    cMul: cM ? Number(cM[2]) : 37,
+    cMod: cM ? Number(cM[3]) : 241,
+    shl: fnBody ? Number(first(/<<\s*(\d+)/, fnBody) || 1) : 1,
+    pMul: pM ? Number(pM[2]) : 97,
+    pAdd: pM ? Number(pM[3]) : 41,
+    mul: mM ? Number(mM[2]) : 5,
+  };
+  var effectiveSeed = fnBody && fnBody.indexOf("hostname") < 0 ? "" : seedHost;
+  var url = decodeToken(parts, effectiveSeed, opts);
+  if (!/^https?:/i.test(url)) url = decodeToken(parts, effectiveSeed);
+  return url;
+}
+
 /** Every candidate the embed offers; the variable wired into `sources: [{file: <var>}]` goes first. */
 function candidates(html, hostname) {
   var out = [];
-  var seedHost = hostname + domSeed(html);
-  var fileVar = first(/sources\s*:\s*\[\s*\{\s*file\s*:\s*([A-Za-z0-9_$]+)/, html);
-  var re = /(?:([A-Za-z0-9_$]+)\s*=\s*)?[A-Za-z0-9_$]+\(\s*"((?:[^"\\]|\\.)*)"\s*\.\s*split\(\s*["']([^"'])["']\s*\)\s*\)/g;
+  var work = unpackPacked(html);
+  var seedHost = hostname + domSeed(work);
+  var fileVar = first(/sources\s*:\s*\[\s*\{\s*file\s*:\s*([A-Za-z0-9_$]+)/, work);
+  var srcFn = first(/sources\s*:\s*\[\s*\{\s*file\s*:[\s\S]{0,400}?\breturn\s+([A-Za-z0-9_$]+)\s*\(/, work);
+  var constRe = /var\s+\w+\s*=\s*"((?:[^"\\]|\\.)*)";\s*var\s+\w+\s*=\s*"((?:[^"\\]|\\.)*)";/;
+  function decodeCall(fnName, parts, varName) {
+    var fnBody = functionBody(work, fnName);
+    var consts = fnBody ? constRe.exec(fnBody) : null;
+    var url = consts ? decodePackedParts(consts[1], consts[2], parts) : decodeTokenCall(fnBody, parts, seedHost);
+    if (/^https?:/i.test(url)) {
+      if ((fileVar && varName === fileVar) || (srcFn && fnName === srcFn)) out.unshift(url);
+      else out.push(url);
+    }
+  }
+  var re = /(?:([A-Za-z0-9_$]+)\s*=\s*)?([A-Za-z0-9_$]+)\(\s*"((?:[^"\\]|\\.)*)"\s*\.\s*split\(\s*["']([^"'])["']\s*\)\s*\)/g;
   var m;
-  while ((m = re.exec(html)) !== null) {
+  while ((m = re.exec(work)) !== null) {
     try {
-      var token = m[2].replace(/\\(.)/g, "$1");
-      var url = decodeToken(token.split(m[3]), seedHost);
-      if (/^https?:/i.test(url)) {
-        if (fileVar && m[1] === fileVar) out.unshift(url);
-        else out.push(url);
-      }
+      decodeCall(m[2], m[3].replace(/\\(.)/g, "$1").split(m[4]), m[1]);
     } catch (e) {}
   }
   var reArr = /(?:([A-Za-z0-9_$]+)\s*=\s*)?([A-Za-z0-9_$]+)\(\[((?:"(?:[^"\\]|\\.)*"\s*,?\s*)+)\]\)/g;
   var ma;
-  while ((ma = reArr.exec(html)) !== null) {
+  while ((ma = reArr.exec(work)) !== null) {
     try {
-      var fnBody = functionBody(html, ma[2]) || html;
-      var consts = /var\s+\w+\s*=\s*"((?:[^"\\]|\\.)*)";\s*var\s+\w+\s*=\s*"((?:[^"\\]|\\.)*)";/.exec(fnBody);
-      if (!consts) continue;
-      var parts = JSON.parse("[" + ma[3] + "]");
-      var packed = decodePackedParts(consts[1], consts[2], parts);
-      if (packed && /^https?:/i.test(packed)) {
-        if (fileVar && ma[1] === fileVar) out.unshift(packed);
-        else out.push(packed);
-      }
+      decodeCall(ma[2], JSON.parse("[" + ma[3] + "]"), ma[1]);
     } catch (e) {}
   }
   return out;
@@ -330,31 +392,31 @@ function readSubtitles(html) {
 }
 
 /** Film sayfasındaki player seçenekleri; iframe doğrudan 404 verdiği için /video/<id>/ üzerinden tazelenir. */
-function embedFrom(page, filmUrl) {
+function embedsFrom(page, filmUrl) {
   var raw = String(page || "").replace(/\\\//g, "/");
   var ids = [];
   var re = /data-video="(\d+)"/g;
   var m;
   while ((m = re.exec(raw)) !== null) if (ids.indexOf(m[1]) < 0) ids.push(m[1]);
-  var chain = Promise.resolve(null);
+  var list = [];
+  var chain = Promise.resolve();
   ids.forEach(function (id) {
-    chain = chain.then(function (found) {
-      if (found) return found;
+    chain = chain.then(function () {
       var ajax = BASE + "/video/" + id + "/";
       return text(ajax, { referer: filmUrl, headers: { "X-Requested-With": "fetch", Accept: "application/json" } })
         .then(function (body) {
           var inner = "";
           try { inner = (JSON.parse(body).data || {}).html || ""; } catch (e) { inner = body; }
           var src = first(/<iframe[^>]*(?:data-src|src)="([^"]+)"/, String(inner).replace(/\\\//g, "/"));
-          return src ? { url: src, referer: ajax } : null;
+          if (src) list.push({ url: abs(BASE, src), referer: ajax });
         })
-        .catch(function () { return null; });
+        .catch(function () {});
     });
   });
-  return chain.then(function (found) {
-    if (found) return found;
+  return chain.then(function () {
+    if (list.length) return list;
     var src = first(/<iframe[^>]*(?:data-src|src)="([^"]+)"/, raw);
-    return src ? { url: src, referer: filmUrl || BASE + "/" } : null;
+    return src ? [{ url: abs(BASE, src), referer: filmUrl || BASE + "/" }] : [];
   });
 }
 /** Embed yalnız doğru Referer + Sec-Fetch-Dest ile 200 döner; aksi halde 404. */
@@ -378,7 +440,6 @@ function attempt(embed, html, tries) {
 
 function getStreams(tmdbId, mediaType) {
   var filmUrl = null;
-  var embed = null;
 
   return titleOf(tmdbId, mediaType)
     .then(function (meta) {
@@ -412,39 +473,42 @@ function getStreams(tmdbId, mediaType) {
       });
     })
     .then(function (url) {
-      if (!url) return null;
+      if (!url) return [];
       filmUrl = url;
-      return text(filmUrl);
-    })
-    .then(function (page) {
-      if (!page) return null;
-      return embedFrom(page, filmUrl);
-    })
-    .then(function (found) {
-      embed = found;
-      if (!embed) return null;
-      return text(embed.url, { referer: embed.referer, headers: embedHeaders(embed) });
-    })
-    .then(function (player) {
-      if (!player) return [];
-      return attempt(embed, player, 3).then(function (rows) {
-        var out = [];
-        var seen = {};
-        for (var i = 0; i < (rows || []).length; i++) {
-          var row = rows[i];
-          if (!row || seen[row.url]) continue;
-          seen[row.url] = 1;
-          out.push({
-            name: "HDFilmCehennemi",
-            title: "HDFilmCehennemi - " + row.quality + " [HLS]",
-            url: hlsNoDownload(row.url),
-            quality: row.quality,
-            headers: { "User-Agent": UA, Referer: embed.url, Origin: origin(embed.url) + "/" },
-            subtitles: row.subtitles
-          });
-        }
-        return out;
+      return text(filmUrl).then(function (page) {
+        return embedsFrom(page, filmUrl);
       });
+    })
+    .then(function (embeds) {
+      if (!embeds || !embeds.length) return [];
+      var chain = Promise.resolve([]);
+      embeds.forEach(function (emb) {
+        chain = chain.then(function (found) {
+          if (found.length) return found;
+          return text(emb.url, { referer: emb.referer, headers: embedHeaders(emb) })
+            .then(function (player) { return attempt(emb, player, 2); })
+            .then(function (rows) {
+              var out = [];
+              var seen = {};
+              for (var i = 0; i < (rows || []).length; i++) {
+                var row = rows[i];
+                if (!row || seen[row.url]) continue;
+                seen[row.url] = 1;
+                out.push({
+                  name: "HDFilmCehennemi",
+                  title: "HDFilmCehennemi - " + row.quality + " [HLS]",
+                  url: hlsNoDownload(row.url),
+                  quality: row.quality,
+                  headers: { "User-Agent": UA, Referer: emb.url, Origin: origin(emb.url) + "/" },
+                  subtitles: row.subtitles
+                });
+              }
+              return out;
+            })
+            .catch(function () { return []; });
+        });
+      });
+      return chain;
     })
     .catch(function (e) {
       console.log("[bb-nuvio][hdfilmcehennemi] " + (e && e.message));
