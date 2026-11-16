@@ -5,6 +5,17 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.88] - 2026-11-17
+
+### Eklendi
+- **YerliDiziler v1**: güncel Türkçe yerli diziler için yeni sağlayıcı eklendi (Cloudstream ve Nuvio).
+- Nuvio'ya **DDizimag** ve **TurkceDizi** eklentileri ile ana sayfaya **Yerli Diziler** kataloğu eklendi.
+
+### Düzeltildi
+- **Ddizi v7**: ana sayfaya yerli diziler satırı eklendi; Nuvio'da sezon/bölüm eşleşmesi ve sayfalama düzeltilerek yerli dizilerin bulunması sağlandı.
+- **StarTV v7**: dizi ve program aramasının boş dönmesi giderildi.
+- **TurkceDizi v12**: ek oynatıcı kaynağı eklendi.
+
 ## [1.6.87] - 2026-11-16
 
 ### Düzeltildi

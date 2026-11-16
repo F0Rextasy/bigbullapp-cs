@@ -34,6 +34,7 @@ class DdiziProvider : MainAPI() {
     override val supportedTypes = setOf(TvType.TvSeries)
 
     override val mainPage get() = mainPageOf(
+        "$mainUrl/" to "Yerli Diziler",
         "$mainUrl/yabanci-dizi-izle" to "Yabancı Diziler",
         "$mainUrl/eski.diziler" to "Eski Diziler",
     ).filter { Settings.rowEnabled(it.name) }
@@ -44,6 +45,16 @@ class DdiziProvider : MainAPI() {
         // Arşiv listeleri tek sayfada geliyor; sayfa 2+ boş.
         val items = if (page > 1) {
             emptyList()
+        } else if (request.data == "$mainUrl/") {
+            val doc = app.get(request.data, headers = uaHeaders).document
+            doc.select("ul.list_ a[href*='/diziler/']")
+                .mapNotNull { anchor ->
+                    val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
+                    val title = anchor.text().trim().ifBlank { anchor.attr("title").removeSuffix(" izle").trim() }
+                    if (title.isBlank()) return@mapNotNull null
+                    newTvSeriesSearchResponse(title, href, TvType.TvSeries)
+                }
+                .distinctBy { it.url }
         } else {
             app.get(request.data, headers = uaHeaders).document
                 .select("div.dizi-boxpost")
@@ -231,7 +242,7 @@ class DdiziProvider : MainAPI() {
 
     companion object {
         /** Ana sayfa satırları; ayarlardan kapatılabilir. */
-        val ROWS = listOf("Yabancı Diziler", "Eski Diziler")
+        val ROWS = listOf("Yerli Diziler", "Yabancı Diziler", "Eski Diziler")
         private val YOUTUBE_ID = Regex("""(?:[?&]v=|youtu\.be/|/embed/|/shorts/)([\w-]{11})""")
         private val SEASON = Regex("""(\d+)\.\s*Sezon""")
         private val EPISODE = Regex("""(\d+)\.\s*Bölüm""")

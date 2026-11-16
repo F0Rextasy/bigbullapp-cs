@@ -1,6 +1,6 @@
 {
   "id": "org.bigbull.trcatalog",
-  "version": "1.6.87",
+  "version": "1.6.88",
   "name": "BigBull TR Katalog",
   "description": "Cloudstream sağlayıcılarının film ve dizi listeleri; öne çıkan toplu satırlar. Katalog verir; meta Nuvio'nun yerleşik TMDB zenginleştirmesi ve kurulu metadata addon'larından, akış BigBull Nuvio eklentilerinden gelir; canlı TV ayrı addon'dadır.",
   "resources": [
@@ -125,6 +125,11 @@
       "type": "series",
       "id": "webdramaturkey2",
       "name": "Web Drama Turkey"
+    },
+    {
+      "type": "series",
+      "id": "yerlidiziler",
+      "name": "Yerli Diziler"
     },
     {
       "type": "movie",

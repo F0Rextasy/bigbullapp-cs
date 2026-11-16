@@ -55,9 +55,15 @@ class StarTVProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val doc = app.get("$mainUrl/arama-sonuclari", params = mapOf("q" to query.trim())).document
         val needle = normalize(query)
-        return parseCards(doc).filter { needle.isBlank() || normalize(it.name).contains(needle) }
+        val doc = runCatching { app.get("$mainUrl/arama-sonuclari", params = mapOf("q" to query.trim())).document }.getOrNull()
+        val direct = doc?.let(::parseCards).orEmpty()
+            .filter { needle.isBlank() || normalize(it.name).contains(needle) }
+        if (direct.isNotEmpty()) return direct
+        return listOf("$mainUrl/dizi", "$mainUrl/program")
+            .flatMap { path -> runCatching { parseCards(app.get(path).document) }.getOrDefault(emptyList()) }
+            .filter { needle.isBlank() || normalize(it.name).contains(needle) || normalize(it.url).contains(needle) }
+            .distinctBy { it.url }
     }
 
     override suspend fun load(url: String): LoadResponse? {

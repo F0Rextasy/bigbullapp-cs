@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.87",
+  "version": "1.6.88",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -84,7 +84,7 @@
       "id": "ddizi",
       "name": "Ddizi",
       "description": "Ddizi yerli dizi arşivi; bölümler jwplayer HLS (tabii) olarak açılır.",
-      "version": "1.0.8",
+      "version": "1.0.9",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -96,6 +96,26 @@
         "m3u8"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=www.ddizi.tel&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "ddizimag",
+      "name": "DDizimag",
+      "description": "DDizimag yerli ve yabancı dizi/film arşivi; pilavyer HLS akışı ve altyazılar.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/ddizimag.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=ddizimag.icu&sz=128",
       "contentLanguage": [
         "tr"
       ]
@@ -510,6 +530,27 @@
       ]
     },
     {
+      "id": "turkcedizi",
+      "name": "TurkceDizi",
+      "description": "TurkceDizi yerli ve yabancı dizi/film arşivi; HLS ve OkRu akışları.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/turkcedizi.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=turkcedizi.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "webdramaturkey2",
       "name": "WebdramaTurkey2",
       "description": "WebdramaTurkey2 Kore/Cin/Japon dizileri, filmleri ve animeleri (Turkce altyazili).",
@@ -545,6 +586,25 @@
         "m3u8"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=webteizle.info&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "yerlidiziler",
+      "name": "YerliDiziler",
+      "description": "YerliDiziler yerli dizi arşivi (tüm ulusal kanallar); Vidmoly HLS akışları.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/yerlidiziler.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=yerlidiziler.com.tr&sz=128",
       "contentLanguage": [
         "tr"
       ]

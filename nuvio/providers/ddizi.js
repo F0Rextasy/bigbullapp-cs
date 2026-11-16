@@ -1,7 +1,8 @@
-// @provider {"id":"ddizi", "name":"Ddizi", "types":["tv"], "domain":"www.ddizi.tel", "formats":["mp4", "m3u8"], "sample":"tt21764074:tv:1:123", "description":"Ddizi yerli dizi arşivi; bölümler jwplayer HLS (tabii) olarak açılır.", "version":"1.0.8"}
+// @provider {"id":"ddizi", "name":"Ddizi", "types":["tv"], "domain":"www.ddizi.tel", "formats":["mp4", "m3u8"], "sample":"tt21764074:tv:1:123", "description":"Ddizi yerli dizi arşivi; bölümler jwplayer HLS (tabii) olarak açılır.", "version":"1.0.9"}
 /**
  * ddizi — Nuvio provider (bb-nuvio).
- * Flow: Cinemeta title -> POST /arama/ -> series -> /izle/ episode -> /player/oynat/<hash> -> jwplayer sources.
+ * Flow: Cinemeta title (+ videos cumulative episode map) -> POST /arama/ -> series
+ *       -> smart /sayfa-N jump -> /izle/ episode -> /player/oynat/<hash> -> jwplayer sources.
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
@@ -21,33 +22,61 @@ function text(url, opts) {
 
 function fold(value) {
   return String(value || "")
+    .replace(/[\u0131\u0130I]/g, "i").replace(/[\u015f\u015e]/g, "s").replace(/[\u011f\u011e]/g, "g")
+    .replace(/[\u00fc\u00dc]/g, "u").replace(/[\u00f6\u00d6]/g, "o").replace(/[\u00e7\u00c7]/g, "c")
     .toLowerCase()
-    .replace(/ı/g, "i").replace(/ş/g, "s").replace(/ğ/g, "g")
-    .replace(/ü/g, "u").replace(/ö/g, "o").replace(/ç/g, "c")
-    .replace(/[^a-z0-9]+/g, " ");
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
 }
 
-function titleOf(id, mediaType) {
-  if (/^__alt__:/.test(String(id))) return Promise.resolve(decodeURIComponent(String(id).slice(8)));
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
+}
+
+function metaOf(id, mediaType, want, wantEp) {
+  if (/^__alt__:/.test(String(id))) {
+    var parts = String(id).slice(8).split("|");
+    return Promise.resolve({
+      title: decodeURIComponent(parts[0] || ""),
+      absEp: parts[1] ? parseInt(parts[1], 10) : (want === 1 ? wantEp : 0)
+    });
+  }
   var kind = mediaType === "tv" ? "series" : "movie";
   return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
     .then(function (body) {
       var meta = JSON.parse(body).meta || {};
-      return String(meta.name || "").trim();
+      var videos = (meta.videos || []).filter(function (v) { return v && Number(v.season) > 0; });
+      videos.sort(function (a, b) {
+        return (Number(a.season) - Number(b.season)) || (Number(a.episode || a.number) - Number(b.episode || b.number));
+      });
+      var absEp = want === 1 ? wantEp : 0;
+      for (var i = 0; i < videos.length; i++) {
+        var v = videos[i];
+        if (Number(v.season) === want && Number(v.episode || v.number) === wantEp) {
+          absEp = i + 1;
+          break;
+        }
+      }
+      return { title: String(meta.name || "").trim(), absEp: absEp };
     })
     .catch(function () {
-      return "";
+      return { title: "", absEp: want === 1 ? wantEp : 0 };
     });
 }
 
 function pickSeries(html, title) {
-  var re = /<a href="(https:\/\/www\.ddizi\.tel\/diziler\/[^"]+)"[^>]*title="([^"]*)"/g;
+  var blocks = String(html || "").split(/<div class="dizi-boxpost-cat">/i).slice(1);
   var want = fold(title);
   var best = "";
   var bestScore = 0;
-  var m;
-  while ((m = re.exec(html)) !== null) {
-    var hay = fold(m[2]);
+  var re = /<a href="(https:\/\/www\.ddizi\.tel\/diziler\/[^"]+)"[^>]*title="([^"]*)"/i;
+  for (var i = 0; i < blocks.length; i++) {
+    var m = re.exec(blocks[i]);
+    if (!m) continue;
+    var cleanLabel = m[2].replace(/\s*son\s+b[oö]l[uü]m\s+izle\s*$/i, "").replace(/\s*izle\s*$/i, "");
+    var hay = fold(cleanLabel);
     var score = hay === want ? 3 : (hay + " ").indexOf(want + " ") === 0 ? 2 : 0;
     if (score > bestScore) {
       bestScore = score;
@@ -57,16 +86,17 @@ function pickSeries(html, title) {
   return best;
 }
 
-/* Episode links live at /izle/<id>/<slug>-<n>-bolum...; carry the same series slug. */
-function episodes(html, slug) {
-  var re = /<a href="(https:\/\/www\.ddizi\.tel\/izle\/[^"]+)"[^>]*title="([^"]*)"/g;
+/* Episode links live inside div.dizi-boxpost-cat at /izle/<id>/<slug>-<n>-bolum... */
+function episodes(html) {
+  var blocks = String(html || "").split(/<div class="dizi-boxpost-cat">/i).slice(1);
   var out = [];
-  var m;
-  while ((m = re.exec(html)) !== null) {
-    if (slug && m[1].indexOf(slug) === -1) continue;
+  var re = /<a href="(https:\/\/www\.ddizi\.tel\/izle\/[^"]+)"[^>]*title="([^"]*)"/i;
+  for (var i = 0; i < blocks.length; i++) {
+    var m = re.exec(blocks[i]);
+    if (!m) continue;
     var label = m[2].replace(/\s+/g, " ").trim();
-    var season = /(\d+)\.\s*Sezon/.exec(label);
-    var number = /(\d+)\.\s*Bölüm/.exec(label) || /-(\d+)-bolum/i.exec(m[1]);
+    var season = /(\d+)\.\s*Sezon/i.exec(label);
+    var number = /(\d+)\.\s*B[oö]l[uü]m/i.exec(label) || /-(\d+)-bolum/i.exec(m[1]);
     out.push({
       url: m[1],
       season: season ? parseInt(season[1], 10) : 1,
@@ -74,6 +104,18 @@ function episodes(html, slug) {
     });
   }
   return out;
+}
+
+function matchEpisode(eps, want, wantEp, absEp) {
+  for (var i = 0; i < eps.length; i++) {
+    if (eps[i].season === want && eps[i].episode === wantEp) return eps[i].url;
+  }
+  if (absEp > 0) {
+    for (var j = 0; j < eps.length; j++) {
+      if (eps[j].season === 1 && eps[j].episode === absEp) return eps[j].url;
+    }
+  }
+  return "";
 }
 
 function sources(player) {
@@ -85,12 +127,13 @@ function sources(player) {
   while ((m = re.exec(block[1])) !== null) {
     var url = m[1].replace(/\\\//g, "/");
     if (!/^https?:/i.test(url)) continue;
+    var isHls = /\.m3u8/i.test(url);
     var q = /(\d{3,4})/.exec(String(m[2] || ""));
     out.push({
       name: "ddizi",
-      title: "ddizi - " + (m[2] || "Auto") + (/\.m3u8/i.test(url) ? " [HLS]" : " [MP4]"),
-      url: url,
-      quality: (q ? q[1] + "p" : "auto") + (/\.m3u8/i.test(url) ? "" : " [MP4]"),
+      title: "ddizi - " + (m[2] || "Auto") + (isHls ? " [HLS]" : " [MP4]"),
+      url: isHls ? hlsNoDownload(url) : url,
+      quality: (q ? q[1] + "p" : "auto") + (isHls ? "" : " [MP4]"),
       headers: {},
       subtitles: []
     });
@@ -98,42 +141,51 @@ function sources(player) {
   return out;
 }
 
-/* Larger series split episodes into /sayfa-N pages: walk them until the pair shows up. */
-function findEpisode(seriesUrl, slug, want, wantEp) {
-  function pageUrls(html) {
+/* Larger series split episodes into /sayfa-N pages (10/page, newest first); jump directly near absEp when possible. */
+function findEpisode(seriesUrl, want, wantEp, absEp) {
+  var base = seriesUrl.replace(/\/sayfa-\d+.*$/, "").replace(/\/+$/, "");
+
+  function candidatePages(html, newestEp) {
+    var seen = {};
     var out = [];
-    var re = /href="([^"]*\/sayfa-\d+)"/g;
+    function add(idx) {
+      if (idx < 1 || idx > 40) return;
+      var u = base + "/sayfa-" + idx;
+      if (!seen[u]) { seen[u] = 1; out.push(u); }
+    }
+    var target = absEp > 0 ? absEp : wantEp;
+    if (newestEp > 0 && target > 0 && newestEp >= target) {
+      var est = Math.floor((newestEp - target) / 10);
+      add(est);
+      add(est - 1);
+      add(est + 1);
+      add(est + 2);
+    }
+    var re = /href="[^"]*\/sayfa-(\d+)"/g;
     var m;
     while ((m = re.exec(html)) !== null) {
-      var url = /^https?:/i.test(m[1]) ? m[1] : BASE + m[1];
-      if (out.indexOf(url) === -1) out.push(url);
+      add(parseInt(m[1], 10));
     }
-    return out.slice(0, 20);
+    return out.slice(0, 12);
   }
 
-  function walk(list, i, fallback) {
-    if (i >= list.length) return Promise.resolve(fallback);
+  function walk(list, i) {
+    if (i >= list.length) return Promise.resolve("");
     return text(list[i])
-      .catch(function () {
-        return "";
-      })
+      .catch(function () { return ""; })
       .then(function (html) {
-        var eps = episodes(html, slug);
-        for (var k = 0; k < eps.length; k++) {
-          if (eps[k].season === want && eps[k].episode === wantEp) return eps[k].url;
-        }
-        return walk(list, i + 1, fallback);
+        var hit = matchEpisode(episodes(html), want, wantEp, absEp);
+        return hit || walk(list, i + 1);
       });
   }
 
   return text(seriesUrl).then(function (html) {
-    var eps = episodes(html, slug);
-    var fallback = "";
-    for (var i = 0; i < eps.length; i++) {
-      if (eps[i].season === want && eps[i].episode === wantEp) return eps[i].url;
-    }
-    var pages = pageUrls(html);
-    return pages.length ? walk(pages, 0, fallback) : fallback;
+    var eps = episodes(html);
+    var hit = matchEpisode(eps, want, wantEp, absEp);
+    if (hit) return hit;
+    var newest = eps.length && eps[0].episode ? eps[0].episode : 0;
+    var pages = candidatePages(html, newest);
+    return pages.length ? walk(pages, 0) : "";
   });
 }
 
@@ -141,22 +193,23 @@ function getStreams(tmdbId, mediaType, season, episode) {
   var want = parseInt(season, 10) || 1;
   var wantEp = parseInt(episode, 10) || 1;
   var wanted = "";
+  var absEp = want === 1 ? wantEp : 0;
 
-  return titleOf(tmdbId, mediaType)
-    .then(function (title) {
-      if (!title) return null;
-      wanted = title;
+  return metaOf(tmdbId, mediaType, want, wantEp)
+    .then(function (info) {
+      if (!info.title) return null;
+      wanted = info.title;
+      absEp = info.absEp || absEp;
       return text(BASE + "/arama/", {
         method: "POST",
         form: true,
-        body: "arama=" + encodeURIComponent(title)
+        body: "arama=" + encodeURIComponent(wanted)
       });
     })
     .then(function (search) {
       var series = search && wanted ? pickSeries(search, wanted) : "";
       if (!series) return null;
-      var slug = series.replace(/\/$/, "").split("/").pop().replace(/-\d+-son-bolum-izle$/, "");
-      return findEpisode(series, slug, want, wantEp);
+      return findEpisode(series, want, wantEp, absEp);
     })
     .then(function (episodeUrl) {
       if (!episodeUrl) return [];
@@ -173,9 +226,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
           if (i >= frames.length) return Promise.resolve(rows);
           var frame = frames[i].charAt(0) === "/" ? BASE + frames[i] : frames[i];
           return text(frame, { referer: episodeUrl })
-            .catch(function () {
-              return "";
-            })
+            .catch(function () { return ""; })
             .then(function (player) {
               rows = rows.concat(sources(player));
               return step(i + 1);
@@ -239,12 +290,12 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
   }).catch(function () { return []; });
 };
 
-/* Cinemeta basligi yerellestirir ("Gibi" -> "As If"); sonuc bossa Wikidata TR/EN basliklariyla yeniden dene. */
+/* Cinemeta basligi yerellestirir ("Gibi" -> "As If"); sonuc bossa Wikidata TR, IMDb ve TVMaze basliklariyla yeniden dene. */
 function __altTitles(raw, mediaType) {
   var h = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
   var api = "https://www.wikidata.org/w/api.php?format=json";
   var stmt = /^tt\d+$/.test(raw) ? "P345=" + raw : (mediaType === "movie" ? "P4947=" : "P4983=") + raw;
-  return fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + stmt), { headers: h })
+  var wd = fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + stmt), { headers: h })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (j) {
       var hits = (j && j.query && j.query.search) || [];
@@ -252,33 +303,56 @@ function __altTitles(raw, mediaType) {
       return fetch(api + "&action=wbgetentities&props=labels|aliases&languages=tr|en&ids=" + hits[0].title, { headers: h }).then(function (r) { return r.ok ? r.json() : null; });
     })
     .then(function (j) {
-      var out = [], seen = {}, ents = (j && j.entities) || {}, k, l, a, i;
-      function add(v) {
-        v = String(v || "").replace(/\s*\([^)]*\)\s*$/, "").trim();
-        if (v && !seen[v.toLowerCase()]) { seen[v.toLowerCase()] = 1; out.push(v); }
-      }
+      var res = [], ents = (j && j.entities) || {}, k, l, a, i;
       for (k in ents) {
         l = ents[k].labels || {}; a = ents[k].aliases || {};
-        add((l.tr || {}).value); add((l.en || {}).value);
-        for (i = 0; i < (a.tr || []).length && i < 2; i++) add(a.tr[i].value);
+        if (l.tr && l.tr.value) res.push(l.tr.value);
+        if (l.en && l.en.value) res.push(l.en.value);
+        for (i = 0; i < (a.tr || []).length && i < 2; i++) res.push(a.tr[i].value);
       }
-      return out;
-    })
-    .catch(function () { return []; });
+      return res;
+    }).catch(function () { return []; });
+  var imdb = /^tt\d+$/.test(raw)
+    ? fetch("https://v3.sg.media-imdb.com/suggestion/t/" + raw + ".json", { headers: h })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { return (j && j.d && j.d[0] && j.d[0].l) ? [j.d[0].l] : []; })
+        .catch(function () { return []; })
+    : Promise.resolve([]);
+  var tvm = /^tt\d+$/.test(raw) && mediaType !== "movie"
+    ? fetch("https://api.tvmaze.com/lookup/shows?imdb=" + raw, { headers: h })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { return (j && j.name) ? [j.name] : []; })
+        .catch(function () { return []; })
+    : Promise.resolve([]);
+  return Promise.all([wd, imdb, tvm]).then(function (lists) {
+    var out = [], seen = {};
+    for (var i = 0; i < lists.length; i++) {
+      for (var j = 0; j < lists[i].length; j++) {
+        var v = String(lists[i][j] || "").replace(/\s*\([^)]*\)\s*$/, "").trim();
+        if (v && !seen[v.toLowerCase()]) { seen[v.toLowerCase()] = 1; out.push(v); }
+      }
+    }
+    return out;
+  });
 }
 var __cinemetaGetStreams = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   var raw = String(id || "");
+  if (/^__alt__:/.test(raw)) return __cinemetaGetStreams(raw, mediaType, season, episode);
+  var want = parseInt(season, 10) || 1;
+  var wantEp = parseInt(episode, 10) || 1;
   return __cinemetaGetStreams(raw, mediaType, season, episode).then(function (streams) {
-    if ((streams && streams.length) || /^__alt__:/.test(raw)) return streams || [];
-    return __altTitles(raw, mediaType).then(function (titles) {
-      var chain = Promise.resolve([]);
-      titles.forEach(function (t) {
-        chain = chain.then(function (out) {
-          return out.length ? out : __cinemetaGetStreams("__alt__:" + encodeURIComponent(t), mediaType, season, episode);
+    if (streams && streams.length) return streams;
+    return metaOf(raw, mediaType, want, wantEp).then(function (info) {
+      return __altTitles(raw, mediaType).then(function (titles) {
+        var chain = Promise.resolve([]);
+        titles.forEach(function (t) {
+          chain = chain.then(function (out) {
+            return out.length ? out : __cinemetaGetStreams("__alt__:" + encodeURIComponent(t) + "|" + (info.absEp || 0), mediaType, season, episode);
+          });
         });
+        return chain;
       });
-      return chain;
     });
   }).catch(function () { return []; });
 };

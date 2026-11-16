@@ -262,6 +262,21 @@ class TurkceDiziProvider : MainAPI() {
                 continue
             }
             val playerHtml = runCatching { app.get(url, headers = uaHeaders, referer = data).text }.getOrNull()
+            val playerCfg = playerHtml?.let { Regex("""window\.__PLAYER__\s*=\s*(\{.*?\});""", RegexOption.DOT_MATCHES_ALL).find(it)?.groupValues?.get(1) }
+                ?.let { runCatching { JSONObject(it) }.getOrNull() }
+            val cfgStream = playerCfg?.optString("stream")?.takeIf { it.startsWith("http") }
+            if (cfgStream != null) {
+                emit(cfgStream, "TurkceDizi", url, Qualities.Unknown.value)
+                playerCfg.optJSONArray("subs")?.let { subsArr ->
+                    for (si in 0 until subsArr.length()) {
+                        val sub = subsArr.optJSONObject(si) ?: continue
+                        val src = sub.optString("src").takeIf { it.startsWith("http") } ?: continue
+                        val lang = sub.optString("lang").ifBlank { "tr" }
+                        if (Settings.subtitleAllowed(lang)) subtitleCallback.invoke(SubtitleFile(lang, src))
+                    }
+                }
+                continue
+            }
             val plain = playerHtml?.let { runCatching { decodeTurkceDiziPlayer(it) }.getOrNull() }
             val master = plain?.let { p -> Regex("""file\s*:\s*"([^"]+)""").find(p)?.groupValues?.get(1) }
             if (master != null) {
@@ -367,7 +382,10 @@ class TurkceDiziProvider : MainAPI() {
             javax.crypto.spec.SecretKeySpec(derived.subList(0, 32).toByteArray(), "AES"),
             javax.crypto.spec.IvParameterSpec(derived.subList(32, 48).toByteArray()),
         )
-        return String(cipher.doFinal(blob.copyOfRange(16, blob.size)), Charsets.UTF_8)
+        val plain = String(cipher.doFinal(blob.copyOfRange(16, blob.size)), Charsets.UTF_8)
+        val junkBlock = Regex("""\[\s*((?:"[^"]*"\s*,?\s*)+)]\s*\.join\(\s*''\s*\)""").find(html)?.groupValues?.get(1)
+        val junk = junkBlock?.let { b -> Regex(""""([^"]*)"""").findAll(b).joinToString("") { it.groupValues[1] } }.orEmpty()
+        return if (junk.isNotEmpty()) plain.replace(junk, "") else plain
     }
 
     private suspend fun resolveCustomFallbackEmbed(
