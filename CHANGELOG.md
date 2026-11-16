@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.83] - 2026-11-16
+
+### Değişti
+- **TurkceDizi v11**: taban adres https://turkcedizi.com -> https://turkcedizi.com.
+
 ## [1.6.82] - 2026-11-16
 
 ### Değişti
