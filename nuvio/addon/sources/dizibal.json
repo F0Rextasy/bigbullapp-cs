@@ -3,8 +3,13 @@
   "name": "DiziBal",
   "type": "series",
   "url": "https://dizibal.org/diziler",
-  "item": "<div class=\"mt-2\\.5 px-0\\.5\">[\\s\\S]*?</div>",
+  "item": "<a href=\"https://dizibal\\.org/series/[^\"]+\" class=\"group block\">[\\s\\S]*?</a>",
   "title": "<h3[^>]*>([^<]+)</h3>",
+  "poster": "src=\"(https?://[^\"]+)\"",
+  "year": "<p[^>]*>\\s*(\\d{4})\\s*</p>",
   "href": "href=\"([^\"]+/series/[^\"]+)\"",
+  "group": [
+    "popular-series"
+  ],
   "limit": 40
 }

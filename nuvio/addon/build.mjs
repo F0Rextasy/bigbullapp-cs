@@ -93,12 +93,24 @@ const recipes = readdirSync(SRC)
 
 const cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, "utf8")) : {};
 
+const TR_FOLD = { ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u", â: "a", î: "i", û: "u" };
 const norm = (s) =>
   String(s || "")
     .toLocaleLowerCase("tr")
-    .replace(/[ıİ]/g, "i")
+    .replace(/[çğıöşüâîû]/g, (c) => TR_FOLD[c] || c)
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
+
+const STOP_WORDS = new Set(["the", "a", "an", "of", "in", "on", "at", "to", "for", "and", "or", "ve", "bir", "ile", "da", "de"]);
+
+function pickPoster(hit) {
+  return String((hit && hit.i && hit.i.imageUrl) || "").trim();
+}
+
+function yearFits(hitYear, wantYear, maxDiff = 2) {
+  if (!wantYear || !hitYear) return true;
+  return Math.abs(Number(hitYear) - Number(wantYear)) <= maxDiff;
+}
 
 
 const ENTITIES = {
@@ -134,36 +146,72 @@ function kindFits(kind, q) {
   return !/series|mini-series/.test(s);
 }
 
-async function imdbHit(title, want, kind) {
+async function fetchImdbHits(title) {
   try {
     const d = JSON.parse(await get(`https://v3.sg.media-imdb.com/suggestion/x/${encodeURIComponent(title)}.json`));
-    const hits = ((d && d.d) || []).filter((h) => h && /^tt\d+$/.test(String(h.id || "")));
-    for (const hit of hits) {
-      const n = norm(hit.l);
-      const exact = n === want;
-      const prefix = n.length >= 3 && want.length >= 3 && (n.startsWith(want + " ") || want.startsWith(n + " "));
-      if ((exact || prefix) && hit.q && kindFits(kind, hit.q)) return { id: hit.id, poster: pickPoster(hit) };
-    }
-    // Yerelleştirilmiş başlıklar ("Örümcek-Adam…", "Saplantı") IMDb'de İngilizce adla döner:
-    // tam eşleşme yoksa yalnız ≥2 ortak kelime varsa ilk uygun türdeki sonucu kabul et.
-    const wantTokens = new Set(want.split(" ").filter((t) => t.length > 1));
-    const top = hits.find((h) => {
-      if (!kindFits(kind, h.q)) return false;
-      const overlap = norm(h.l).split(" ").filter((t) => t.length > 1 && wantTokens.has(t)).length;
-      return overlap >= 2;
-    });
-    if (top) return { id: top.id, poster: pickPoster(top) };
+    return ((d && d.d) || []).filter((h) => h && /^tt\d+$/.test(String(h.id || "")));
   } catch {
-    /* ağ hatası: sıradaki adaya geç */
+    return [];
+  }
+}
+
+function bestByYear(list, year) {
+  if (!list.length) return null;
+  if (!year) return list[0];
+  const near = list.filter((h) => yearFits(h.y, year, 2));
+  if (!near.length) return null;
+  near.sort((a, b) => Math.abs((Number(a.y) || year) - year) - Math.abs((Number(b.y) || year) - year));
+  return near[0];
+}
+
+function imdbExact(hits, want, kind, year) {
+  const exact = hits.filter((h) => {
+    if (!h.q || !kindFits(kind, h.q)) return false;
+    const n = norm(h.l);
+    return n === want || (!want.startsWith("the ") && n === "the " + want);
+  });
+  const eHit = bestByYear(exact, year);
+  return eHit ? { id: eHit.id, poster: pickPoster(eHit) } : null;
+}
+
+function imdbFuzzy(hits, want, kind, year) {
+  const prefix = hits.filter((h) => {
+    if (!h.q || !kindFits(kind, h.q)) return false;
+    const n = norm(h.l);
+    return want.length >= 6 && n.length >= 6 && (n.startsWith(want + " ") || want.startsWith(n + " "));
+  });
+  const pHit = bestByYear(prefix, year);
+  if (pHit) return { id: pHit.id, poster: pickPoster(pHit) };
+
+  // Yerelleştirilmiş veya alt başlıklı adlar: anlamsız bağlaçlar hariç ≥2 ortak kelime.
+  const wantTokens = new Set(want.split(" ").filter((t) => t.length > 1 && !STOP_WORDS.has(t)));
+  if (wantTokens.size >= 2) {
+    const overlap = hits.filter((h) => {
+      if (!h.q || !kindFits(kind, h.q)) return false;
+      const count = norm(h.l).split(" ").filter((t) => t.length > 1 && !STOP_WORDS.has(t) && wantTokens.has(t)).length;
+      return count >= 2;
+    });
+    const oHit = bestByYear(overlap, year);
+    if (oHit) return { id: oHit.id, poster: pickPoster(oHit) };
   }
   return null;
 }
 
-async function imdbById(id, kind) {
+function imdbAkaByYear(hits, kind, year) {
+  if (!year) return null;
+  const near = hits.filter((h) => h.q && kindFits(kind, h.q) && h.y && Math.abs(Number(h.y) - Number(year)) <= 1);
+  if (!near.length) return null;
+  near.sort((a, b) => Math.abs(Number(a.y) - year) - Math.abs(Number(b.y) - year));
+  return { id: near[0].id, poster: pickPoster(near[0]) };
+}
+
+async function imdbById(id, kind, year) {
   try {
     const d = JSON.parse(await get(`https://v3.sg.media-imdb.com/suggestion/x/${encodeURIComponent(id)}.json`));
     const hit = ((d && d.d) || []).find((h) => h && h.id === id);
-    if (hit && kindFits(kind, hit.q)) return { id, poster: pickPoster(hit) };
+    if (hit && kindFits(kind, hit.q) && yearFits(hit.y, year, 2)) {
+      return { id, poster: pickPoster(hit) };
+    }
   } catch {
     /* yok say */
   }
@@ -177,15 +225,15 @@ const WD_TYPES = {
   movie: new Set(["Q11424", "Q506240", "Q202866", "Q24856"]),
   series: new Set(["Q5398426", "Q1259759"]),
 };
-async function wikidataHit(title, want, kind) {
+async function wikidataHit(title, want, kind, year) {
   for (const lang of ["tr", "en"]) {
     try {
       const s = JSON.parse(await get(
-        `https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${encodeURIComponent(title)}&language=${lang}&uselang=${lang}&format=json&limit=3&origin=*`, WD_HEADERS));
+        `https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${encodeURIComponent(title)}&language=${lang}&uselang=${lang}&format=json&limit=8&origin=*`, WD_HEADERS));
       const ids = (s.search || [])
-        .filter((x) => norm(x.label) === want)
+        .filter((x) => norm(x.label) === want || norm(x.match && x.match.text) === want)
         .map((x) => x.id)
-        .slice(0, 2);
+        .slice(0, 6);
       if (!ids.length) continue;
       const e = JSON.parse(await get(
         `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${ids.join("|")}&props=claims&format=json&origin=*`, WD_HEADERS));
@@ -200,7 +248,9 @@ async function wikidataHit(title, want, kind) {
           ? String(claim[0].mainsnak.datavalue.value || "")
           : "";
         if (!/^tt\d+$/.test(imdb)) continue;
-        return (await imdbById(imdb, kind)) || { id: imdb, poster: "" };
+        const verified = await imdbById(imdb, kind, year);
+        if (verified) return verified;
+        if (!year) return { id: imdb, poster: "" };
       }
     } catch {
       /* sıradaki dil */
@@ -209,7 +259,7 @@ async function wikidataHit(title, want, kind) {
   return null;
 }
 
-async function tvmazeHit(title, want) {
+async function tvmazeHit(title, want, year) {
   try {
     const arr = JSON.parse(await get(`https://api.tvmaze.com/search/shows?q=${encodeURIComponent(title)}`));
     for (const row of Array.isArray(arr) ? arr : []) {
@@ -217,7 +267,8 @@ async function tvmazeHit(title, want) {
       const imdb = show && show.externals && show.externals.imdb;
       if (!show || !/^tt\d+$/.test(String(imdb || ""))) continue;
       const n = norm(show.name);
-      if (n === want || (n.length >= 3 && want.length >= 3 && n.startsWith(want + " "))) {
+      const sy = show.premiered ? Number(String(show.premiered).slice(0, 4)) : 0;
+      if ((n === want || (n.length >= 4 && want.length >= 4 && n.startsWith(want + " "))) && yearFits(sy, year, 2)) {
         return { id: imdb, poster: (show.image && show.image.original) || "" };
       }
     }
@@ -227,19 +278,28 @@ async function tvmazeHit(title, want) {
   return null;
 }
 
-async function resolve(type, title) {
-  const key = type + "|" + norm(title);
-  if (Object.prototype.hasOwnProperty.call(cache, key)) return cache[key];
+async function resolve(type, title, year) {
+  const baseKey = type + "|" + norm(title);
+  const key = year ? `${type}|${year}|${norm(title)}` : baseKey;
+  const cached = cache[key] || (!year ? cache[baseKey] : null);
+  if (cached && cached.id) return cached;
   let value = null;
   for (const cand of titleCandidates(title)) {
     const want = norm(cand);
     if (!want) continue;
-    value = (await imdbHit(cand, want, type)) || (await wikidataHit(cand, want, type))
-      || (type === "series" ? await tvmazeHit(cand, want) : null);
+    const hits = await fetchImdbHits(cand);
+    value = imdbExact(hits, want, type, year)
+      || (await wikidataHit(cand, want, type, year))
+      || (type === "series" ? await tvmazeHit(cand, want, year) : null)
+      || imdbFuzzy(hits, want, type, year)
+      || imdbAkaByYear(hits, type, year);
     if (value) break;
   }
-  cache[key] = value;
-  if (!value) console.warn(`  ~ çözülemedi: ${title}`);
+  if (value && value.id) cache[key] = value;
+  else {
+    delete cache[key];
+    console.warn(`  ~ çözülemedi: ${title}${year ? ` (${year})` : ""}`);
+  }
   return value;
 }
 async function mapLimit(items, limit, fn) {
@@ -276,13 +336,18 @@ for (const rc of recipes) {
       const k = norm(title);
       if (seen.has(k)) continue;
       seen.add(k);
-      const poster = rc.poster ? (new RegExp(rc.poster, "i").exec(b) || [])[1] : undefined;
+      let poster = rc.poster ? (new RegExp(rc.poster, "i").exec(b) || [])[1] : undefined;
+      if (poster && /^data:/i.test(poster)) poster = undefined;
+      if (poster && poster.startsWith("/")) poster = new URL(poster, rc.url).origin + poster;
+      const yearStr = rc.year ? (new RegExp(rc.year, "i").exec(b) || [])[1] : undefined;
+      const year = yearStr && /^(19|20)\d{2}$/.test(yearStr) ? Number(yearStr) : 0;
       const imdb = rc.imdb ? (new RegExp(rc.imdb, "i").exec(b) || [])[1] : undefined;
       const slug = rc.title2 ? (new RegExp(rc.title2, "i").exec(b) || [])[1] : undefined;
       items.push({
         title,
         title2: slug ? slug.replace(/-/g, " ") : undefined,
         poster,
+        year,
         imdb,
         href: rc.href ? (new RegExp(rc.href, "i").exec(b) || [])[1] : undefined,
       });
@@ -303,7 +368,7 @@ for (const rc of recipes) {
     it,
     hit: it.imdb
       ? { id: it.imdb, poster: it.poster || "" }
-      : (await resolve(rc.type, it.title)) || (it.title2 ? await resolve(rc.type, it.title2) : null),
+      : (await resolve(rc.type, it.title, it.year)) || (it.title2 ? await resolve(rc.type, it.title2, it.year) : null),
   }));
   const metas = [];
   for (const { it, hit } of resolved) {
@@ -327,20 +392,22 @@ for (const rc of recipes) {
   console.log(`ok ${rc.id} (${rc.type}) ${metas.length}/${items.length}`);
 }
 
-// Geçici hata (site blokajı/ağ) satır silmesin: önceki katalog dosyası manifestte kalır.
+// Geçici hata (site blokajı/ağ) satır veya grup üyesi silmesin: önceki katalog dosyası korunur.
 if (!check) {
   for (const rc of failed) {
-    if (rc.hidden) continue;
     const file = join(OUT, rc.type, rc.id + ".json");
     if (!existsSync(file)) continue;
     const metas = JSON.parse(readFileSync(file, "utf8")).metas || [];
     if (!metas.length) continue;
-    written.push({ id: rc.id, type: rc.type, name: rc.name, hidden: false, group: rc.group || [], count: metas.length, kept: true });
+    written.push({ id: rc.id, type: rc.type, name: rc.name, hidden: !!rc.hidden, group: rc.group || [], count: metas.length, kept: true });
     console.log(`~ ${rc.id}: önceki liste korundu (${metas.length})`);
   }
 }
 
 if (!check) {
+  for (const k of Object.keys(cache)) {
+    if (!cache[k] || !cache[k].id) delete cache[k];
+  }
   writeFileSync(CACHE, JSON.stringify(cache, null, 1) + "\n");
   // Tarifi silinen katalogları kaldır; geçici hata alan tarifin eski listesi korunur.
   const allRecipes = readdirSync(SRC)

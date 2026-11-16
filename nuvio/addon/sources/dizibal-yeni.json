@@ -3,8 +3,10 @@
   "name": "DiziBal · Son Eklenenler",
   "type": "series",
   "url": "https://dizibal.org/diziler?sirala=yeni",
-  "item": "<div class=\"mt-2\\.5 px-0\\.5\">[\\s\\S]*?</div>",
+  "item": "<a href=\"https://dizibal\\.org/series/[^\"]+\" class=\"group block\">[\\s\\S]*?</a>",
   "title": "<h3[^>]*>([^<]+)</h3>",
+  "poster": "src=\"(https?://[^\"]+)\"",
+  "year": "<p[^>]*>\\s*(\\d{4})\\s*</p>",
   "group": [
     "latest-series"
   ],

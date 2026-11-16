@@ -7,6 +7,7 @@
   "title": "alt=\"([^\"]+)\"",
   "strip": "\\s+Film\\s+[İi]zle$",
   "poster": "src=\"([^\"]+)\"",
+  "year": "<p[^>]*>\\s*(\\d{4})\\s*</p>",
   "group": [
     "latest-movie"
   ]

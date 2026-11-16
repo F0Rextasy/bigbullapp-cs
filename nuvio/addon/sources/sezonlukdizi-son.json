@@ -5,6 +5,8 @@
   "url": "https://sezonlukdizi.cc/diziler.asp?siralama_tipi=id",
   "item": "<a href=\"/diziler/[^\"]*\" class=\"column\"[\\s\\S]*?</a>",
   "title": "class=\"description\">([^<]+)<",
+  "poster": "data-src=\"([^\"]+)\"",
+  "year": "<span class=\"year\">(\\d{4})</span>",
   "group": [
     "latest-series"
   ],

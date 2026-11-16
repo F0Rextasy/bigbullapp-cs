@@ -5,6 +5,7 @@
   "url": "https://webdramaturkey2.com/diziler",
   "item": "<div class=\"list-movie\"[\\s\\S]*?class=\"list-title\"[^>]*>[^<]*",
   "title": "class=\"list-title\"[^>]*>\\s*([^<]+)",
+  "poster": "data-src=\"([^\"]+)\"",
   "group": [
     "latest-series"
   ],

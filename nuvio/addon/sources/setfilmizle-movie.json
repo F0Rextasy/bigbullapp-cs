@@ -6,5 +6,7 @@
   "item": "<a class=\"card-link\"[\\s\\S]*?</article>",
   "title": "alt=\"([^\"]+)\"",
   "title2": "src=\"[^\"]*/([a-z0-9-]+)-\\d{4}-izle",
+  "poster": "src=\"(https?://[^\"]+)\"",
+  "year": "-(\\d{4})-izle",
   "limit": 40
 }

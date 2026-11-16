@@ -1,0 +1,16 @@
+{
+  "id": "dizimom-trend",
+  "name": "DiziMom · Trendler",
+  "type": "series",
+  "url": "https://ddizimom.net/",
+  "item": "<a href=\"https://ddizimom\\.net/dizi/[^\"]+\" class=\"group block\">[\\s\\S]*?</a>",
+  "title": "alt=\"([^\"]+)\"",
+  "strip": "\\s+Dizi izle$",
+  "poster": "src=\"([^\"]+)\"",
+  "year": "<p[^>]*>\\s*(\\d{4})\\s*</p>",
+  "group": [
+    "popular-series"
+  ],
+  "hidden": true,
+  "limit": 12
+}

@@ -3,8 +3,10 @@
   "name": "DiziBal Filmler",
   "type": "movie",
   "url": "https://dizibal.org/filmler",
-  "item": "<div class=\"mt-2\\.5 px-0\\.5\">[\\s\\S]*?</div>",
+  "item": "<a href=\"https://dizibal\\.org/movie/[^\"]+\" class=\"group block\">[\\s\\S]*?</a>",
   "title": "<h3[^>]*>([^<]+)</h3>",
+  "poster": "src=\"(https?://[^\"]+)\"",
+  "year": "<p[^>]*>\\s*(\\d{4})\\s*</p>",
   "href": "href=\"([^\"]+/movie/[^\"]+)\"",
   "limit": 40
 }
