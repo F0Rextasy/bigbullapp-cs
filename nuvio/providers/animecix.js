@@ -1,4 +1,4 @@
-// @provider {"id":"animecix", "name":"AnimeciX", "types":["tv"], "domain":"animecix.tv", "formats":["mp4"], "sample":"tt12343534:tv:1:1", "description":"AnimeciX Turkce altyazili anime arsivi (MP4 akislari).", "version":"1.0.7"}
+// @provider {"id":"animecix", "name":"AnimeciX", "types":["tv"], "domain":"animecix.tv", "formats":["mp4"], "sample":"tt12343534:tv:1:1", "description":"AnimeciX Turkce altyazili anime arsivi (MP4 akislari).", "version":"1.0.8"}
 /**
  * animecix — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /secure/search/<q> -> /secure/related-videos -> secure/best-video
@@ -62,9 +62,14 @@ function pick(items, title) {
   for (var i = 0; i < (items || []).length; i++) {
     var item = items[i] || {};
     if (!item.id) continue;
-    var have = fold(item.name);
-    var score = have === want ? 100 : 0;
-    if (!score && have.indexOf(want + " ") === 0) score = 60;
+    var candidates = [item.name, item.name_english, item.name_romanji];
+    var score = 0;
+    for (var c = 0; c < candidates.length; c++) {
+      var have = fold(candidates[c]);
+      if (!have) continue;
+      if (have === want) score = Math.max(score, 100);
+      else if (have.indexOf(want + " ") === 0) score = Math.max(score, 60);
+    }
     if (score > bestScore) {
       bestScore = score;
       best = item;

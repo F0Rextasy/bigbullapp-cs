@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.88",
+  "version": "1.6.89",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -8,7 +8,7 @@
       "id": "animecix",
       "name": "AnimeciX",
       "description": "AnimeciX Turkce altyazili anime arsivi (MP4 akislari).",
-      "version": "1.0.7",
+      "version": "1.0.8",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -124,7 +124,7 @@
       "id": "dizibal",
       "name": "DiziBal",
       "description": "DiziBal altyazili yabanci dizi/film arsivi; pilavyer HLS akisi ve altyazilar.",
-      "version": "1.0.8",
+      "version": "1.0.9",
       "author": "bigbull",
       "supportedTypes": [
         "tv",
@@ -298,7 +298,7 @@
       "id": "filmmakinesi",
       "name": "FilmMakinesi",
       "description": "FilmMakinesi film kaynaklari (oynatloload secure-hls).",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "author": "bigbull",
       "supportedTypes": [
         "movie",

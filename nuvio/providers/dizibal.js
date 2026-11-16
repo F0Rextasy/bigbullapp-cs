@@ -1,4 +1,4 @@
-// @provider {"id":"dizibal", "name":"DiziBal", "types":["tv", "movie"], "domain":"dizibal.org", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"DiziBal altyazili yabanci dizi/film arsivi; pilavyer HLS akisi ve altyazilar.", "version":"1.0.8"}
+// @provider {"id":"dizibal", "name":"DiziBal", "types":["tv", "movie"], "domain":"dizibal.org", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"DiziBal altyazili yabanci dizi/film arsivi; pilavyer HLS akisi ve altyazilar.", "version":"1.0.9"}
 /**
  * dizibal — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /ara?q= -> /series/<slug> -> /series/<slug>/season/S/episode/E
@@ -71,6 +71,7 @@ function qualityOf(master, fallback) {
 
 // Oynatıcı sayfası -> data-pv + oynatıcı tabanı -> s.php -> __PLAYER__
 function resolvePlayer(pageUrl) {
+  if (!pageUrl) return Promise.resolve(null);
   return text(pageUrl).then(function (page) {
     var pv = first(/data-pv="([^"]+)"/, page);
     if (!pv) return null;

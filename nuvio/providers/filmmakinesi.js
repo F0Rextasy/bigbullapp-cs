@@ -1,4 +1,4 @@
-// @provider {"id":"filmmakinesi", "name":"FilmMakinesi", "types":["movie", "tv"], "domain":"filmmakinesi.co", "formats":["m3u8"], "description":"FilmMakinesi film kaynaklari (oynatloload secure-hls).", "sample":"tt13611778:movie:1:1", "verified":true, "version":"1.0.3"}
+// @provider {"id":"filmmakinesi", "name":"FilmMakinesi", "types":["movie", "tv"], "domain":"filmmakinesi.co", "formats":["m3u8"], "description":"FilmMakinesi film kaynaklari (oynatloload secure-hls).", "sample":"tt13611778:movie:1:1", "verified":true, "version":"1.0.4"}
 /**
  * filmmakinesi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /?s= -> film sayfasi -> oynatloload embed -> __ULTRA_EAUTH ->
@@ -36,7 +36,10 @@ function abs(base, href) {
 }
 
 function norm(s) {
-  return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  return String(s || "")
+    .replace(/[\u0131\u0130I]/g, "i").replace(/[\u015f\u015e]/g, "s").replace(/[\u011f\u011e]/g, "g")
+    .replace(/[\u00fc\u00dc]/g, "u").replace(/[\u00f6\u00d6]/g, "o").replace(/[\u00e7\u00c7]/g, "c")
+    .toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
 // Cinemeta istege bagli turu bos doner (film/dizi ayrimi 307 -> {}); diger turu dene.
@@ -80,11 +83,17 @@ function langOf(label) {
   return "";
 }
 
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
+}
+
 function row(url, quality, subs, label) {
   return {
     name: "FilmMakinesi",
     title: "FilmMakinesi - " + quality + " [HLS]" + label,
-    url: url,
+    url: hlsNoDownload(url),
     quality: quality,
     headers: { "User-Agent": UA, Referer: PLAYER + "/", Origin: PLAYER },
     subtitles: subs

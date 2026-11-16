@@ -5,6 +5,14 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.89] - 2026-11-17
+
+### Düzeltildi
+- **AnimeciX (Nuvio)**: İngilizce veya alternatif anime başlıklarıyla arama eşleşmesi düzeltildi.
+- **DiziBal (Nuvio)**: eşleşme bulunamadığında oluşan gereksiz hata kaydı temizlendi.
+- **FilmMakinesi (Nuvio)**: Türkçe harf eşleşmesi ve HLS indirme işareti düzeltildi.
+- **DiziLife v12**: eklenti açıklaması ve simge adresi güncel alan adına güncellendi.
+
 ## [1.6.88] - 2026-11-17
 
 ### Eklendi

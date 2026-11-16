@@ -1,9 +1,9 @@
 // Use an integer for version numbers
-version = 11
+version = 12
 
 
 cloudstream {
-    description = "DiziLife — dizi85.life dizi ve film arşivi"
+    description = "DiziLife — dizi86.life dizi ve film arşivi"
     authors = listOf("F0Rextasy")
 
     /**
@@ -18,7 +18,7 @@ cloudstream {
     tvTypes = listOf("TvSeries", "Movie")
     language = "tr"
 
-    iconUrl = "https://www.google.com/s2/favicons?domain=dizi85.life&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=dizi86.life&sz=%size%"
 }
 
 android {

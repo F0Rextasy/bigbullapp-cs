@@ -161,7 +161,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Dizigecesi` | dizigecesi.com | Film | — | — | — | — | — | — |
 | `Dizigom` | dizigom.news | Film | — | — | — | — | — | — |
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
-| `DiziLife` | dizi85.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
+| `DiziLife` | dizi86.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
 | `Dizimanya` | dizimanya.com | Dizi | — | — | — | — | — | ✓ |
 | `Dizirella` | dizirella.one | Dizi | — | — | — | — | — | — |
 | `DiziSol` | dizisol.com | Film/Dizi | ✓ | — | — | — | ✓ | — |
