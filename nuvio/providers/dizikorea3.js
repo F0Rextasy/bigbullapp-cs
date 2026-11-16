@@ -1,4 +1,4 @@
-// @provider {"id":"dizikorea3", "name":"Dizikorea3", "types":["tv"], "domain":"dizikorea3.com", "formats":["m3u8"], "sample":"tt43088191:tv:1:1", "description":"Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).", "version":"1.0.10"}
+// @provider {"id":"dizikorea3", "name":"Dizikorea3", "types":["tv"], "domain":"dizikorea3.com", "formats":["m3u8"], "sample":"tt43088191:tv:1:1", "description":"Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).", "version":"1.0.11"}
 /**
  * dizikorea3 — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /sayfa/1?s= -> /dizi/<slug> -> /sezon-N/bolum-M -> player iframes.
@@ -35,6 +35,13 @@ function abs(base, href) {
   var origin = /^(https?:\/\/[^/]+)/.exec(base);
   if (href.charAt(0) === "/") return origin ? origin[1] + href : href;
   return base.replace(/[^/]*$/, "") + href;
+}
+
+/** Nuvio yalnız progressive indirir; HLS'yi işaretle ki sahte dosya inmesin (fragment HTTP'de gönderilmez). */
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
 }
 
 /** Nuvio's home rows pass a numeric TMDB id; Wikidata maps it to the English title the site indexes. */
@@ -266,7 +273,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
             rows.push({
               name: "dizikorea3",
               title: "dizikorea3 - " + label + (item.hls ? " [HLS]" : " [MP4]"),
-              url: item.url,
+              url: item.hls ? hlsNoDownload(item.url) : item.url,
               quality: label,
               headers: { Referer: item.frame },
               subtitles: []

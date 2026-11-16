@@ -1,4 +1,4 @@
-// @provider {"id":"fullhdfilmizlesene", "name":"FullHDFilmizlesene", "types":["movie"], "domain":"fullhdfilmizlesene.now", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.", "verified":true, "version":"1.0.9"}
+// @provider {"id":"fullhdfilmizlesene", "name":"FullHDFilmizlesene", "types":["movie"], "domain":"fullhdfilmizlesene.now", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.", "verified":true, "version":"1.0.10"}
 /**
  * fullhdfilmizlesene — Nuvio provider (bb-nuvio).
  * Flow: TMDB id -> Wikidata -> IMDb -> Cinemeta title -> /arama/<q> -> film page
@@ -175,6 +175,13 @@ function abs(base, href) {
   return base.replace(/[^/]*$/, "") + href;
 }
 
+/** Nuvio yalnız progressive indirir; HLS'yi işaretle ki sahte dosya inmesin (fragment HTTP'de gönderilmez). */
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
+}
+
 /** Cinema-aspect masters (3840x1600) still read as their ladder rung, so label by width first. */
 function label(width, height) {
   if (width >= 3400) return "2160p";
@@ -342,7 +349,7 @@ function getStreams(tmdbId, mediaType) {
           out.push({
             name: "FullHDFilmizlesene",
             title: "FullHDFilmizlesene - " + row.quality + " [" + (row.label || "Atom") + "]",
-            url: row.url,
+            url: hlsNoDownload(row.url),
             quality: row.quality,
             headers: { "User-Agent": UA, Referer: filmUrl },
             subtitles: row.subtitles

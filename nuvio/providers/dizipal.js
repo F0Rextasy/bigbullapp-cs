@@ -1,4 +1,4 @@
-// @provider {"id":"dizipal", "name":"DiziPal", "types":["movie", "tv"], "domain":"dizipal1595.com", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.", "verified":true, "version":"1.0.11"}
+// @provider {"id":"dizipal", "name":"DiziPal", "types":["movie", "tv"], "domain":"dizipal1595.com", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.", "verified":true, "version":"1.0.12"}
 /**
  * dizipal — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> POST /api/mj {action:searchContent} -> content/episode page
@@ -46,6 +46,13 @@ function first(pattern, body) {
 function origin(url) {
   var m = /^(https?:\/\/[^/]+)/.exec(String(url || ""));
   return m ? m[1] : null;
+}
+
+/** Nuvio yalnız progressive indirir; HLS'yi işaretle ki sahte dosya inmesin (fragment HTTP'de gönderilmez). */
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
 }
 
 /** atob is absent in the Nuvio sandbox: base64 -> byte array by hand. */
@@ -715,7 +722,7 @@ function getStreams(tmdbId, mediaType, season, episode) {
         out.push({
           name: "DiziPal",
           title: "DiziPal - " + row.quality + " [HLS]",
-          url: row.url,
+          url: hlsNoDownload(row.url),
           quality: row.quality,
           headers: { "User-Agent": UA, Referer: (origin(row.player) || "") + "/" }
         });
