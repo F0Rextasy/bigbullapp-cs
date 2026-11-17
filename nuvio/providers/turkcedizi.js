@@ -1,4 +1,4 @@
-// @provider {"id":"turkcedizi", "name":"TurkceDizi", "types":["tv", "movie"], "domain":"turkcedizi.com", "formats":["m3u8", "mp4"], "sample":"tt38647499:tv:2:3", "description":"TurkceDizi yerli ve yabancı dizi/film arşivi; HLS ve OkRu akışları.", "version":"1.0.0"}
+// @provider {"id": "turkcedizi", "name": "TurkceDizi", "types": ["tv", "movie"], "domain": "turkcedizi.com", "formats": ["m3u8", "mp4"], "sample": "tt0903747:tv:1:1", "description": "TurkceDizi yerli ve yabancı dizi/film arşivi; HLS ve OkRu akışları.", "version": "1.0.1"}
 /**
  * turkcedizi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta (+ Wikidata TR / IMDb / TVMaze) -> /api/search?q= -> /<slug>?sezon=S&bolum=E

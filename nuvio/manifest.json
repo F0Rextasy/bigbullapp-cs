@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -533,7 +533,7 @@
       "id": "turkcedizi",
       "name": "TurkceDizi",
       "description": "TurkceDizi yerli ve yabancı dizi/film arşivi; HLS ve OkRu akışları.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "bigbull",
       "supportedTypes": [
         "tv",
