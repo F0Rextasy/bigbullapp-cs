@@ -7,7 +7,7 @@ Cloudstream için `.cs3` eklentileri, Nuvio için plugin deposu + iki katalog ad
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-94-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-114-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -137,11 +137,14 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `AsyaBox` | asyabox.co | Dizi | — | — | — | — | — | — |
 | `AsyaDizi` | asyadizi.com | Dizi | — | — | — | — | — | — |
 | `Asyadizileriizle` | asyadizileriizle.com | Dizi | — | — | — | — | — | — |
+| `AsyaFanatikleri` **beta** | asyafanatikleri.vip | Asya dizi/film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `AsyaLog` | asyalog.co | Asya dizi/film | ✓ | ✓ | — | — | ✓ | ✓ |
 | `AsyaLuna` **pasif** | asyaluna.com | Dizi | — | — | — | — | — | — |
+| `AsyaMax` | asyamax.com | Asya dizi/film | ✓ | — | — | — | — | — |
 | `AsyaWatch` | asyawatch.com | Asya dizi/film | ✓ | ✓ | — | ✓ | — | ✓ |
 | `ATV` | atv.com.tr | Dizi | — | — | — | — | — | — |
 | `BelgeselX` | belgeselx.com | Belgesel | — | — | — | — | — | — |
+| `BiCaps` | bicaps.live | Film | ✓ | — | ✓ | ✓ | — | ✓ |
 | `BirAsyaDizi` | birasyadizi.cx | Dizi | — | — | — | — | — | — |
 | `CanliDizi` | canlidizi.sbs | Dizi | — | — | — | — | — | — |
 | `CanliTV` | iptv-org TR M3U + sabit HLS | Canlı TV | — | — | — | — | — | — |
@@ -160,9 +163,12 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Dizifon` | dizifon.cc | Dizi | — | — | — | — | — | — |
 | `Dizigecesi` | dizigecesi.com | Film | — | — | — | — | — | — |
 | `Dizigom` | dizigom.news | Film | — | — | — | — | — | — |
+| `Diziizle` | diziizle.cloud | Dizi | ✓ | — | ✓ | ✓ | — | ✓ |
+| `DiziKutusu` | dizikutusu.com | Dizi | ✓ | — | — | ✓ | — | ✓ |
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi86.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
 | `Dizimanya` | dizimanya.com | Dizi | — | — | — | — | — | ✓ |
+| `DiziModu` **beta** | dizimodu.com | Dizi | ✓ | — | — | ✓ | — | ✓ |
 | `Dizirella` | dizirella.one | Dizi | — | — | — | — | — | — |
 | `DiziSol` | dizisol.com | Film/Dizi | ✓ | — | — | — | ✓ | — |
 | `Dizist` | dizist.live | Dizi | — | — | — | — | — | ✓ |
@@ -177,9 +183,12 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `DiziPod` | dizipod.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `DMAX` | dmax.com.tr | Dizi | — | — | — | — | — | — |
 | `DramaDizilerim` | dramadizilerim1.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
+| `FilmDozu` | filmdozu.com | Film | ✓ | — | — | — | — | ✓ |
 | `FilmEkseni` | filmekseni.vip | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `Filmgecesi` | filmgecesi.vip | Film/Dizi | ✓ | — | — | — | ✓ | ✓ |
 | `FilmMakinesi` | filmmakinesi.co | Film | ✓ | — | — | — | ✓ | ✓ |
 | `Filmizyon` | filmizyon.net | Film | — | — | — | — | — | — |
+| `FilmKovasi` | filmkovasi.co | Film | ✓ | — | — | ✓ | — | — |
 | `FilmModu` | filmmodu.news | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `FullHDFilm` | fullhdfilmizlebox.vip | Film | — | — | — | — | — | ✓ |
 | `FullHDFilmizlesene` | fullhdfilmizlesene.now | Film | — | — | ✓ | — | — | ✓ |
@@ -189,6 +198,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `HDFilmizleBest` | hdfilmizle.best | Film | — | — | — | — | — | — |
+| `Izle7` **beta** | izle7.com | Dizi/Film | ✓ | — | — | — | ✓ | — |
 | `IzleFilm` | izlefilm.net | Film | ✓ | — | — | — | ✓ | ✓ |
 | `JetFilmizle` | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
 | `KanalD` | kanald.com.tr | Dizi | — | — | — | — | — | — |
@@ -198,7 +208,10 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `MinikaCocuk` | minikacocuk.com.tr | Çocuk/Dizi | — | — | — | — | — | — |
 | `MinikaGO` | minikago.com.tr | Çocuk | — | — | — | — | — | — |
 | `NetFilmizle` | netfilmizle.com | Film | — | — | — | — | — | — |
+| `NowTV` | nowtv.com.tr | Dizi/Film | ✓ | — | — | — | — | — |
 | `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
+| `OnlineDizi` | onlinedizi.sbs | Dizi | ✓ | — | — | ✓ | — | — |
+| `720pizle` | 720pizle.my | Film | ✓ | — | — | ✓ | ✓ | ✓ |
 | `PuhuTV` | puhutv.com | Dizi/Film | ✓ | — | — | ✓ | film | — |
 | `Rectv` | a.psrectv80.xyz (imzalı API) | Film/Dizi | ✓ | — | — | — | ✓ | ✓ |
 | `RoketDizi` | roketdizi.live | Dizi | ✓ | — | — | — | — | — |
@@ -213,20 +226,27 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `SonAnime` | sonanime.com | Dizi | — | — | — | — | — | — |
 | `StarTV` | startv.com.tr | Dizi | — | — | — | — | — | — |
 | `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
+| `Toruko` | turkceanime.com | Anime | — | — | — | — | ✓ | ✓ |
 | `TrDiziIzle` | trdiziizle.tv | Dizi | ✓ | — | — | — | — | — |
+| `TRT1` | trt1.com.tr | Dizi | — | — | — | — | — | — |
 | `TurkAnimeTV` | turkanime.live | Anime | ✓ | — | — | — | — | — |
 | `TurkceDizi` | turkcedizi.com | Film | — | — | — | — | — | ✓ |
+| `TV2` | tv2.com.tr | Dizi/Film | ✓ | — | — | — | — | — |
 | `TV8` **pasif** | tv8.com.tr (bakım) | Dizi | — | — | — | — | — | — |
+| `TvDiziler` | tvdiziler.tv | Dizi | — | — | — | — | — | ✓ |
 | `UltraFilmizle` | ufilmizle.com | Film | — | — | — | — | — | — |
+| `VenusFilmizle` | venusfilmizle.com | Film | ✓ | — | — | — | ✓ | ✓ |
 | `WebdramaTurkey2` | webdramaturkey2.com | Asya dizi/film | ✓ | — | — | ✓ | ✓ | — |
+| `WebFilmizle` | webfilmizle.com | Film | ✓ | — | — | — | — | — |
 | `Weboo` | weboo.com.tr | Dizi | — | — | — | — | — | — |
 | `WebteIzle` | webteizle.info | Film | ✓ | — | ✓ | ✓ | ✓ | — |
 | `Yabancidizi` | ybncidizi.com | Dizi/Film | — | ✓ | — | ✓ | film | ✓ |
 | `YerliDiziler` | yerlidiziler.com.tr | Yerli Dizi | ✓ | — | — | — | — | — |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**Kapsam notu:** Depoda toplam **94 aktif modül** var; `AsyaLuna` (alan adı ölü) ve `TV8`
-(site bakımı, 2026-11-15) `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları
+**Kapsam notu:** Depoda toplam **114 modül** var; 111'i doğrulanmış (`status = 1`), 3'ü beta
+(`DiziModu`, `Izle7`, `Asya Fanatikleri`; oynatıcı CDN'i doğrulanamadı). `AsyaLuna` (alan adı ölü) ve
+`TV8` (site bakımı, 2026-11-15) `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları
 nedeniyle kaldırıldı; düzeldiğinde tekrar eklenir. Bu tablo ve özellik matrisi her sağlayıcı
 değişikliğinde güncellenir.
 
