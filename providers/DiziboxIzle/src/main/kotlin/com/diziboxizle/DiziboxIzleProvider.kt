@@ -88,7 +88,9 @@ class DiziboxIzleProvider : MainAPI() {
                 }
                 .distinctBy { it.url }
         }
-        return newHomePageResponse(request.name, items, hasNext = true)
+        val hasNext = items.isNotEmpty() &&
+            doc.selectFirst("a[href*=\"/page/${page + 1}/\"]") != null
+        return newHomePageResponse(request.name, items, hasNext = hasNext)
     }
 
     /** Archive/genre cards: poster in `.cat-img`, title in `.categorytitle`. */

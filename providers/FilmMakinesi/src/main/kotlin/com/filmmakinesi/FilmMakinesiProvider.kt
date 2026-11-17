@@ -51,11 +51,15 @@ class FilmMakinesiProvider : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val base = ROW_BASES[request.name] ?: request.data.removePrefix(mainUrl)
+        // Ana sayfa rel=next ilan ediyor ama /page/N/ aynı 20 kartı döndürüyor.
+        if (page > 1 && base.isEmpty()) {
+            return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        }
         val url = if (page <= 1) "$mainUrl$base/" else "$mainUrl$base/page/$page/"
         val doc = runCatching { app.get(url, headers = uaHeaders).document }.getOrNull()
             ?: return newHomePageResponse(request.name, emptyList(), hasNext = false)
         val items = doc.select(CARD).mapNotNull { it.toSearchResult() }.distinctBy { it.url }
-        return newHomePageResponse(request.name, items, hasNext = items.isNotEmpty())
+        return newHomePageResponse(request.name, items, hasNext = base.isNotEmpty() && items.isNotEmpty())
     }
 
     private fun Element.toSearchResult(): SearchResponse? {

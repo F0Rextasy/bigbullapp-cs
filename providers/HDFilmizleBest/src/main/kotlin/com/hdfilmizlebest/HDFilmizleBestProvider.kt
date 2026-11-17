@@ -65,7 +65,7 @@ class HDFilmizleBestProvider : MainAPI() {
         }.getOrNull() ?: return newHomePageResponse(request.name, emptyList(), hasNext = false)
         val items = cards(doc)
         val hasNext = items.isNotEmpty() && doc.selectFirst(
-            "a[href*='page=${page + 1}'], a[href*='?page=${page + 1}']"
+            "a[href*='page=${page + 1}'], a[href*='/page/${page + 1}/']"
         ) != null
         return newHomePageResponse(request.name, items, hasNext = hasNext)
     }

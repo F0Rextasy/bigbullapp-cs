@@ -63,12 +63,15 @@ class DiziboxProvider : MainAPI() {
             else -> "$path/page/$page/?$query"
         }
         val doc = app.get(url, headers = uaHeaders).document
-        if (path.contains("/tur/")) {
-            val items = doc.select("article.article-series-poster").mapNotNull { it.toPosterSeries() }
-            return newHomePageResponse(request.name, items, hasNext = items.isNotEmpty())
+        val items = if (path.contains("/tur/")) {
+            doc.select("article.article-series-poster").mapNotNull { it.toPosterSeries() }
+        } else {
+            doc.select("article.article-episode-card").mapNotNull { it.toSearchResult() }
         }
-        val items = doc.select("article.article-episode-card").mapNotNull { it.toSearchResult() }
-        return newHomePageResponse(request.name, items, hasNext = true)
+        // Site son sayfadan sonra 0 kart döndürüyor; rel=next her zaman true kalmasın.
+        val hasNext = items.isNotEmpty() &&
+            doc.selectFirst("a[href*=\"/page/${page + 1}/\"]") != null
+        return newHomePageResponse(request.name, items, hasNext = hasNext)
     }
 
     /** Genre pages use the poster grid, unlike the episode feed. */
