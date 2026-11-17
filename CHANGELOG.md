@@ -5,6 +5,36 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.93] - 2026-11-17
+
+### Düzeltildi
+- **FilmMakinesi v4**: ana sayfadaki "Yeni Eklenenler" satırının aynı filmleri tekrar tekrar yüklemesi düzeltildi.
+- **Dizibox v13**: Son Bölümler satırı son sayfada sonsuz tekrar yerine duruyor.
+- **DiziboxIzle v11**: Son Eklenenler satırı son sayfada sonsuz tekrar yerine duruyor.
+- **HDFilmizleBest v6**: tür satırlarında "sonraki sayfa" algılanmadığı için sayfalama düzeltildi.
+
+### Eklendi
+- **OnlineDizi v1**: yabancı ve Asya dizileri eklendi; arama, sezon/bölüm listesi ve vidmoly akışı.
+- **Diziizle v1**: yabancı dizi arşivi eklendi; TR/EN altyazılı HLS.
+- **DiziModu v1 (beta)**: ToroFlix yabancı dizi arşivi eklendi; oynatıcı CDN'i doğrulanacak.
+- **DiziKutusu v1**: Batı ve Asya dizileri eklendi; ok.ru ve VK oynatıcıları.
+- **720pizle v1**: HD/4K film arşivi eklendi; pichive HLS ve Türkçe altyazı.
+- **BiCaps v1**: film arşivi eklendi; CapsPlayer ve CapsMoly oynatıcıları.
+- **FilmKovasi v1**: film arşivi eklendi; vidmoly, ok.ru ve mail.ru kaynakları.
+- **FilmDozu v1**: film arşivi eklendi; vidmoly ve ok.ru kaynakları.
+- **VenusFilmizle v1**: film arşivi eklendi; hd.player.rest ve vidmoly.
+- **Filmgecesi v1**: film arşivi ve film serileri eklendi; blurays.me HLS.
+- **WebFilmizle v1**: film arşivi eklendi; hotstream/BEpeak HLS.
+- **NowTV v1**: resmi dizi, program ve film arşivi eklendi; 360p–1080p HLS.
+- **TV2 v1**: resmi dizi ve film arşivi eklendi; teve2vod HLS.
+- **TRT1 v1**: TRT 1 dizi arşivi eklendi; CDN HLS ve YouTube bölümleri.
+- **TvDiziler v1**: yerli dizi arşivi eklendi; bölüm listesi ve çoklu kaynak.
+- **Izle7 v1 (beta)**: Kanal 7 dizi ve film arşivi eklendi; Dailymotion CDN'i doğrulanacak.
+- **Toruko v1**: Türkçe altyazılı anime arşivi eklendi; HLS akışları.
+- **AnimeTR v1**: anime ve donghua arşivi eklendi; çoklu oynatıcı desteği.
+- **Asya Fanatikleri v1 (beta)**: Kore/Çin/Japon dizileri ve filmleri eklendi; oynatıcı CDN'i doğrulanacak.
+- **AsyaMax v1**: Asya dizileri ve filmleri eklendi; mixdrop, vidmoly, ok.ru, VK ve mail.ru.
+
 ## [1.6.92] - 2026-11-17
 
 ### Düzeltildi
