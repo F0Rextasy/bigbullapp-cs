@@ -78,6 +78,24 @@ class FilmMakinesiProvider : MainAPI() {
         return doc.select(CARD).mapNotNull { it.toSearchResult() }.distinctBy { it.url }
     }
 
+    override suspend fun quickSearch(query: String): List<SearchResponse> {
+        val q = query.trim()
+        if (q.length < 2) return emptyList()
+        val url = "$mainUrl/?knl_ajax_search=1&s=" + java.net.URLEncoder.encode(q, "UTF-8")
+        val doc = runCatching { app.get(url, headers = uaHeaders).document }.getOrNull()
+            ?: return search(q)
+        val ajaxHits = doc.select("a.search-result[href]").mapNotNull { a ->
+            val href = fixUrlNull(a.attr("href")) ?: return@mapNotNull null
+            val title = a.selectFirst("span.title")?.text()?.trim()
+                ?.ifBlank { null } ?: return@mapNotNull null
+            newMovieSearchResponse(title, href, TvType.Movie) {
+                this.posterUrl = fixUrlNull(a.selectFirst("img")?.posterSrcLazy())
+                this.posterHeaders = uaHeaders
+            }
+        }.distinctBy { it.url }
+        return ajaxHits.ifEmpty { search(q) }
+    }
+
     override suspend fun load(url: String): LoadResponse? {
         val doc = runCatching { app.get(url, headers = uaHeaders).document }.getOrNull()
             ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")

@@ -5,6 +5,12 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.0] - 2026-11-17
+
+### Düzeltildi
+- **FilmMakinesi v5**: anlık arama ve Nuvio yedek oynatıcı kaynakları düzeltildi.
+- **YesilCamTv v7**: kategori/arama kart eşleşmesi ve video oynatıcı desteği genişletildi.
+
 ## [1.6.99] - 2026-11-17
 
 ### Düzeltildi

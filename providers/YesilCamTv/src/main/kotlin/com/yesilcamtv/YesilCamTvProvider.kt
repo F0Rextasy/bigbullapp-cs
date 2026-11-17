@@ -81,25 +81,23 @@ class YesilCamTvProvider : MainAPI() {
     companion object {
         val ROWS = listOf("Aile", "Aksiyon", "Belgesel", "Bilim Kurgu", "Dram", "Fantastik",
             "Gerilim", "Gizem", "Komedi", "Korku", "Macera", "Müzik", "Romantik")
+        private val NON_FILM_PATHS = listOf(
+            "category/", "tag/", "oyuncu/", "yil/", "page/", "wp-", "login", "uye-ol", "giris"
+        )
     }
-
-    private val pathPrefixes = listOf("/")
-
 
     override suspend fun search(query: String): List<SearchResponse> {
         // site araması yalnız tek kelimede çalışıyor; çok kelimede ilk kelimeyle tekrar dene
-        suspend fun probe(q: String) = cards(app.get("https://yesilcamtv.com.tr/?s=" + java.net.URLEncoder.encode(q, "UTF-8"), headers = uaHeaders).document)
+        suspend fun probe(q: String) = cards(app.get("$mainUrl/?s=" + java.net.URLEncoder.encode(q, "UTF-8"), headers = uaHeaders).document)
         val direct = probe(query)
         if (direct.isNotEmpty() || !query.contains(' ')) return direct
         return probe(query.trim().split(Regex("\\s+")).first())
     }
 
-    private fun cards(doc: Document): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
+    private fun cards(doc: Document): List<SearchResponse> = doc.select("div.poster a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
-        val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
-        if (listOf("/").none { path.startsWith(it) }) return@mapNotNull null
-        if (!path.trimEnd('/').endsWith("-izle")) return@mapNotNull null
-        if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
+        val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?').trim('/')
+        if (path.isEmpty() || NON_FILM_PATHS.any { path.startsWith(it) || path.contains("/$it") }) return@mapNotNull null
         val img = card.selectFirst("img") ?: return@mapNotNull null
         val title = card.attr("title").trim()
             .ifBlank { card.text().trim() }
@@ -234,11 +232,12 @@ class YesilCamTvProvider : MainAPI() {
                 headers = uaHeaders + mapOf("Referer" to "https://rumble.com/"),
             ).text.replace("\\/", "/")
         }.getOrNull() ?: return false
+        val uaSection = body.substringAfter("\"ua\":", body).substringBefore("\"timeline\":")
         val seen = mutableSetOf<String>()
         val qualities = mutableSetOf<Int>()
         var found = false
         val rows = Regex(""""(\d+|tar|mp4)":\{"url":"(https:[^"]+?)","meta":\{"bitrate":\d+,"size":\d+,"w":\d+,"h":(\d+)""")
-            .findAll(body)
+            .findAll(uaSection).toList()
         for (row in rows) {
             val url = row.groupValues[2]
             val quality = getQualityFromName("${row.groupValues[3]}p")
@@ -251,8 +250,22 @@ class YesilCamTvProvider : MainAPI() {
             found = true
         }
         if (!found) {
+            for (row in rows) {
+                val url = row.groupValues[2]
+                val height = row.groupValues[3].toIntOrNull() ?: 0
+                if (height < 240 || !url.contains(".mp4")) continue
+                val quality = getQualityFromName("${height}p")
+                if (!seen.add(url) || !qualities.add(quality) || !Settings.qualityAllowed(quality)) continue
+                callback.invoke(newExtractorLink(name, "Rumble MP4", url, ExtractorLinkType.VIDEO) {
+                    this.referer = "https://rumble.com/"
+                    this.quality = quality
+                })
+                found = true
+            }
+        }
+        if (!found) {
             val master = Regex(""""url"\s*:\s*"(https:[^"]+?\.m3u8[^"]*)"""")
-                .find(body)?.groupValues?.get(1) ?: return false
+                .find(uaSection)?.groupValues?.get(1) ?: return false
             callback.invoke(newExtractorLink(name, "Rumble", master, ExtractorLinkType.M3U8) {
                 this.referer = "https://rumble.com/"
                 this.quality = getQualityFromName("")

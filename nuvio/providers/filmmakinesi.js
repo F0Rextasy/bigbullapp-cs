@@ -1,4 +1,4 @@
-// @provider {"id":"filmmakinesi", "name":"FilmMakinesi", "types":["movie", "tv"], "domain":"filmmakinesi.co", "formats":["m3u8"], "description":"FilmMakinesi film kaynaklari (oynatloload secure-hls).", "sample":"tt13611778:movie:1:1", "verified":true, "version":"1.0.4"}
+// @provider {"id":"filmmakinesi", "name":"FilmMakinesi", "types":["movie", "tv"], "domain":"filmmakinesi.co", "formats":["m3u8"], "description":"FilmMakinesi film kaynaklari (oynatloload secure-hls, vidmoly).", "sample":"tt13611778:movie:1:1", "verified":true, "version":"1.0.5"}
 /**
  * filmmakinesi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /?s= -> film sayfasi -> oynatloload embed -> __ULTRA_EAUTH ->
@@ -69,11 +69,94 @@ function posters(page) {
   return out;
 }
 
-function embedOf(page, filmUrl) {
-  var block = String(page || "").split("video-player-container-here")[1] || "";
-  var src = first(/<iframe[^>]+src="([^"]+)"/, block);
-  if (!src) src = first(/<iframe[^>]+src="([^"]*oynatloload[^"]*)"/, page);
-  return src ? abs(filmUrl, src) : null;
+function embedsOf(page, filmUrl) {
+  var body = String(page || "");
+  var block = body.indexOf("video-player-container-here") !== -1 ? body.split("video-player-container-here")[1] : body;
+  var re = /<iframe[^>]+src="([^"]+)"/gi;
+  var out = [];
+  var seen = {};
+  var m;
+  while ((m = re.exec(block)) !== null) {
+    var src = abs(filmUrl, m[1]);
+    if (!src || seen[src] || /youtu/i.test(src)) continue;
+    seen[src] = 1;
+    out.push(src);
+  }
+  return out;
+}
+
+function altLinksOf(page, filmUrl) {
+  var re = /<a[^>]+href="([^"]+)"[^>]*class="[^"]*alternative-link|<a[^>]+class="[^"]*alternative-link[^"]*"[^>]*href="([^"]+)"/gi;
+  var out = [];
+  var seen = {};
+  var m;
+  while ((m = re.exec(String(page || ""))) !== null) {
+    var u = abs(filmUrl, m[1] || m[2]);
+    if (!u || u.replace(/\/+$/, "") === filmUrl.replace(/\/+$/, "") || seen[u]) continue;
+    seen[u] = 1;
+    out.push(u);
+    if (out.length >= 3) break;
+  }
+  return out;
+}
+
+function vidmolyRows(embedUrl, referer) {
+  var normUrl = String(embedUrl).replace(/\/\/(?:www\.)?vidmoly\.(?:to|biz|me|sx)\//i, "//vidmoly.net/");
+  return text(normUrl, { referer: referer, headers: { "Sec-Fetch-Dest": "iframe" } })
+    .then(function (body) {
+      var m3u8 = first(/file\s*:\s*["'](https?:\/\/[^"']+\.m3u8[^"']*)["']/, body);
+      if (!m3u8) return [];
+      var subs = [];
+      var seenSub = {};
+      var re = /file\s*:\s*["'](https?:\/\/[^"']+\.(?:vtt|srt)[^"']*)["']/gi;
+      var m;
+      while ((m = re.exec(body)) !== null) {
+        if (seenSub[m[1]] || /slides|thumb/i.test(m[1])) continue;
+        seenSub[m[1]] = 1;
+        subs.push({ url: m[1], language: "tr", name: "Altyazi [filmmakinesi]" });
+      }
+      return [{
+        name: "FilmMakinesi",
+        title: "FilmMakinesi - VidMoly [HLS]" + (subs.length ? " \u2022 Altyaz\u0131l\u0131" : ""),
+        url: hlsNoDownload(m3u8),
+        quality: "auto",
+        headers: { "User-Agent": UA, Referer: "https://vidmoly.net/" },
+        subtitles: subs
+      }];
+    })
+    .catch(function () { return []; });
+}
+
+function resolveEmbed(embedUrl, referer) {
+  if (/oynatloload\./i.test(embedUrl)) {
+    return text(embedUrl, { referer: referer })
+      .then(function (embed) {
+        var token = first(/__ULTRA_EAUTH\s*=\s*"([^"]+)"/, embed);
+        if (!token) return [];
+        var id = embedUrl.replace(/[?#].*$/, "").split("/").pop();
+        return text(PLAYER + "/api/video-bilgi/" + id + "?eauth=" + encodeURIComponent(token), {
+          referer: embedUrl,
+          headers: { Origin: PLAYER, Accept: "application/json" }
+        }).then(function (body) {
+          return body ? rows(JSON.parse(body)) : [];
+        });
+      })
+      .catch(function () { return []; });
+  }
+  if (/vidmoly\./i.test(embedUrl)) return vidmolyRows(embedUrl, referer);
+  return Promise.resolve([]);
+}
+
+function resolvePage(page, pageUrl) {
+  var embeds = embedsOf(page, pageUrl);
+  var chain = Promise.resolve([]);
+  embeds.forEach(function (em) {
+    chain = chain.then(function (acc) {
+      if (acc.length) return acc;
+      return resolveEmbed(em, pageUrl);
+    });
+  });
+  return chain;
 }
 
 function langOf(label) {
@@ -141,27 +224,20 @@ function rows(oj) {
 }
 
 function resolve(filmUrl) {
-  var embedUrl = null;
-  return text(filmUrl)
-    .then(function (page) {
-      embedUrl = embedOf(page, filmUrl);
-      if (!embedUrl || embedUrl.indexOf("oynatloload.") === -1) return null;
-      return text(embedUrl, { referer: filmUrl });
-    })
-    .then(function (embed) {
-      if (!embed) return [];
-      var token = first(/__ULTRA_EAUTH\s*=\s*"([^"]+)"/, embed);
-      if (!token) return [];
-      var id = embedUrl.replace(/[?#].*$/, "").split("/").pop();
-      return text(PLAYER + "/api/video-bilgi/" + id + "?eauth=" + encodeURIComponent(token), {
-        referer: embedUrl,
-        headers: { Origin: PLAYER, Accept: "application/json" }
+  return text(filmUrl).then(function (page) {
+    return resolvePage(page, filmUrl).then(function (out) {
+      if (out.length) return out;
+      var alts = altLinksOf(page, filmUrl);
+      var chain = Promise.resolve([]);
+      alts.forEach(function (alt) {
+        chain = chain.then(function (acc) {
+          if (acc.length) return acc;
+          return text(alt).then(function (ap) { return resolvePage(ap, alt); }).catch(function () { return []; });
+        });
       });
-    })
-    .then(function (body) {
-      if (!body) return [];
-      return rows(JSON.parse(body));
+      return chain;
     });
+  });
 }
 
 function getStreams(tmdbId, mediaType, season, episode) {

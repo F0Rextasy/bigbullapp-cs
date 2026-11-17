@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.99",
+  "version": "1.7.0",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -297,8 +297,8 @@
     {
       "id": "filmmakinesi",
       "name": "FilmMakinesi",
-      "description": "FilmMakinesi film kaynaklari (oynatloload secure-hls).",
-      "version": "1.0.4",
+      "description": "FilmMakinesi film kaynaklari (oynatloload secure-hls, vidmoly).",
+      "version": "1.0.5",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -613,7 +613,7 @@
       "id": "yesilcamtv",
       "name": "YesilCamTv",
       "description": "Yeşilçam TV: klasik Türk filmleri; Rumble HLS kaliteleri ve doğrudan MP4 akışları.",
-      "version": "1.0.10",
+      "version": "1.0.11",
       "author": "bigbull",
       "supportedTypes": [
         "movie"

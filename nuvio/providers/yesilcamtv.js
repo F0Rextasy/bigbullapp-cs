@@ -1,4 +1,4 @@
-// @provider {"id":"yesilcamtv", "name":"YesilCamTv", "types":["movie"], "domain":"yesilcamtv.com.tr", "formats":["m3u8", "mp4"], "sample":"tt0297138:movie:1:1", "description":"Yeşilçam TV: klasik Türk filmleri; Rumble HLS kaliteleri ve doğrudan MP4 akışları.", "version":"1.0.10"}
+// @provider {"id":"yesilcamtv", "name":"YesilCamTv", "types":["movie"], "domain":"yesilcamtv.com.tr", "formats":["m3u8", "mp4"], "sample":"tt0297138:movie:1:1", "description":"Yeşilçam TV: klasik Türk filmleri; Rumble HLS kaliteleri ve doğrudan MP4 akışları.", "version":"1.0.11"}
 /**
  * yesilcamtv — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /?s= card -> film page -> rumble embed -> HLS qualities.
@@ -32,9 +32,12 @@ function titleOf(id, mediaType) {
 }
 
 function parseCards(page) {
-  var re = /<a href="(https:\/\/yesilcamtv\.com\.tr\/[^"]+-izle\/?)"[^>]*>[\s\S]{0,700}?alt="([^"]*)"/g;
+  var re = /<div class="poster">\s*<a href="(https:\/\/yesilcamtv\.com\.tr\/[^"]+)"[^>]*>[\s\S]{0,700}?alt="([^"]*)"/g;
   var m, cards = [];
-  while ((m = re.exec(page)) !== null) cards.push({ url: m[1], label: fold(m[2]) });
+  while ((m = re.exec(page)) !== null) {
+    if (/\/(?:category|tag|oyuncu|yil|page|wp-|login|uye-ol|giris)\b/i.test(m[1])) continue;
+    cards.push({ url: m[1], label: fold(m[2]) });
+  }
   return cards;
 }
 
@@ -90,13 +93,23 @@ function rumbleRows(page, add) {
   return resolveId.then(function (id) {
     if (!id) return;
     return text("https://rumble.com/embed/" + id + "/", "https://rumble.com/").then(function (embed) {
+      var uaSection = embed.split("\"timeline\"")[0];
       var media = /"(\d+|tar|mp4)":\{"url":"(https:[^"]+?)","meta":\{"bitrate":\d+,"size":\d+,"w":\d+,"h":(\d+)/g;
-      var hit;
-      while ((hit = media.exec(embed)) !== null) {
-        /* yalnızca gerçek video varyantları: mp4 girdisi 180p önizleme şeridi, ses .aac */
-        if (hit[2].indexOf("r_file=chunklist.m3u8") === -1) continue;
+      var mp4 = [];
+      var hit, hlsCount = 0;
+      while ((hit = media.exec(uaSection)) !== null) {
+        var u = hit[2].replace(/\\\//g, "/");
         var height = parseInt(hit[3], 10) || 0;
-        add(hit[2].replace(/\\\//g, "/"), height ? height + "p" : "auto", "https://rumble.com/");
+        var q = height ? height + "p" : "auto";
+        if (u.indexOf("r_file=chunklist.m3u8") !== -1) {
+          add(u, q, "https://rumble.com/");
+          hlsCount++;
+        } else if (/\.mp4(\?|$)/i.test(u) && height >= 240) {
+          mp4.push([u, q]);
+        }
+      }
+      if (!hlsCount) {
+        for (var k = 0; k < mp4.length; k++) add(mp4[k][0], mp4[k][1], "https://rumble.com/");
       }
     });
   });
