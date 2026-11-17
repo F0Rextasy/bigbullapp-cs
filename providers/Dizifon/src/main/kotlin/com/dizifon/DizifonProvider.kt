@@ -1,7 +1,5 @@
 package com.dizifon
 
-import com.bigbull.common.browserHeaders
-import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -11,6 +9,7 @@ import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.SubtitleFile
+import com.lagradost.cloudstream3.newSubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.fixUrl
@@ -31,6 +30,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.nodes.Document
 
+private fun org.jsoup.nodes.Element.posterSrcLazy(): String? =
+    attr("data-src").takeIf { it.isNotBlank() } ?: attr("src")
+
 private fun asciiFold(value: String): String = value
     .replace('ı', 'i').replace('İ', 'I')
     .replace('ş', 's').replace('Ş', 'S')
@@ -48,7 +50,11 @@ private fun cleanTitle(raw: String?): String = (raw ?: "")
     .trim().trim('-', '–', '|', ',')
 
 class DizifonProvider : MainAPI() {
-    private val uaHeaders get() = browserHeaders
+    private val uaHeaders = mapOf(
+        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+            "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+        "Accept-Language" to "tr-TR,tr;q=0.9",
+    )
 
     override var mainUrl = "https://www.dizifon.cc"
     override var name = "Dizifon"
@@ -59,32 +65,32 @@ class DizifonProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Diziler" -> "https://www.dizifon.cc/tum-diziler/"
-            "Dram" -> "https://www.dizifon.cc/diziler/dram/"
-            "Fantastik" -> "https://www.dizifon.cc/diziler/fantastik/"
-            "Gençlik" -> "https://www.dizifon.cc/diziler/genclik/"
-            "Komedi" -> "https://www.dizifon.cc/diziler/komedi/"
-            "Okul" -> "https://www.dizifon.cc/diziler/okul/"
-            "Romantik" -> "https://www.dizifon.cc/diziler/romantik/"
-            "Tarihi" -> "https://www.dizifon.cc/diziler/tarihi/"
-            "Yaşam" -> "https://www.dizifon.cc/diziler/yasam/"
-            "Anime" -> "https://www.dizifon.cc/diziler/anime/"
-            "Çin Dizileri" -> "https://www.dizifon.cc/diziler/cin-dizileri/"
-            "Japon Dizileri" -> "https://www.dizifon.cc/diziler/japon-dizileri/"
-            "Kore Dizileri" -> "https://www.dizifon.cc/diziler/kore-dizileri/"
-            "Tayland Dizileri" -> "https://www.dizifon.cc/diziler/tayland-dizileri/"
-            "Aksiyon" -> "https://www.dizifon.cc/diziler/aksiyon/"
-            "Arkadaşlık" -> "https://www.dizifon.cc/diziler/arkadaslik/"
-            "Doğaüstü" -> "https://www.dizifon.cc/diziler/dogaustu/"
-            "Gerilim" -> "https://www.dizifon.cc/diziler/gerilim/"
-            "Gizem" -> "https://www.dizifon.cc/diziler/gizem/"
-            "Hukuk" -> "https://www.dizifon.cc/diziler/hukuk/"
-            "İş" -> "https://www.dizifon.cc/diziler/is/"
-            "Korku" -> "https://www.dizifon.cc/diziler/korku/"
-            "Medikal" -> "https://www.dizifon.cc/diziler/medikal/"
-            "Müzik" -> "https://www.dizifon.cc/diziler/muzik/"
-            "Spor" -> "https://www.dizifon.cc/diziler/spor/"
-            "Suç" -> "https://www.dizifon.cc/diziler/suc/"
+            "Diziler" -> "$mainUrl/tum-diziler/"
+            "Dram" -> "$mainUrl/diziler/dram/"
+            "Fantastik" -> "$mainUrl/diziler/fantastik/"
+            "Gençlik" -> "$mainUrl/diziler/genclik/"
+            "Komedi" -> "$mainUrl/diziler/komedi/"
+            "Okul" -> "$mainUrl/diziler/okul/"
+            "Romantik" -> "$mainUrl/diziler/romantik/"
+            "Tarihi" -> "$mainUrl/diziler/tarihi/"
+            "Yaşam" -> "$mainUrl/diziler/yasam/"
+            "Anime" -> "$mainUrl/diziler/anime/"
+            "Çin Dizileri" -> "$mainUrl/diziler/cin-dizileri/"
+            "Japon Dizileri" -> "$mainUrl/diziler/japon-dizileri/"
+            "Kore Dizileri" -> "$mainUrl/diziler/kore-dizileri/"
+            "Tayland Dizileri" -> "$mainUrl/diziler/tayland-dizileri/"
+            "Aksiyon" -> "$mainUrl/diziler/aksiyon/"
+            "Arkadaşlık" -> "$mainUrl/diziler/arkadaslik/"
+            "Doğaüstü" -> "$mainUrl/diziler/dogaustu/"
+            "Gerilim" -> "$mainUrl/diziler/gerilim/"
+            "Gizem" -> "$mainUrl/diziler/gizem/"
+            "Hukuk" -> "$mainUrl/diziler/hukuk/"
+            "İş" -> "$mainUrl/diziler/is/"
+            "Korku" -> "$mainUrl/diziler/korku/"
+            "Medikal" -> "$mainUrl/diziler/medikal/"
+            "Müzik" -> "$mainUrl/diziler/muzik/"
+            "Spor" -> "$mainUrl/diziler/spor/"
+            "Suç" -> "$mainUrl/diziler/suc/"
             else -> mainUrl
         })
     }
@@ -103,51 +109,56 @@ class DizifonProvider : MainAPI() {
         val ROWS = listOf("Diziler", "Dram", "Fantastik", "Gençlik", "Komedi", "Okul", "Romantik", "Tarihi", "Yaşam", "Anime", "Çin Dizileri", "Japon Dizileri", "Kore Dizileri", "Tayland Dizileri", "Aksiyon", "Arkadaşlık", "Doğaüstü", "Gerilim", "Gizem", "Hukuk", "İş", "Korku", "Medikal", "Müzik", "Spor", "Suç")
     }
 
+    private val pathPrefixes = listOf("/bolum/", "/diziler/")
+
     override suspend fun search(query: String): List<SearchResponse> {
-        // Site search returns nothing for Turkish diacritics ("aşk" -> 0), so query the folded form.
-        val q = asciiFold(query).trim()
-        val all = cards(app.get("$mainUrl/?s=" + java.net.URLEncoder.encode(q, "UTF-8"), headers = uaHeaders).document)
-        if (q.isBlank()) return all
-        val hits = all.filter { asciiFold(it.name).contains(q, ignoreCase = true) }
-        return hits // site ?s= sorguyu yok sayıp sabit liste döndürüyor; eşleşme yoksa boş dön (alakasız kart gösterme)
+        val q = if (false) asciiFold(query) else query
+        val url = "$mainUrl/arama/{q}".replace("{q}", java.net.URLEncoder.encode(q, "UTF-8"))
+        return cards(app.get(url, headers = uaHeaders).document, q)
     }
 
-    private fun cards(doc: Document): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
+    private fun cards(doc: Document, query: String? = null): List<SearchResponse> = doc.select("a[href]").mapNotNull { card ->
         val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
         val path = card.attr("href").substringAfter(mainUrl, card.attr("href")).substringBefore('?')
-        if (listOf("/dizi/").none { path.startsWith(it) }) return@mapNotNull null
+        if (listOf("/bolum/", "/diziler/").none { path.startsWith(it) }) return@mapNotNull null
         
-        if (path.contains("login") || path.contains("uye-ol") || path.contains("/giris")) return@mapNotNull null
-        val img = card.selectFirst("img") ?: return@mapNotNull null
+        if (path.trim('/').length < 4 || path.contains("login") || path.contains("uye-ol") ||
+            path.contains("/giris") || href.contains("?ara=") || href.contains("sirala=")) return@mapNotNull null
+        val img = card.selectFirst("img")
         val title = card.attr("title").trim()
             .ifBlank { card.text().trim() }
-            .ifBlank { img.attr("alt").trim() }
+            .ifBlank { img?.attr("alt")?.trim().orEmpty() }
             .takeIf { it.isNotBlank() } ?: return@mapNotNull null
+        if (query != null && !title.contains(query, ignoreCase = true) &&
+            !href.contains(query, ignoreCase = true)) return@mapNotNull null
         val hrefLower = href.lowercase()
         val isSeries = hrefLower.contains("/dizi/") || hrefLower.contains("/seri/") ||
             hrefLower.contains("/anime/") || hrefLower.contains("/series/")
         if (isSeries) {
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-                posterUrl = fixUrlNull(img.posterSrcLazy())
+                posterUrl = fixUrlNull(img?.posterSrcLazy())
             }
         } else {
             newMovieSearchResponse(title, href, TvType.Movie) {
-                posterUrl = fixUrlNull(img.posterSrcLazy())
+                posterUrl = fixUrlNull(img?.posterSrcLazy())
             }
         }
-    }.distinctBy { it.url }
+    }.distinctBy { it.url }.sortedBy { if (it.type == TvType.TvSeries) 0 else 1 }
 
     override suspend fun load(url: String): LoadResponse? {
-        val resp = app.get(url, headers = uaHeaders)
+        val pageUrl = if (url.contains("?")) url else url.trimEnd('/') + "/"
+        val resp = app.get(pageUrl, headers = uaHeaders)
         val doc = resp.document
         val raw = resp.text
         val title = cleanTitle(
-            doc.selectFirst("meta[property=og:title]")?.attr("content")
-                ?: doc.selectFirst("h1")?.text()
-                ?: throw ErrorLoadingException("$name: başlık okunamadı")
+            doc.selectFirst("h1")?.text()?.takeIf(String::isNotBlank)
+                ?: doc.selectFirst("meta[property=og:title]")?.attr("content")
         ).ifBlank { throw ErrorLoadingException("$name: başlık okunamadı") }
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
         val plot = doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+        val genres = doc.select("[itemprop=genre], a[href*='/tur/'], a[href*='/kategori/']")
+            .mapNotNull { it.attr("content").ifBlank { it.text() }.trim().takeIf(String::isNotBlank) }
+            .distinct().take(8)
         val year = Regex("""\b(19|20)\d{2}\b""").find(title)?.value?.toIntOrNull()
             ?: Regex("""\b(19|20)\d{2}\b""").find(raw)?.value?.toIntOrNull()
         val score = Score.from10(
@@ -158,29 +169,29 @@ class DizifonProvider : MainAPI() {
         val slug = basePath.trim('/').split('/').lastOrNull().orEmpty()
         val slugBase = slug.removeSuffix("-izle").removeSuffix("-film-izle")
         val episodes = doc.select("a[href]").mapNotNull { anchor ->
-            val href = fixUrlNull(anchor.attr("href")) ?: return@mapNotNull null
-            val path = href.substringAfter(mainUrl).substringBefore('?')
-            if (basePath.isNotBlank() && !path.startsWith(basePath) &&
-                !path.contains(slug) && !path.contains(slugBase)) return@mapNotNull null
-            if (!Regex("""(?:bolum|episode|sezon|season)""", RegexOption.IGNORE_CASE).containsMatchIn(path)) return@mapNotNull null
-            val seasonMatch = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
-                .find(path)
-            val season = seasonMatch?.groupValues?.getOrNull(1)?.toIntOrNull()
-            val number = seasonMatch?.groupValues?.getOrNull(2)?.toIntOrNull()
-                ?: Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
-                ?: Regex("""(\d+)[-_]bolum""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
+            val rawHref = anchor.attr("href").substringBefore('#').trim()
+            val href = fixUrlNull(rawHref) ?: return@mapNotNull null
+            val pathAndQuery = href.substringAfter(mainUrl).substringBefore('#')
+            val path = pathAndQuery.substringBefore('?')
+            if (path.contains("/admin/") || path.contains("/wp-admin/")) return@mapNotNull null
+            if (!Regex("""(?:bolum|episode)""", RegexOption.IGNORE_CASE).containsMatchIn(pathAndQuery)) return@mapNotNull null
+            val number = Regex("""(?:sezon|season)[-_ /=]?(\d+).*?(?:bolum|episode)[-_ /=]?([0-9]*)""")
+                .find(pathAndQuery)?.groupValues?.getOrNull(2)?.toIntOrNull()
+                ?: Regex("""(?:bolum|episode)[-_ /=]?(\d+)""").find(pathAndQuery)?.groupValues?.getOrNull(1)?.toIntOrNull()
+                ?: Regex("""(\d+)[-_]bolum""").find(pathAndQuery)?.groupValues?.getOrNull(1)?.toIntOrNull()
             newEpisode(href) {
                 this.name = anchor.text().trim().ifBlank { "Bölüm $number" }
-                this.season = season
                 this.episode = number
             }
-        }.distinctBy { it.data }.sortedWith(compareBy({ it.season ?: 1 }, { it.episode ?: 0 }))
+        }.distinctBy { it.data }.sortedBy { it.episode ?: 0 }
         if (episodes.isNotEmpty()) {
             return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
                 this.plot = plot
                 this.year = year
                 this.score = score
+                this.backgroundPosterUrl = poster
+                this.tags = genres.ifEmpty { null }
             }
         }
         return newMovieLoadResponse(title, url, TvType.Movie, url) {
@@ -188,6 +199,8 @@ class DizifonProvider : MainAPI() {
             this.plot = plot
             this.year = year
             this.score = score
+            this.backgroundPosterUrl = poster
+            this.tags = genres.ifEmpty { null }
         }
     }
 
@@ -203,7 +216,8 @@ class DizifonProvider : MainAPI() {
         val seen = mutableSetOf<String>()
         suspend fun emit(stream: String, label: String, referer: String) {
             if (!stream.startsWith("http") || !seen.add(stream)) return
-            val type = if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+            val isM3u8 = stream.contains(".m3u8") || stream.contains("/vs/") || stream.endsWith(".gif")
+            val type = if (isM3u8) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
             val quality = getQualityFromName(label)
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
@@ -212,8 +226,36 @@ class DizifonProvider : MainAPI() {
             })
             found = true
         }
-        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
+        fun decodeVixolity(html: String): String? {
+            val m = Regex("""\}\)\('([0-9a-f]+)',\s*(\d+)\)""").find(html) ?: return null
+            return runCatching {
+                val rev = String(m.groupValues[1].chunked(2).map { it.toInt(16).toByte() }.toByteArray(), Charsets.ISO_8859_1).reversed()
+                val shifted = String(java.util.Base64.getDecoder().decode(rev), Charsets.ISO_8859_1)
+                    .map { (it.code - m.groupValues[2].toInt()).toChar() }.joinToString("")
+                val code = String(java.util.Base64.getDecoder().decode(shifted), Charsets.UTF_8)
+                Regex(""""kaynak"\s*:\s*"([^"]+)"""").find(code)?.groupValues?.get(1)?.replace("\\/", "/")
+            }.getOrNull()
+        }
+        
+        
+        
+        
+        
+        
+        
+
+        val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
+        val openPlayers = Regex("""openPlayer\(\s*['"](https?://[^'"]+)['"]""").findAll(text)
+            .map { it.groupValues[1] }.distinct().toList()
+        for (op in openPlayers) {
+            val vid = Regex("""[?&]v=([A-Za-z0-9_-]+)""").find(op)?.groupValues?.get(1)
+            val origin = Regex("""^(https?://[^/]+)""").find(op)?.groupValues?.get(1)
+            if (vid != null && origin != null) {
+                emit("$origin/source2.php?v=$vid.m3u8", "Player", "$origin/")
+            }
+            if (loadExtractor(op, data, subtitleCallback, callback)) found = true
+        }
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
             .findAll(text).map { it.groupValues[1] }.toList()
         for (embed in embeds) {
@@ -225,13 +267,16 @@ class DizifonProvider : MainAPI() {
                 continue
             }
             val inner = runCatching { app.get(absolute, headers = uaHeaders, referer = data).text }.getOrNull() ?: continue
-            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(inner)
+            val innerMedia = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(inner)
             for (m in innerMedia) emit(m.value, "Embed", absolute)
         }
-        val frames = resp.document.select("iframe").mapNotNull {
+        val domFrames = resp.document.select("iframe").mapNotNull {
             val raw = it.attr("src").ifBlank { it.attr("data-src") }.ifBlank { it.attr("vdo-src") }
             fixUrlNull(raw)
-        }.distinct()
+        }
+        val regexFrames = Regex("""<iframe\b[^>]*?\b(?:src|data-src|vdo-src)\s*=\s*["']([^"']+)["']""", RegexOption.IGNORE_CASE)
+            .findAll(text).mapNotNull { fixUrlNull(it.groupValues[1]) }.toList()
+        val frames = (domFrames + regexFrames).distinct()
         for (frame in frames) {
             if (frame.contains(".mp4") || frame.contains(".m3u8")) {
                 emit(frame, "Embed", data)
@@ -239,8 +284,9 @@ class DizifonProvider : MainAPI() {
             }
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
+                decodeVixolity(inner)?.let { emit(it, "Vixolity", "https://pl.vixolity.com/") }
                 val innerText = inner.replace("\\/", "/")
-                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(innerText)) {
+                for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(innerText)) {
                     emit(m.value, "Embed", frame)
                 }
                 for (sub in Regex("""<iframe[^>]+(?:src|data-src)="([^"]+)""").findAll(innerText)) {
@@ -248,13 +294,11 @@ class DizifonProvider : MainAPI() {
                     if (loadExtractor(subUrl, frame, subtitleCallback, callback)) found = true
                 }
             }
-            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) {
-                if (loadOkRu(frame, callback)) found = true
-            } else if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
+            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) { if (loadOkRu(frame, callback)) found = true } else if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
-        val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
+        val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in subs) {
-            if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))
+            if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(newSubtitleFile("tr", m.value))
         }
         if (!found && frames.isEmpty() && embeds.isEmpty() && media.none()) {
             throw ErrorLoadingException("$name: oynatılabilir akış yok")
@@ -268,7 +312,7 @@ class DizifonProvider : MainAPI() {
             app.post(
                 "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
                 data = emptyMap(),
-                headers = mapOf("user-agent" to "Mozilla/5.0 (Linux; Android 13)", "Referer" to "https://ok.ru/"),
+                headers = mapOf("User-Agent" to "Mozilla/5.0 (Linux; Android 13)", "Referer" to "https://ok.ru/"),
             ).text
         }.getOrNull() ?: return false
         val videos = runCatching { JSONObject(body).optJSONArray("videos") }.getOrNull() ?: return false
@@ -280,18 +324,17 @@ class DizifonProvider : MainAPI() {
             callback.invoke(
                 newExtractorLink(name, "OkRu $label", stream, ExtractorLinkType.VIDEO) {
                     this.referer = "https://ok.ru/"
-                    this.quality = when (label.lowercase()) {
-                        "mobile", "lowest" -> 240
-                        "low" -> 360
-                        "sd" -> 480
-                        "hd" -> 720
-                        "full" -> 1080
-                        else -> getQualityFromName(label.uppercase())
-                    }
+                    this.quality = getQualityFromName(label.uppercase())
                 }
             )
             found = true
         }
         return found
     }
+
+
+
+
+
+
 }

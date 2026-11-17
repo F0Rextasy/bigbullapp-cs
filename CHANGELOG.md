@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.96] - 2026-11-17
+
+### Düzeltildi
+- **Dizifon v8**: site yapısına göre arama ve oynatma ayrıştırıcısı güncellendi.
+
 ## [1.6.95] - 2026-11-17
 
 ### Düzeltildi
