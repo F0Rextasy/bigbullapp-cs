@@ -22,8 +22,12 @@ import com.lagradost.cloudstream3.newMovieSearchResponse
 import com.lagradost.cloudstream3.newTvSeriesLoadResponse
 import com.lagradost.cloudstream3.newTvSeriesSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
+import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.loadExtractor
+import com.lagradost.cloudstream3.utils.newExtractorLink
 import java.net.URLEncoder
+import org.json.JSONObject
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -179,19 +183,49 @@ class Izle7Provider : MainAPI() {
             ?: throw ErrorLoadingException("$name: Dailymotion kimliği bulunamadı. $REPORT_HINT")
 
         var found = false
+        val linkCallback: (ExtractorLink) -> Unit = {
+            if (Settings.qualityAllowed(it.quality)) {
+                callback(it)
+                found = true
+            }
+        }
         loadExtractor(
             "https://www.dailymotion.com/video/$videoId",
             data,
             { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) },
-            {
-                if (Settings.qualityAllowed(it.quality)) {
-                    callback(it)
-                    found = true
-                }
-            },
+            linkCallback,
         )
+        if (!found) loadDailymotionMetadata(videoId, linkCallback)
         if (!found) throw ErrorLoadingException("$name: oynatılabilir kaynak yok. $REPORT_HINT")
         return true
+    }
+
+    /** Metadata API (`dmvk`, `ts`, `v1st` çerezleriyle eşleşen HLS URL'i) Dailymotion yerleşik çözücü başarısızsa devralır. */
+    private suspend fun loadDailymotionMetadata(
+        videoId: String,
+        callback: (ExtractorLink) -> Unit,
+    ) {
+        val resp = runCatching {
+            app.get(
+                "https://www.dailymotion.com/player/metadata/video/$videoId",
+                referer = "https://www.dailymotion.com/",
+                headers = uaHeaders,
+            )
+        }.getOrNull() ?: return
+        val meta = runCatching { JSONObject(resp.text) }.getOrNull() ?: return
+        val qualities = meta.optJSONObject("qualities") ?: return
+        val stream = qualities.optJSONArray("auto")?.optJSONObject(0)?.optString("url")
+            ?.takeIf { it.startsWith("http") } ?: return
+        val cookieHeader = resp.cookies.entries.joinToString("; ") { "${it.key}=${it.value}" }
+        val streamHeaders = uaHeaders + mapOf("Origin" to "https://www.dailymotion.com") +
+            if (cookieHeader.isNotBlank()) mapOf("Cookie" to cookieHeader) else emptyMap()
+        callback(
+            newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
+                this.referer = "https://www.dailymotion.com/"
+                this.quality = Qualities.Unknown.value
+                this.headers = streamHeaders
+            }
+        )
     }
 
     /** JSON-LD `VideoObject` bloğu; süre ve yayın yılı buradan okunur. */

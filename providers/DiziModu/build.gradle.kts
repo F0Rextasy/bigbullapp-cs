@@ -1,9 +1,9 @@
-version = 1
+version = 2
 
 
 cloudstream {
     description = "DiziModu — ToroFlix yabancı dizi arşivi (dizimodu.com)"
-    status = 3
+    status = 0
     authors = listOf("F0Rextasy")
     tvTypes = listOf("TvSeries")
     language = "tr"

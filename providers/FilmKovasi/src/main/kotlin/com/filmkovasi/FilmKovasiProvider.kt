@@ -72,7 +72,7 @@ class FilmKovasiProvider : MainAPI() {
         val raw = anchor.text().trim().ifBlank { selectFirst("img")?.attr("alt").orEmpty() }
         val title = cleanTitle(raw) ?: return null
         return newMovieSearchResponse(title, href, TvType.Movie) {
-            this.posterUrl = fixUrlNull(selectFirst("img")?.posterSrcLazy())
+            this.posterUrl = fixUrlNull((selectFirst(".poster img") ?: selectFirst("img[alt]") ?: selectFirst("img"))?.posterSrcLazy())
             this.year = YEAR.find(raw)?.groupValues?.get(1)?.toIntOrNull()
         }
     }
@@ -252,7 +252,6 @@ class FilmKovasiProvider : MainAPI() {
             "Korku" to "korku",
             "Gerilim" to "gerilim",
             "Gizem" to "gizem",
-            "Polisiye" to "polisiye",
             "Suç" to "suc",
             "Savaş" to "savas",
             "Tarih" to "tarih",

@@ -27,6 +27,7 @@ import com.lagradost.cloudstream3.newTvSeriesSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
+import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONObject
 import org.jsoup.nodes.Document
@@ -162,50 +163,96 @@ class AsyaFanatikleriProvider : MainAPI() {
     ): Boolean {
         val doc = runCatching { app.get(data, headers = browserHeaders).document }.getOrNull()
             ?: throw ErrorLoadingException("$name: oynatılabilir kaynak yok")
-        // Fragman iframe'i de sayfada durur; yalnızca FirePlayer kaynakları çözülür.
+        val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
+        val subCallback: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
+        // Fragman YouTube iframe'leri atlanır; ölü FirePlayer jetonları 10 sn beklettiğinden son sıraya konur.
         val embeds = doc.select("iframe[data-src], iframe[src]")
             .mapNotNull { fixUrlNull(it.attr("data-src").ifBlank { it.attr("src") }.trim()) }
-            .filter { it.startsWith("http") && (it.contains("playerdkorea") || it.contains("playerkorea")) }
+            .filter { it.startsWith("http") && !it.contains("youtube", true) && !it.contains("youtu.be", true) }
             .distinct()
+            .sortedBy { if (it.contains("playerdkorea") || it.contains("playerkorea")) 1 else 0 }
         var found = false
         for (embed in embeds) {
-            if (loadFirePlayer(embed, data, callback)) found = true
+            val ok = when {
+                embed.contains("playerdkorea") || embed.contains("playerkorea") ->
+                    loadFirePlayer(embed, linkCallback)
+                embed.contains("vidmoly.", ignoreCase = true) ->
+                    loadVidmoly(embed, data, subCallback, linkCallback)
+                else -> loadExtractor(embed, data, subCallback, linkCallback)
+            }
+            if (ok) found = true
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir kaynak yok")
         return true
     }
 
+    private suspend fun loadVidmoly(
+        embed: String,
+        pageUrl: String,
+        subtitleCallback: (SubtitleFile) -> Unit,
+        callback: (ExtractorLink) -> Unit,
+    ): Boolean {
+        val target = embed.replace(Regex("""vidmoly\.(?:to|me|biz)"""), "vidmoly.net")
+        val html = runCatching {
+            app.get(
+                target,
+                referer = "$mainUrl/",
+                headers = browserHeaders + mapOf("Sec-Fetch-Dest" to "iframe"),
+            ).text
+        }.getOrNull().orEmpty()
+        val m3u8 = Regex("""file\s*:\s*["'](https?://[^"']+\.m3u8[^"']*)["']""")
+            .find(html)?.groupValues?.get(1)
+        if (m3u8 != null) {
+            callback.invoke(
+                newExtractorLink(name, "VidMoly", m3u8, ExtractorLinkType.M3U8) {
+                    this.referer = "https://vidmoly.net/"
+                    this.quality = Qualities.Unknown.value
+                    this.headers = browserHeaders
+                }
+            )
+            return true
+        }
+        return loadExtractor(target, pageUrl, subtitleCallback, callback)
+    }
+
     /** FirePlayer (playerdkorea/playerkorea*) — çekirdekte hazır extractor yok. */
-    private suspend fun loadFirePlayer(embed: String, pageUrl: String, callback: (ExtractorLink) -> Unit): Boolean {
+    private suspend fun loadFirePlayer(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
         val origin = embed.substringBefore("/video/").takeIf { it.startsWith("http") } ?: return false
         val id = embed.substringAfter("/video/").substringBefore('?').substringBefore('/')
         if (id.isBlank()) return false
+        val pageResp = runCatching {
+            app.get(embed, referer = "$mainUrl/", headers = browserHeaders)
+        }.getOrNull()
         val body = runCatching {
             app.post(
                 "$origin/player/index.php?data=$id&do=getVideo",
-                data = mapOf("hash" to id, "r" to pageUrl),
+                data = mapOf("hash" to id, "r" to "$mainUrl/"),
+                cookies = pageResp?.cookies ?: emptyMap(),
                 headers = browserHeaders + mapOf(
                     "X-Requested-With" to "XMLHttpRequest",
-                    "Referer" to pageUrl,
+                    "Referer" to embed,
                     "Origin" to origin,
                 ),
             ).text
         }.getOrNull() ?: return false
         val json = runCatching { JSONObject(body) }.getOrNull() ?: return false
-        // Oynatıcı `videoSource`u (master.txt) kullanır; `securedLink` aynı playlist'in imzalı hâli.
-        val stream = json.optString("videoSource").ifBlank { json.optString("securedLink") }
-        if (!stream.startsWith("http")) return false
-        val live = runCatching {
-            app.get(stream, referer = "$origin/", headers = browserHeaders).text.startsWith("#EXTM3U")
-        }.getOrDefault(false)
-        if (!live) return false
-        val link = newExtractorLink(name, "playerDKorea", stream, ExtractorLinkType.M3U8) {
-            this.referer = "$origin/"
-            this.quality = Qualities.Unknown.value
+        val streamHeaders = browserHeaders + mapOf("Accept" to "*/*")
+        for (key in listOf("securedLink", "videoSource")) {
+            val stream = json.optString(key).trim().replace("\\/", "/")
+            if (!stream.startsWith("http")) continue
+            val live = runCatching {
+                app.get(stream, referer = "$origin/", headers = streamHeaders).text.trimStart().startsWith("#EXTM3U")
+            }.getOrDefault(false)
+            if (!live) continue
+            val link = newExtractorLink(name, "playerDKorea", stream, ExtractorLinkType.M3U8) {
+                this.referer = "$origin/"
+                this.quality = Qualities.Unknown.value
+                this.headers = streamHeaders
+            }
+            callback.invoke(link)
+            return true
         }
-        if (!Settings.qualityAllowed(link.quality)) return false
-        callback.invoke(link)
-        return true
+        return false
     }
 
     private fun Element.toSearchResult(): SearchResponse? {

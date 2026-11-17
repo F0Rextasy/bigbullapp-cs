@@ -55,13 +55,13 @@ class DiziizleProvider : MainAPI() {
             "Netflix" -> MainPageData(name, "$mainUrl/platform/netflix")
             "Disney+" -> MainPageData(name, "$mainUrl/platform/disney")
             "HBO Max" -> MainPageData(name, "$mainUrl/platform/hbo-max")
-            "Aksiyon" -> MainPageData(name, "$mainUrl/tur/aksiyon")
-            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/tur/bilim-kurgu")
+            "Aksiyon & Macera" -> MainPageData(name, "$mainUrl/tur/aksiyon-macera")
+            "Bilim Kurgu & Fantastik" -> MainPageData(name, "$mainUrl/tur/bilim-kurgu-fantastik")
+            "Animasyon" -> MainPageData(name, "$mainUrl/tur/animasyon")
             "Dram" -> MainPageData(name, "$mainUrl/tur/dram")
-            "Fantastik" -> MainPageData(name, "$mainUrl/tur/fantastik")
             "Gizem" -> MainPageData(name, "$mainUrl/tur/gizem")
             "Komedi" -> MainPageData(name, "$mainUrl/tur/komedi")
-            "Macera" -> MainPageData(name, "$mainUrl/tur/macera")
+            "Suç" -> MainPageData(name, "$mainUrl/tur/suc")
             else -> null
         }
     }
@@ -149,7 +149,7 @@ class DiziizleProvider : MainAPI() {
         val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
         val doc = runCatching { app.get(data, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: bölüm yüklenemedi. $REPORT_HINT")
-        val playerBase = doc.selectFirst("script[src*='/assets/js/core.js']")?.let { el -> el.attr("data-src").ifBlank { el.attr("data-lazy-src").ifBlank { el.attr("data-original").ifBlank { el.attr("data-srcset").substringBefore(" ").trim().ifBlank { el.attr("src") } } } } }
+        val playerBase = doc.selectFirst("script[src*='/assets/js/core.js']")?.attr("src")
             ?.substringBefore("/assets/js/core.js")?.takeIf { it.startsWith("http") }
             ?: PLAYER_HOST
 
@@ -219,7 +219,7 @@ class DiziizleProvider : MainAPI() {
     companion object {
         /** Homepage rows in display order; all map to live listing pages. */
         val ROWS = listOf("Trend Diziler", "Son Eklenen Diziler", "Netflix", "Disney+", "HBO Max",
-            "Aksiyon", "Bilim Kurgu", "Dram", "Fantastik", "Gizem", "Komedi", "Macera")
+            "Aksiyon & Macera", "Bilim Kurgu & Fantastik", "Animasyon", "Dram", "Gizem", "Komedi", "Suç")
 
         private val EPISODE = Regex("""/sezon-(\d+)/bolum-(\d+)""")
         private const val CARD = "a[href*='/dizi/']"

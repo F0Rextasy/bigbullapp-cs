@@ -5,6 +5,20 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.6.99] - 2026-11-17
+
+### Düzeltildi
+- **AsyaFanatikleri v2**: video oynatıcı ve bölüm oynatma bağlantıları düzeltildi.
+- **Izle7 v2**: video oynatma bağlantıları düzeltildi.
+- **Dizifon v9**: ana sayfa kategorileri, arama ve afiş görselleri düzeltildi.
+- **Diziizle v3**: tekrar eden kategoriler düzenlendi ve oynatma bağlantısı onarıldı.
+- **Filmgecesi v3**: tekrar eden kategori yenilendi ve video çözümü güncellendi.
+- **FilmKovasi v2**: boş kategori kaldırıldı ve afiş görselleri düzeltildi.
+- **Toruko v3**: tekrar eden ana sayfa kategorisi sadeleştirildi.
+
+### Değiştirildi
+- **DiziModu v2**: tüm video sunucuları çalışmadığı için geçici olarak pasife alındı.
+
 ## [1.6.98] - 2026-11-17
 
 ### Düzeltildi

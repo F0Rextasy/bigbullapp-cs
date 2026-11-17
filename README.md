@@ -7,7 +7,7 @@ Cloudstream için `.cs3` eklentileri, Nuvio için plugin deposu + iki katalog ad
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-114-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-113-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -137,7 +137,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `AsyaBox` | asyabox.co | Dizi | — | — | — | — | — | — |
 | `AsyaDizi` | asyadizi.com | Dizi | — | — | — | — | — | — |
 | `Asyadizileriizle` | asyadizileriizle.com | Dizi | — | — | — | — | — | — |
-| `AsyaFanatikleri` **beta** | asyafanatikleri.vip | Asya dizi/film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `AsyaFanatikleri` | asyafanatikleri.vip | Asya dizi/film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `AsyaLog` | asyalog.co | Asya dizi/film | ✓ | ✓ | — | — | ✓ | ✓ |
 | `AsyaLuna` **pasif** | asyaluna.com | Dizi | — | — | — | — | — | — |
 | `AsyaMax` | asyamax.com | Asya dizi/film | ✓ | — | — | — | — | — |
@@ -168,7 +168,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi86.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
 | `Dizimanya` | dizimanya.com | Dizi | — | — | — | — | — | ✓ |
-| `DiziModu` **beta** | dizimodu.com | Dizi | ✓ | — | — | ✓ | — | ✓ |
+| `DiziModu` **pasif** | dizimodu.com | Dizi | ✓ | — | — | ✓ | — | ✓ |
 | `Dizirella` | dizirella.one | Dizi | — | — | — | — | — | — |
 | `DiziSol` | dizisol.com | Film/Dizi | ✓ | — | — | — | ✓ | — |
 | `Dizist` | dizist.live | Dizi | — | — | — | — | — | ✓ |
@@ -198,7 +198,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
 | `HDFilmizle` | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `HDFilmizleBest` | hdfilmizle.best | Film | — | — | — | — | — | — |
-| `Izle7` **beta** | izle7.com | Dizi/Film | ✓ | — | — | — | ✓ | — |
+| `Izle7` | izle7.com | Dizi/Film | ✓ | — | — | — | ✓ | — |
 | `IzleFilm` | izlefilm.net | Film | ✓ | — | — | — | ✓ | ✓ |
 | `JetFilmizle` | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
 | `KanalD` | kanald.com.tr | Dizi | — | — | — | — | — | — |
@@ -244,11 +244,11 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `YerliDiziler` | yerlidiziler.com.tr | Yerli Dizi | ✓ | — | — | — | — | — |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**Kapsam notu:** Depoda toplam **114 modül** var; 111'i doğrulanmış (`status = 1`), 3'ü beta
-(`DiziModu`, `Izle7`, `Asya Fanatikleri`; oynatıcı CDN'i doğrulanamadı). `AsyaLuna` (alan adı ölü) ve
-`TV8` (site bakımı, 2026-11-15) `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları
-nedeniyle kaldırıldı; düzeldiğinde tekrar eklenir. Bu tablo ve özellik matrisi her sağlayıcı
-değişikliğinde güncellenir.
+**Kapsam notu:** Depoda aktif **113 modül** var ve tamamı doğrulanmış durumda (`status = 1`).
+`AsyaLuna` (alan adı ölü), `TV8` (site bakımı, 2026-11-15) ve `DiziModu` (tüm oynatıcı sunucuları
+ölü/429, 2026-11-17) `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle
+kaldırıldı; düzeldiğinde tekrar eklenir. Bu tablo ve özellik matrisi her sağlayıcı değişikliğinde
+güncellenir.
 
 ## Nuvio sağlayıcıları (32)
 
