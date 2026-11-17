@@ -149,7 +149,7 @@ class DiziizleProvider : MainAPI() {
         val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
         val doc = runCatching { app.get(data, headers = uaHeaders).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: bölüm yüklenemedi. $REPORT_HINT")
-        val playerBase = doc.selectFirst("script[src*='/assets/js/core.js']")?.attr("src")
+        val playerBase = doc.selectFirst("script[src*='/assets/js/core.js']")?.let { el -> el.attr("data-src").ifBlank { el.attr("data-lazy-src").ifBlank { el.attr("data-original").ifBlank { el.attr("data-srcset").substringBefore(" ").trim().ifBlank { el.attr("src") } } } } }
             ?.substringBefore("/assets/js/core.js")?.takeIf { it.startsWith("http") }
             ?: PLAYER_HOST
 
@@ -185,6 +185,7 @@ class DiziizleProvider : MainAPI() {
                 newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
                     this.referer = shellUrl
                     this.quality = Qualities.Unknown.value
+                this.headers = uaHeaders
                 }
             )
             found = true
