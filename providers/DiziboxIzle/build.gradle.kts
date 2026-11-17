@@ -1,6 +1,5 @@
 version = 11
 
-
 cloudstream {
     description = "DiziboxIzle — güncel yabancı dizi (diziboxizle.com)"
     authors = listOf("F0Rextasy")
