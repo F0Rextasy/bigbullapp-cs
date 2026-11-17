@@ -50,7 +50,6 @@ class DizilabProvider : MainAPI() {
         MainPageData("Japonya", "$mainUrl/tur/japonya/"),
         MainPageData("Tayland", "$mainUrl/tur/tayland/"),
         MainPageData("Aksiyon", "$mainUrl/tur/aksiyon/"),
-        MainPageData("Dram", "$mainUrl/tur/dram/"),
         MainPageData("Fantastik", "$mainUrl/tur/fantastik/"),
         MainPageData("Romantik", "$mainUrl/tur/romantik/"),
         MainPageData("Komedi", "$mainUrl/tur/komedi/"),
@@ -132,7 +131,8 @@ class DizilabProvider : MainAPI() {
             for (stream in streams) {
                 linkCallback.invoke(
                     newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
-                        this.referer = frame
+                        // twimg CDN'i Referer başlığı gönderilince 403 döndüğü için boş bırakılır.
+                        this.referer = if (stream.contains("video.twimg.com")) "" else frame
                         this.headers = headers
                         this.quality = Qualities.Unknown.value
                     },
@@ -146,7 +146,7 @@ class DizilabProvider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Diziler", "Kore", "Çin", "Japonya", "Tayland", "Aksiyon", "Dram",
+        val ROWS = listOf("Diziler", "Kore", "Çin", "Japonya", "Tayland", "Aksiyon",
             "Fantastik", "Romantik", "Komedi", "Gerilim")
         private val EPISODE = Regex("""-(\d+)-sezon-(\d+)-bolum""")
         private const val REPORT_HINT =
