@@ -1,4 +1,4 @@
-// @provider {"id":"setfilmizle", "name":"SetFilmIzle", "types":["movie", "tv"], "domain":"setfilmizle.ltd", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"SetFilmIzle Türkçe dublaj/altyazılı film ve dizi arşivi (HLS + altyazı).", "version":"1.0.9"}
+// @provider {"id": "setfilmizle", "name": "SetFilmIzle", "types": ["movie", "tv"], "domain": "setfilmizle.ltd", "formats": ["m3u8"], "sample": "tt0944947:tv:1:1", "description": "SetFilmIzle Türkçe dublaj/altyazılı film ve dizi arşivi (HLS + altyazı).", "version": "1.0.10"}
 /**
  * setfilmizle — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /?s= -> film|dizi page -> admin-ajax get_video_url -> bridge page

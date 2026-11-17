@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.6.90",
+  "version": "1.6.91",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -455,7 +455,7 @@
       "id": "setfilmizle",
       "name": "SetFilmIzle",
       "description": "SetFilmIzle Türkçe dublaj/altyazılı film ve dizi arşivi (HLS + altyazı).",
-      "version": "1.0.9",
+      "version": "1.0.10",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
