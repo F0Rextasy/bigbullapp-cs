@@ -1,4 +1,4 @@
-// @provider {"id":"sinemetrik","name":"Sinemetrik","types":["movie","tv"],"domain":"sinemetrik.com","formats":["m3u8"],"description":"Sinemetrik film/dizi kaynaklari (kendi player'i, TR altyazi).","sample":"tt0468569:movie:1:1","version":"1.0.1","verified":true}
+// @provider {"id": "sinemetrik", "name": "Sinemetrik", "types": ["movie", "tv"], "domain": "sinemetrik.com", "formats": ["m3u8"], "description": "Sinemetrik film/dizi kaynaklari (kendi player'i, TR altyazi).", "sample": "tt0903747:tv:1:1", "version": "1.0.2", "verified": true}
 /**
  * sinemetrik — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /api/search (TMDB slug dogrulamasi) -> film/dizi detayi ->
