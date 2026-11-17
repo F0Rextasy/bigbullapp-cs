@@ -154,7 +154,14 @@ class DiziKutusuProvider : MainAPI() {
             .distinct()
 
         var found = false
-        for (embed in embeds) {
+        // VK önce: ok.ru CDN'i bazı ağlarda HTTP hatası veriyor.
+        for (embed in embeds.sortedBy {
+            when {
+                it.contains("vk.com/video_ext") || it.contains("vkvideo.ru") -> 0
+                it.contains("ok.ru/") || it.contains("odnoklassniki.ru") -> 1
+                else -> 2
+            }
+        }) {
             val ok = when {
                 embed.contains("ok.ru/") || embed.contains("odnoklassniki.ru") ->
                     loadOkRu(embed, linkCallback)

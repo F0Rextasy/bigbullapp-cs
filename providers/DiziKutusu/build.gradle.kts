@@ -1,4 +1,4 @@
-version = 1
+version = 2
 cloudstream {
     description = "DiziKutusu — Batı & Asya dizileri arşivi (dizikutusu.com)"
     authors = listOf("F0Rextasy")
