@@ -124,16 +124,16 @@ class DizistProvider : MainAPI() {
             throw ErrorLoadingException("$name: bölüm listesi bulunamadı. $REPORT_HINT")
         }
         return newTvSeriesLoadResponse(title, pageUrl, TvType.TvSeries, episodes) {
-            this.posterUrl = doc.selectFirst(".series-profile-image img")?.posterSrcLazy()
+            this.posterUrl = doc.selectFirst("div.serie-box-mb")?.posterSrcLazy()
                 ?: fixUrlNull(schema?.optString("image"))
-            this.plot = doc.selectFirst(".series-profile-summary p")?.text()?.trim()
+            this.plot = doc.selectFirst("div.serie-box-mb")?.text()?.trim()
                 ?.takeIf { it.isNotEmpty() }
                 ?: schema?.optString("description")?.trim()?.takeIf { it.isNotEmpty() }
             this.year = YEAR_SUFFIX.find(heading)?.groupValues?.get(1)?.toIntOrNull()
                 ?: schema?.optString("datePublished")?.take(4)?.toIntOrNull()?.takeIf { it in 1900..2100 }
-            this.tags = doc.select(".series-profile-type a[href*='/kategori/']")
+            this.tags = doc.select("div.serie-box-mb")
                 .map { it.text().trim() }.filter { it.isNotEmpty() }.distinct()
-            this.score = doc.selectFirst("strong.color-imdb")?.text()?.trim()?.toDoubleOrNull()
+            this.score = doc.selectFirst("div.serie-box-mb")?.text()?.trim()?.toDoubleOrNull()
                 ?.let { Score.from10(it) }
             addActors(schema?.optJSONArray("actor").names())
         }
