@@ -124,16 +124,16 @@ class DizistProvider : MainAPI() {
             throw ErrorLoadingException("$name: bölüm listesi bulunamadı. $REPORT_HINT")
         }
         return newTvSeriesLoadResponse(title, pageUrl, TvType.TvSeries, episodes) {
-            this.posterUrl = doc.selectFirst("div.serie-box-mb")?.posterSrcLazy()
+            this.posterUrl = doc.selectFirst(".series-profile-image img")?.posterSrcLazy()
                 ?: fixUrlNull(schema?.optString("image"))
-            this.plot = doc.selectFirst("div.serie-box-mb")?.text()?.trim()
+            this.plot = doc.selectFirst(".series-profile-summary p")?.text()?.trim()
                 ?.takeIf { it.isNotEmpty() }
                 ?: schema?.optString("description")?.trim()?.takeIf { it.isNotEmpty() }
             this.year = YEAR_SUFFIX.find(heading)?.groupValues?.get(1)?.toIntOrNull()
                 ?: schema?.optString("datePublished")?.take(4)?.toIntOrNull()?.takeIf { it in 1900..2100 }
-            this.tags = doc.select("div.serie-box-mb")
+            this.tags = doc.select(".series-profile-type a[href*='/kategori/']")
                 .map { it.text().trim() }.filter { it.isNotEmpty() }.distinct()
-            this.score = doc.selectFirst("div.serie-box-mb")?.text()?.trim()?.toDoubleOrNull()
+            this.score = doc.selectFirst("strong.color-imdb")?.text()?.trim()?.toDoubleOrNull()
                 ?.let { Score.from10(it) }
             addActors(schema?.optJSONArray("actor").names())
         }
@@ -270,18 +270,20 @@ class DizistProvider : MainAPI() {
         return scope.select("div.poster-mb-bx").mapNotNull { it.toPosterCard() }.distinctBy { it.url }
     }
 
-    /** "Yeni Eklenen Dizi Bölümleri" kartları bölüme gider; dizi sayfasına çevrilir. */
-    private fun Document.episodeCards(): List<SearchResponse> =
-        select(".area.last-episodes div.serie-box-mb").mapNotNull { card ->
+    /** "Yeni Eklenen Dizi Bölümleri" kartları bölüme gider; load() içinde dizi sayfasına indirgenir. */
+    private fun Document.episodeCards(): List<SearchResponse> {
+        val seenSlugs = HashSet<String>()
+        return select(".area.last-episodes div.serie-box-mb").mapNotNull { card ->
             val href = fixUrlNull(card.selectFirst("a[href*='/izle/']")?.attr("href")) ?: return@mapNotNull null
             val slug = href.substringAfter("/izle/").replace(EPISODE_SUFFIX, "")
-            if (slug.isEmpty() || slug == href.substringAfter("/izle/")) return@mapNotNull null
+            if (slug.isEmpty() || slug == href.substringAfter("/izle/") || !seenSlugs.add(slug)) return@mapNotNull null
             val title = card.selectFirst("h2")?.text()?.trim()?.takeIf { it.isNotEmpty() }
                 ?: return@mapNotNull null
-            newTvSeriesSearchResponse(title, "$mainUrl/dizi/$slug", TvType.TvSeries) {
+            newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
                 this.posterUrl = card.selectFirst("img")?.posterSrcLazy()
             }
-        }.distinctBy { it.url }
+        }
+    }
 
     private fun Element.toPosterCard(): SearchResponse? {
         val link = selectFirst("a[href*='/dizi/']") ?: return null
