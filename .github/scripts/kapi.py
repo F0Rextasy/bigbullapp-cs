@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""CI kapısı: kaynak değişen modülün sürümü artmış mı, .cs3 sayısı modül sayısına eşit mi.
+"""CI kapısı: sürüm artışı, .cs3 sayısı, README/envanter senkronu ve Nuvio sayısı.
 
   kapi.py surum <taban-sha>   providers/<X>/src ve nuvio/providers/<id>.js değişince sürüm artmalı
   kapi.py sayi                providers/*/build/*.cs3 sayısı aktif modül sayısına eşit olmalı
+  kapi.py envanter            README tablosu, Settings/openSettings/hasMainPage ve Nuvio=32 uyumu
   kapi.py test                kendi kendine kontrol
 """
 import glob
+import os
 import re
 import subprocess
 import sys
@@ -13,6 +15,7 @@ import sys
 ZERO = "0" * 40
 # shortcut: ortak modüller (Common, InatShared) hangi modülleri etkilediğini bilmez; sürüm şartı aranmaz
 ORTAK = {"Common", "InatShared"}
+NUVIO_SABIT = 32
 
 
 def git(*a):
@@ -80,6 +83,74 @@ def sayi():
     return [] if beklenen == var else [f".cs3 sayısı {var}, aktif modül sayısı {beklenen}"]
 
 
+def readme_satirlari(metin=None):
+    if metin is None:
+        metin = open("README.md", encoding="utf-8").read()
+    aktif, pasif = set(), set()
+    for satir in metin.splitlines():
+        m = re.match(r"^\|\s*`([^`]+)`(.*)$", satir)
+        if not m:
+            continue
+        ad, kalan = m.group(1).strip(), m.group(2)
+        if "**pasif**" in kalan:
+            pasif.add(ad)
+        else:
+            aktif.add(ad)
+    return aktif, pasif
+
+
+def envanter():
+    hata = []
+    aktif_disk = set(aktif_moduller())
+    pasif_disk = devre_disi()
+    try:
+        r_aktif, r_pasif = readme_satirlari()
+    except OSError as exc:
+        return [f"README.md okunamadı: {exc}"]
+
+    eksik_readme = sorted(aktif_disk - r_aktif)
+    fazla_readme = sorted(r_aktif - aktif_disk)
+    if eksik_readme:
+        hata.append(f"README.md eksik aktif modüller: {', '.join(eksik_readme)}")
+    if fazla_readme:
+        hata.append(f"README.md aktif olup diskte olmayanlar: {', '.join(fazla_readme)}")
+
+    eksik_pasif = sorted(pasif_disk - r_pasif)
+    fazla_pasif = sorted(r_pasif - pasif_disk)
+    if eksik_pasif:
+        hata.append(f"README.md eksik pasif modüller: {', '.join(eksik_pasif)}")
+    if fazla_pasif:
+        hata.append(f"README.md pasif olup diskte olmayanlar: {', '.join(fazla_pasif)}")
+
+    for mod in sorted(aktif_disk):
+        kok = f"providers/{mod}"
+        has_settings = False
+        has_open_settings = False
+        has_main_false = False
+        for dirpath, _dirs, files in os.walk(kok):
+            for fn in files:
+                yol = os.path.join(dirpath, fn)
+                if fn == "Settings.kt":
+                    has_settings = True
+                elif fn.endswith("Plugin.kt"):
+                    if "openSettings" in open(yol, encoding="utf-8").read():
+                        has_open_settings = True
+                elif fn.endswith("Provider.kt"):
+                    if re.search(r"\bhasMainPage\s*=\s*false\b", open(yol, encoding="utf-8").read()):
+                        has_main_false = True
+        if not has_settings:
+            hata.append(f"{mod}: Settings.kt eksik")
+        if not has_open_settings:
+            hata.append(f"{mod}: Plugin.kt içinde openSettings eksik")
+        if has_main_false:
+            hata.append(f"{mod}: hasMainPage = false yasak")
+
+    nuvio_sayisi = len(glob.glob("nuvio/providers/*.js"))
+    if nuvio_sayisi != NUVIO_SABIT:
+        hata.append(f"nuvio/providers/*.js sayısı {nuvio_sayisi}, sabit {NUVIO_SABIT} olmalı")
+    return hata
+
+
 def test():
     assert kt_surum("// x\nversion = 10\n\ncloudstream {") == 10
     assert kt_surum("cloudstream { version = 3 }") is None  # satır başı değil
@@ -87,6 +158,10 @@ def test():
     assert js_surum("// @provider {}\n") is None
     assert "AsyaLuna" in devre_disi() and "Dizibox" not in devre_disi()
     assert "Dizibox" in aktif_moduller() and "AsyaLuna" not in aktif_moduller()
+    ra, rp = readme_satirlari("| `Dizibox` | x |\n| `AsyaLuna` **pasif** | y |\n")
+    assert ra == {"Dizibox"} and rp == {"AsyaLuna"}
+    env_hatalari = envanter()
+    assert not env_hatalari, f"envanter hatası: {env_hatalari}"
     print("kapi.py: testler geçti")
 
 
@@ -95,7 +170,12 @@ if __name__ == "__main__":
     if komut == "test":
         test()
         sys.exit(0)
-    hatalar = surum(sys.argv[2] if len(sys.argv) > 2 else "") if komut == "surum" else sayi() if komut == "sayi" else None
+    hatalar = (
+        surum(sys.argv[2] if len(sys.argv) > 2 else "") if komut == "surum"
+        else sayi() if komut == "sayi"
+        else envanter() if komut == "envanter"
+        else None
+    )
     if hatalar is None:
         sys.exit(__doc__)
     for h in hatalar:

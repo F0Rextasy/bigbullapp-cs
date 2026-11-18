@@ -120,7 +120,69 @@ async function fetchPlaylist(consts) {
   }
 }
 
+const VERIFY = process.argv.includes("--verify");
+const CHECK = process.argv.includes("--check");
 const writeJson = (path, value) => writeFileSync(path, JSON.stringify(value) + "\n");
+
+async function probeStream(url, referer) {
+  const headers = { "User-Agent": UA };
+  if (referer) headers.Referer = referer;
+  try {
+    const r = await fetch(url, { headers, redirect: "follow", signal: AbortSignal.timeout(6000) });
+    if (r.status < 200 || r.status >= 300) {
+      await r.body?.cancel?.().catch(() => {});
+      return { ok: false, reason: `HTTP ${r.status}` };
+    }
+    const ct = String(r.headers.get("content-type") || "").toLowerCase();
+    if (ct.includes("text/html")) {
+      await r.body?.cancel?.().catch(() => {});
+      return { ok: false, reason: "text/html" };
+    }
+    let headText = "";
+    if (r.body?.getReader) {
+      const reader = r.body.getReader();
+      const { value } = await reader.read();
+      await reader.cancel().catch(() => {});
+      if (value) headText = new TextDecoder("utf-8", { fatal: false }).decode(value.slice(0, 2048));
+    }
+    const isM3u = headText.includes("#EXTM3U") || headText.includes("#EXT-X-");
+    const mediaCt = ct.includes("mpegurl") || ct.includes("video/") || ct.includes("octet-stream") || ct.includes("mp2t");
+    if (!isM3u && !mediaCt) {
+      return { ok: false, reason: ct ? `unexpected:${ct.split(";")[0]}` : "not-m3u8" };
+    }
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, reason: e?.name === "TimeoutError" ? "timeout" : (e?.message || "fetch-error").slice(0, 80) };
+  }
+}
+
+async function verifyChannels(channels, staticKeys, concurrency = 24) {
+  const keepIds = new Set();
+  const deadStatic = [];
+  let deadDynamic = 0;
+  let idx = 0;
+  async function worker() {
+    while (idx < channels.length) {
+      const cur = channels[idx++];
+      const res = await probeStream(cur.url, cur.referer);
+      if (res.ok) {
+        keepIds.add(cur.id);
+      } else if (staticKeys.has(cur.key)) {
+        deadStatic.push({ id: cur.id, name: cur.name, url: cur.url, reason: res.reason });
+        keepIds.add(cur.id);
+      } else {
+        deadDynamic += 1;
+      }
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(concurrency, channels.length) }, () => worker()));
+  return {
+    keepIds,
+    deadStatic,
+    deadDynamic,
+    aliveCount: keepIds.size - deadStatic.length,
+  };
+}
 
 async function main() {
   const { consts, rows, skip, overrides, statics } = parseProvider();
@@ -134,13 +196,14 @@ async function main() {
     const key = keyOf(ch.name);
     if (key && !merged.has(key)) merged.set(key, { ...ch, key });
   }
-  const live = [];
+  let live = [];
   for (const [key, ch] of merged) {
     if (skip.has(key)) continue;
     const url = overrides[key] || ch.url;
     if (!/^https?:\/\//i.test(url)) continue;
     live.push({
       id: `bb-${slugOf(key)}`,
+      key,
       name: ch.name,
       url,
       logo: ch.logo && ch.logo !== consts.DEFAULT_LOGO ? ch.logo : dynamicLogo.get(key) || consts.DEFAULT_LOGO || "",
@@ -150,6 +213,30 @@ async function main() {
   }
   const ids = new Set(live.map((c) => c.id));
   if (ids.size !== live.length) throw new Error("kanal id çakışması");
+
+  if (VERIFY) {
+    const staticKeys = new Set(statics.map((s) => keyOf(s.name)));
+    const report = await verifyChannels(live, staticKeys, 24);
+    if (CHECK) {
+      console.log(JSON.stringify({
+        ok: true,
+        total: live.length,
+        alive: report.aliveCount,
+        deadStatic: report.deadStatic,
+        deadDynamic: report.deadDynamic,
+      }));
+      return;
+    }
+    live = live.filter((c) => report.keepIds.has(c.id));
+    ids.clear();
+    for (const c of live) ids.add(c.id);
+    if (report.deadDynamic || report.deadStatic.length) {
+      console.error(`canlı tarama: ${report.aliveCount} açık, ${report.deadDynamic} ölü dinamik elendi, ${report.deadStatic.length} ölü statik`);
+    }
+  } else if (CHECK) {
+    console.log(JSON.stringify({ ok: true, total: live.length, alive: live.length, deadStatic: [], deadDynamic: 0 }));
+    return;
+  }
 
   const groupLabel = new Map(rows.map((r) => [r.group, r.label]));
   const metaOf = (c) => ({

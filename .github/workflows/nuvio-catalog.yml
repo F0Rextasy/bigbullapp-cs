@@ -10,8 +10,6 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "CHANGELOG.md"
-      - "nuvio/providers/**"
       - "nuvio/addon/sources/**"
       - "nuvio/addon/build.mjs"
       - "nuvio/addon-live/**"

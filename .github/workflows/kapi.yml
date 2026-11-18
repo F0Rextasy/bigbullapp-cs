@@ -31,3 +31,5 @@ jobs:
         run: python3 .github/scripts/kapi.py test
       - name: Kaynak değişen modülün sürümü arttı mı
         run: python3 .github/scripts/kapi.py surum "${{ github.event.pull_request.base.sha || github.event.before }}"
+      - name: Envanter ve README senkron kontrolü
+        run: python3 .github/scripts/kapi.py envanter

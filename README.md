@@ -40,7 +40,7 @@ Nuvio plugin deposu: `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/
 
 | İş | Sağlayan |
 |---|---|
-| Film/dizi arama ve oynatma | Plugin deposu (32 sağlayıcı) |
+| Film/dizi arama ve oynatma | Plugin deposu (113 sağlayıcı) |
 | Film/dizi detayı: özet, kadro, bölümler | **Bir metadata addon'u zorunlu**: Cinemeta (`https://v3-cinemeta.strem.io/manifest.json`) veya AIOMetadata/TMDB |
 | Ana sayfada film/dizi satırları | **BigBull TR Katalog** addon'u |
 | Canlı TV satırları ve kanal oynatma | **BigBull Canlı TV** addon'u |
@@ -130,6 +130,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 |---|---|---|---|---|---|---|---|---|
 | `AniArsiv` | aniarsiv.com | Dizi | — | — | — | — | — | — |
 | `AnimeciX` | animecix.tv | Anime | — | — | — | — | — | ✓ |
+| `AnimeTR` | animetr.co | Anime | ✓ | — | — | — | — | ✓ |
 | `Animeler` | animeler.live | Anime | — | — | — | — | — | — |
 | `Anizm` | turkanime.info | Anime | — | — | ✓ | — | — | ✓ |
 | `Anizium` | anizium.co | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
@@ -149,7 +150,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `CanliDizi` | canlidizi.sbs | Dizi | — | — | — | — | — | — |
 | `CanliTV` | iptv-org TR M3U + sabit HLS | Canlı TV | — | — | — | — | — | — |
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
-| `CizgiSite` | www.cizgi.site | Dizi | — | — | — | — | — | — |
+| `CizgiSite` | cizgi.site | Dizi | — | — | — | — | — | — |
 | `Ddizi` | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
 | `DDizimag` | ddizimag.icu | Dizi | — | — | — | — | — | — |
 | `Deokwave` | deokwave.com | Anime | — | — | — | — | — | ✓ |
@@ -211,10 +212,10 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `NowTV` | nowtv.com.tr | Dizi/Film | ✓ | — | — | — | — | — |
 | `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
 | `OnlineDizi` | onlinedizi.sbs | Dizi | ✓ | — | — | ✓ | — | — |
-| `720pizle` | 720pizle.my | Film | ✓ | — | — | ✓ | ✓ | ✓ |
+| `P720pizle` | 720pizle.my | Film | ✓ | — | — | ✓ | ✓ | ✓ |
 | `PuhuTV` | puhutv.com | Dizi/Film | ✓ | — | — | ✓ | film | — |
 | `Rectv` | a.psrectv80.xyz (imzalı API) | Film/Dizi | ✓ | — | — | — | ✓ | ✓ |
-| `RoketDizi` | roketdizi.live | Dizi | ✓ | — | — | — | — | — |
+| `RoketDizi` | roketdizi.life | Dizi | ✓ | — | — | — | — | — |
 | `SelcukFlix` | selcukflix.app | Dizi/Film | — | — | — | — | ✓ | ✓ |
 | `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `Sezonlukdizi` | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
@@ -234,7 +235,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `TV2` | tv2.com.tr | Dizi/Film | ✓ | — | — | — | — | — |
 | `TV8` **pasif** | tv8.com.tr (bakım) | Dizi | — | — | — | — | — | — |
 | `TvDiziler` | tvdiziler.tv | Dizi | — | — | — | — | — | ✓ |
-| `UltraFilmizle` | ufilmizle.com | Film | — | — | — | — | — | — |
+| `UltraFilmizle` | ultraiz.net | Film | — | — | — | — | — | — |
 | `VenusFilmizle` | venusfilmizle.com | Film | ✓ | — | — | — | ✓ | ✓ |
 | `WebdramaTurkey2` | webdramaturkey2.com | Asya dizi/film | ✓ | — | — | ✓ | ✓ | — |
 | `WebFilmizle` | webfilmizle.com | Film | ✓ | — | — | — | — | — |
