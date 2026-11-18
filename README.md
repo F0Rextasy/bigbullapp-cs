@@ -7,7 +7,7 @@ Cloudstream için `.cs3` eklentileri, Nuvio için plugin deposu + iki katalog ad
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-113-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-114-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -40,7 +40,7 @@ Nuvio plugin deposu: `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/
 
 | İş | Sağlayan |
 |---|---|
-| Film/dizi arama ve oynatma | Plugin deposu (113 sağlayıcı) |
+| Film/dizi arama ve oynatma | Plugin deposu (114 sağlayıcı) |
 | Film/dizi detayı: özet, kadro, bölümler | **Bir metadata addon'u zorunlu**: Cinemeta (`https://v3-cinemeta.strem.io/manifest.json`) veya AIOMetadata/TMDB |
 | Ana sayfada film/dizi satırları | **BigBull TR Katalog** addon'u |
 | Canlı TV satırları ve kanal oynatma | **BigBull Canlı TV** addon'u |
@@ -233,7 +233,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `TurkAnimeTV` | turkanime.live | Anime | ✓ | — | — | — | — | — |
 | `TurkceDizi` | turkcedizi.com | Film | — | — | — | — | — | ✓ |
 | `TV2` | tv2.com.tr | Dizi/Film | ✓ | — | — | — | — | — |
-| `TV8` **pasif** | tv8.com.tr (bakım) | Dizi | — | — | — | — | — | — |
+| `TV8` | tv8.com.tr | Dizi | — | — | — | — | — | — |
 | `TvDiziler` | tvdiziler.tv | Dizi | — | — | — | — | — | ✓ |
 | `UltraFilmizle` | ultraiz.net | Film | — | — | — | — | — | — |
 | `VenusFilmizle` | venusfilmizle.com | Film | ✓ | — | — | — | ✓ | ✓ |
@@ -245,8 +245,8 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `YerliDiziler` | yerlidiziler.com.tr | Yerli Dizi | ✓ | — | — | — | — | — |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**Kapsam notu:** Depoda aktif **113 modül** var ve tamamı doğrulanmış durumda (`status = 1`).
-`AsyaLuna` (alan adı ölü), `TV8` (site bakımı, 2026-11-15) ve `DiziModu` (tüm oynatıcı sunucuları
+**Kapsam notu:** Depoda aktif **114 modül** var ve tamamı doğrulanmış durumda (`status = 1`).
+`AsyaLuna` (alan adı ölü) ve `DiziModu` (tüm oynatıcı sunucuları
 ölü/429, 2026-11-17) `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle
 kaldırıldı; düzeldiğinde tekrar eklenir. Bu tablo ve özellik matrisi her sağlayıcı değişikliğinde
 güncellenir.

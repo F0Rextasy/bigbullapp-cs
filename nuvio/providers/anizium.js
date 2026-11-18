@@ -1,4 +1,4 @@
-// @provider {"id":"anizium", "name":"Anizium", "types":["tv"], "domain":"anizium.co", "formats":["mp4"], "sample":"tt0988824:tv:1:1", "description":"Anizium anime arsivi (Turkce altyazili MP4 akislari).", "version":"1.0.9"}
+// @provider {"id":"anizium", "name":"Anizium", "types":["tv"], "domain":"anizium.co", "formats":["mp4"], "sample":"tt0409591:tv:1:1", "description":"Anizium anime arsivi (Turkce altyazili MP4 akislari).", "version":"1.0.10"}
 /**
  * anizium — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> api.anizium.co/page/search -> /anime/source -> group item mp4 links.
@@ -19,13 +19,28 @@ function text(url, opts) {
   if (o.headers) for (var k in o.headers) headers[k] = o.headers[k];
   return fetch(url, { method: o.method || "GET", headers: headers, body: o.body })
     .then(function (r) {
-      if (!r.ok) throw new Error("HTTP " + r.status + " " + url);
+      if (!r.ok) {
+        if (r.status === 400 && String(url).indexOf("/page/search") !== -1) {
+          return '{"isError":true,"page":{"data":[]}}';
+        }
+        throw new Error("HTTP " + r.status + " " + url);
+      }
       return r.text();
     });
 }
 
-function fold(value) {
+function cleanQuery(value) {
   return String(value || "")
+    .replace(/[\u016b\u016a]/g, "u")
+    .replace(/[\u014d\u014c]/g, "o")
+    .replace(/[\u0101\u0100]/g, "a")
+    .replace(/[\u012b\u012a]/g, "i")
+    .replace(/[\u0113\u0112]/g, "e")
+    .trim();
+}
+
+function fold(value) {
+  return cleanQuery(value)
     .replace(/ı/g, "i").replace(/İ/g, "i")
     .replace(/ş/g, "s").replace(/Ş/g, "s")
     .replace(/ğ/g, "g").replace(/Ğ/g, "g")
@@ -92,6 +107,15 @@ function pick(items, title) {
   return bestScore > 0 ? best : null;
 }
 
+function searchPick(q, matchTitle) {
+  var cleaned = cleanQuery(q);
+  if (!cleaned) return Promise.resolve(null);
+  return api(API + "/page/search?value=" + encodeURIComponent(cleaned) + "&page=1")
+    .then(function (body) {
+      return pick(((body && body.page) || {}).data || [], matchTitle || cleaned);
+    });
+}
+
 function getStreams(tmdbId, mediaType, season, episode) {
   var want = parseInt(season, 10) || 1;
   var wantEp = parseInt(episode, 10) || 1;
@@ -99,13 +123,18 @@ function getStreams(tmdbId, mediaType, season, episode) {
 
   return titleOf(tmdbId, mediaType)
     .then(function (name) {
-      title = name;
+      title = cleanQuery(name);
       if (!title) return null;
-      return api(API + "/page/search?value=" + encodeURIComponent(title) + "&page=1");
+      return searchPick(title, title).then(function (hit) {
+        if (hit) return hit;
+        var colon = title.indexOf(":");
+        if (colon <= 0) return null;
+        var prefix = cleanQuery(title.slice(0, colon));
+        if (fold(prefix).length < 3) return null;
+        return searchPick(prefix, prefix);
+      });
     })
-    .then(function (body) {
-      if (!body) return null;
-      var hit = pick(((body.page || {}).data) || [], title);
+    .then(function (hit) {
       if (!hit) return null;
       return api(
         API + "/anime/source?id=" + encodeURIComponent(hit.ID) + "&site=main" +

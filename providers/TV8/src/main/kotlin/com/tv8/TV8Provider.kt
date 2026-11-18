@@ -84,11 +84,28 @@ class TV8Provider : MainAPI() {
             }
         }
 
-        val episodes = doc.select("a[href*='-video.htm']").mapNotNull { card ->
-            val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
+        val articleEpisodes = doc.select("article.now-thumb").mapNotNull { card ->
+            val link = card.selectFirst("a[href*='-video.htm']") ?: return@mapNotNull null
+            val href = fixUrlNull(link.attr("href")) ?: return@mapNotNull null
+            val epName = card.selectFirst(".now-thumb-desc a")?.text()?.trim()?.takeIf { it.isNotEmpty() }
+                ?: link.attr("aria-label").trim().takeIf { it.isNotEmpty() }
+                ?: card.selectFirst("img")?.attr("alt")?.trim()?.takeIf { it.isNotEmpty() }
+                ?: link.text().trim().ifBlank { "Bölüm" }
             newEpisode(href) {
-                this.name = card.text().trim().ifBlank { "Bölüm" }
-                this.posterUrl = fixUrlNull(card.selectFirst("img")?.attr("src"))
+                this.name = epName
+                this.posterUrl = fixUrlNull(card.selectFirst("img")?.posterSrcLazy())
+            }
+        }
+        val episodes = articleEpisodes.ifEmpty {
+            doc.select("a[href*='-video.htm']:not([data-notif-id]):not(.now-notif-item)").mapNotNull { card ->
+                val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
+                val epName = card.attr("aria-label").trim().takeIf { it.isNotEmpty() }
+                    ?: card.selectFirst("img")?.attr("alt")?.trim()?.takeIf { it.isNotEmpty() }
+                    ?: card.text().trim().ifBlank { "Bölüm" }
+                newEpisode(href) {
+                    this.name = epName
+                    this.posterUrl = fixUrlNull(card.selectFirst("img")?.posterSrcLazy())
+                }
             }
         }.distinctBy { it.data }
         if (episodes.isNotEmpty()) {
@@ -112,19 +129,39 @@ class TV8Provider : MainAPI() {
         val pageUrl = fixUrl(data)
         val html = runCatching { app.get(pageUrl, headers = headers).text }.getOrNull()
             ?: throw ErrorLoadingException("$name: video sayfası yüklenemedi. $REPORT_HINT")
-        val stream = HLS.find(html)?.groupValues?.get(1)
+        val rawStream = HLS.find(html)?.groupValues?.get(1)
             ?: M3U8.find(html)?.groupValues?.get(0)
             ?: throw ErrorLoadingException("$name: HLS adresi bulunamadı. $REPORT_HINT")
-        callback(newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
+        val stream = rawStream.replace("\\/", "/").replace("&amp;", "&")
+        val link = newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
             this.referer = pageUrl
             this.headers = headers
             this.quality = Qualities.Unknown.value
-        })
+        }
+        if (Settings.qualityAllowed(link.quality)) callback(link)
         return true
     }
 
-    private fun Document.cards(): List<SearchResponse> =
-        select("a[href]").mapNotNull { card ->
+    private fun Document.cards(): List<SearchResponse> {
+        val articleCards = select("article.now-program-thumb, article.now-thumb").mapNotNull { card ->
+            val anchor = card.selectFirst("a[href]") ?: return@mapNotNull null
+            val href = fixUrlNull(anchor.attr("href").trim()) ?: return@mapNotNull null
+            if (!href.startsWith(mainUrl)) return@mapNotNull null
+            val path = href.removePrefix(mainUrl).substringBefore('?').trim('/')
+            if (path.isBlank() || path.contains('/') || path in STATIC) return@mapNotNull null
+            val title = card.selectFirst(".now-thumb-prog, .now-thumb-title, .now-thumb-desc a")?.text()?.trim()
+                ?.takeIf { it.isNotEmpty() }
+                ?: card.selectFirst("img[alt]")?.attr("alt")?.trim()?.takeIf { it.isNotEmpty() }
+                ?: anchor.attr("aria-label").trim().takeIf { it.isNotEmpty() }
+                ?: return@mapNotNull null
+            val poster = fixUrlNull(card.selectFirst("img")?.posterSrcLazy())
+            newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
+                this.posterUrl = poster
+            }
+        }.distinctBy { it.url }
+        if (articleCards.isNotEmpty()) return articleCards
+
+        return select("a[href]").mapNotNull { card ->
             val rawHref = card.attr("href").trim()
             if (rawHref.isEmpty() || rawHref.startsWith("javascript", true) || rawHref.startsWith("#")) return@mapNotNull null
             val href = fixUrlNull(rawHref) ?: return@mapNotNull null
@@ -136,11 +173,14 @@ class TV8Provider : MainAPI() {
             val title = card.attr("data-title").trim()
                 .ifBlank { card.text().trim() }
                 .ifBlank { card.attr("title").trim() }
+                .ifBlank { card.selectFirst("img[alt]")?.attr("alt")?.trim().orEmpty() }
+                .ifBlank { card.attr("aria-label").trim() }
                 .takeIf { it.isNotEmpty() } ?: return@mapNotNull null
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
                 this.posterUrl = poster
             }
         }.distinctBy { it.url }
+    }
 
     companion object {
         val ROWS = listOf("Programlar")

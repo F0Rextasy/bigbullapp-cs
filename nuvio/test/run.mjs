@@ -14,6 +14,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
+import { fetchWithDpi } from "../tools/verify-all.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const manifest = JSON.parse(fs.readFileSync(path.join(root, "manifest.json"), "utf8"));
@@ -62,7 +63,7 @@ if (wanted) {
       module,
       exports: module.exports,
       console: { log: (...a) => console.log("  plugin:", ...a) },
-      fetch,
+      fetch: process.env.LIVE ? (url, opts) => fetchWithDpi(url, opts) : fetch,
       URL,
       encodeURIComponent,
       decodeURIComponent,

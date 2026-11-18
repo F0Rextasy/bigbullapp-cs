@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -27,7 +27,7 @@
       "id": "anizium",
       "name": "Anizium",
       "description": "Anizium anime arsivi (Turkce altyazili MP4 akislari).",
-      "version": "1.0.9",
+      "version": "1.0.10",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
