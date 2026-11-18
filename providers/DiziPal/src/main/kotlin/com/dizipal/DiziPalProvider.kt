@@ -31,6 +31,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import com.bigbull.common.posterSrcLazy
 
 /**
  * DiziPal — dizipal1593.com (Next.js arayüzü, Türkçe dizi + film, platform bölümleri).
@@ -46,7 +47,7 @@ import org.jsoup.nodes.Element
  * Her iki CDN de isteklerde oynatıcı sayfasını `Referer` olarak şart koşar.
  */
 class DiziPalProvider : MainAPI() {
-    override var mainUrl = "https://dizipal1595.com"
+    override var mainUrl = "https://dizipal1596.com"
     override var name = "DiziPal"
     override var lang = "tr"
     override val hasMainPage = true
@@ -173,7 +174,7 @@ class DiziPalProvider : MainAPI() {
             ?: selectFirst("span.ft1")?.text()?.trim()?.ifBlank { null }
             ?: attr("aria-label").substringBefore(',').trim().ifBlank { null }
             ?: return null
-        val poster = selectFirst("img[src^=http]")?.attr("src")
+        val poster = selectFirst("img[src^=http]")?.let { el -> fixUrlNull(el.posterSrcLazy()).orEmpty() }
         val year = YEAR.find(text())?.value?.toIntOrNull()
 
         return if (isSeries) {
@@ -268,7 +269,7 @@ class DiziPalProvider : MainAPI() {
 
     /** Dizi sayfası künye görseli olarak backdrop taşır; afiş `…/tv/poster/…` yolundan gelir. */
     private fun posterOf(doc: Document, ld: JSONObject?): String? =
-        doc.selectFirst("img[src*=/poster/]")?.attr("src")?.takeIf { it.startsWith("http") }
+        doc.selectFirst("img[src*=/poster/]")?.let { el -> fixUrlNull(el.posterSrcLazy()).orEmpty() }?.takeIf { it.startsWith("http") }
             ?: ld?.optString("image")?.takeIf { it.startsWith("http") }
 
     private fun yearOf(ld: JSONObject?): Int? =
