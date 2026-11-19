@@ -2598,5 +2598,53 @@
  "movie|2026|guarding stars": {
   "id": "tt6611324",
   "poster": "https://m.media-amazon.com/images/M/MV5BODcwOTdjZTItZDA5Zi00YzgwLTkwMmQtNTk2Zjc2ZDc1ZjlkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a new way for sanctification": {
+  "id": "tt22189858",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzg3Y2Q1NWMtY2NhMC00MDVjLTg2MTktMzRhZDEzZTljMWNmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|madden": {
+  "id": "tt24818230",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGQ0YzA4ZTAtZjlmYS00ZGU3LTg2MGItYmI2MzQ5MDY4YWE3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|son yemek": {
+  "id": "tt50016818",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzMzZGNkYmMtZjAxMi00MjQ3LThkMGMtOWY3NTlhMzQ0NmJiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|1999|kurda tuzak": {
+  "id": "tt0137494",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjliMDM0ZGQtMzA1Yy00MjZhLWI2NDgtODJhOWMyNTBlZDdhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2014|sessizligin bakisi": {
+  "id": "tt3521134",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTMwMjI4MjQ3MF5BMl5BanBnXkFtZTgwMjkwOTM2NTE@._V1_.jpg"
+ },
+ "movie|2000|forrester i bulmak": {
+  "id": "tt0181536",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTk5MjQ4MjcyOF5BMl5BanBnXkFtZTYwNTMzODg2._V1_.jpg"
+ },
+ "movie|2006|poseidon dan kacis": {
+  "id": "tt0409182",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTIwOTMwODM2Nl5BMl5BanBnXkFtZTYwMDY5NjU3._V1_.jpg"
+ },
+ "series|2026|gordon": {
+  "id": "tt41559886",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTUxMzNlODctNjE4MS00OWJlLWI1NjAtZmJmYzBiNjQ0M2ZkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|cicekci kiz": {
+  "id": "tt48685065",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTE0OTU1YmItOGIzZS00ZGM1LWJlYTgtMjVhMWVlNWE0ZGYxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|vienna game": {
+  "id": "tt31844371",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGQwZTg2MGUtYzgwNS00ZmM2LTlmNWItYjBkYWI5ZTk0ZjMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|cok ozel bir koruma": {
+  "id": "tt37877083",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjdlOGI1ODQtMDlkMC00MTZiLWI4NWUtNzE1NDdjYzgzOTViXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|aile arasinda": {
+  "id": "tt7642818",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzFhZGUwODUtYTE5MS00MTJkLTk5ZWQtOGVmNzNiNzk3OGFlXkEyXkFqcGc@._V1_.jpg"
  }
 }
