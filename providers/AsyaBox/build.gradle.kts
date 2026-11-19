@@ -1,10 +1,10 @@
-version = 7
+version = 8
 
 
 cloudstream {
     description = "AsyaBox — Türkçe içerik"
     authors = listOf("F0Rextasy")
-    status = 1
+    status = 0
     tvTypes = listOf("Movie", "TvSeries")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=asyabox.co&sz=%size%"
