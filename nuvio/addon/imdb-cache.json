@@ -2646,5 +2646,13 @@
  "movie|aile arasinda": {
   "id": "tt7642818",
   "poster": "https://m.media-amazon.com/images/M/MV5BYzFhZGUwODUtYTE5MS00MTJkLTk5ZWQtOGVmNzNiNzk3OGFlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|arzu": {
+  "id": "tt2958780",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTJlMWVmOTItZTMwOS00ZTk5LTg3YWItNjc3MTIzMmE2MGI0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|bataklikta bir gul": {
+  "id": "tt0494923",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWQyNzQwMGYtOTZiMC00ZGMzLWExNjAtODVjNzkwY2VhM2YzXkEyXkFqcGc@._V1_.jpg"
  }
 }
