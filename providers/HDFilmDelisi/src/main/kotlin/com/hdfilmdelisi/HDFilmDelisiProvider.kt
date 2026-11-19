@@ -2,6 +2,7 @@ package com.hdfilmdelisi
 
 import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.decodeVixolityStream
 import com.bigbull.common.parseHlsVariants
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -182,17 +183,15 @@ class HDFilmDelisiProvider : MainAPI() {
         }
     }
 
-    // pl.vixolity.com oynatıcısı: hex -> ters -> base64 -> karakter kaydırma -> base64 ile gizlenmiş JS; "kaynak" HLS master'dır.
-    private suspend fun vixolityMaster(embed: String): String? {
-        val html = runCatching { app.get(embed, headers = uaHeaders, referer = "$mainUrl/").text }.getOrNull() ?: return null
-        val m = Regex("""\}\)\('([0-9a-f]+)',\s*(\d+)\)""").find(html) ?: return null
-        return runCatching {
-            val rev = String(m.groupValues[1].chunked(2).map { it.toInt(16).toByte() }.toByteArray(), Charsets.ISO_8859_1).reversed()
-            val shifted = String(java.util.Base64.getDecoder().decode(rev), Charsets.ISO_8859_1)
-                .map { (it.code - m.groupValues[2].toInt()).toChar() }.joinToString("")
-            val code = String(java.util.Base64.getDecoder().decode(shifted), Charsets.UTF_8)
-            Regex(""""kaynak"\s*:\s*"([^"]+)"""").find(code)?.groupValues?.get(1)?.replace("\\/", "/")
-        }.getOrNull()
+    private suspend fun fetchVixolityMaster(embed: String): Pair<String, String>? {
+        val html = runCatching { app.get(embed, headers = uaHeaders, referer = "$mainUrl/").text }.getOrNull()
+            ?: return null
+        val masterUrl = decodeVixolityStream(html) ?: return null
+        val playlist = runCatching {
+            val res = app.get(masterUrl, headers = uaHeaders, referer = "https://pl.vixolity.com/")
+            if (res.code in 200..299 && res.text.trimStart().startsWith("#EXTM3U")) res.text else null
+        }.getOrNull() ?: return null
+        return masterUrl to playlist
     }
 
     /**
@@ -234,16 +233,21 @@ class HDFilmDelisiProvider : MainAPI() {
         }
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
-        val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
-            .findAll(text).map { it.groupValues[1] }.toList()
+        val sourceBlocks = Regex(""""sources"\s*:\s*\[([^\]]*)\]""").findAll(text).flatMap { blk ->
+            Regex(""""url"\s*:\s*"([^"]+)"""").findAll(blk.groupValues[1]).map { it.groupValues[1] }
+        }
+        val embeds = (
+            Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)"""")
+                .findAll(text).map { it.groupValues[1] } +
+                sourceBlocks
+            ).distinct().toList()
         for (embed in embeds) {
             val absolute = fixUrl(embed)
             if (absolute == data) continue
             if (absolute.contains("vixolity.com")) {
-                vixolityMaster(absolute)?.let { m ->
+                fetchVixolityMaster(absolute)?.let { (m, playlist) ->
                     val vixRef = "https://pl.vixolity.com/"
                     emit(m, "Vixolity", vixRef, Qualities.Unknown.value)
-                    val playlist = runCatching { app.get(m, headers = uaHeaders, referer = vixRef).text }.getOrNull().orEmpty()
                     for ((h, vUrl) in parseHlsVariants(m, playlist)) {
                         emit(vUrl, "Vixolity ${h}p", vixRef, h)
                     }
@@ -294,7 +298,7 @@ class HDFilmDelisiProvider : MainAPI() {
         for (m in subs) {
             if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))
         }
-        if (!found && frames.isEmpty() && embeds.isEmpty() && media.none()) {
+        if (!found) {
             throw ErrorLoadingException("$name: oynatılabilir akış yok")
         }
         return found

@@ -1,4 +1,4 @@
-// @provider {"id":"dizikorea3", "name":"Dizikorea3", "types":["tv"], "domain":"dizikorea3.com", "formats":["m3u8"], "sample":"tt43088191:tv:1:1", "description":"Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).", "version":"1.0.12"}
+// @provider {"id":"dizikorea3", "name":"Dizikorea3", "types":["tv"], "domain":"dizikorea3.com", "formats":["m3u8"], "sample":"tt43088191:tv:1:1", "description":"Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).", "version":"1.0.13"}
 /**
  * dizikorea3 — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /sayfa/1?s= -> /dizi/<slug> -> /sezon-N/bolum-M -> player iframes.
@@ -16,6 +16,7 @@ function text(url, opts) {
   if (o.origin) headers.Origin = o.origin;
   if (o.ajax) headers["X-Requested-With"] = "XMLHttpRequest";
   if (o.form) headers["Content-Type"] = "application/x-www-form-urlencoded";
+  if (o.headers) for (var k in o.headers) if (o.headers[k]) headers[k] = o.headers[k];
   return fetch(url, { method: o.method || "GET", headers: headers, body: o.body })
     .then(function (r) {
       if (!r.ok) throw new Error("HTTP " + r.status + " " + url);
@@ -243,45 +244,66 @@ function getStreams(tmdbId, mediaType, season, episode) {
       });
     })
     .then(function (referer) {
-      return frames.reduce(function (chain, frame) {
-        return chain.then(function (found) {
-          if (frame.indexOf("playerdkorea") !== -1 || frame.indexOf("playerkorea") !== -1) {
-            return firePlayer(frame, found);
+      function probeFrame(frame) {
+        if (frame.indexOf("playerdkorea") !== -1 || frame.indexOf("playerkorea") !== -1) {
+          return firePlayer(frame, []);
+        }
+        var target = frame.replace(/\/\/(?:www\.)?vidmoly\.(?:to|me|biz|sx)\//i, "//vidmoly.net/");
+        var isVidmoly = /vidmoly\./i.test(target);
+        var hdrs = isVidmoly ? { "Sec-Fetch-Dest": "iframe" } : null;
+        return text(target, { referer: referer, headers: hdrs })
+          .then(function (html) {
+            var body = html.replace(/\\\//g, "/");
+            var re = /https?:\/\/[^"'\s<>\\]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>\\]*)?/g;
+            var found = [];
+            var m;
+            var streamRef = isVidmoly ? (first(/^(https?:\/\/[^/]+)/, target) || "https://vidmoly.net") + "/" : target;
+            while ((m = re.exec(body)) !== null) {
+              if (found.some(function (item) { return item.url === m[0]; })) continue;
+              found.push({ url: m[0], frame: streamRef, hls: m[0].indexOf(".m3u8") !== -1 });
+            }
+            return found;
+          })
+          .catch(function () {
+            return [];
+          });
+      }
+      function resolveGroup(group) {
+        if (!group.length) return Promise.resolve([]);
+        return Promise.all(group.map(probeFrame)).then(function (lists) {
+          var merged = [];
+          for (var i = 0; i < lists.length; i++) {
+            for (var j = 0; j < (lists[i] || []).length; j++) {
+              var cand = lists[i][j];
+              if (!merged.some(function (x) { return x.url === cand.url; })) merged.push(cand);
+            }
           }
-          return text(frame, { referer: referer })
-            .then(function (html) {
-              var body = html.replace(/\\\//g, "/");
-              var re = /https?:\/\/[^"'\s<>\\]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>\\]*)?/g;
-              var m;
-              while ((m = re.exec(body)) !== null) {
-                if (found.some(function (item) { return item.url === m[0]; })) continue;
-                found.push({ url: m[0], frame: frame, hls: m[0].indexOf(".m3u8") !== -1 });
-              }
-              return found;
-            })
-            .catch(function () {
-              return found;
+          return Promise.all(merged.map(function (item) {
+            return quality(item).then(function (label) {
+              if (!label) return null;
+              return {
+                name: "dizikorea3",
+                title: "dizikorea3 - " + label + (item.hls ? " [HLS]" : " [MP4]"),
+                url: item.hls ? hlsNoDownload(item.url) : item.url,
+                quality: label,
+                headers: { Referer: item.frame },
+                subtitles: []
+              };
             });
-        });
-      }, Promise.resolve([]));
-    })
-    .then(function (found) {
-      return found.reduce(function (chain, item) {
-        return chain.then(function (rows) {
-          return quality(item).then(function (label) {
-            if (!label) return rows;
-            rows.push({
-              name: "dizikorea3",
-              title: "dizikorea3 - " + label + (item.hls ? " [HLS]" : " [MP4]"),
-              url: item.hls ? hlsNoDownload(item.url) : item.url,
-              quality: label,
-              headers: { Referer: item.frame },
-              subtitles: []
-            });
-            return rows;
+          })).then(function (rows) {
+            return rows.filter(Boolean);
           });
         });
-      }, Promise.resolve([]));
+      }
+      var fast = [];
+      var slow = [];
+      for (var i = 0; i < frames.length; i++) {
+        if (frames[i].indexOf("playerdkorea") !== -1 || frames[i].indexOf("playerkorea") !== -1) slow.push(frames[i]);
+        else fast.push(frames[i]);
+      }
+      return resolveGroup(fast).then(function (rows) {
+        return rows.length ? rows : resolveGroup(slow);
+      });
     })
     .catch(function (e) {
       console.log("[bb-nuvio][dizikorea3] " + (e && e.message));

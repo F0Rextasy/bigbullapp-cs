@@ -16,6 +16,7 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.fixUrlNull
+import com.lagradost.cloudstream3.network.CloudflareKiller
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
@@ -31,6 +32,8 @@ import org.jsoup.Jsoup
 class HDFilmCehennemiProvider : MainAPI() {
     override var mainUrl = "https://www.hdfilmcehennemi.nl"
     private val uaHeaders get() = browserHeaders
+    private val killer = CloudflareKiller()
+    private val posterHdrs get() = uaHeaders + mapOf("Referer" to "$mainUrl/") + killer.getCookieHeaders(mainUrl).toMap()
     override var name = "HDFilmCehennemi"
     override var lang = "tr"
     override val hasMainPage = true
@@ -53,7 +56,7 @@ class HDFilmCehennemiProvider : MainAPI() {
     override val supportedTypes = setOf(TvType.Movie)
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val doc = app.get(request.data, headers = uaHeaders).document
+        val doc = app.get(request.data, headers = uaHeaders, interceptor = killer).document
         val items = doc.select("a.poster[href]").mapNotNull { card ->
             val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
             val title = card.attr("title").removeSuffix(" izle").trim()
@@ -61,6 +64,7 @@ class HDFilmCehennemiProvider : MainAPI() {
                 .takeIf { it.isNotBlank() } ?: return@mapNotNull null
             newMovieSearchResponse(title, href, TvType.Movie) {
                 this.posterUrl = fixUrlNull(card.selectFirst("img")?.posterSrcLazy())
+                this.posterHeaders = posterHdrs
             }
         }.distinctBy { it.url }
         return newHomePageResponse(request.name, items, hasNext = false)
@@ -74,6 +78,7 @@ class HDFilmCehennemiProvider : MainAPI() {
                 "X-Requested-With" to "fetch",
                 "Accept" to "application/json",
             ),
+            interceptor = killer,
         ).text
         val arr = runCatching { JSONObject(json).optJSONArray("results") }.getOrNull()
             ?: throw ErrorLoadingException("$name: arama yanıtı çözümlenemedi. $REPORT_HINT")
@@ -89,12 +94,13 @@ class HDFilmCehennemiProvider : MainAPI() {
             val tvType = if (type != null) TvType.TvSeries else TvType.Movie
             newMovieSearchResponse(title, href, tvType) {
                 this.posterUrl = fixUrlNull(poster)
+                this.posterHeaders = posterHdrs
             }
         }
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val doc = runCatching { app.get(url, headers = uaHeaders).document }
+        val doc = runCatching { app.get(url, headers = uaHeaders, interceptor = killer).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
 
         val h1 = doc.selectFirst("h1")
@@ -125,7 +131,7 @@ class HDFilmCehennemiProvider : MainAPI() {
     ): Boolean {
         val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
         val subtitleFilter: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
-        val doc = runCatching { app.get(data, headers = uaHeaders).document }
+        val doc = runCatching { app.get(data, headers = uaHeaders, interceptor = killer).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
 
         // Iframe src doğrudan 404 döner: player, /video/<id>/ AJAX yanıtından tazelenir.
@@ -141,6 +147,7 @@ class HDFilmCehennemiProvider : MainAPI() {
                             "X-Requested-With" to "fetch",
                             "Accept" to "application/json",
                         ),
+                        interceptor = killer,
                     ).text
                     val html = Regex(""""html"\s*:\s*"((?:[^"\\]|\\.)*)"""")
                         .find(body)?.groupValues?.get(1)

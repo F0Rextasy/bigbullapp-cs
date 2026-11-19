@@ -178,11 +178,18 @@ class TvDizilerProvider : MainAPI() {
             found = true
             val quality = getQualityFromName(label)
             if (!Settings.qualityAllowed(quality)) return true
-            val type = if (stream.contains(".m3u8", true)) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
-            // Yandex imzalı indirme bağlantıları tvdiziler referer'ını "Invalid Referer" ile reddediyor.
-            val ref = if (stream.contains("yandex", true)) "https://disk.yandex.ru/" else referer
+            val isHls = stream.contains(".m3u8", true) || stream.contains("/hls/", true) || stream.contains("master.txt", true)
+            val type = if (isHls) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+            // Yandex imzalı indirme bağlantıları tvdiziler referer'ını, streambox ise dış referer'ı ve eksik Accept başlığını reddediyor.
+            val isStreambox = stream.contains("streambox.xyz", true)
+            val ref = when {
+                stream.contains("yandex", true) -> "https://disk.yandex.ru/"
+                isStreambox -> "https://streambox.xyz/"
+                else -> referer
+            }
             callback(newExtractorLink(name, name, stream, type) {
                 this.referer = ref
+                this.headers = if (isStreambox) uaHeaders + ("Accept" to "*/*") else uaHeaders
                 this.quality = quality
             })
             return true

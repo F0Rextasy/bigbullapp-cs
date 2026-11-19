@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "YerliDiziler — yerlidiziler.com.tr (Güncel Türkçe yerli diziler)"

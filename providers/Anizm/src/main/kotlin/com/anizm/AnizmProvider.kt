@@ -246,23 +246,23 @@ class AnizmProvider : MainAPI() {
         callback.invoke(
             newExtractorLink(name, label, stream, ExtractorLinkType.M3U8) {
                 this.referer = "$origin/"
-                // The CDN answers "security error" to requests without Accept.
-                this.headers = mapOf("Accept" to "*/*")
+                // The CDN answers "security error" to requests without Accept and 403 without browser User-Agent.
+                this.headers = uaHeaders + ("Accept" to "*/*")
                 this.quality = Qualities.Unknown.value
             }
         )
         return true
     }
 
-    /** pl.puffytr.tr/watch/{slug} plays the master at /stream/{slug}/native.m3u8. */
+    /** pl.puffytr.tr/watch/{slug} plays the master at /stream/{slug}/master.txt. */
     private suspend fun loadPuffytr(target: String, label: String, callback: (ExtractorLink) -> Unit): Boolean {
         val origin = target.substringBefore("/watch/")
         val slug = target.substringAfterLast('/')
         if (slug.isBlank() || origin == target) return false
         callback.invoke(
-            newExtractorLink(name, label, "$origin/stream/$slug/native.m3u8", ExtractorLinkType.M3U8) {
+            newExtractorLink(name, label, "$origin/stream/$slug/master.txt", ExtractorLinkType.M3U8) {
                 this.referer = target
-                this.headers = mapOf("Accept" to "*/*")
+                this.headers = uaHeaders + ("Accept" to "*/*")
                 this.quality = Qualities.Unknown.value
             }
         )

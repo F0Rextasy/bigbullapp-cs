@@ -442,7 +442,31 @@ suspend fun loadCommonEmbedWithHints(
         }
     }
 
-    if (loadExtractor(u, ref, subtitleCallback, callback)) return true
+    if (u.contains("ok.ru", ignoreCase = true) || u.contains("odnoklassniki.ru", ignoreCase = true)) {
+        val okHtml = runCatching { app.get(u, referer = ref, headers = reqHeaders).text }.getOrNull().orEmpty()
+            .replace("&quot;", "\"")
+            .replace("\\/", "/")
+            .replace("\\u0026", "&")
+            .replace("&amp;", "&")
+        val hls = OKRU_HLS_RE.find(okHtml)?.groupValues?.get(1).orEmpty()
+        if (hls.startsWith("http")) {
+            callback(
+                newExtractorLink(sourceName, "$sourceName [Ok.ru]", hls, ExtractorLinkType.M3U8) {
+                    this.referer = "https://ok.ru/"
+                    this.quality = Qualities.Unknown.value
+                    this.headers = reqHeaders
+                },
+            )
+            return true
+        }
+    }
+
+    var emitted = false
+    val trackedCallback: (ExtractorLink) -> Unit = {
+        emitted = true
+        callback(it)
+    }
+    if (loadExtractor(u, ref, subtitleCallback, trackedCallback) && emitted) return true
 
     if (u.contains("vidmoly.", ignoreCase = true)) {
         val vmTarget = u.replace(Regex("""vidmoly\.(?:to|me|biz)"""), "vidmoly.net")
@@ -470,25 +494,6 @@ suspend fun loadCommonEmbedWithHints(
             callback(
                 newExtractorLink(sourceName, "$sourceName [Sibnet]", mp4, ExtractorLinkType.VIDEO) {
                     this.referer = u
-                    this.quality = Qualities.Unknown.value
-                    this.headers = reqHeaders
-                },
-            )
-            return true
-        }
-    }
-
-    if (u.contains("ok.ru", ignoreCase = true) || u.contains("odnoklassniki.ru", ignoreCase = true)) {
-        val okHtml = runCatching { app.get(u, referer = ref, headers = reqHeaders).text }.getOrNull().orEmpty()
-            .replace("&quot;", "\"")
-            .replace("\\/", "/")
-            .replace("\\u0026", "&")
-            .replace("&amp;", "&")
-        val hls = OKRU_HLS_RE.find(okHtml)?.groupValues?.get(1).orEmpty()
-        if (hls.startsWith("http")) {
-            callback(
-                newExtractorLink(sourceName, "$sourceName [Ok.ru]", hls, ExtractorLinkType.M3U8) {
-                    this.referer = "https://ok.ru/"
                     this.quality = Qualities.Unknown.value
                     this.headers = reqHeaders
                 },

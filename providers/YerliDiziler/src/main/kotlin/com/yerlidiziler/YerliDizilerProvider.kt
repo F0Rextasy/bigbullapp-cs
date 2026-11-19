@@ -266,19 +266,25 @@ class YerliDizilerProvider : MainAPI() {
     }
 
     private suspend fun fetchCategoryPosters(): Map<Int, String> {
-        val raw = runCatching {
-            app.get("$mainUrl/wp-json/wp/v2/posts?per_page=100&_fields=categories,yoast_head_json.og_image", headers = uaHeaders).text
-        }.getOrNull() ?: return emptyMap()
-        val arr = runCatching { JSONArray(raw) }.getOrNull() ?: return emptyMap()
         val map = HashMap<Int, String>()
-        for (i in 0 until arr.length()) {
-            val obj = arr.optJSONObject(i) ?: continue
-            val img = firstOgImage(obj) ?: continue
-            val cats = obj.optJSONArray("categories") ?: continue
-            for (j in 0 until cats.length()) {
-                val cid = cats.optInt(j, 0)
-                if (cid > 0) map.putIfAbsent(cid, img)
+        for (page in 1..2) {
+            val raw = runCatching {
+                app.get(
+                    "$mainUrl/wp-json/wp/v2/posts?per_page=100&page=$page&_fields=categories,yoast_head_json.og_image",
+                    headers = uaHeaders,
+                ).text
+            }.getOrNull() ?: break
+            val arr = runCatching { JSONArray(raw) }.getOrNull() ?: break
+            for (i in 0 until arr.length()) {
+                val obj = arr.optJSONObject(i) ?: continue
+                val img = firstOgImage(obj) ?: continue
+                val cats = obj.optJSONArray("categories") ?: continue
+                for (j in 0 until cats.length()) {
+                    val cid = cats.optInt(j, 0)
+                    if (cid > 0) map.putIfAbsent(cid, img)
+                }
             }
+            if (arr.length() < 100) break
         }
         return map
     }

@@ -5,6 +5,20 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.14] - 2026-11-19
+
+### Değişti
+- **CizgiVeDizi v2**: eklenti dosyaları diğer sağlayıcılarla uyumlu biçimde sadeleştirildi.
+- **CizgiVeDizi (Nuvio) 1.0.2**: sunucunun 2 MB parça ve 60 sn çerez sınırı nedeniyle Nuvio eklentisi yeniden varsayılan olarak kapatıldı.
+- **Dizikorea3 (Nuvio) 1.0.13**: sorunlu oynatıcı önceliği düzenlenerek akış çözümü hızlandırıldı.
+- **Anizm v10**: ana oynatıcı akış adresi ve istek başlıkları güncellendi.
+- **TvDiziler v2**: oynatıcı istek başlıkları ve akış desteği düzeltildi.
+- **OnlineDizi v2**: alternatif kaynak sekmeleri ve gömülü oynatıcı çözümü düzeltildi.
+- **YerliDiziler v2**: kategori kapak görsellerinin tam yüklenmesi sağlandı.
+- **Filmizyon v6**: yayın doğrulaması ve hata bildirimi iyileştirildi.
+- **HDFilmDelisi v9**: akış çözümü, yayın doğrulaması ve hata bildirimi güncellendi.
+- **HDFilmCehennemi v15**: site koruma desteği ve kapak istek başlıkları eklendi.
+
 ## [1.7.13] - 2026-11-19
 
 ### Eklendi

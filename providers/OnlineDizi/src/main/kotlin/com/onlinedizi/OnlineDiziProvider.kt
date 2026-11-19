@@ -1,6 +1,7 @@
 package com.onlinedizi
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.loadCommonEmbed
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -149,37 +150,57 @@ class OnlineDiziProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val doc = runCatching { app.get(data, headers = uaHeaders).document }.getOrNull()
+        val firstUrl = fixUrl(data)
+        val doc = runCatching { app.get(firstUrl, headers = uaHeaders).document }.getOrNull()
             ?: throw ErrorLoadingException("$name: bölüm sayfası açılamadı. $REPORT_HINT")
-        val iframe = doc.selectFirst("iframe[src*=players]")?.attr("src")?.trim()
-            ?.takeIf { it.isNotEmpty() }
-            ?: throw ErrorLoadingException("$name: oynatıcı bulunamadı. $REPORT_HINT")
+        val seenLinks = HashSet<String>()
+        val seenSubs = HashSet<String>()
+        val linkCallback: (ExtractorLink) -> Unit = { link ->
+            if (seenLinks.add(link.url) && Settings.qualityAllowed(link.quality)) callback(link)
+        }
+        val subtitleFilter: (SubtitleFile) -> Unit = { sub ->
+            if (seenSubs.add(sub.url) && Settings.subtitleAllowed(sub.lang)) subtitleCallback(sub)
+        }
 
-        val gate = runCatching {
-            app.get(fixUrl(iframe), referer = data, headers = uaHeaders).text
-        }.getOrNull() ?: throw ErrorLoadingException("$name: oynatıcı açılamadı. $REPORT_HINT")
-        val inner = IFSRC.find(gate)?.groupValues?.get(1) ?: iframe
-        val embedResponse = runCatching {
-            app.get(fixUrl(inner), referer = data, headers = uaHeaders)
-        }.getOrNull() ?: throw ErrorLoadingException("$name: oynatıcı açılamadı. $REPORT_HINT")
-        val embed = embedResponse.text
+        // Alternatifler açılır menüsündeki diğer oynatıcı sekmelerini de (/2/, /3/...) dene.
+        val tabUrls = (listOf(firstUrl) + doc.select("div.buttons ul.dropdown-menu li a[href]")
+            .mapNotNull { fixUrlNull(it.attr("href")) })
+            .distinct()
+            .take(6)
 
         var found = false
-        val streams = M3U8.findAll(embed).map { it.groupValues[1] }.toList()
-        if (streams.isEmpty()) {
-            // vidmoly yerine başka bir gömme gelirse core extractor'a bırakılır.
-            if (loadExtractor(embedResponse.url, data, subtitleCallback, callback)) found = true
-        } else {
-            val label = LABEL.find(embed)?.groupValues?.get(1)
-            val quality = getQualityFromName(DIGITS.find(label.orEmpty())?.value)
-            streams.forEach { stream ->
-                if (!Settings.qualityAllowed(quality)) return@forEach
-                callback(newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
-                    this.referer = mainUrl
-                    this.quality = quality
-                })
+        for (tabUrl in tabUrls) {
+            val tabDoc = if (tabUrl == firstUrl) doc else {
+                runCatching { app.get(tabUrl, referer = firstUrl, headers = uaHeaders).document }.getOrNull()
+                    ?: continue
+            }
+            val iframe = tabDoc.selectFirst("iframe[src*=players], iframe[data-src*=players]")
+                ?.let { it.attr("src").ifBlank { it.attr("data-src") } }
+                ?.trim()?.takeIf { it.isNotEmpty() } ?: continue
+            val gate = runCatching {
+                app.get(fixUrl(iframe), referer = tabUrl, headers = uaHeaders).text
+            }.getOrNull() ?: continue
+            val inner = IFSRC.find(gate)?.groupValues?.get(1) ?: iframe
+            val embedResponse = runCatching {
+                app.get(fixUrl(inner), referer = tabUrl, headers = uaHeaders)
+            }.getOrNull() ?: continue
+            val embed = embedResponse.text
+
+            val streams = M3U8.findAll(embed).map { it.groupValues[1] }.toList()
+            if (streams.isNotEmpty()) {
+                val label = LABEL.find(embed)?.groupValues?.get(1)
+                val quality = getQualityFromName(DIGITS.find(label.orEmpty())?.value)
+                streams.forEach { stream ->
+                    linkCallback(newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
+                        this.referer = mainUrl
+                        this.quality = quality
+                    })
+                    found = true
+                }
+            } else if (loadCommonEmbed(name, mainUrl, embedResponse.url, tabUrl, subtitleCallback = subtitleFilter, callback = linkCallback)) {
                 found = true
             }
+            if (found) break
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
         return true

@@ -1,4 +1,4 @@
-// @provider {"id": "cizgivedizi", "name": "CizgiVeDizi", "types": ["tv", "movie"], "domain": "cizgivedizi.net", "formats": ["mp4"], "description": "CizgiVeDizi Turkce cizgi dizi, anime, dizi ve film arsivi (sunucu 2 MB Range + 60 sn cerez siniri nedeniyle Nuvio'da varsayilan kapali).", "sample": "tt7678620:tv:1:1", "version": "1.0.1", "verified": true}
+// @provider {"id":"cizgivedizi", "name":"CizgiVeDizi", "types":["tv", "movie"], "domain":"cizgivedizi.net", "formats":["mp4"], "description":"CizgiVeDizi Turkce cizgi dizi, anime, dizi ve film arsivi (sunucu 2 MB Range + 60 sn cerez siniri nedeniyle Nuvio'da varsayilan kapali).", "sample":"tt7678620:tv:1:1", "version":"1.0.2", "verified":false}
 /**
  * cizgivedizi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> homepage poolData -> show/film -> video_sources/data-embeds -> yetki.php -> MP4.

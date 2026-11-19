@@ -228,7 +228,14 @@ class FilmizyonProvider : MainAPI() {
             }
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
-                decodeVixolityStream(inner)?.let { emit(it, "Vixolity", "https://pl.vixolity.com/") }
+                decodeVixolityStream(inner)?.let { vixUrl ->
+                    val vixRef = "https://pl.vixolity.com/"
+                    val live = runCatching {
+                        val vRes = app.get(vixUrl, referer = vixRef, headers = uaHeaders)
+                        vRes.code in 200..299 && vRes.text.trimStart().startsWith("#EXTM3U")
+                    }.getOrDefault(false)
+                    if (live) emit(vixUrl, "Vixolity", vixRef)
+                }
                 val innerText = inner.replace("\\/", "/")
                 for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(innerText)) {
                     emit(m.value, "Embed", frame)
@@ -244,7 +251,7 @@ class FilmizyonProvider : MainAPI() {
         for (m in subs) {
             if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))
         }
-        if (!found && frames.isEmpty() && embeds.isEmpty() && media.none()) {
+        if (!found) {
             throw ErrorLoadingException("$name: oynatılabilir akış yok")
         }
         return found
