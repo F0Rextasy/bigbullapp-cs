@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.7.12",
+  "version": "1.7.13",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -84,14 +84,14 @@
       "id": "cizgivedizi",
       "name": "CizgiVeDizi",
       "description": "CizgiVeDizi Turkce cizgi dizi, anime, dizi ve film arsivi (sunucu 2 MB Range + 60 sn cerez siniri nedeniyle Nuvio'da varsayilan kapali).",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "bigbull",
       "supportedTypes": [
         "tv",
         "movie"
       ],
       "filename": "providers/cizgivedizi.js",
-      "enabled": false,
+      "enabled": true,
       "formats": [
         "mp4"
       ],
