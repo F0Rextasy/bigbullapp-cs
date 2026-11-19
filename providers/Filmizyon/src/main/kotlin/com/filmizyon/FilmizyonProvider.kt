@@ -1,6 +1,7 @@
 package com.filmizyon
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.decodeVixolityStream
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -200,16 +201,6 @@ class FilmizyonProvider : MainAPI() {
             })
             found = true
         }
-        fun decodeVixolity(html: String): String? {
-            val m = Regex("""\}\)\('([0-9a-f]+)',\s*(\d+)\)""").find(html) ?: return null
-            return runCatching {
-                val rev = String(m.groupValues[1].chunked(2).map { it.toInt(16).toByte() }.toByteArray(), Charsets.ISO_8859_1).reversed()
-                val shifted = String(java.util.Base64.getDecoder().decode(rev), Charsets.ISO_8859_1)
-                    .map { (it.code - m.groupValues[2].toInt()).toChar() }.joinToString("")
-                val code = String(java.util.Base64.getDecoder().decode(shifted), Charsets.UTF_8)
-                Regex(""""kaynak"\s*:\s*"([^"]+)"""").find(code)?.groupValues?.get(1)?.replace("\\/", "/")
-            }.getOrNull()
-        }
         val media = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(text)
         for (m in media) emit(m.value, "Direct", data)
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
@@ -237,7 +228,7 @@ class FilmizyonProvider : MainAPI() {
             }
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
-                decodeVixolity(inner)?.let { emit(it, "Vixolity", "https://pl.vixolity.com/") }
+                decodeVixolityStream(inner)?.let { emit(it, "Vixolity", "https://pl.vixolity.com/") }
                 val innerText = inner.replace("\\/", "/")
                 for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""").findAll(innerText)) {
                     emit(m.value, "Embed", frame)

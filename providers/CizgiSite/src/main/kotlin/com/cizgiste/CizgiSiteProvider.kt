@@ -60,6 +60,14 @@ class CizgiSiteProvider : MainAPI() {
         .hostnameVerifier { _, _ -> true }
         .build()
 
+    // vk.com ve api.vk.com istekleri standart TLS sertifika doğrulamasıyla gider.
+    private val vkClient = OkHttpClient.Builder()
+        .followRedirects(true)
+        .build()
+
+    private fun clientFor(url: String): OkHttpClient =
+        if (url.contains("vk.com", ignoreCase = true)) vkClient else client
+
     private fun vkApiMedia(frame: String, page: String): List<Pair<String, String>> {
         val oid = Regex("""[?&]oid=(-?\d+)""").find(frame)?.groupValues?.get(1) ?: return emptyList()
         val id = Regex("""[?&]id=(\d+)""").find(frame)?.groupValues?.get(1) ?: return emptyList()
@@ -80,7 +88,7 @@ class CizgiSiteProvider : MainAPI() {
             .post(body)
             .build()
         val text = runCatching {
-            client.newCall(request).execute().use { response ->
+            vkClient.newCall(request).execute().use { response ->
                 if (response.isSuccessful) response.body?.string() else null
             }
         }.getOrNull() ?: return emptyList()
@@ -110,7 +118,7 @@ class CizgiSiteProvider : MainAPI() {
             }
             .apply { if (referer != null) header("Referer", referer) }
             .build()
-        client.newCall(request).execute().use { response ->
+        clientFor(url).newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw ErrorLoadingException("$name: HTTP ${response.code}")
             val raw = response.body?.bytes() ?: return ""
             val encoding = response.header("Content-Encoding")?.lowercase()

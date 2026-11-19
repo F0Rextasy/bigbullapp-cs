@@ -1,6 +1,7 @@
 package com.tlctr
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.parseHlsVariants
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.HomePageResponse
@@ -179,7 +180,7 @@ class TLCtrProvider : MainAPI() {
             app.get(master, headers = uaHeaders, referer = "$mainUrl/").text
         }.getOrNull() ?: throw ErrorLoadingException("$name: oynatma listesi alınamadı. $REPORT_HINT")
 
-        val variants = parseVariants(playlist, master)
+        val variants = parseHlsVariants(master, playlist)
         if (variants.isEmpty()) {
             // Single-rendition playlist: unknown quality, so the cap must not drop the only link.
             emit(master, Qualities.Unknown.value, callback)
@@ -275,29 +276,6 @@ class TLCtrProvider : MainAPI() {
         }
     }
 
-    /** Master playlist pairs: (height, variant URL). Relative URIs resolve against the master path. */
-    private fun parseVariants(playlist: String, master: String): List<Pair<Int, String>> {
-        if (playlist.contains("TYPE=AUDIO", ignoreCase = true) || playlist.contains("AUDIO=", ignoreCase = true)) return emptyList()
-        val base = master.substringBefore('?').substringBeforeLast('/') + "/"
-        val variants = mutableListOf<Pair<Int, String>>()
-        var height = 0
-        for (line in playlist.lineSequence()) {
-            val text = line.trim()
-            when {
-                text.startsWith("#EXT-X-STREAM-INF") ->
-                    height = RESOLUTION.find(text)?.groupValues?.get(1)?.toIntOrNull() ?: 0
-
-                text.isEmpty() || text.startsWith("#") -> Unit
-
-                height > 0 -> {
-                    variants += height to if (text.startsWith("http")) text else base + text
-                    height = 0
-                }
-            }
-        }
-        return variants
-    }
-
     private suspend fun emit(link: String, quality: Int, callback: (ExtractorLink) -> Unit) {
         val label = if (quality > 0) "$name ${quality}p" else name
         callback(newExtractorLink(name, label, link, ExtractorLinkType.M3U8) {
@@ -348,7 +326,6 @@ class TLCtrProvider : MainAPI() {
         private const val MAX_SEASON_PAGES = 40
 
         private val SEASON_EPISODE = Regex("""(\d+)-sezon-(\d+)-bolum""")
-        private val RESOLUTION = Regex("""RESOLUTION=\d+x(\d+)""")
         private val LIVE_URL = Regex("""daionUrl\s*:\s*'([^']+)'""")
         private val LIVE_POSTER = Regex("""poster\s*:\s*'([^']+)'""")
     }

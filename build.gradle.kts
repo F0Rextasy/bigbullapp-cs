@@ -35,6 +35,17 @@ fun Project.cloudstream(configuration: CloudstreamExtension.() -> Unit) = extens
 
 fun Project.android(configuration: BaseExtension.() -> Unit) = extensions.getByName<BaseExtension>("android").configuration()
 
+private val inactiveStatusRe = Regex("""^\s*status\s*=\s*0\b""", RegexOption.MULTILINE)
+private fun Project.isActiveProvider(): Boolean {
+    val bf = file("build.gradle.kts")
+    return bf.isFile && !inactiveStatusRe.containsMatchIn(bf.readText())
+}
+
+val commonTestHost: String? = subprojects
+    .sortedBy { it.name }
+    .firstOrNull { it.isActiveProvider() }
+    ?.name
+
 subprojects {
     apply(plugin = "com.android.library")
     apply(plugin = "kotlin-android")
@@ -48,7 +59,7 @@ subprojects {
     android {
         namespace = "com.bigbull.${project.name.lowercase()}"
         sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
-        if (project.name == "Dizibox") {
+        if (project.name == commonTestHost) {
             sourceSets["test"].java.srcDir(rootProject.file("providers/Common/src/test/kotlin"))
         }
 
@@ -99,4 +110,19 @@ subprojects {
 
 task<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
+}
+
+tasks.register("testCommon") {
+    group = "verification"
+    description = "Runs Common unit tests on the first active provider module."
+    commonTestHost?.let { dependsOn(":$it:testDebugUnitTest") }
+}
+
+tasks.register("testUnit") {
+    group = "verification"
+    description = "Runs Common and all active provider unit tests."
+    dependsOn("testCommon")
+    subprojects.filter { it.isActiveProvider() && it.file("src/test").isDirectory }.forEach { sub ->
+        dependsOn(":${sub.name}:testDebugUnitTest")
+    }
 }

@@ -40,7 +40,7 @@ Nuvio plugin deposu: `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/
 
 | İş | Sağlayan |
 |---|---|
-| Film/dizi arama ve oynatma | Plugin deposu (114 sağlayıcı) |
+| Film/dizi arama ve oynatma | Plugin deposu (32 sağlayıcı) |
 | Film/dizi detayı: özet, kadro, bölümler | **Bir metadata addon'u zorunlu**: Cinemeta (`https://v3-cinemeta.strem.io/manifest.json`) veya AIOMetadata/TMDB |
 | Ana sayfada film/dizi satırları | **BigBull TR Katalog** addon'u |
 | Canlı TV satırları ve kanal oynatma | **BigBull Canlı TV** addon'u |

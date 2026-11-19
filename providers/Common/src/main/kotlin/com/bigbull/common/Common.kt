@@ -142,7 +142,7 @@ fun parseHlsVariants(masterUrl: String, m3u8Text: String): List<Pair<Int, String
 fun pichiveGateNonce(html: String): String? {
     val gate = Regex(""""gate"\s*:\s*\{\s*"n"\s*:\s*"([^"]+)"(?:\s*,\s*"b"\s*:\s*(\d+))?""").find(html) ?: return null
     val n = gate.groupValues[1]
-    val bits = gate.groupValues[2].toIntOrNull() ?: 12
+    val bits = (gate.groupValues[2].toIntOrNull() ?: 12).coerceIn(1, 22)
     val md = MessageDigest.getInstance("SHA-256")
     fun wordAt(msg: String, idx: Int): Long {
         val d = md.digest(msg.toByteArray(Charsets.UTF_8))
@@ -150,16 +150,19 @@ fun pichiveGateNonce(html: String): String? {
         return ((d[o].toLong() and 0xff) shl 24) or ((d[o + 1].toLong() and 0xff) shl 16) or
             ((d[o + 2].toLong() and 0xff) shl 8) or (d[o + 3].toLong() and 0xff)
     }
+    val maxAttempts = 2_000_000
     val fn = Regex("""window\.NP_GATE\s*=\s*function\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*\{([\s\S]*?)\};""").find(html)
     if (fn == null) {
-        for (i in 0 until 50_000_000) if (wordAt("$n:$i", 0) ushr (32 - bits) == 0L) return i.toString()
+        for (i in 0 until maxAttempts) if (wordAt("$n:$i", 0) ushr (32 - bits) == 0L) return i.toString()
         return null
     }
     val nVar = fn.groupValues[1]
     val body = fn.groupValues[3]
     val cm = Regex("""var\s+(\w+)\s*=\s*String\.fromCharCode\(([\d,\s]+)\)""").find(body) ?: return null
     val saltVar = cm.groupValues[1]
-    val salt = cm.groupValues[2].split(',').map { it.trim().toInt().toChar() }.joinToString("")
+    val saltChars = cm.groupValues[2].split(',').mapNotNull { it.trim().toIntOrNull()?.toChar() }
+    if (saltChars.isEmpty()) return null
+    val salt = saltChars.joinToString("")
     val nonceMatch = Regex("""var\s+(\w+)\s*=\s*(?:\w+\.toString\((\d*)\)|String\(\w+\))""").find(body) ?: return null
     val nonceVar = nonceMatch.groupValues[1]
     val radix = nonceMatch.groupValues[2].toIntOrNull()?.coerceIn(2, 36) ?: 10
@@ -168,7 +171,7 @@ fun pichiveGateNonce(html: String): String? {
     val wordIdx = im.groupValues[2].toIntOrNull() ?: 0
     val op = im.groupValues[3]
     val rhs = im.groupValues[4].toLongOrNull() ?: return null
-    for (i in 0 until 50_000_000) {
+    for (i in 0 until maxAttempts) {
         val nonce = java.lang.Long.toString(i.toLong(), radix)
         val msg = buildString {
             for (p in parts) {

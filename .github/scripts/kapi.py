@@ -7,15 +7,19 @@
   kapi.py test                kendi kendine kontrol
 """
 import glob
+import json
 import os
 import re
 import subprocess
 import sys
 
 ZERO = "0" * 40
-# shortcut: ortak modüller (Common, InatShared) hangi modülleri etkilediğini bilmez; sürüm şartı aranmaz
+# Common değişiminde etkilenen aktif modüller bump_common ile denetlenir; InatShared kullanılmıyor.
 ORTAK = {"Common", "InatShared"}
-NUVIO_SABIT = 32
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+if _SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPT_DIR)
+import bump_common  # noqa: E402
 
 
 def git(*a):
@@ -75,6 +79,12 @@ def surum(taban):
             continue  # silinmiş
         if eski is not None and yeni == eski:
             hata.append(f"nuvio/{m.group(1)}: dosya değişti ama @provider version {eski} aynı")
+    if any(p.startswith("providers/Common/src/main/kotlin/") for p in degisen):
+        for mod, eski, yeni, syms in bump_common.find_unbumped_dependents(taban, changed_files=degisen, target="HEAD"):
+            hata.append(
+                f"{mod}: Common ({', '.join(syms[:3])}) değişti ama version {eski} -> {yeni} artmadı "
+                "(python .github/scripts/bump_common.py --apply)"
+            )
     return hata
 
 
@@ -145,9 +155,21 @@ def envanter():
         if has_main_false:
             hata.append(f"{mod}: hasMainPage = false yasak")
 
-    nuvio_sayisi = len(glob.glob("nuvio/providers/*.js"))
-    if nuvio_sayisi != NUVIO_SABIT:
-        hata.append(f"nuvio/providers/*.js sayısı {nuvio_sayisi}, sabit {NUVIO_SABIT} olmalı")
+    disk_nuvio = {os.path.splitext(os.path.basename(p))[0] for p in glob.glob("nuvio/providers/*.js")}
+    if len(disk_nuvio) < 20:
+        hata.append(f"nuvio/providers/*.js sayısı {len(disk_nuvio)}, en az 20 olmalı")
+    try:
+        with open("nuvio/manifest.json", encoding="utf-8") as mf:
+            manifest = json.load(mf)
+        manifest_nuvio = {str(p.get("id") or "") for p in manifest.get("scrapers", []) if isinstance(p, dict) and p.get("id")}
+        eksik_m = sorted(disk_nuvio - manifest_nuvio)
+        fazla_m = sorted(manifest_nuvio - disk_nuvio)
+        if eksik_m:
+            hata.append(f"nuvio/manifest.json eksik sağlayıcılar: {', '.join(eksik_m)}")
+        if fazla_m:
+            hata.append(f"nuvio/manifest.json diskte olmayan sağlayıcılar: {', '.join(fazla_m)}")
+    except Exception as exc:
+        hata.append(f"nuvio/manifest.json okunamadı: {exc}")
     return hata
 
 
@@ -160,6 +182,8 @@ def test():
     assert "Dizibox" in aktif_moduller() and "AsyaLuna" not in aktif_moduller()
     ra, rp = readme_satirlari("| `Dizibox` | x |\n| `AsyaLuna` **pasif** | y |\n")
     assert ra == {"Dizibox"} and rp == {"AsyaLuna"}
+    common_syms = bump_common.extract_public_symbols("providers/Common/src/main/kotlin/com/bigbull/common/Common.kt")
+    assert "pichiveGateNonce" in common_syms and "parseHlsVariants" in common_syms
     env_hatalari = envanter()
     assert not env_hatalari, f"envanter hatası: {env_hatalari}"
     print("kapi.py: testler geçti")

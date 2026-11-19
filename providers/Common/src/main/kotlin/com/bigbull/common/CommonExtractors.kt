@@ -13,7 +13,11 @@ import org.json.JSONObject
 import org.jsoup.Jsoup
 
 private val VIXOLITY_HEX_RE = Regex(""""([0-9a-fA-F]{80,})"""")
-private val VIXOLITY_URL_RE = Regex(""""(?:kaynak|file|src)"\s*:\s*"([^"]+\.m3u8[^"]*)"""")
+private val VIXOLITY_CALL_RE = Regex("""\}\)\('([0-9a-fA-F]{16,})',\s*(\d+)\)""")
+private val VIXOLITY_URL_RE = Regex(""""(?:kaynak|file|src)"\s*:\s*"([^"]+)"""")
+private val DEFAULT_VIXOLITY_SHIFTS = listOf(3, 1, 2, 4, 5, 6, 7)
+private val PACKER_ESC_RE = Regex("""\\(.)""")
+private val PACKER_WORD_RE = Regex("""\b[0-9a-zA-Z]+\b""")
 private val VIDEOPARK_ID_RE = Regex("""VIDEO_ID\s*=\s*"([^"]+)"""")
 private val VIDEOPARK_WORKER_RE = Regex("""WORKER_URL\s*=\s*"([^"]+)"""")
 private val PLAYERX_FILE_RE = Regex(""""file"\s*:\s*"([^"]+)"""")
@@ -22,7 +26,7 @@ private val DAILYMOTION_ID_RE = Regex("""/(?:embed/)?video/([\w-]+)""")
 private val DIRECT_M3U8_RE = Regex("""https?://[^"'\s<>]+\.m3u8(?:\?[^"'\s<>]*)?""")
 private val DIRECT_MP4_RE = Regex("""https?://[^"'\s<>]+\.mp4(?:\?[^"'\s<>]*)?""")
 private val PACKER_RE = Regex(
-    """eval\(function\(p,a,c,k,e,[dr]\)\{[\s\S]*?\}\('((?:[^'\\]|\\.)*)',(\d+),(\d+),'((?:[^'\\]|\\.)*)'\.split\('\|'\)""",
+    """eval\(function\(p,a,c,k,e,[dr]\)\{[\s\S]*?\}\('((?:[^'\\]++|\\.)*+)',\s*(\d+),\s*(\d+),\s*'((?:[^'\\]++|\\.)*+)'\.split\(['"]\|['"]\)""",
     RegexOption.DOT_MATCHES_ALL,
 )
 private val BEPLAYER_RE = Regex("""bePlayer\s*\(\s*['"]([^'"]+)['"]\s*,\s*['"](\{[^}]+\})['"]\s*\)""")
@@ -62,15 +66,20 @@ internal fun decodeBase64Bytes(input: String): ByteArray? {
     }.getOrNull()
 }
 
-/** Dean Edwards `eval(function(p,a,c,k,e,d)...)` paketlenmiş JS kodunu açar. */
-fun unpackJsPacker(script: String): String? {
-    val m = PACKER_RE.find(script) ?: return null
-    val payload = m.groupValues[1]
-        .replace("\\'", "'")
-        .replace("\\\"", "\"")
-        .replace("\\\\", "\\")
+private fun unescapePackerText(raw: String): String =
+    PACKER_ESC_RE.replace(raw) { mr ->
+        when (val ch = mr.groupValues[1]) {
+            "n" -> "\n"
+            "r" -> "\r"
+            "t" -> "\t"
+            else -> ch
+        }
+    }
+
+private fun decodePackerMatch(m: MatchResult): String? {
+    val payload = unescapePackerText(m.groupValues[1])
     val base = m.groupValues[2].toIntOrNull() ?: return null
-    val keys = m.groupValues[4].split("|")
+    val keys = unescapePackerText(m.groupValues[4]).split("|")
     val alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     if (base !in 2..alphabet.length) return null
 
@@ -90,7 +99,21 @@ fun unpackJsPacker(script: String): String? {
         val tok = encodeToken(i)
         table[tok] = keys[i].ifEmpty { tok }
     }
-    return Regex("""\b[0-9a-zA-Z]+\b""").replace(payload) { mr -> table[mr.value] ?: mr.value }
+    return PACKER_WORD_RE.replace(payload) { mr -> table[mr.value] ?: mr.value }
+}
+
+/** Dean Edwards `eval(function(p,a,c,k,e,d)...)` paketlenmiş JS kodunu açar. */
+fun unpackJsPacker(script: String): String? = PACKER_RE.find(script)?.let(::decodePackerMatch)
+
+/** Sayfadaki tüm Dean Edwards packed bloklarını açıp orijinal HTML'in sonuna ekler. */
+fun unpackAllJsPacker(html: String): String {
+    val matches = PACKER_RE.findAll(html).toList()
+    if (matches.isEmpty()) return html
+    val out = StringBuilder(html)
+    for (m in matches) {
+        decodePackerMatch(m)?.let { out.append('\n').append(it) }
+    }
+    return out.toString()
 }
 
 data class FirePlayerStream(
@@ -150,23 +173,37 @@ fun decodeRapidVidAv(html: String): String? {
     return null
 }
 
+private fun decodeVixolityHex(hex: String, shifts: List<Int>): String? {
+    if (hex.length % 2 != 0) return null
+    val step1 = runCatching { hex.hexToBytes().toString(Charsets.ISO_8859_1) }.getOrNull() ?: return null
+    val step2Bytes = decodeBase64Bytes(step1.reversed()) ?: return null
+    val step2 = runCatching { String(step2Bytes, Charsets.ISO_8859_1) }.getOrNull() ?: return null
+    for (shift in shifts) {
+        val shifted = buildString(step2.length) {
+            for (ch in step2) append((ch.code - shift).toChar())
+        }
+        val decBytes = decodeBase64Bytes(shifted) ?: continue
+        val dec = runCatching { String(decBytes, Charsets.UTF_8) }.getOrNull() ?: continue
+        val km = VIXOLITY_URL_RE.find(dec) ?: continue
+        val url = km.groupValues[1].replace("\\/", "/")
+        if (url.startsWith("http") || url.contains(".m3u8")) return url
+    }
+    return null
+}
+
 /** Vixolity gömülü hex -> ters base64 -> Caesar kaydırma -> base64 akışını çözer. */
 fun decodeVixolityStream(html: String): String? {
-    for (m in VIXOLITY_HEX_RE.findAll(html)) {
-        val hex = m.groupValues[1]
-        if (hex.length % 2 != 0) continue
-        val step1 = runCatching { hex.hexToBytes().toString(Charsets.ISO_8859_1) }.getOrNull() ?: continue
-        val step2Bytes = decodeBase64Bytes(step1.reversed()) ?: continue
-        val step2 = runCatching { String(step2Bytes, Charsets.ISO_8859_1) }.getOrNull() ?: continue
-        for (shift in listOf(3, 1, 2, 4, 5, 6, 7)) {
-            val shifted = buildString(step2.length) {
-                for (ch in step2) append((ch.code - shift).toChar())
-            }
-            val decBytes = decodeBase64Bytes(shifted) ?: continue
-            val dec = runCatching { String(decBytes, Charsets.UTF_8) }.getOrNull() ?: continue
-            val km = VIXOLITY_URL_RE.find(dec) ?: continue
-            return km.groupValues[1].replace("\\/", "/")
+    for (m in VIXOLITY_CALL_RE.findAll(html)) {
+        val explicit = m.groupValues[2].toIntOrNull()
+        val shifts = if (explicit != null) {
+            listOf(explicit) + DEFAULT_VIXOLITY_SHIFTS.filter { it != explicit }
+        } else {
+            DEFAULT_VIXOLITY_SHIFTS
         }
+        decodeVixolityHex(m.groupValues[1], shifts)?.let { return it }
+    }
+    for (m in VIXOLITY_HEX_RE.findAll(html)) {
+        decodeVixolityHex(m.groupValues[1], DEFAULT_VIXOLITY_SHIFTS)?.let { return it }
     }
     return null
 }
@@ -513,7 +550,7 @@ suspend fun loadCommonEmbedWithHints(
     }
 
     val rawHtml = runCatching { app.get(u, referer = ref, headers = reqHeaders).text }.getOrNull().orEmpty()
-    val unpacked = unpackJsPacker(rawHtml).orEmpty()
+    val unpacked = runCatching { unpackJsPacker(rawHtml) }.getOrNull().orEmpty()
     val cryptoDec = decryptCryptoJsJson(rawHtml).orEmpty()
     val rapidDec = decodeRapidVidAv(rawHtml).orEmpty()
     val searchPool = buildString {
@@ -565,6 +602,8 @@ suspend fun loadCommonPageLinks(
     noRefererHosts: List<String> = listOf("video.twimg.com", "twimg.com"),
     subtitleCallback: (SubtitleFile) -> Unit,
     callback: (ExtractorLink) -> Unit,
+    originHosts: List<String> = emptyList(),
+    firefoxUaHosts: List<String> = emptyList(),
 ): Boolean {
     val base = mainUrl.trimEnd('/')
     val html = runCatching {
@@ -635,7 +674,7 @@ suspend fun loadCommonPageLinks(
 
     for (c in embeds) {
         if (!seen.add(c)) continue
-        if (loadCommonEmbed(sourceName, mainUrl, c, dataUrl, noRefererHosts, subtitleCallback, callback)) {
+        if (loadCommonEmbedWithHints(sourceName, mainUrl, c, dataUrl, noRefererHosts, originHosts, firefoxUaHosts, subtitleCallback, callback)) {
             ok = true
         }
     }

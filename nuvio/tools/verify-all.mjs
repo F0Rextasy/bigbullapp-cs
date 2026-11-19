@@ -97,6 +97,8 @@ function decodeChunked(buf) {
   return Buffer.concat(out);
 }
 
+const tlsWarned = new Set();
+
 /** Bypass SNI/DPI TCP resets (ddizimom, diziyou) by fragmenting the TLS ClientHello record. */
 export function dpiFetch(urlStr, options = {}, redirects = 4) {
   return new Promise(async (resolve, reject) => {
@@ -163,6 +165,10 @@ export function dpiFetch(urlStr, options = {}, redirects = 4) {
       raw.on("data", (d) => { if (!proxy.destroyed) proxy.push(d); });
       raw.on("end", () => { if (!proxy.destroyed) proxy.push(null); });
       s = tls.connect({ socket: proxy, servername: u.hostname, rejectUnauthorized: false, ALPNProtocols: ["http/1.1"] }, () => {
+        if (!s.authorized && !tlsWarned.has(u.hostname)) {
+          tlsWarned.add(u.hostname);
+          process.stderr.write(`[tls-warn] ${u.hostname}: ${s.authorizationError || "unauthorized"}\n`);
+        }
         const hdrs = { ...(options.headers || {}) };
         const has = (k) => Object.keys(hdrs).some((x) => x.toLowerCase() === k);
         if (!has("host")) hdrs.Host = u.host;

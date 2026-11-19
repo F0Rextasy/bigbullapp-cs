@@ -1,4 +1,4 @@
-// @provider {"id":"dizipod", "name":"DiziPod", "types":["tv"], "domain":"dizipod.com", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"DiziPod Türkçe altyazılı yabancı dizi arşivi (HLS).", "version":"1.1.1", "verified":true}
+// @provider {"id":"dizipod", "name":"DiziPod", "types":["tv"], "domain":"dizipod.com", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"DiziPod Türkçe altyazılı yabancı dizi arşivi (HLS).", "version":"1.1.2", "verified":true}
 /**
  * dizipod — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /?s= -> strict ul.list/ul.premium-listing card match ->
@@ -306,7 +306,7 @@ function __altTitles(raw, mediaType) {
   var h = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
   var api = "https://www.wikidata.org/w/api.php?format=json";
   var stmt = /^tt\d+$/.test(raw) ? "P345=" + raw : (mediaType === "movie" ? "P4947=" : "P4983=") + raw;
-  return fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + stmt), { headers: h })
+  var wd = fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + stmt), { headers: h })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (j) {
       var hits = (j && j.query && j.query.search) || [];
@@ -314,19 +314,37 @@ function __altTitles(raw, mediaType) {
       return fetch(api + "&action=wbgetentities&props=labels|aliases&languages=tr|en&ids=" + hits[0].title, { headers: h }).then(function (r) { return r.ok ? r.json() : null; });
     })
     .then(function (j) {
-      var out = [], seen = {}, ents = (j && j.entities) || {}, k, l, a, i;
-      function add(v) {
-        v = String(v || "").replace(/\s*\([^)]*\)\s*$/, "").trim();
-        if (v && !seen[v.toLowerCase()]) { seen[v.toLowerCase()] = 1; out.push(v); }
-      }
+      var res = [], ents = (j && j.entities) || {}, k, l, a, i;
       for (k in ents) {
         l = ents[k].labels || {}; a = ents[k].aliases || {};
-        add((l.tr || {}).value); add((l.en || {}).value);
-        for (i = 0; i < (a.tr || []).length && i < 2; i++) add(a.tr[i].value);
+        if (l.tr && l.tr.value) res.push(l.tr.value);
+        if (l.en && l.en.value) res.push(l.en.value);
+        for (i = 0; i < (a.tr || []).length && i < 2; i++) res.push(a.tr[i].value);
       }
-      return out;
-    })
-    .catch(function () { return []; });
+      return res;
+    }).catch(function () { return []; });
+  var imdb = /^tt\d+$/.test(raw)
+    ? fetch("https://v3.sg.media-imdb.com/suggestion/t/" + raw + ".json", { headers: h })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { return (j && j.d && j.d[0] && j.d[0].l) ? [j.d[0].l] : []; })
+        .catch(function () { return []; })
+    : Promise.resolve([]);
+  var tvm = /^tt\d+$/.test(raw) && mediaType !== "movie"
+    ? fetch("https://api.tvmaze.com/lookup/shows?imdb=" + raw, { headers: h })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { return (j && j.name) ? [j.name] : []; })
+        .catch(function () { return []; })
+    : Promise.resolve([]);
+  return Promise.all([wd, imdb, tvm]).then(function (lists) {
+    var out = [], seen = {};
+    for (var i = 0; i < lists.length; i++) {
+      for (var j = 0; j < lists[i].length; j++) {
+        var v = String(lists[i][j] || "").replace(/\s*\([^)]*\)\s*$/, "").trim();
+        if (v && !seen[v.toLowerCase()]) { seen[v.toLowerCase()] = 1; out.push(v); }
+      }
+    }
+    return out;
+  });
 }
 var __cinemetaGetStreams = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {

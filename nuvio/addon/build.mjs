@@ -410,9 +410,6 @@ if (!check) {
   }
   writeFileSync(CACHE, JSON.stringify(cache, null, 1) + "\n");
   // Tarifi silinen katalogları kaldır; geçici hata alan tarifin eski listesi korunur.
-  const allRecipes = readdirSync(SRC)
-    .filter((f) => f.endsWith(".json"))
-    .map((f) => JSON.parse(readFileSync(join(SRC, f), "utf8")));
   const keep = new Set(written.map((w) => w.type + "/" + w.id));
   for (const t of ["movie", "series"]) {
     const d = join(OUT, t);

@@ -81,4 +81,15 @@ class CryptoTest {
         val demuxed = "#EXTM3U\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"a\",URI=\"a.m3u8\"\n#EXT-X-STREAM-INF:RESOLUTION=1280x720,AUDIO=\"a\"\nv.m3u8"
         assertEquals(emptyList<Pair<Int, String>>(), parseHlsVariants("https://cdn.example/master.m3u8", demuxed))
     }
+
+    @Test
+    fun pichiveGateNonceClampsHighBitsAndRejectsMalformedCharCode() {
+        val malformed = """"gate":{"n":"abc","b":12}; window.NP_GATE = function(n, s) { var c = String.fromCharCode(65,oops); var x = s.toString(36); return hash(n+c+x)[0] >>> 20 === 0; };"""
+        assertNull(pichiveGateNonce(malformed))
+
+        // Note: 2_000_000 attempts at bits=22 still stays bounded and finishes cleanly instead of spinning 50M hashes.
+        // Clamping b=32 to max 22 and capping attempts avoids infinite loops; test unreachable mask cleanly returns null.
+        val impossibleMask = """"gate":{"n":"abc","b":32}; window.NP_GATE = function(n, s) { var c = String.fromCharCode(65,66); var x = s.toString(36); return (sha(n+c+x)[0] & 4294967295) === 0; };"""
+        assertNull(pichiveGateNonce(impossibleMask))
+    }
 }

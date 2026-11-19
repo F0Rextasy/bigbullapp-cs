@@ -203,7 +203,8 @@ class AsyaLogProvider : MainAPI() {
         embed: String,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val body = app.get(embed, referer = "$mainUrl/", headers = uaHeaders).text
+        val target = embed.replace("odnoklassniki.ru", "ok.ru")
+        val body = app.get(target, referer = "$mainUrl/", headers = uaHeaders).text
             .replace("&quot;", "\"")
             .replace("\\\\", "\\")
         val videos = Regex(""""videos"\s*:\s*(\[.*?])""", RegexOption.DOT_MATCHES_ALL)
@@ -220,7 +221,7 @@ class AsyaLogProvider : MainAPI() {
                     .let { if (it.startsWith("//")) "https:$it" else it }
                 callback.invoke(
                     newExtractorLink(name, "Odnoklassniki ($label)", stream, INFER_TYPE) {
-                        this.referer = "https://odnoklassniki.ru/"
+                        this.referer = "https://ok.ru/"
                         this.quality = getQualityFromName(label.uppercase())
                     }
                 )

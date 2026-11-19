@@ -22,7 +22,9 @@ jobs:
         with:
           node-version: 20
       - name: Nuvio statik ve sandbox testi
-        run: node nuvio/test/run.mjs
+        run: |
+          node nuvio/test/run.mjs
+          node nuvio/tools/sync-helpers.mjs --check
       - name: Manifest üretimi ve senkron kontrolü
         run: |
           node nuvio/tools/build-manifest.mjs --strict

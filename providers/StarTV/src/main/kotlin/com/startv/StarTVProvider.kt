@@ -1,5 +1,6 @@
 package com.startv
 
+import com.bigbull.common.parseHlsVariants
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -20,7 +21,6 @@ import com.lagradost.cloudstream3.newTvSeriesSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.newExtractorLink
-import java.net.URI
 import org.json.JSONObject
 import org.jsoup.Jsoup
 
@@ -115,7 +115,7 @@ class StarTVProvider : MainAPI() {
         val playlist = runCatching {
             app.get(master, referer = "$mainUrl/", headers = mapOf("user-agent" to UA)).text
         }.getOrNull().orEmpty()
-        val variants = parseVariants(playlist, master)
+        val variants = parseHlsVariants(master, playlist)
         var emitted = 0
         suspend fun emit(url: String, quality: Int) {
             if (!Settings.qualityAllowed(quality)) return
@@ -166,25 +166,6 @@ class StarTVProvider : MainAPI() {
     private fun searchResult(title: String, slug: String): SearchResponse =
         newTvSeriesSearchResponse(title, "$mainUrl/dizi/$slug", TvType.TvSeries)
 
-    private fun parseVariants(playlist: String, base: String): List<Pair<Int, String>> {
-        if (playlist.contains("TYPE=AUDIO", ignoreCase = true) || playlist.contains("AUDIO=", ignoreCase = true)) return emptyList()
-        val variants = mutableListOf<Pair<Int, String>>()
-        var quality = 0
-        for (line in playlist.lineSequence()) {
-            val text = line.trim()
-            when {
-                text.startsWith("#EXT-X-STREAM-INF") ->
-                    quality = RESOLUTION.find(text)?.groupValues?.get(1)?.toIntOrNull() ?: 0
-                text.isEmpty() || text.startsWith("#") -> Unit
-                quality > 0 -> {
-                    variants += quality to runCatching { URI(base).resolve(text).toString() }.getOrDefault(text)
-                    quality = 0
-                }
-            }
-        }
-        return variants
-    }
-
     private fun normalize(value: String): String = value.lowercase()
         .replace('ı', 'i').replace('ş', 's').replace('ğ', 'g')
         .replace('ü', 'u').replace('ö', 'o').replace('ç', 'c')
@@ -213,7 +194,6 @@ class StarTVProvider : MainAPI() {
         private val EPISODE_NO = Regex("""/bolumler/(\d+)-bolum""")
         private val TAGS = Regex("""dyg:tags"\s+content="([^"]+)"""")
         private val REFERENCE = Regex(""""referenceId"\s*:\s*"([a-f0-9]{24})"""")
-        private val RESOLUTION = Regex("""RESOLUTION=\d+x(\d+)""")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

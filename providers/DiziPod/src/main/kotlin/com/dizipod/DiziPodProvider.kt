@@ -2,6 +2,7 @@ package com.dizipod
 
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.posterSrcLazy
+import com.bigbull.common.unpackJsPacker
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -297,7 +298,7 @@ class DiziPodProvider : MainAPI() {
      * `sources[{file,label}]` alınır; kaynak listesi yoksa düz m3u8 aramasına düşülür.
      */
     private fun sourcesOf(embedHtml: String): List<Pair<String, String>> {
-        val script = unpack(embedHtml)
+        val script = unpackJsPacker(embedHtml) ?: embedHtml
         val listed = SOURCES.findAll(script).map { it.groupValues[1] to it.groupValues[2] }.toList()
         val pairs = listed.ifEmpty {
             M3U8_ANY.findAll(script).map { it.value to name }.toList()
@@ -306,33 +307,6 @@ class DiziPodProvider : MainAPI() {
         return pairs.map { (stream, label) ->
             stream.replace("\\", "") to label.trim().ifEmpty { name }
         }.distinctBy { it.first }
-    }
-
-    private fun unpack(html: String): String {
-        val match = PACKED.find(html) ?: return html
-        val payload = match.groupValues[1]
-        val base = match.groupValues[2].toIntOrNull() ?: return html
-        val words = match.groupValues[4].split('|')
-        if (base !in 2..ALPHABET.length) return html
-
-        val dictionary = HashMap<String, String>(words.size * 2)
-        words.forEachIndexed { index, word ->
-            val key = encodeBase(index, base)
-            dictionary[key] = word.ifEmpty { key }
-        }
-        return WORD.replace(payload.replace("\\'", "'")) { dictionary[it.value] ?: it.value }
-    }
-
-    /** Packer'ın sözlük anahtarı: indeksin `base` tabanındaki yazımı. */
-    private fun encodeBase(value: Int, base: Int): String {
-        if (value == 0) return "0"
-        var rest = value
-        val out = StringBuilder()
-        while (rest > 0) {
-            out.append(ALPHABET[rest % base])
-            rest /= base
-        }
-        return out.reverse().toString()
     }
 
     companion object {
@@ -346,7 +320,6 @@ class DiziPodProvider : MainAPI() {
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
-        private const val ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
         private val EPISODE_IN_URL = Regex("""-(\d+)-sezon-(\d+)-bolum""")
         private val SEASON_IN_TEXT = Regex("""(\d+)\.\s*Sezon""")
@@ -354,10 +327,5 @@ class DiziPodProvider : MainAPI() {
         private val IFRAME_SRC = Regex("""<iframe[^>]+src=["']([^"']+)["']""")
         private val SOURCES = Regex("\"file\"\\s*:\\s*\"([^\"]+)\"\\s*,\\s*\"label\"\\s*:\\s*\"([^\"]*)\"")
         private val M3U8_ANY = Regex("""https?:[\\/]{2}[^\s"']+?\.m3u8""")
-        private val WORD = Regex("""\b\w+\b""")
-        private val PACKED = Regex(
-            """eval\(function\(p,a,c,k,e,[rd]\)\{.*?\}\('((?:[^'\\]+|\\.)*)',(\d+),(\d+),'((?:[^'\\]+|\\.)*)'\.split\('\|'\)""",
-            RegexOption.DOT_MATCHES_ALL,
-        )
     }
 }

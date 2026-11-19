@@ -17,6 +17,66 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.newExtractorLink
 
+private const val DEFAULT_LOGO = "https://www.tabii.com/favicon.ico"
+private const val IPTV_REFERER = "https://iptv-org.github.io/"
+private val QUALITY = Regex("""\s*\([^)]*\)""")
+private val LABEL = Regex("""\s*\[[^]]*]""")
+private val TR_LETTERS = mapOf(
+    'ç' to 'c', 'ğ' to 'g', 'ı' to 'i', 'ö' to 'o', 'ş' to 's', 'ü' to 'u',
+    'â' to 'a', 'î' to 'i', 'û' to 'u',
+)
+private val ATTR = Regex("""([\w-]+)="([^"]*)"""")
+
+internal data class Channel(
+    val name: String,
+    val groups: List<String>,
+    val logo: String?,
+    val url: String,
+    val referer: String? = null,
+) {
+    /**
+     * Kalite ve etiket ekleri ("(720p)", "[Not 24/7]") ile Türkçe harf farkı atılır:
+     * "TRT 1 (720p)", "TRT Kurdî" ve "TRT Kurdi" aynı kanaldır.
+     */
+    val key get() = buildString {
+        for (c in name.replace(QUALITY, "").replace(LABEL, "").trim().lowercase()) {
+            if (c != '\u0307') append(TR_LETTERS[c] ?: c)
+        }
+    }
+}
+
+/** #EXTINF attributes followed by one stream line; #EXTVLCOPT and other tags are skipped. */
+internal fun parseM3uPlaylist(text: String): List<Channel> {
+    val found = LinkedHashMap<String, Channel>()
+    var pending: Pair<String, Map<String, String>>? = null
+    for (raw in text.lineSequence()) {
+        val line = raw.trim()
+        if (line.isEmpty()) continue
+        when {
+            line.startsWith("#EXTINF") -> {
+                val attrs = ATTR.findAll(line).associate { it.groupValues[1] to it.groupValues[2] }
+                pending = line.substringAfterLast(',', "").trim() to attrs
+            }
+            line.startsWith("#") -> Unit
+            else -> {
+                val (channelName, attrs) = pending ?: continue
+                if (channelName.isNotEmpty()) {
+                    // .m3u8, .mpd and .ts all play through the live player; only the URL matters.
+                    Channel(
+                        name = channelName,
+                        groups = attrs["group-title"].orEmpty().split(';').map { it.trim() },
+                        logo = attrs["tvg-logo"]?.takeIf { it.isNotBlank() } ?: DEFAULT_LOGO,
+                        url = line,
+                        referer = IPTV_REFERER,
+                    ).let { found.putIfAbsent(it.key, it) }
+                }
+                pending = null
+            }
+        }
+    }
+    return found.values.toList()
+}
+
 /**
  * CanliTV — tek canlı TV sağlayıcısı. Seçilmiş HLS adresleri (STATIC) ile iptv-org Türkiye M3U
  * listesi aynı havuzda birleşir; yeni canlı kanal bu dosyaya eklenir.
@@ -61,7 +121,7 @@ class CanliTVProvider : MainAPI() {
     private suspend fun getChannels(): List<Channel> {
         channels?.let { return it }
         val playlist = runCatching { app.get(mainUrl).text }.getOrNull()
-        val dynamic = playlist?.let { parsePlaylist(it) }.orEmpty()
+        val dynamic = playlist?.let { parseM3uPlaylist(it) }.orEmpty()
         if (dynamic.isEmpty() && STATIC.isEmpty()) {
             throw ErrorLoadingException("$name: kanal listesi alınamadı. $REPORT_HINT")
         }
@@ -75,58 +135,8 @@ class CanliTVProvider : MainAPI() {
         return live.also { if (dynamic.isNotEmpty()) channels = it }
     }
 
-    /** #EXTINF attributes followed by one stream line; #EXTVLCOPT and other tags are skipped. */
-    private fun parsePlaylist(text: String): List<Channel> {
-        val found = LinkedHashMap<String, Channel>()
-        var pending: Pair<String, Map<String, String>>? = null
-        for (raw in text.lineSequence()) {
-            val line = raw.trim()
-            if (line.isEmpty()) continue
-            when {
-                line.startsWith("#EXTINF") -> {
-                    val attrs = ATTR.findAll(line).associate { it.groupValues[1] to it.groupValues[2] }
-                    pending = line.substringAfterLast(',', "").trim() to attrs
-                }
-                line.startsWith("#") -> Unit
-                else -> {
-                    val (channelName, attrs) = pending ?: continue
-                    if (channelName.isNotEmpty()) {
-                        // .m3u8, .mpd and .ts all play through the live player; only the URL matters.
-                        Channel(
-                            name = channelName,
-                            groups = attrs["group-title"].orEmpty().split(';').map { it.trim() },
-                            logo = attrs["tvg-logo"]?.takeIf { it.isNotBlank() } ?: DEFAULT_LOGO,
-                            url = line,
-                            referer = IPTV_REFERER,
-                        ).let { found.putIfAbsent(it.key, it) }
-                    }
-                    pending = null
-                }
-            }
-        }
-        return found.values.toList()
-    }
-
     private fun Channel.toSearchResponse() = newLiveSearchResponse(name, url, TvType.Live) {
         this.posterUrl = logo
-    }
-
-    private data class Channel(
-        val name: String,
-        val groups: List<String>,
-        val logo: String?,
-        val url: String,
-        val referer: String? = null,
-    ) {
-        /**
-         * Kalite ve etiket ekleri ("(720p)", "[Not 24/7]") ile Türkçe harf farkı atılır:
-         * "TRT 1 (720p)", "TRT Kurdî" ve "TRT Kurdi" aynı kanaldır.
-         */
-        val key get() = buildString {
-            for (c in name.replace(QUALITY, "").replace(LABEL, "").trim().lowercase()) {
-                if (c != '\u0307') append(TR_LETTERS[c] ?: c)
-            }
-        }
     }
 
     override suspend fun loadLinks(
@@ -146,17 +156,8 @@ class CanliTVProvider : MainAPI() {
     }
 
     companion object {
-        private const val DEFAULT_LOGO = "https://www.tabii.com/favicon.ico"
         private const val STATIC_REFERER = "https://www.tabii.com/"
-        private const val IPTV_REFERER = "https://iptv-org.github.io/"
         private const val SHOW_REFERER = "https://www.showtv.com.tr/"
-        private val QUALITY = Regex("""\s*\([^)]*\)""")
-        private val LABEL = Regex("""\s*\[[^]]*]""")
-        private val TR_LETTERS = mapOf(
-            'ç' to 'c', 'ğ' to 'g', 'ı' to 'i', 'ö' to 'o', 'ş' to 's', 'ü' to 'u',
-            'â' to 'a', 'î' to 'i', 'û' to 'u',
-        )
-        private val ATTR = Regex("""([\w-]+)="([^"]*)"""")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
 

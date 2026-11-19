@@ -1,6 +1,7 @@
 package com.puhutv
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.parseHlsVariants
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -199,7 +200,7 @@ class PuhuTVProvider : MainAPI() {
         val playlist = runCatching {
             app.get(master, headers = browserHeaders, referer = "$mainUrl/").text
         }.getOrNull().orEmpty()
-        val variants = parseVariants(playlist, master)
+        val variants = parseHlsVariants(master, playlist)
         var emitted = 0
         suspend fun emit(streamUrl: String, quality: Int) {
             if (!Settings.qualityAllowed(quality)) return
@@ -285,26 +286,6 @@ class PuhuTVProvider : MainAPI() {
         else -> null
     }
 
-    private fun parseVariants(playlist: String, base: String): List<Pair<Int, String>> {
-        if (playlist.contains("TYPE=AUDIO", ignoreCase = true) || playlist.contains("AUDIO=", ignoreCase = true)) return emptyList()
-        val variants = mutableListOf<Pair<Int, String>>()
-        var quality = 0
-        for (line in playlist.lineSequence()) {
-            val text = line.trim()
-            when {
-                text.startsWith("#EXT-X-STREAM-INF") ->
-                    quality = RESOLUTION.find(text)?.groupValues?.get(1)?.toIntOrNull() ?: 0
-                text.isEmpty() || text.startsWith("#") -> Unit
-                quality > 0 -> {
-                    val resolved = runCatching { URI(base).resolve(text).toString() }.getOrDefault(text)
-                    variants += quality to resolved
-                    quality = 0
-                }
-            }
-        }
-        return variants
-    }
-
     private fun JSONArray?.toObjects(): List<JSONObject> =
         if (this == null) emptyList() else (0 until length()).mapNotNull { optJSONObject(it) }
 
@@ -329,7 +310,6 @@ class PuhuTVProvider : MainAPI() {
         private const val SEARCH_API = "https://appservice.puhutv.com/search/search"
         private const val DYG_API = "https://dygvideo.dygdigital.com/api/video_info"
         private const val DYG_SECRET = "NtvApiSecret2014*"
-        private val RESOLUTION = Regex("""RESOLUTION=\d+x(\d+)""")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

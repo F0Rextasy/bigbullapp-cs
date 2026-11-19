@@ -129,4 +129,25 @@ class CommonExtractorsTest {
         assertTrue(found.contains("https://vk.com/video_ext.php?oid=1&id=2"))
         assertTrue(found.contains("https://ok.ru/videoembed/12345"))
     }
+
+    @Test
+    fun unpackJsPackerHandles65KbPayloadWithoutStackOverflow() {
+        val bigFiller = "x".repeat(65 * 1024)
+        val script = "eval(function(p,a,c,k,e,d){return p}('0=\"1\";//$bigFiller',10,2,'url|https://cdn.example/master.m3u8'.split('|'),0,{}))"
+        val unpacked = unpackJsPacker(script)
+        assertNotNull(unpacked)
+        assertTrue(unpacked!!.contains("url=\"https://cdn.example/master.m3u8\""))
+        assertTrue(unpackAllJsPacker(script).contains("url=\"https://cdn.example/master.m3u8\""))
+    }
+
+    @Test
+    fun decodeVixolityStreamSupportsSingleQuotedCallForm() {
+        val jsonPayload = """{"kaynak":"https:\/\/pl.vixolity.com\/hls\/video.m3u8"}"""
+        val b64 = Base64.getEncoder().encodeToString(jsonPayload.toByteArray(Charsets.UTF_8))
+        val shifted = buildString { for (ch in b64) append((ch.code + 5).toChar()) }
+        val step1 = Base64.getEncoder().encodeToString(shifted.toByteArray(Charsets.ISO_8859_1)).reversed()
+        val hex = step1.toByteArray(Charsets.ISO_8859_1).joinToString("") { "%02x".format(it) }
+        val html = """<script>})('$hex', 5)</script>"""
+        assertEquals("https://pl.vixolity.com/hls/video.m3u8", decodeVixolityStream(html))
+    }
 }

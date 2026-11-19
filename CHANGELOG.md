@@ -5,6 +5,14 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.8] - 2026-11-19
+
+### Değişti
+- Eklenti ortak video çıkarıcıları güvenilirlik ve hız açısından güncellendi, yinelenen çözücüler sadeleştirildi.
+- **Nuvio sağlayıcıları**: alternatif başlık aramasına IMDb ve TVMaze yedekleri eklendi.
+- **CanliTV v7**: canlı yayın listesi ayrıştırma iyileştirildi.
+- **CizgiSite v9** & **AsyaLog v10**: dış oynatıcı bağlantıları ve güvenlik doğrulaması güncellendi.
+
 ## [1.7.7] - 2026-11-18
 
 ### Düzeltildi

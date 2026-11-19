@@ -3,6 +3,7 @@ package com.hdfilmcehennemi
 import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.posterSrcLazy
+import com.bigbull.common.unpackAllJsPacker
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.MainPageRequest
@@ -223,47 +224,9 @@ class HDFilmCehennemiProvider : MainAPI() {
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
 
-        private fun unpackPacked(html: String): String {
-            val packRe = Regex(
-                """eval\(function\(p,a,c,k,e,[dr]\)\{[\s\S]*?\}\('((?:[^'\\]++|\\.)*+)',\s*(\d+),\s*(\d+),\s*'((?:[^'\\]++|\\.)*+)'\.split\(['"]\|['"]\)""",
-            )
-            val matches = packRe.findAll(html).toList()
-            if (matches.isEmpty()) return html
-            val escRe = Regex("""\\(.)""")
-            fun unesc(s: String) = escRe.replace(s) { mr ->
-                when (val ch = mr.groupValues[1]) {
-                    "n" -> "\n"
-                    "r" -> "\r"
-                    "t" -> "\t"
-                    else -> ch
-                }
-            }
-            fun encodeBase(n: Int, radix: Int): String {
-                val hi = if (n < radix) "" else encodeBase(n / radix, radix)
-                val lo = n % radix
-                val ch = if (lo > 35) (lo + 29).toChar().toString() else lo.toString(36)
-                return hi + ch
-            }
-            val wordRe = Regex("""\b\w+\b""")
-            val out = StringBuilder(html)
-            for (m in matches) {
-                val payload = unesc(m.groupValues[1])
-                val radix = m.groupValues[2].toIntOrNull() ?: continue
-                val count = m.groupValues[3].toIntOrNull() ?: continue
-                val sym = unesc(m.groupValues[4]).split('|')
-                val dict = HashMap<String, String>(count)
-                for (i in 0 until count) {
-                    val k = encodeBase(i, radix)
-                    dict[k] = sym.getOrNull(i)?.takeIf { it.isNotEmpty() } ?: k
-                }
-                out.append('\n').append(wordRe.replace(payload) { mr -> dict[mr.value] ?: mr.value })
-            }
-            return out.toString()
-        }
-
         fun decodeEmbedCandidates(html: String, hostname: String): List<String> {
             val out = mutableListOf<String>()
-            val work = unpackPacked(html)
+            val work = unpackAllJsPacker(html)
             val seedHost = hostname + domSeedSuffix(work)
             val fileVar = Regex("""sources\s*:\s*\[\s*\{\s*file\s*:\s*(\w+)""").find(work)?.groupValues?.get(1)
             val sourcesCallFn = Regex("""sources\s*:\s*\[\s*\{\s*file\s*:[\s\S]{0,400}?\breturn\s+([A-Za-z0-9_$]+)\s*\(""").find(work)?.groupValues?.get(1)
