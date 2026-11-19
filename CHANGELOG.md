@@ -5,6 +5,12 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.12] - 2026-11-19
+
+### Eklendi
+- **CizgiVeDizi v1**: yeni çizgi dizi, anime, dizi ve film sağlayıcısı eklendi.
+- **CizgiVeDizi (Nuvio) 1.0.0**: Nuvio eklentisi eklendi (sunucu oynatma sınırı nedeniyle varsayılan olarak kapalı).
+
 ## [1.7.11] - 2026-11-19
 
 ### Değişti
