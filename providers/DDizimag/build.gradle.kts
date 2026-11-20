@@ -1,4 +1,4 @@
-version = 5
+version = 6
 
 
 cloudstream {
@@ -7,7 +7,7 @@ cloudstream {
     status = 1
     tvTypes = listOf("Movie", "TvSeries")
     language = "tr"
-    iconUrl = "https://www.google.com/s2/favicons?domain=ddizimag.icu&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=ddizimag2.icu&sz=%size%"
 }
 
 android {

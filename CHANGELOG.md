@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.17] - 2026-11-20
+
+### Değişti
+- **DDizimag v6**: taban adres https://ddizimag.icu -> https://ddizimag2.icu.
+
 ## [1.7.16] - 2026-11-20
 
 ### Değişti

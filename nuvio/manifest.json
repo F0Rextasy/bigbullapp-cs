@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.7.15",
+  "version": "1.7.17",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -124,7 +124,7 @@
       "id": "ddizimag",
       "name": "DDizimag",
       "description": "DDizimag yerli ve yabancı dizi/film arşivi; pilavyer HLS akışı ve altyazılar.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "bigbull",
       "supportedTypes": [
         "tv",
@@ -135,7 +135,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=ddizimag.icu&sz=128",
+      "logo": "https://www.google.com/s2/favicons?domain=ddizimag2.icu&sz=128",
       "contentLanguage": [
         "tr"
       ]
