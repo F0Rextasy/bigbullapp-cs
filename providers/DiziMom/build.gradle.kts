@@ -1,14 +1,14 @@
 // Use an integer for version numbers
-version = 9
+version = 10
 
 
 cloudstream {
-    description = "DiziMom — yabancı dizi izle, Türkçe dublaj & altyazı (ddizimom.net)"
+    description = "DiziMom — yabancı dizi izle, Türkçe dublaj & altyazı (ddizimom.icu)"
     authors = listOf("F0Rextasy")
     status = 1
     tvTypes = listOf("TvSeries")
     language = "tr"
-    iconUrl = "https://www.google.com/s2/favicons?domain=ddizimom.net&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=ddizimom.icu&sz=%size%"
 }
 
 android {

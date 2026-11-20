@@ -1,4 +1,4 @@
-// @provider {"id":"dizimom", "name":"DiziMom", "types":["tv"], "domain":"ddizimom.net", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"DiziMom yabancı diziler Türkçe dublaj/altyazılı arşivi (pilavyer HLS).", "version":"1.1.3", "verified":true}
+// @provider {"id": "dizimom", "name": "DiziMom", "types": ["tv"], "domain": "ddizimom.icu", "formats": ["m3u8"], "sample": "tt0903747:tv:1:1", "description": "DiziMom yabancı diziler Türkçe dublaj/altyazılı arşivi (pilavyer HLS).", "version": "1.1.4", "verified": true}
 /**
  * dizimom — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /ara?q= -> strict card match -> /dizi/<slug> ->
@@ -6,7 +6,7 @@
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
-var BASE = "https://ddizimom.net";
+var BASE = "https://ddizimom.icu";
 var PLAYER = "https://pilavyerplay.top";
 
 function text(url, opts) {

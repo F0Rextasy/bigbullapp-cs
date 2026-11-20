@@ -2,7 +2,7 @@
   "id": "dizimom-trend",
   "name": "DiziMom · Trendler",
   "type": "series",
-  "url": "https://ddizimom.net/",
+  "url": "https://ddizimom.icu/",
   "item": "<a href=\"https://ddizimom\\.net/dizi/[^\"]+\" class=\"group block\">[\\s\\S]*?</a>",
   "title": "alt=\"([^\"]+)\"",
   "strip": "\\s+Dizi izle$",

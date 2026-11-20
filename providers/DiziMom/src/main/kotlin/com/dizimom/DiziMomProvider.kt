@@ -29,14 +29,14 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 /**
- * DiziMom — ddizimom.net (dizimom.plus adresi parked).
+ * DiziMom — ddizimom.icu (dizimom.plus adresi parked).
  * Bölümler `?sezon=N#bolumler` altında, sezon başına bir istek.
  * Bölüm sayfasındaki `data-pv` slug'ı → play2.pilavyerplay.top s.php →
  * `window.__PLAYER__` (master HLS + ses/altyazı) → stream.php.
  */
 class DiziMomProvider : MainAPI() {
     private val uaHeaders get() = browserHeaders
-    override var mainUrl = "https://ddizimom.net"
+    override var mainUrl = "https://ddizimom.icu"
     override var name = "DiziMom"
     override var lang = "tr"
     override val hasMainPage = true
