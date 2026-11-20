@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.18] - 2026-11-20
+
+### Değişti
+- **DiziLife v14**: taban adres https://dizi86.life -> https://dizi87.life.
+
 ## [1.7.17] - 2026-11-20
 
 ### Değişti
