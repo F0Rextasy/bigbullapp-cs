@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.7.14",
+  "version": "1.7.15",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -183,7 +183,7 @@
       "id": "dizikorea3",
       "name": "Dizikorea3",
       "description": "Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).",
-      "version": "1.0.13",
+      "version": "1.0.14",
       "author": "bigbull",
       "supportedTypes": [
         "tv"

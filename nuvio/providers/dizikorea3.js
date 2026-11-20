@@ -1,4 +1,4 @@
-// @provider {"id":"dizikorea3", "name":"Dizikorea3", "types":["tv"], "domain":"dizikorea3.com", "formats":["m3u8"], "sample":"tt43088191:tv:1:1", "description":"Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).", "version":"1.0.13"}
+// @provider {"id": "dizikorea3", "name": "Dizikorea3", "types": ["tv"], "domain": "dizikorea3.com", "formats": ["m3u8"], "sample": "tt0388629:tv:1:1", "description": "Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).", "version": "1.0.14"}
 /**
  * dizikorea3 — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /sayfa/1?s= -> /dizi/<slug> -> /sezon-N/bolum-M -> player iframes.
