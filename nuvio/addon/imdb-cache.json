@@ -2710,5 +2710,9 @@
  "series|1993|lois clark the new adventures of superman": {
   "id": "tt0106057",
   "poster": "https://m.media-amazon.com/images/M/MV5BMzhmYWEwMTUtZjExNS00MjgzLTllN2UtOGExNDM4NWIzMjVjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|crash": {
+  "id": "tt1178636",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWUyODNlNjMtMzY4NC00MjgwLWJhYTMtNjAyYjE3NTA4ZmQ0XkEyXkFqcGc@._V1_.jpg"
  }
 }
