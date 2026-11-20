@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.16] - 2026-11-20
+
+### Değişti
+- **DiziModu v2**: modül yeniden canlıya alındı; dizimodu.com player'ı sunucu tarafında düzelene dek taramalar bekleme durumunda raporlar.
+
 ## [1.7.15] - 2026-11-20
 
 ### Düzeltildi
