@@ -2654,5 +2654,61 @@
  "movie|bataklikta bir gul": {
   "id": "tt0494923",
   "poster": "https://m.media-amazon.com/images/M/MV5BOWQyNzQwMGYtOTZiMC00ZGMzLWExNjAtODVjNzkwY2VhM2YzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the last dance": {
+  "id": "tt8420184",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTQyYmQ1N2UtYjFkNS00NzgyLTk5YTUtYjExMDdjOTA3MGU2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|wednesday": {
+  "id": "tt13443470",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2E1NDI5OWEtODJmYi00Nzg2LWI4MjUtODFiMTU2YWViOTU3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the 100": {
+  "id": "tt2661044",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDdmZGYwOWEtN2FkZC00Y2ExLWJkY2UtNzFlODVlNzc3MGIzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the witcher": {
+  "id": "tt5180504",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTQzMzNmMzUtODgwNS00YTdhLTg5N2MtOWU1YTc4YWY3NjRlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|perfectos mentirosos": {
+  "id": "tt18351090",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTM4ZWUwODYtMDVlNC00Njc3LThkZDAtZDA4NTU5YzliYWZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2022|crawlspace": {
+  "id": "tt14394620",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGUwMzZlMjMtNTc4Yy00N2Y3LWI4ZjItNmNiNWY3ZTUxYWY0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|robin hood un olumu": {
+  "id": "tt32273171",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTRmNzlmZjEtYjkzMC00MmNjLThiOGYtZjM5MjFiZDQyM2IwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2005|gercek dedikodu": {
+  "id": "tt0398375",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTg3Njk2NTIxNF5BMl5BanBnXkFtZTcwNTc4MTEzMw@@._V1_.jpg"
+ },
+ "movie|2026|koloni": {
+  "id": "tt34385135",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzI5YWViNGUtNGRiMy00OThhLWIwOGUtZjkyZDk2NjliODY2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2007|tetikci": {
+  "id": "tt0822854",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmE0NWZiMjktY2U4MC00MDVmLTljMGMtMWZiMThiNjczNzViXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|the altruists": {
+  "id": "tt36786185",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjczNDNmZWEtMDllMy00OTlkLWIxODctOTY0YWU0M2M1ZDc3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2024|tracker": {
+  "id": "tt13875494",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmZlYjk1N2QtOWE2NS00MDk2LWE0ZmEtM2NiOGEzNzRiN2Y0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|kardes kardes": {
+  "id": "tt39105901",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2ZhOGRjZWEtNDEyYi00NDkxLWFlY2EtNjNiOGM1ZDhkNWYyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|1993|lois clark the new adventures of superman": {
+  "id": "tt0106057",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzhmYWEwMTUtZjExNS00MjgzLTllN2UtOGExNDM4NWIzMjVjXkEyXkFqcGc@._V1_.jpg"
  }
 }
