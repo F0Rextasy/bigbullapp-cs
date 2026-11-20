@@ -2822,5 +2822,13 @@
  "series|sound track": {
   "id": "tt43719355",
   "poster": "https://m.media-amazon.com/images/M/MV5BNDMzYWExODktYjUwYS00MWMyLWFiYTEtNzViMmRkMmQwOWM5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|alikara": {
+  "id": "tt45382417",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTU4MWJkNGItMDRhOS00ZDEwLTgwMDItOTY3YTg5NmZiMzgzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|ciplak vatandas": {
+  "id": "tt0263211",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjA2YmZmN2MtNGM3MC00YjUxLTg4ZDctMjJjYTFmZjg0ZTIwXkEyXkFqcGc@._V1_.jpg"
  }
 }

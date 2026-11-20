@@ -3,14 +3,15 @@
   "name": "DiziMom · Trendler",
   "type": "series",
   "url": "https://ddizimom.icu/",
-  "item": "<a href=\"https://ddizimom\\.net/dizi/[^\"]+\" class=\"group block\">[\\s\\S]*?</a>",
+  "item": "<div[^>]*class=\"[^\"]*\\bshrink\\-0\\b[^\"]*\"[\\s\\S]{0,3200}?</div>",
   "title": "alt=\"([^\"]+)\"",
   "strip": "\\s+Dizi izle$",
-  "poster": "src=\"([^\"]+)\"",
+  "poster": "<img[^>]+src=\"(https?://[^\"]+|/[^\"]+)\"",
   "year": "<p[^>]*>\\s*(\\d{4})\\s*</p>",
   "group": [
     "popular-series"
   ],
   "hidden": true,
-  "limit": 12
+  "limit": 12,
+  "href": "href=\"([^\"]+)\""
 }

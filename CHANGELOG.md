@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.22] - 2026-11-20
+
+### Düzeltildi
+- **Nuvio katalog**: bozulan katalog tarifleri otomatik onarıldı.
+
 ## [1.7.21] - 2026-11-20
 
 ### Düzeltildi
