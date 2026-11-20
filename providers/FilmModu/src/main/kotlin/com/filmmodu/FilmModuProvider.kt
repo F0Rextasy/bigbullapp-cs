@@ -31,14 +31,14 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 /**
- * Filmmodu — filmmodu.news (filmmodu.io artık kumar sitesine yönleniyor).
+ * Filmmodu — filmmodu.icu (filmmodu.io artık kumar sitesine yönleniyor).
  * Film sayfasındaki oyuncu, gizli oynatıcıyı `data-pv` slug'ı ile kurar:
  * `<player>/assets/js/s.php?s=<slug>` → window.__PLAYER__ {stream, subs, audios}.
  * Oynatıcı host'u sayfadaki core.js kaynağından türetilir (pilavyerplay.top).
  */
 
 class FilmModuProvider : MainAPI() {
-    override var mainUrl = "https://filmmodu.news"
+    override var mainUrl = "https://filmmodu.icu"
     override var name = "Filmmodu"
     override var lang = "tr"
     override val hasMainPage = true

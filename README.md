@@ -191,7 +191,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `FilmMakinesi` | filmmakinesi.co | Film | ✓ | — | — | — | ✓ | ✓ |
 | `Filmizyon` | filmizyon.net | Film | — | — | — | — | — | — |
 | `FilmKovasi` | filmkovasi.co | Film | ✓ | — | — | ✓ | — | — |
-| `FilmModu` | filmmodu.news | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `FilmModu` | filmmodu.icu | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `FullHDFilm` | fullhdfilmizlebox.vip | Film | — | — | — | — | — | ✓ |
 | `FullHDFilmizlesene` | fullhdfilmizlesene.now | Film | — | — | ✓ | — | — | ✓ |
 | `HDFilmCehennemi` | hdfilmcehennemi.nl | Film | — | — | — | — | — | — |

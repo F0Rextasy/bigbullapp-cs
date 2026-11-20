@@ -2714,5 +2714,113 @@
  "series|crash": {
   "id": "tt1178636",
   "poster": "https://m.media-amazon.com/images/M/MV5BZWUyODNlNjMtMzY4NC00MjgwLWJhYTMtNjAyYjE3NTA4ZmQ0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|percy jackson and the olympians": {
+  "id": "tt12324366",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGUwOTQ0ZjMtYzA3NS00YWJiLWE3YzEtOGI1YzNkZGFlOWQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|vienna game": {
+  "id": "tt31844371",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGQwZTg2MGUtYzgwNS00ZmM2LTlmNWItYjBkYWI5ZTk0ZjMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|prawo bestii": {
+  "id": "tt44079238",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTI1NzRkOTAtNzFhMi00NmE4LWFjNTYtZGNiZmMzYzNjZDU4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|la mes as": {
+  "id": "tt20096840",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWRkMGFkMmUtNzRhNS00ODkzLWE0NTItMzNjOGUxYzc1ZjM4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|cicekci kiz": {
+  "id": "tt48685065",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTE0OTU1YmItOGIzZS00ZGM1LWJlYTgtMjVhMWVlNWE0ZGYxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|steps": {
+  "id": "tt14413964",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTQyNjk2NmUtZWZlYi00ZDY4LWExYzgtNDY1ZGY3YTA2NDhlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|primetime preacher": {
+  "id": "tt48434154",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWRmNmFlZTMtN2E2NC00OGFhLTllN2MtMjE2NzlhZDQyNTUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|colony": {
+  "id": "tt34385135",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzI5YWViNGUtNGRiMy00OThhLWIwOGUtZjkyZDk2NjliODY2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|on behalf of my son": {
+  "id": "tt33402927",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWM0MGRmOWMtMWNjMi00YzRlLTk4YzItZmJkZTQxNWY2YThiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|418": {
+  "id": "tt38984184",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDY5NmU2ZjYtODhmYi00NGIyLWI4YTUtZjUwY2I4MWE4ZGYwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|perfect liars": {
+  "id": "tt18351090",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTM4ZWUwODYtMDVlNC00Njc3LThkZDAtZDA4NTU5YzliYWZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the voice of hind rajab": {
+  "id": "tt36943034",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWVlM2RjYTctODU4Mi00NTQzLWEzMDktZGVmYTQ2NTEwOWFiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the death of robin hood": {
+  "id": "tt32273171",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTRmNzlmZjEtYjkzMC00MmNjLThiOGYtZjM5MjFiZDQyM2IwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|analyze this": {
+  "id": "tt0122933",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDJmZTNmMmQtYWM2MC00YzM5LWI5MGEtODRmZTgzNDAyN2FjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the hotline": {
+  "id": "tt39640040",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2FiZWYxZTYtODA4NC00ZmVkLTk4ZTAtNWZiMzQyMjZhMDdkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|force 10 from navarone": {
+  "id": "tt0077572",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGM1NDJmOTktYTcxYS00YWViLTllMTMtYmVmZTAwMTU4ODhjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|children of heaven": {
+  "id": "tt0118849",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWZlMjNhNzgtZGRhOS00Y2U5LThjOTctODNjZTI0ZTBiYzBhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the look of silence": {
+  "id": "tt3521134",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTMwMjI4MjQ3MF5BMl5BanBnXkFtZTgwMjkwOTM2NTE@._V1_.jpg"
+ },
+ "movie|attack of the kraken": {
+  "id": "tt39216132",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzg3NTFkNjItYWJjOS00ZTQ4LWIwMWItNjQwMTlhZTA0ZDU1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|son of rambow": {
+  "id": "tt0845046",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTM1MjM0ODc5N15BMl5BanBnXkFtZTcwMjMxMDg1MQ@@._V1_.jpg"
+ },
+ "movie|can t quit mom": {
+  "id": "tt17371682",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzEwNmFmNWYtYTM5YS00Y2Q4LWJlN2UtYzg5ZjZlNjQxZTEwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the absence of eden": {
+  "id": "tt10353588",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjNkYmE1YzUtNDg1Ni00YzI5LWExN2QtNWQ4NmEwZDAzYjA3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|bundy and the green river killer": {
+  "id": "tt8549254",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjgyZGViYjAtZTQzMS00OTVmLTlhY2UtMWZiNWUzNDNlMGRjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|cool books": {
+  "id": "tt37438659",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGJlMmI5YWEtMzQyYy00MWRlLWFkYTYtYzc5MGUxM2MyN2FjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|sorry if i call you love": {
+  "id": "tt1074213",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjkwMTIxOTktM2FmZS00Y2U1LTkzMmQtOTc5YzIzYjE3NmRjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|cafe funiculi funicula": {
+  "id": "tt8315128",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWU2M2Q1NTMtOGMyZC00Njc0LWI0NTYtOTVlMzI3OGNmNzQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sound track": {
+  "id": "tt43719355",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDMzYWExODktYjUwYS00MWMyLWFiYTEtNzViMmRkMmQwOWM5XkEyXkFqcGc@._V1_.jpg"
  }
 }

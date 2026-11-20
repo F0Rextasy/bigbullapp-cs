@@ -1,4 +1,4 @@
-// @provider {"id":"filmmodu", "name":"FilmModu", "types":["movie"], "domain":"filmmodu.news", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FilmModu Türkçe dublaj/altyazılı film arşivi (pilavyerplay HLS + altyazı).", "version":"1.1.4", "verified":true}
+// @provider {"id": "filmmodu", "name": "FilmModu", "types": ["movie"], "domain": "filmmodu.icu", "formats": ["m3u8"], "sample": "tt0133093:movie:1:1", "description": "FilmModu Türkçe dublaj/altyazılı film arşivi (pilavyerplay HLS + altyazı).", "version": "1.1.5", "verified": true}
 /**
  * filmmodu — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /ara?q= -> strict card match -> film page -> data-pv slug ->
@@ -6,7 +6,7 @@
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
-var BASE = "https://filmmodu.news";
+var BASE = "https://filmmodu.icu";
 var PLAYER_FALLBACK = "https://play2.pilavyerplay.top";
 
 function text(url, opts) {

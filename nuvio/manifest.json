@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.7.19",
+  "version": "1.7.20",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -338,7 +338,7 @@
       "id": "filmmodu",
       "name": "FilmModu",
       "description": "FilmModu Türkçe dublaj/altyazılı film arşivi (pilavyerplay HLS + altyazı).",
-      "version": "1.1.4",
+      "version": "1.1.5",
       "author": "bigbull",
       "supportedTypes": [
         "movie"
@@ -348,7 +348,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=filmmodu.news&sz=128",
+      "logo": "https://www.google.com/s2/favicons?domain=filmmodu.icu&sz=128",
       "contentLanguage": [
         "tr"
       ]
