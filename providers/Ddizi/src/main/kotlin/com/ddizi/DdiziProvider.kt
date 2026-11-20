@@ -36,7 +36,6 @@ class DdiziProvider : MainAPI() {
 
     override val mainPage get() = mainPageOf(
         "$mainUrl/" to "Yerli Diziler",
-        "$mainUrl/yabanci-dizi-izle" to "Yabancı Diziler",
         "$mainUrl/eski.diziler" to "Eski Diziler",
     ).filter { Settings.rowEnabled(it.name) }
 
@@ -250,7 +249,7 @@ class DdiziProvider : MainAPI() {
 
     companion object {
         /** Ana sayfa satırları; ayarlardan kapatılabilir. */
-        val ROWS = listOf("Yerli Diziler", "Yabancı Diziler", "Eski Diziler")
+        val ROWS = listOf("Yerli Diziler", "Eski Diziler")
         private const val HOME_CARD_LIMIT = 30
         private val YOUTUBE_ID = Regex("""(?:[?&]v=|youtu\.be/|/embed/|/shorts/)([\w-]{11})""")
         private val SEASON = Regex("""(\d+)\.\s*Sezon""")
