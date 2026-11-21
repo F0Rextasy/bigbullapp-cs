@@ -47,7 +47,7 @@ import com.bigbull.common.posterSrcLazy
  * Her iki CDN de isteklerde oynatıcı sayfasını `Referer` olarak şart koşar.
  */
 class DiziPalProvider : MainAPI() {
-    override var mainUrl = "https://dizipal1596.com"
+    override var mainUrl = "https://dizipal1597.com"
     override var name = "DiziPal"
     override var lang = "tr"
     override val hasMainPage = true

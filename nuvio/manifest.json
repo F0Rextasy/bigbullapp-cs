@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.7.26",
+  "version": "1.7.27",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -240,7 +240,7 @@
       "id": "dizipal",
       "name": "DiziPal",
       "description": "DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.",
-      "version": "1.0.14",
+      "version": "1.0.15",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -251,7 +251,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizipal1596.com&sz=128",
+      "logo": "https://www.google.com/s2/favicons?domain=dizipal1597.com&sz=128",
       "contentLanguage": [
         "tr"
       ]
