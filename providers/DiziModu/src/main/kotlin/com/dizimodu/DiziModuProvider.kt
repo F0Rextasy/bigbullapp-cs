@@ -1,6 +1,7 @@
 package com.dizimodu
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.extractVidmolyStreams
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -157,7 +158,8 @@ class DiziModuProvider : MainAPI() {
                     referer = embed,
                 ).text
             }.getOrNull().orEmpty()
-            val player = PLAYER_URL.find(body)?.value ?: continue
+            val rawPlayer = PLAYER_URL.find(body)?.value ?: continue
+            val player = VIDMOLY_MIRROR.replace(rawPlayer, "vidmoly.net")
             if (!seen.add(player)) continue
             if (loadExtractor(player, embed, subtitleCallback, linkCallback)) {
                 found = true
@@ -173,19 +175,24 @@ class DiziModuProvider : MainAPI() {
             } else {
                 first
             })?.replace("\\/", "/") ?: continue
-            val stream = PLAYER_FILE.find(html)?.groupValues?.get(1) ?: continue
+            val streams = extractVidmolyStreams(html).ifEmpty {
+                listOfNotNull(PLAYER_FILE.find(html)?.groupValues?.get(1))
+            }
+            if (streams.isEmpty()) continue
             val label = option.selectFirst("p.AAIco-dns")?.text()?.trim().orEmpty()
-            linkCallback.invoke(
-                newExtractorLink(
-                    name,
-                    "$name $label".trim(),
-                    stream,
-                    if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO,
-                ) {
-                    this.referer = embed
-                    this.quality = quality
-                },
-            )
+            streams.distinct().forEach { stream ->
+                linkCallback.invoke(
+                    newExtractorLink(
+                        name,
+                        "$name $label".trim(),
+                        stream,
+                        if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO,
+                    ) {
+                        this.referer = if (player.contains("vidmoly.", ignoreCase = true)) "https://vidmoly.net/" else embed
+                        this.quality = quality
+                    },
+                )
+            }
             found = true
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir kaynak yok")
@@ -200,5 +207,6 @@ class DiziModuProvider : MainAPI() {
         private val PLAYER_URL = Regex("""https?://[^"'\s<>]+""")
         private val PLAYER_FILE = Regex("""file\s*:\s*["'](https?://[^"']+)["']""")
         private val JS_REDIRECT = Regex("""location\.replace\('([^']+)'\)""")
+        private val VIDMOLY_MIRROR = Regex("""vidmoly\.(?:to|me|biz)""", RegexOption.IGNORE_CASE)
     }
 }
