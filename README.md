@@ -7,7 +7,7 @@ Cloudstream için `.cs3` eklentileri, Nuvio için plugin deposu + iki katalog ad
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-113-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-112-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 
@@ -170,7 +170,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi87.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
 | `Dizimanya` | dizimanya.com | Dizi | — | — | — | — | — | ✓ |
-| `DiziModu` | dizimodu.com | Dizi | ✓ | — | — | ✓ | — | ✓ |
+| `DiziModu` **pasif** | dizimodu.com | Dizi | — | — | — | — | — | — |
 | `Dizirella` | dizirella.one | Dizi | — | — | — | — | — | — |
 | `DiziSol` | dizisol.com | Film/Dizi | ✓ | — | — | — | ✓ | — |
 | `Dizist` | dizist.live | Dizi | — | — | — | — | — | ✓ |
@@ -246,9 +246,9 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `YerliDiziler` | yerlidiziler.com.tr | Yerli Dizi | ✓ | — | — | — | — | — |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
 
-**Kapsam notu:** Depoda aktif **113 modül** var ve tamamı doğrulanmış durumda (`status = 1`).
+**Kapsam notu:** Depoda aktif **112 modül** var ve tamamı doğrulanmış durumda (`status = 1`).
 `AsyaLuna` (alan adı ölü) ve `DiziModu` (tüm oynatıcı sunucuları
-ölü/429, 2026-11-17) `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle
+ölü/404, 2026-11-21) `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle
 kaldırıldı; düzeldiğinde tekrar eklenir. Bu tablo ve özellik matrisi her sağlayıcı değişikliğinde
 güncellenir.
 

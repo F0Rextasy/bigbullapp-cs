@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.26] - 2026-11-21
+
+### Değişti
+- **DiziModu v4**: tüm video sunucuları (vidmoly.to, ddplayer.site, ddsplayer.site, short.ink) ölü/desteklenmeyen durumda olduğu için pasife alındı (`status = 0`).
+
 ## [1.7.25] - 2026-11-21
 
 ### Düzeltildi
