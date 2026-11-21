@@ -27,14 +27,39 @@ const jobs = Math.max(1, Number(jobsAt >= 0 ? argv[jobsAt + 1] : process.env.NUV
 const only = argv.find((a, i) => !a.startsWith("--") && (jobsAt < 0 || i !== jobsAt + 1));
 const curlBin = process.platform === "win32" ? "curl.exe" : "curl";
 
+/** Clearance exported by the bot's solver (`cf_browser.remember_curl`) for blocked hosts. */
+function cfState(host) {
+  try {
+    const file = process.env.BIGBULL_CF_CURL;
+    if (!file || !fs.existsSync(file)) return null;
+    const data = JSON.parse(fs.readFileSync(file, "utf8"));
+    const key = String(host || "").toLowerCase();
+    const entry = data[key] || data[key.replace(/^www\./, "")] || data["www." + key];
+    if (!entry || !entry.cookie) return null;
+    let ts = Number(entry.ts) || 0;
+    if (ts && ts < 1e11) ts *= 1000;
+    if (!ts || Date.now() - ts > 6 * 3600 * 1000) return null;
+    return entry;
+  } catch {
+    return null;
+  }
+}
+
 /** Fallback when Cloudflare/CDN blocks Node/undici's TLS JA3 with 403 while curl/Android works (AGENTS.md). */
 function curlFallback(url, options = {}) {
   try {
     const args = ["-sL", "--max-time", "15", "-w", "\n__HTTP_STATUS__:%{http_code}"];
     if (options.method && options.method !== "GET") args.push("-X", options.method);
-    const hdrs = options.headers || {};
+    const cf = cfState(new URL(String(url)).hostname);
+    const hdrs = { ...(options.headers || {}) };
+    if (cf) {
+      if (cf.ua) args.push("-A", cf.ua);  // cf_clearance UA'ya bağlı
+      hdrs.Cookie = hdrs.Cookie ? `${hdrs.Cookie}; ${cf.cookie}` : cf.cookie;
+    }
     for (const [k, v] of Object.entries(hdrs)) {
-      if (v != null) args.push("-H", `${k}: ${v}`);
+      if (v == null) continue;
+      if (cf && k.toLowerCase() === "user-agent") continue;
+      args.push("-H", `${k}: ${v}`);
     }
     if (options.body) args.push("--data-raw", String(options.body));
     args.push(String(url));
