@@ -244,7 +244,6 @@ class FilmgecesiProvider : MainAPI() {
         private val ROW_BASES = linkedMapOf(
             "Yeni Eklenenler" to "",
             "Seri Filmler" to "/seri-filmler",
-            "Film Arşivi" to "/film-arsivi",
             "Aksiyon" to "/aksiyon",
             "Animasyon" to "/animasyon",
             "Komedi" to "/komedi",
