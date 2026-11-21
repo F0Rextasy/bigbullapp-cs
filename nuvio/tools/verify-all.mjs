@@ -38,7 +38,7 @@ function cfState(host) {
     if (!entry || !entry.cookie) return null;
     let ts = Number(entry.ts) || 0;
     if (ts && ts < 1e11) ts *= 1000;
-    if (!ts || Date.now() - ts > 6 * 3600 * 1000) return null;
+    if (!ts || Date.now() - ts > 25 * 60 * 1000) return null;  // cf_clearance ~30 dk yaşıyor
     return entry;
   } catch {
     return null;
