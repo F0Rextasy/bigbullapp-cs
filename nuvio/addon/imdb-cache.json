@@ -2830,5 +2830,53 @@
  "movie|ciplak vatandas": {
   "id": "tt0263211",
   "poster": "https://m.media-amazon.com/images/M/MV5BMjA2YmZmN2MtNGM3MC00YjUxLTg4ZDctMjJjYTFmZjg0ZTIwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2014|altman": {
+  "id": "tt2404171",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTkzNDQyNzczOF5BMl5BanBnXkFtZTgwOTkwOTc5MTE@._V1_.jpg"
+ },
+ "movie|2026|oglum adina ozur dilerim": {
+  "id": "tt33402927",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWM0MGRmOWMtMWNjMi00YzRlLTk4YzItZmJkZTQxNWY2YThiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|siradan melekler": {
+  "id": "tt4996328",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzg3OTliZDMtNTBhYy00OGMzLTlhZmUtMDMyNjQ4NDc4MDk5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|melania rea": {
+  "id": "tt45114341",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmI2MzIxYjMtYmMxOC00ZWYyLWJjZWUtYmE1ZTAxMGMwNDU5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|the blue road": {
+  "id": "tt38336631",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTE2YjI4MDctMTY3YS00ODYyLTgwOTMtZmVkZDljZGQ3OWI1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sacred jewel": {
+  "id": "tt41939482",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTE3OWI1M2QtYzM1Yy00NDY2LTkxZjAtZjUwNDVkMGY4NzBhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|good partner": {
+  "id": "tt32840498",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWIzNjQ0MjAtNTY2ZS00ZTQwLWJjYzItODNkMzY5ZTkzNTU3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|gift": {
+  "id": "tt4012790",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/183/459941.jpg"
+ },
+ "movie|2026|kusursuz yalancilar": {
+  "id": "tt18351090",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTM4ZWUwODYtMDVlNC00Njc3LThkZDAtZDA4NTU5YzliYWZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|arafta": {
+  "id": "tt39013436",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzgyMjZhZjEtODJkMi00NzlhLWEzNTYtOGQ5YmRlM2EwNWQxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|aile kadini": {
+  "id": "tt0494630",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmMyMWRjYjEtN2IxZi00ODMyLTkzY2UtMWI4MTI3NGQ3ZWE4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|katircilar": {
+  "id": "tt0967942",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzc3NTU0ZTctNGQxZS00ZGUwLTkzODItOGRiNTFlMGExNDliXkEyXkFqcGc@._V1_.jpg"
  }
 }
