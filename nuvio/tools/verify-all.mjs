@@ -34,12 +34,17 @@ function cfState(host) {
     if (!file || !fs.existsSync(file)) return null;
     const data = JSON.parse(fs.readFileSync(file, "utf8"));
     const key = String(host || "").toLowerCase();
-    const entry = data[key] || data[key.replace(/^www\./, "")] || data["www." + key];
-    if (!entry || !entry.cookie) return null;
-    let ts = Number(entry.ts) || 0;
-    if (ts && ts < 1e11) ts *= 1000;
-    if (!ts || Date.now() - ts > 25 * 60 * 1000) return null;  // cf_clearance ~30 dk yaşıyor
-    return entry;
+    const base = key.replace(/^www\./, "");
+    // www/apex kayıtları ayrı tazelenebilir: taze olan ilk adayı kullan.
+    for (const candidate of [key, base, "www." + base]) {
+      const entry = data[candidate];
+      if (!entry || !entry.cookie) continue;
+      let ts = Number(entry.ts) || 0;
+      if (ts && ts < 1e11) ts *= 1000;
+      if (!ts || Date.now() - ts > 25 * 60 * 1000) continue;  // cf_clearance ~30 dk yaşıyor
+      return entry;
+    }
+    return null;
   } catch {
     return null;
   }
