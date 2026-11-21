@@ -1,11 +1,11 @@
-// @provider {"id": "ddizimag", "name": "DDizimag", "types": ["tv", "movie"], "domain": "ddizimag2.icu", "formats": ["m3u8"], "sample": "tt13675832:tv:1:1", "description": "DDizimag yerli ve yabancı dizi/film arşivi; pilavyer HLS akışı ve altyazılar.", "version": "1.0.1"}
+// @provider {"id": "ddizimag", "name": "DDizimag", "types": ["tv", "movie"], "domain": "ddizimag2.icu", "formats": ["m3u8"], "sample": "tt13675832:tv:1:1", "description": "DDizimag yerli ve yabanc\u0131 dizi/film ar\u015fivi; pilavyer HLS ak\u0131\u015f\u0131 ve altyaz\u0131lar.", "version": "1.0.2"}
 /**
  * ddizimag — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta (+ Wikidata TR / IMDb / TVMaze) -> /ara?q= -> /dizi/<slug>/sezon-S/bolum-E
  *       -> data-pv + core.js -> s.php?s= -> window.__PLAYER__ -> HLS + altyazi.
  */
 
-var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
+var UA = "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36";
 var BASE = "https://ddizimag2.icu";
 var ID = "ddizimag";
 
