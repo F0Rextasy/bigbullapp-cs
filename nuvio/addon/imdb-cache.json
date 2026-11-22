@@ -2878,5 +2878,33 @@
  "movie|katircilar": {
   "id": "tt0967942",
   "poster": "https://m.media-amazon.com/images/M/MV5BNzc3NTU0ZTctNGQxZS00ZGUwLTkzODItOGRiNTFlMGExNDliXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|armand": {
+  "id": "tt26745321",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODZlZTUyOWEtZTIyZC00NjA0LWIzZWMtNzFhMGYzZTA4NzExXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|premada oorali": {
+  "id": "tt33381528",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDg2M2E5NWUtM2FlYS00OGRlLTk3YWEtMWU5MDhlMWIyMDEyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|altman": {
+  "id": "tt2404171",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTkzNDQyNzczOF5BMl5BanBnXkFtZTgwOTkwOTc5MTE@._V1_.jpg"
+ },
+ "movie|the chronology of water": {
+  "id": "tt8667404",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDUyM2ViNWYtNzJhMy00MDdiLWFkYTktYzBhOTYzN2UwZGMzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|bob trevino likes it": {
+  "id": "tt28613536",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGI2Yzg2MmYtMmI0Mi00ZWYwLThjMGItZTQ3MmExODFiMjI3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the vvaan": {
+  "id": "tt34498564",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGQ3YWZlMjUtNDI1Zi00YjRjLTg2YzctMGU1MTkxMWU5M2U5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|angel eyes": {
+  "id": "tt3681890",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGM5MzkwODktMDU0YS00OTY4LTg1NTAtOTA1NTcyZDE0OTRmXkEyXkFqcGc@._V1_.jpg"
  }
 }

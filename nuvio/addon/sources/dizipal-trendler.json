@@ -2,7 +2,7 @@
   "id": "dizipal-trendler",
   "name": "DiziPal · Trendler",
   "type": "series",
-  "url": "https://dizipal1596.com/trendler",
+  "url": "https://dizipal1597.com/trendler",
   "item": "<a class=\"tc\"[\\s\\S]*?</a>",
   "title": "<span class=\"tt\"[^>]*>([^<]+)</span>",
   "poster": "<img[^>]+src=\"(https?://[^\"]+)\"",
