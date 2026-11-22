@@ -2906,5 +2906,33 @@
  "series|angel eyes": {
   "id": "tt3681890",
   "poster": "https://m.media-amazon.com/images/M/MV5BZGM5MzkwODktMDU0YS00OTY4LTg1NTAtOTA1NTcyZDE0OTRmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|mr k": {
+  "id": "tt7972570",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmE4ZWY3MDAtNmFmYS00YmRkLWJmNjQtMmQ5MDk0ZmIyOGY5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2022|hayalimdeki dugun": {
+  "id": "tt9686790",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGI5ZGYyMmQtYzVmZC00YWI0LTgwYTUtNjdmZmY5YjQwMDhlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|uzayli dostum flik": {
+  "id": "tt14813764",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzNlN2VlNWMtMWExOC00ZDZkLTkyODEtMzg5NmMwNzIzNTUzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|cambaz": {
+  "id": "tt23468450",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmJkNGNiNjgtMzFlYy00ZDI5LWI2YzktZGVjYjI5MjQyMGU3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|aznavour": {
+  "id": "tt26743414",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmRlYjBiMjAtZWVkYy00ZDk4LTk5YWUtNDhlNDA3MzM0Y2M5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|saint ex": {
+  "id": "tt27156915",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmZmZjliMDItNzBmMi00MGI5LTk4YjItZWIxNTFmNjdhODFiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|mutfak": {
+  "id": "tt19864832",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGYyYjI3MGQtNGIzNS00MTgxLWE2NDctMmZlNzE5OGY4NTY3XkEyXkFqcGc@._V1_.jpg"
  }
 }

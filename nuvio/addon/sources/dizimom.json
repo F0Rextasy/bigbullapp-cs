@@ -3,7 +3,7 @@
   "name": "DiziMom",
   "type": "series",
   "url": "https://ddizimom.icu/diziler?sirala=yeni",
-  "item": "<a href=\"https://ddizimom\\.net/dizi/[^\"]+\" class=\"group block\">[\\s\\S]*?</a>",
+  "item": "<a href=\"https://ddizimom\\.icu/dizi/[^\"]+\" class=\"group block\">[\\s\\S]*?</a>",
   "title": "alt=\"([^\"]+)\"",
   "strip": "\\s+Dizi izle$",
   "poster": "src=\"([^\"]+)\"",
