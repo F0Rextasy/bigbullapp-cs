@@ -1,4 +1,5 @@
 import { execFileSync } from "node:child_process";
+import { fetchWithDpi } from "../tools/verify-all.mjs";
 /**
  * Statik Stremio/Nuvio katalog addon'u üretir.
  *
@@ -68,7 +69,7 @@ async function get(url, headers) {
   const hdrs = { ...DEFAULT_HEADERS, ...(headers || {}) };
   let status = 0;
   try {
-    const r = await fetch(url, { headers: hdrs, signal: AbortSignal.timeout(15000) });
+    const r = await fetchWithDpi(url, { headers: hdrs }, AbortSignal.timeout(15000));
     if (r.ok) return r.text();
     status = r.status;
   } catch {

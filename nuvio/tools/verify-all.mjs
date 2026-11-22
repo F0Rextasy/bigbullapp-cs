@@ -173,7 +173,18 @@ export function dpiFetch(urlStr, options = {}, redirects = 4) {
             firstWrite = false;
             const recLen = (chunk[3] << 8) | chunk[4];
             if (5 + recLen <= chunk.length) {
-              const sp = Math.min(45, recLen - 8);
+              let sp = Math.min(45, recLen - 8);
+              for (let i = 5; i < 5 + recLen - 12; i++) {
+                if (chunk[i] === 0 && chunk[i + 1] === 0 && chunk[i + 6] === 0) {
+                  const extLen = (chunk[i + 2] << 8) | chunk[i + 3];
+                  const lLen = (chunk[i + 4] << 8) | chunk[i + 5];
+                  const nameLen = (chunk[i + 7] << 8) | chunk[i + 8];
+                  if (nameLen >= 4 && nameLen <= 253 && lLen === nameLen + 3 && extLen === lLen + 2 && i + 9 + nameLen <= 5 + recLen) {
+                    sp = (i - 5) + 9 + (nameLen >> 1);
+                    break;
+                  }
+                }
+              }
               const r2 = recLen - sp;
               const b1 = Buffer.concat([chunk.subarray(0, 3), Buffer.from([sp >> 8, sp & 0xff]), chunk.subarray(5, 5 + sp)]);
               const b2 = Buffer.concat([chunk.subarray(0, 3), Buffer.from([r2 >> 8, r2 & 0xff]), chunk.subarray(5 + sp)]);
@@ -259,7 +270,8 @@ export async function fetchWithDpi(url, options = {}, signal = null) {
     res = await dpiFetch(url, reqOpts);
   } else {
     try {
-      res = await fetch(url, reqOpts);
+      const directSignal = signal ? AbortSignal.any([signal, AbortSignal.timeout(5000)]) : AbortSignal.timeout(5000);
+      res = await fetch(url, { ...options, signal: directSignal });
     } catch (e) {
       if (signal && signal.aborted) throw e;
       dpiHosts.add(hostname);
