@@ -1,5 +1,5 @@
 // Use an integer for version numbers
-version = 16
+version = 17
 
 
 cloudstream {
@@ -15,7 +15,7 @@ cloudstream {
      **/
     status = 1
 
-    tvTypes = listOf("Movie")
+    tvTypes = listOf("Movie", "TvSeries")
     language = "tr"
 
     iconUrl = "https://www.google.com/s2/favicons?domain=hdfilmcehennemi.nl&sz=%size%"

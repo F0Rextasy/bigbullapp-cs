@@ -376,7 +376,7 @@
       "id": "hdfilmcehennemi",
       "name": "HDFilmCehennemi",
       "description": "HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.",
-      "version": "1.0.22",
+      "version": "1.0.23",
       "author": "bigbull",
       "supportedTypes": [
         "movie"

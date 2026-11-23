@@ -17,9 +17,11 @@ import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.fixUrlNull
 import com.lagradost.cloudstream3.network.CloudflareKiller
+import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
+import com.lagradost.cloudstream3.newTvSeriesLoadResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
@@ -27,7 +29,7 @@ import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONObject
 import org.jsoup.Jsoup
 
-/** HDFilmCehennemi — hdfilmcehennemi.nl (movies only, self-hosted jwplayer embed) */
+/** HDFilmCehennemi — hdfilmcehennemi.nl (film ve dizi, self-hosted jwplayer embed) */
 
 class HDFilmCehennemiProvider : MainAPI() {
     override var mainUrl = "https://www.hdfilmcehennemi.nl"
@@ -53,7 +55,7 @@ class HDFilmCehennemiProvider : MainAPI() {
             else -> null
         }
     }
-    override val supportedTypes = setOf(TvType.Movie)
+    override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data, headers = uaHeaders, interceptor = killer).document
@@ -111,15 +113,44 @@ class HDFilmCehennemiProvider : MainAPI() {
         val year = h1.selectFirst("small")?.text()?.trim('(', ')')?.trim()?.toIntOrNull()
             ?: Regex("""\((\d{4})\)""").find(h1.text())?.groupValues?.get(1)?.toIntOrNull()
 
+        val posterUrl = fixUrlNull(doc.selectFirst("div.poster img, figure img, img.lazyload")?.posterSrcLazy())
+        val plot = doc.jsonLdDescription()
+            ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+        val tags = doc.select("a[href*='/kategori/'], a[href*='/category/']").map { it.text().trim() }
+            .filter { it.isNotBlank() }.distinct()
+        val score = Score.from10(doc.selectFirst("span.imdb, div.rating, [class*=imdb]")?.text()?.trim())
+        val duration = doc.selectFirst("span.sure, div.duration")?.text()?.filter { it.isDigit() }?.toIntOrNull()
+        val episodes = doc.select("a[href*='/sezon-'][href*='/bolum-']").mapNotNull { anchor ->
+            val href = fixUrlNull(anchor.attr("abs:href").ifBlank { anchor.attr("href") }) ?: return@mapNotNull null
+            val seasonNum = Regex("""/sezon-(\d+)""").find(href)?.groupValues?.get(1)?.toIntOrNull()
+            val episodeNum = Regex("""/bolum-(\d+)""").find(href)?.groupValues?.get(1)?.toIntOrNull()
+            val epTitle = anchor.text().trim().ifBlank {
+                if (seasonNum != null && episodeNum != null) "${seasonNum}. Sezon ${episodeNum}. Bölüm" else "Bölüm"
+            }
+            newEpisode(href) {
+                this.name = epTitle
+                this.season = seasonNum
+                this.episode = episodeNum
+            }
+        }.distinctBy { it.data }.sortedWith(compareBy({ it.season ?: 0 }, { it.episode ?: 0 }))
+        if (episodes.isNotEmpty()) {
+            return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
+                this.posterUrl = posterUrl
+                this.posterHeaders = posterHdrs
+                this.plot = plot
+                this.year = year
+                this.tags = tags
+                this.score = score
+            }
+        }
         return newMovieLoadResponse(title, url, TvType.Movie, url) {
-            this.posterUrl = fixUrlNull(doc.selectFirst("div.poster img, figure img, img.lazyload")?.posterSrcLazy())
-            this.plot = doc.jsonLdDescription()
-                ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
+            this.posterUrl = posterUrl
+            this.posterHeaders = posterHdrs
+            this.plot = plot
             this.year = year
-            this.tags = doc.select("a[href*='/kategori/'], a[href*='/category/']").map { it.text().trim() }
-                .filter { it.isNotBlank() }.distinct()
-            this.score = Score.from10(doc.selectFirst("span.imdb, div.rating, [class*=imdb]")?.text()?.trim())
-            this.duration = doc.selectFirst("span.sure, div.duration")?.text()?.filter { it.isDigit() }?.toIntOrNull()
+            this.tags = tags
+            this.score = score
+            this.duration = duration
         }
     }
 
@@ -191,26 +222,35 @@ class HDFilmCehennemiProvider : MainAPI() {
                 "Accept" to "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                 "Sec-Fetch-Dest" to "iframe",
                 "Sec-Fetch-Mode" to "navigate",
-                "Sec-Fetch-Site" to "cross-site",
+                "Sec-Fetch-Site" to if (embedUrl.startsWith(mainUrl, true)) "same-origin" else "cross-site",
             ),
+            interceptor = killer,
         ).text
-        val host = Regex("""https?://([^/]+)""").find(embedUrl)?.groupValues?.get(1) ?: return false
-        val candidates = decodeEmbedCandidates(embed, host)
-        val stream = candidates.firstOrNull { url ->
-            url.startsWith("http") && runCatching {
-                val res = app.get(url, referer = embedUrl, headers = uaHeaders)
-                res.code in 200..299 && res.text.trimStart().startsWith("#EXTM3U")
-            }.getOrDefault(false)
-        } ?: return false
+        // Yeni oynatıcı: gerçek adres /kn/ POST yanıtında; eski c6rbn çözümü artık yalnızca örnek (decoy) video verir.
+        val kn = knStream(embedUrl, embed)
+        val stream: String
+        if (kn != null) {
+            stream = kn.first
+            kn.second.forEach { (label, file) -> subtitleCallback.invoke(SubtitleFile(label, file)) }
+        } else {
+            val host = Regex("""https?://([^/]+)""").find(embedUrl)?.groupValues?.get(1) ?: return false
+            val candidates = decodeEmbedCandidates(embed, host)
+            stream = candidates.firstOrNull { url ->
+                url.startsWith("http") && runCatching {
+                    val res = app.get(url, referer = embedUrl, headers = uaHeaders)
+                    res.code in 200..299 && res.text.trimStart().startsWith("#EXTM3U")
+                }.getOrDefault(false)
+            } ?: return false
 
-        // subtitle tracks from jwplayer setup
-        Regex("""tracks:\s*\[(.*?)\]\s*,\s*(?:captions|image)""", RegexOption.DOT_MATCHES_ALL).find(embed)?.let { t ->
-            Regex("""\{"file":"((?:[^"\\]++|\\.)*+)","kind":"captions","label":"((?:[^"\\]++|\\.)*+)"""").findAll(t.groupValues[1])
-                .forEach { s ->
-                    val file = s.groupValues[1].replace("\\/", "/")
-                    val label = s.groupValues[2].replace("\\/", "/")
-                    subtitleCallback.invoke(SubtitleFile(label, file))
-                }
+            // subtitle tracks from jwplayer setup
+            Regex("""tracks:\s*\[(.*?)\]\s*,\s*(?:captions|image)""", RegexOption.DOT_MATCHES_ALL).find(embed)?.let { t ->
+                Regex("""\{"file":"((?:[^"\\]++|\\.)*+)","kind":"captions","label":"((?:[^"\\]++|\\.)*+)"""").findAll(t.groupValues[1])
+                    .forEach { s ->
+                        val file = s.groupValues[1].replace("\\/", "/")
+                        val label = s.groupValues[2].replace("\\/", "/")
+                        subtitleCallback.invoke(SubtitleFile(label, file))
+                    }
+            }
         }
 
         callback.invoke(
@@ -223,7 +263,78 @@ class HDFilmCehennemiProvider : MainAPI() {
         return true
     }
 
+    /**
+     * Embed sayfası adresi `POST <embed>/kn/` ile verir: gövde `n`, `j`, `p=knF(n)` alır, yanıt
+     * hex + XOR (`knC`) ile çözülür. Çözüm: ilk satır HLS adresi, kalanı altyazı JSON'u.
+     */
+    private suspend fun knStream(embedUrl: String, html: String): Pair<String, List<Pair<String, String>>>? {
+        val origin = Regex("""^(https?://[^/]+)""").find(embedUrl)?.groupValues?.get(1) ?: return null
+        val nj = Regex("""var n="([0-9a-f]+)",j="([0-9a-f]+)""").find(html) ?: return null
+        val hash = Regex("""hash:"([0-9a-f]+)",s:"g""").find(html)?.groupValues?.get(1) ?: return null
+        val path = Regex("""url:"(/video/embed/[^"]+/kn/)""").find(html)?.groupValues?.get(1) ?: return null
+        val key = Regex("""var k="([0-9a-f]+)";function f\(""").find(unpackAllJsPacker(html))?.groupValues?.get(1)
+            ?: return null
+        val n = nj.groupValues[1]
+        val p = knHash("$n|$key|[object Window]|[object HTMLDocument]|function")
+        val body = runCatching {
+            app.post(
+                origin + path,
+                data = mapOf("hash" to hash, "s" to "g", "n" to n, "j" to nj.groupValues[2], "p" to p, "d" to "1"),
+                referer = embedUrl,
+                headers = uaHeaders + mapOf(
+                    "Origin" to origin,
+                    "X-Requested-With" to "XMLHttpRequest",
+                    "Accept" to "*/*",
+                    "Sec-Fetch-Dest" to "empty",
+                    "Sec-Fetch-Mode" to "cors",
+                    "Sec-Fetch-Site" to "same-origin",
+                ),
+            ).text
+        }.getOrNull() ?: return null
+        val hex = body.filter { it in '0'..'9' || it in 'a'..'f' }
+        if (hex.length < 16) return null
+        val plain = knDecode(hex, n, p)
+        val url = plain.substringBefore('\n').trim()
+        if (!url.startsWith("http")) return null
+        val ok = runCatching {
+            val res = app.get(url, referer = embedUrl, headers = uaHeaders)
+            res.code in 200..299 && res.text.trimStart().startsWith("#EXTM3U")
+        }.getOrDefault(false)
+        if (!ok) return null
+        val tracks = runCatching { org.json.JSONArray(plain.substringAfter('\n', "")) }.getOrNull()
+        val subs = (0 until (tracks?.length() ?: 0)).mapNotNull { i ->
+            val t = tracks?.optJSONObject(i) ?: return@mapNotNull null
+            val file = t.optString("file").takeIf { it.startsWith("http") } ?: return@mapNotNull null
+            t.optString("label").ifBlank { "Altyazı" } to file
+        }
+        return url to subs
+    }
+
     companion object {
+        private fun knHash(s: String): String {
+            var h = 2166136261L
+            repeat(3) {
+                for (ch in s) {
+                    h = (h xor ch.code.toLong()) and 0xFFFFFFFFL
+                    h = (h + (h shl 1) + (h shl 4) + (h shl 7) + (h shl 8) + (h shl 24)) and 0xFFFFFFFFL
+                }
+            }
+            return h.toString(16).padStart(8, '0').takeLast(8)
+        }
+
+        fun knDecode(hex: String, n: String, p: String): String {
+            val out = StringBuilder()
+            var ks = ""
+            var i = 0
+            while (i + 1 < hex.length) {
+                if (i % 8 == 0) ks = knHash("$n|${i / 8}|$p")
+                val b = hex.substring(i, i + 2).toInt(16) xor ks.substring(i % 8, i % 8 + 2).toInt(16)
+                out.append(b.toChar())
+                i += 2
+            }
+            return String(out.toString().toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
+        }
+
         /** Homepage row; maps to the live listing page. */
         val ROWS = listOf("Son Eklenen Filmler", "Aile", "Aksiyon", "Animasyon", "Belgesel",
             "Bilim Kurgu", "Dram", "Fantastik", "Gerilim", "Gizem")

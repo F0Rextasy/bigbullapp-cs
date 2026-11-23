@@ -1,4 +1,4 @@
-// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.22"}
+// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.23"}
 /**
  * hdfilmcehennemi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /search/?q= JSON -> film page -> hdfilmcehennemi.mobi embed
@@ -426,16 +426,107 @@ function embedHeaders(embed) {
     Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     "Sec-Fetch-Dest": "iframe",
     "Sec-Fetch-Mode": "navigate",
-    "Sec-Fetch-Site": "cross-site",
+    "Sec-Fetch-Site": origin(embed.url) === BASE ? "same-origin" : "cross-site",
   };
 }
+function knHash(s) {
+  var h = 2166136261;
+  for (var r = 0; r < 3; r++) {
+    for (var i = 0; i < s.length; i++) {
+      h = (h ^ s.charCodeAt(i)) >>> 0;
+      h = (h + (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24)) >>> 0;
+    }
+  }
+  var hex = (h >>> 0).toString(16);
+  while (hex.length < 8) hex = "0" + hex;
+  return hex.slice(-8);
+}
+function knDecode(hex, n, p) {
+  var raw = "";
+  var ks = "";
+  for (var i = 0; i + 1 < hex.length; i += 2) {
+    if (i % 8 === 0) ks = knHash(n + "|" + (i / 8) + "|" + p);
+    var b = parseInt(hex.slice(i, i + 2), 16) ^ parseInt(ks.slice(i % 8, (i % 8) + 2), 16);
+    raw += String.fromCharCode(b);
+  }
+  var out = "";
+  for (var j = 0; j < raw.length; j++) {
+    var c = raw.charCodeAt(j);
+    if (c < 128) out += raw.charAt(j);
+    else if (c > 191 && c < 224 && j + 1 < raw.length) {
+      out += String.fromCharCode(((c & 31) << 6) | (raw.charCodeAt(++j) & 63));
+    } else if (c > 223 && j + 2 < raw.length) {
+      out += String.fromCharCode(((c & 15) << 12) | ((raw.charCodeAt(++j) & 63) << 6) | (raw.charCodeAt(++j) & 63));
+    }
+  }
+  return out;
+}
+function knStream(embedUrl, html) {
+  var org = origin(embedUrl);
+  var nj = /var n="([0-9a-f]+)",j="([0-9a-f]+)"/.exec(String(html || ""));
+  var hash = first(/hash:"([0-9a-f]+)",s:"g"/, html);
+  var path = first(/url:"(\/video\/embed\/[^"]+\/kn\/)"/, html);
+  var key = first(/var k="([0-9a-f]+)";function f\(/, unpackPacked(html));
+  if (!org || !nj || !hash || !path || !key) return Promise.resolve(null);
+  var n = nj[1];
+  var p = knHash(n + "|" + key + "|[object Window]|[object HTMLDocument]|function");
+  var body =
+    "hash=" + encodeURIComponent(hash) +
+    "&s=g&n=" + encodeURIComponent(n) +
+    "&j=" + encodeURIComponent(nj[2]) +
+    "&p=" + encodeURIComponent(p) +
+    "&d=1";
+  return text(org + path, {
+    method: "POST",
+    referer: embedUrl,
+    body: body,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+      Origin: org,
+      "X-Requested-With": "XMLHttpRequest",
+      Accept: "*/*",
+      "Sec-Fetch-Dest": "empty",
+      "Sec-Fetch-Mode": "cors",
+      "Sec-Fetch-Site": "same-origin",
+    },
+  })
+    .then(function (resp) {
+      var hex = String(resp || "").replace(/[^0-9a-f]/g, "");
+      if (hex.length < 16) return null;
+      var plain = knDecode(hex, n, p);
+      var idx = plain.indexOf("\n");
+      var url = (idx >= 0 ? plain.slice(0, idx) : plain).trim();
+      if (!/^https?:/i.test(url)) return null;
+      var subs = [];
+      if (idx >= 0) {
+        try {
+          var arr = JSON.parse(plain.slice(idx + 1));
+          for (var i = 0; i < (arr || []).length && subs.length < 4; i++) {
+            var t = arr[i];
+            if (!t || !/^https?:/i.test(String(t.file || ""))) continue;
+            var lbl = String(t.label || "Altyazı").trim();
+            var lang = /t[üu]rk/i.test(lbl) ? "tr" : /^english/i.test(lbl) ? "en" : lbl.slice(0, 2).toLowerCase();
+            subs.push({ url: t.file, language: lang, name: lbl + " [HDFilmCehennemi]" });
+          }
+        } catch (e) {}
+      }
+      if (!subs.length) subs = readSubtitles(html);
+      return pick([url], embedUrl, embedUrl, 0, subs);
+    })
+    .catch(function () { return null; });
+}
 function attempt(embed, html, tries) {
-  return pick(candidates(html, host(embed.url)), embed.url, embed.url, 0, readSubtitles(html)).then(function (rows) {
-    if ((rows && rows.length) || tries <= 1) return rows || [];
-    return text(embed.url, { referer: embed.referer, headers: embedHeaders(embed) }).then(function (fresh) {
-      return attempt(embed, fresh, tries - 1);
+  return knStream(embed.url, html)
+    .then(function (rows) {
+      if (rows && rows.length) return rows;
+      return pick(candidates(html, host(embed.url)), embed.url, embed.url, 0, readSubtitles(html));
+    })
+    .then(function (rows) {
+      if ((rows && rows.length) || tries <= 1) return rows || [];
+      return text(embed.url, { referer: embed.referer, headers: embedHeaders(embed) }).then(function (fresh) {
+        return attempt(embed, fresh, tries - 1);
+      });
     });
-  });
 }
 
 function getStreams(tmdbId, mediaType) {

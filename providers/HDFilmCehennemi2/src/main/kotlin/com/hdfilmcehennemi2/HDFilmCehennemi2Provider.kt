@@ -26,6 +26,7 @@ import com.lagradost.cloudstream3.newTvSeriesLoadResponse
 import com.lagradost.cloudstream3.newTvSeriesSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
+import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
@@ -189,15 +190,17 @@ class HDFilmCehennemi2Provider : MainAPI() {
             val path = href.substringAfter(mainUrl).substringBefore('?')
             if (path.contains("/admin/") || path.contains("/wp-admin/")) return@mapNotNull null
             if (!Regex("""(?:bolum|episode)""", RegexOption.IGNORE_CASE).containsMatchIn(path)) return@mapNotNull null
+            val seasonNum = Regex("""(?:sezon|season)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
             val number = Regex("""(?:sezon|season)[-_/]?(\d+).*?(?:bolum|episode)[-_/]?([0-9]*)""")
                 .find(path)?.groupValues?.getOrNull(2)?.toIntOrNull()
                 ?: Regex("""(?:bolum|episode)[-_/]?(\d+)""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
                 ?: Regex("""(\d+)[-_]bolum""").find(path)?.groupValues?.getOrNull(1)?.toIntOrNull()
             newEpisode(href) {
                 this.name = anchor.text().trim().ifBlank { "Bölüm $number" }
+                this.season = seasonNum
                 this.episode = number
             }
-        }.distinctBy { it.data }.sortedBy { it.episode ?: 0 }
+        }.distinctBy { it.data }.sortedWith(compareBy({ it.season ?: 0 }, { it.episode ?: 0 }))
         if (episodes.isNotEmpty()) {
             return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
@@ -228,21 +231,24 @@ class HDFilmCehennemi2Provider : MainAPI() {
         val text = resp.text.replace("\\/", "/").replace("\\\"", "\"")
         var found = false
         val seen = mutableSetOf<String>()
-        suspend fun emit(stream: String, label: String, referer: String) {
+        suspend fun emit(stream: String, label: String, referer: String, originHeader: String? = null) {
             if (!stream.startsWith("http") || !seen.add(stream)) return
             val type = if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
-            val quality = getQualityFromName(label)
+            val quality = if (type == ExtractorLinkType.M3U8) Qualities.Unknown.value else getQualityFromName(label)
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
                 this.referer = referer
                 this.quality = quality
+                this.headers = if (!originHeader.isNullOrBlank()) uaHeaders + mapOf("Origin" to originHeader) else uaHeaders
             })
             found = true
         }
         
         
         
-        loadAlpine(data, subtitleCallback) { stream, label, referer -> emit(stream, label, referer) }
+        loadAlpine(data, subtitleCallback) { stream, label, referer, originHeader ->
+            emit(stream, label, referer, originHeader)
+        }
 
         val known = listOf<String>()
         for (u in known) emit(u, "Site", if (u.contains("rumble.com")) "https://rumble.com/" else data)
@@ -300,13 +306,13 @@ class HDFilmCehennemi2Provider : MainAPI() {
     private suspend fun loadAlpine(
         data: String,
         subtitleCallback: (SubtitleFile) -> Unit,
-        emit: suspend (String, String, String) -> Unit,
+        emit: suspend (String, String, String, String?) -> Unit,
     ) {
         val page = runCatching { app.get(data, headers = uaHeaders).text }.getOrNull() ?: return
         val raw = Regex("""videoPlayerData\(JSON\.parse\('(.*?)'\)""", RegexOption.DOT_MATCHES_ALL)
             .find(page)?.groupValues?.get(1) ?: return
         val json = raw.replace("\\\\/", "/").replace("\\/", "/").replace("\\u0022", "\"")
-            .replace("\\u0027", "'").replace("\\'", "'")
+            .replace("\\u0027", "'").replace("\\u0026", "&").replace("\\'", "'")
         val root = runCatching { JSONObject(json) }.getOrNull() ?: return
         val keys = root.keys()
         while (keys.hasNext()) {
@@ -322,19 +328,49 @@ class HDFilmCehennemi2Provider : MainAPI() {
                 val src = Regex("""data-src="([^"]+)""").find(decoded)?.groupValues?.get(1)
                     ?.replace("{url}", link) ?: continue
                 val absolute = if (src.startsWith("//")) "https:$src" else src
-                val inner = runCatching {
-                    app.get(absolute, headers = uaHeaders, referer = data).text
-                        .replace("\\\\/", "/").replace("\\/", "/").replace("\\u0022", "\"")
+                val innerRaw = runCatching {
+                    app.get(
+                        absolute,
+                        headers = uaHeaders + mapOf(
+                            "Accept" to "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                            "Sec-Fetch-Dest" to "iframe",
+                            "Sec-Fetch-Mode" to "navigate",
+                            "Sec-Fetch-Site" to "cross-site",
+                        ),
+                        referer = data,
+                    ).text
                 }.getOrNull() ?: continue
-                val file = Regex("""\bfile\s*:\s*["'](https?://[^"']+?\.m3u8[^"']*)["']""")
-                    .find(inner)?.groupValues?.get(1) ?: continue
-                emit(file, item.optString("quality").ifBlank { "HDF" }, data)
-                Regex("""\bfile\s*:\s*["'](https?://[^"']+?\.(?:vtt|srt)[^"']*)["'][^}]*?["']label["']\s*:\s*["']([^"']+)""")
-                    .findAll(inner).forEach { track ->
-                        if (Settings.subtitleAllowed(track.groupValues[2])) {
-                            subtitleCallback.invoke(newSubtitleFile(track.groupValues[2], track.groupValues[1]))
+                val parsedJson = Regex("""JSON\.parse\('([^']+)'\)""").find(innerRaw)?.groupValues?.get(1)
+                    ?.replace("\\\\/", "/")?.replace("\\/", "/")
+                    ?.replace("\\u0022", "\"")?.replace("\\u0027", "'")?.replace("\\u0026", "&")
+                    ?.let { runCatching { JSONObject(it) }.getOrNull() }
+                val inner = innerRaw.replace("\\\\/", "/").replace("\\/", "/")
+                    .replace("\\u0022", "\"").replace("\\u0027", "'").replace("\\u0026", "&")
+                val file = parsedJson?.optString("file")?.takeIf { it.startsWith("http") }
+                    ?: Regex("""["']?file["']?\s*:\s*["'](https?://[^"']+?\.m3u8[^"']*)["']""")
+                        .find(inner)?.groupValues?.get(1)
+                    ?: continue
+                val embedOrigin = Regex("""^(https?://[^/]+)""").find(absolute)?.groupValues?.get(1)
+                val embedReferer = embedOrigin?.let { "$it/" } ?: data
+                emit(file, item.optString("quality").ifBlank { "HDF" }, embedReferer, embedOrigin)
+                val tracks = parsedJson?.optJSONArray("tracks")
+                if (tracks != null) {
+                    for (t in 0 until tracks.length()) {
+                        val tr = tracks.optJSONObject(t) ?: continue
+                        val trFile = tr.optString("file").takeIf { it.startsWith("http") } ?: continue
+                        val trLabel = tr.optString("label").ifBlank { "Altyazı" }
+                        if (Settings.subtitleAllowed(trLabel)) {
+                            subtitleCallback.invoke(newSubtitleFile(trLabel, trFile))
                         }
                     }
+                } else {
+                    Regex("""["']?file["']?\s*:\s*["'](https?://[^"']+?\.(?:vtt|srt)[^"']*)["'][^}]*?["']label["']\s*:\s*["']([^"']+)""")
+                        .findAll(inner).forEach { track ->
+                            if (Settings.subtitleAllowed(track.groupValues[2])) {
+                                subtitleCallback.invoke(newSubtitleFile(track.groupValues[2], track.groupValues[1]))
+                            }
+                        }
+                }
             }
         }
     }
