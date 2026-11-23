@@ -48,7 +48,6 @@ class TV2Provider : MainAPI() {
     override val mainPage get() = listOf(
         MainPageData("Diziler", "$mainUrl/diziler"),
         MainPageData("Filmler", "$mainUrl/filmler"),
-        MainPageData("Programlar", "$mainUrl/programlar"),
     ).filter { Settings.rowEnabled(it.name) }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
@@ -197,7 +196,7 @@ class TV2Provider : MainAPI() {
         if (path.startsWith("http")) path else service.trimEnd('/') + "/" + path.trimStart('/')
 
     companion object {
-        val ROWS = listOf("Diziler", "Filmler", "Programlar")
+        val ROWS = listOf("Diziler", "Filmler")
 
         private const val REPORT_HINT = "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
         private const val MAX_PAGES = 30
