@@ -156,7 +156,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `DDizimag` | ddizimag2.icu | Dizi | ✓ | — | — | — | — | ✓ |
 | `Deokwave` | deokwave.com | Anime | ✓ | — | — | — | — | ✓ |
 | `DiziAbi` | diziabi.net | Film | ✓ | — | — | — | — | ✓ |
-| `Dizibaba` | dizibaba.net | Film | — | — | — | — | — | — |
+| `Dizibaba` | dizibaba.icu | Film | — | — | — | — | — | — |
 | `DiziBal` | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |
 | `DiziBol` | dizibol.org | Dizi | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `DiziBoxTv` | diziboxtv.com | Dizi | ✓ | — | — | — | — | ✓ |
@@ -165,7 +165,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Dizifon` | dizifon.cc | Dizi | ✓ | — | — | — | — | ✓ |
 | `Dizigecesi` | dizigecesi.com | Film | — | — | — | — | — | — |
 | `Dizigom` | dizigom.news | Film | ✓ | — | — | — | — | ✓ |
-| `Diziizle` | diziizle.cloud | Dizi | — | — | ✓ | ✓ | — | ✓ |
+| `Diziizle` | diziizle2.icu | Dizi | — | — | ✓ | ✓ | — | ✓ |
 | `DiziKutusu` | dizikutusu.com | Dizi | ✓ | — | — | — | — | ✓ |
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi87.life | Dizi/Film | ✓ | ✓ | — | — | film | ✓ |
@@ -174,7 +174,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Dizirella` | dizirella.one | Dizi | ✓ | — | — | — | — | ✓ |
 | `DiziSol` | dizisol.com | Film/Dizi | — | — | — | — | — | ✓ |
 | `Dizist` | dizist.live | Dizi | ✓ | — | — | ✓ | — | ✓ |
-| `DiziYou` | diziyou.one | Dizi | ✓ | — | ✓ | — | — | ✓ |
+| `DiziYou` | diziyou.love | Dizi | ✓ | — | ✓ | — | — | ✓ |
 | `Diziasia` | diziasia.com | Asya dizi | ✓ | ✓ | — | — | — | — |
 | `Dizibox` | dizibox.live | Dizi | ✓ | — | ✓ | — | — | ✓ |
 | `DiziboxIzle` | diziboxizle.com | Dizi | ✓ | — | ✓ | — | — | ✓ |

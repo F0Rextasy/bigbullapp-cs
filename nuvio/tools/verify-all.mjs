@@ -32,10 +32,18 @@ const testProvider = argv.includes("--test-provider");
 const only = argv.find((a, i) => !a.startsWith("--") && (jobsAt < 0 || i !== jobsAt + 1));
 const curlBin = process.platform === "win32" ? "curl.exe" : "curl";
 
+function defaultBotDir() {
+  if (process.env.BIGBULL_BOT_DIR) return process.env.BIGBULL_BOT_DIR;
+  if (process.env.BIGBULL_CF_CURL) return path.dirname(process.env.BIGBULL_CF_CURL);
+  const home = process.env.USERPROFILE || process.env.HOME || "";
+  return home ? path.join(home, ".omp", "local", "bigbull-bot") : "";
+}
+
 /** Clearance exported by the bot's solver (`cf_browser.remember_curl`) for blocked hosts. */
 function cfState(host) {
   try {
-    const file = process.env.BIGBULL_CF_CURL;
+    const botDir = defaultBotDir();
+    const file = process.env.BIGBULL_CF_CURL || (botDir ? path.join(botDir, "cf-curl.json") : "");
     if (!file || !fs.existsSync(file)) return null;
     const data = JSON.parse(fs.readFileSync(file, "utf8"));
     const key = String(host || "").toLowerCase();
@@ -50,6 +58,55 @@ function cfState(host) {
       return entry;
     }
     return null;
+  } catch {
+    return null;
+  }
+}
+
+function solverToken() {
+  const envTok = (process.env.BIGBULL_CF_SOLVER_TOKEN || "").trim();
+  if (envTok) return envTok;
+  const botDir = defaultBotDir();
+  if (!botDir) return "";
+  try {
+    const tokFile = path.join(botDir, ".cf-solver.token");
+    if (fs.existsSync(tokFile)) return fs.readFileSync(tokFile, "utf8").trim();
+  } catch {}
+  return "";
+}
+
+async function solverFetchFallback(url, options = {}) {
+  const base = (process.env.BIGBULL_CF_SOLVER || "http://127.0.0.1:8159").trim();
+  if (!base.startsWith("http://127.0.0.1") && !base.startsWith("http://localhost")) return null;
+  try {
+    const tok = solverToken();
+    const reqHeaders = { "Content-Type": "application/json" };
+    if (tok) reqHeaders["X-BigBull-Solver-Token"] = tok;
+    const res = await fetch(`${base}/fetch`, {
+      method: "POST",
+      headers: reqHeaders,
+      body: JSON.stringify({
+        url: String(url),
+        method: options.method || "GET",
+        headers: options.headers || {},
+        body: options.body != null ? String(options.body) : undefined,
+      }),
+      signal: AbortSignal.timeout(35000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const status = Number(data.status) || 0;
+    if (status < 200 || status >= 400) return null;
+    const body = String(data.body || "");
+    const headers = makeHeaders("Content-Type: text/html; charset=utf-8");
+    return {
+      ok: status >= 200 && status < 300,
+      status,
+      url: String(data.url || url),
+      headers,
+      text: async () => body,
+      json: async () => JSON.parse(body),
+    };
   } catch {
     return null;
   }
@@ -110,17 +167,19 @@ async function curlFallback(url, options = {}) {
     const idx = raw.lastIndexOf("\n__HTTP_STATUS__:");
     const status = idx >= 0 ? Number(raw.slice(idx + 17).trim()) || 0 : 200;
     const body = idx >= 0 ? raw.slice(0, idx) : raw;
-    if (status < 200 || status >= 400) return null;
-    return {
-      ok: status >= 200 && status < 300,
-      status,
-      url: String(url),
-      headers,
-      text: async () => body,
-      json: async () => JSON.parse(body),
-    };
+    if (status >= 200 && status < 400) {
+      return {
+        ok: status >= 200 && status < 300,
+        status,
+        url: String(url),
+        headers,
+        text: async () => body,
+        json: async () => JSON.parse(body),
+      };
+    }
+    return await solverFetchFallback(url, options);
   } catch {
-    return null;
+    return await solverFetchFallback(url, options);
   } finally {
     try { fs.unlinkSync(hdrFile); } catch {}
   }
@@ -340,7 +399,7 @@ export async function fetchWithDpi(url, options = {}, signal = null) {
       res = await dpiFetch(url, reqOpts);
     }
   }
-  if (res.status === 403) {
+  if (res.status === 403 || res.status === 503) {
     const viaCurl = await curlFallback(url, options);
     if (viaCurl) return viaCurl;
   }

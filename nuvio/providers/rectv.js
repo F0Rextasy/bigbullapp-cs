@@ -1,4 +1,4 @@
-// @provider {"id":"rectv", "name":"RecTV", "types":["movie", "tv"], "domain":"rectv.org.tr", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"RecTV imzalı resmî API film ve dizi kataloğu (attest/nonce + HMAC-SHA256; arama ve sezon/bölüm uçları, token'lı m3u8).", "verified":true, "version":"1.0.7"}
+// @provider {"id":"rectv", "name":"RecTV", "types":["movie", "tv"], "domain":"a.psrectv80.xyz", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"RecTV imzalı resmî API film ve dizi kataloğu (attest/nonce + HMAC-SHA256; arama ve sezon/bölüm uçları, token'lı m3u8).", "verified":true, "version":"1.0.8"}
 var CFG = {
   id: "rectv",
   name: "RecTV",

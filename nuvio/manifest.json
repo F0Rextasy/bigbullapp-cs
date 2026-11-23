@@ -455,7 +455,7 @@
       "id": "rectv",
       "name": "RecTV",
       "description": "RecTV imzalı resmî API film ve dizi kataloğu (attest/nonce + HMAC-SHA256; arama ve sezon/bölüm uçları, token'lı m3u8).",
-      "version": "1.0.7",
+      "version": "1.0.8",
       "author": "bigbull",
       "supportedTypes": [
         "movie",
@@ -466,7 +466,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=rectv.org.tr&sz=128",
+      "logo": "https://www.google.com/s2/favicons?domain=a.psrectv80.xyz&sz=128",
       "contentLanguage": [
         "tr"
       ]
