@@ -165,16 +165,37 @@ class DramaDizilerimProvider : MainAPI() {
                 ).text,
             )
         }.getOrNull() ?: throw ErrorLoadingException("$name: oynatıcı yanıtı okunamadı. $REPORT_HINT")
-        val stream = fixUrlNull(playback.optString("url"))
-            ?: fixUrlNull(playback.optString("compatibilityUrl"))
-            ?: throw ErrorLoadingException("$name: oynatılabilir akış yok. $REPORT_HINT")
-        val quality = qualityOf(stream)
+        val candidates = buildList {
+            fixUrlNull(playback.optString("url"))?.let(::add)
+            fixUrlNull(playback.optString("compatibilityUrl"))?.let(::add)
+            val fb = playback.optJSONArray("fallbackUrls")
+            if (fb != null) {
+                for (i in 0 until fb.length()) {
+                    fixUrlNull(fb.optString(i))?.let(::add)
+                }
+            }
+        }.distinct()
+        var stream: String? = null
+        var lastCode = 0
+        for (cand in candidates) {
+            val code = runCatching {
+                app.get(cand, headers = uaHeaders + mapOf("Range" to "bytes=0-0"), referer = pageUrl).code
+            }.getOrDefault(0)
+            lastCode = code
+            if (code in 200..299) {
+                stream = cand
+                break
+            }
+        }
+        val finalStream = stream
+            ?: throw ErrorLoadingException("$name: oynatılabilir akış yok (HTTP $lastCode). $REPORT_HINT")
+        val quality = qualityOf(finalStream)
         if (!Settings.qualityAllowed(quality)) {
             throw ErrorLoadingException("$name: akış kalite sınırının üstünde. $REPORT_HINT")
         }
-        val isHls = playback.optString("kind").contains("hls", true) || stream.contains(".m3u8")
+        val isHls = playback.optString("kind").contains("hls", true) || finalStream.contains(".m3u8")
         callback.invoke(
-            newExtractorLink(name, if (quality > 0) "${quality}p" else "Otomatik", stream,
+            newExtractorLink(name, if (quality > 0) "${quality}p" else "Otomatik", finalStream,
                 if (isHls) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO) {
                 this.referer = pageUrl
                 this.headers = uaHeaders

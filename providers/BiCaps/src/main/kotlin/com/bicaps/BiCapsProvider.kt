@@ -118,7 +118,14 @@ class BiCapsProvider : MainAPI() {
         }
         val subtitleFilter: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback.invoke(it) }
 
-        for (source in sources(html)) {
+        val ordered = sources(html).sortedBy { s ->
+            when {
+                s.url.contains("/biplayer/embed2.php") -> 0
+                s.url.contains("/biplayer/vid/") -> 2
+                else -> 1
+            }
+        }
+        for (source in ordered) {
             val label = source.label + when (source.lang) {
                 "tra" -> " · Altyazılı"
                 "trd" -> " · Dublaj"
@@ -210,10 +217,14 @@ class BiCapsProvider : MainAPI() {
         seen: MutableSet<String>,
         emit: (ExtractorLink) -> Unit,
     ) {
-        val playlist = runCatching { app.get(stream, headers = browserHeaders, referer = referer).text }.getOrNull()
-        val variants = playlist?.let { parseHlsVariants(stream, it) }.orEmpty()
+        val resp = runCatching { app.get(stream, headers = browserHeaders, referer = referer) }.getOrNull() ?: return
+        if (resp.code !in 200..299) return
+        val playlist = resp.text
+        val variants = parseHlsVariants(stream, playlist)
         if (variants.isEmpty()) {
-            if (seen.add(stream)) emit.invoke(newExtractorLink(name, label, stream, ExtractorLinkType.M3U8) {
+            if (!playlist.contains("#EXTM3U") && !stream.contains(".mp4", ignoreCase = true)) return
+            val linkType = if (stream.contains(".mp4", ignoreCase = true)) ExtractorLinkType.VIDEO else ExtractorLinkType.M3U8
+            if (seen.add(stream)) emit.invoke(newExtractorLink(name, label, stream, linkType) {
                 this.referer = referer
                 this.quality = Qualities.Unknown.value
             })

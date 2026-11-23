@@ -251,17 +251,30 @@ class CizgimaxProvider : MainAPI() {
                                 )
                             }
                         } else {
-                            emit(
-                                newExtractorLink(
-                                    name,
-                                    label,
-                                    fixUrl(streamUrl),
-                                    if (isMp4) ExtractorLinkType.VIDEO else ExtractorLinkType.M3U8,
-                                ) {
-                                    referer = data
-                                    quality = getQualityFromName(label)
-                                }
-                            )
+                            val absStream = fixUrl(streamUrl)
+                            val probeOk = if (isMp4) {
+                                runCatching {
+                                    app.get(absStream, referer = data, headers = uaHeaders + mapOf("Range" to "bytes=0-0")).code in 200..299
+                                }.getOrDefault(false)
+                            } else {
+                                runCatching {
+                                    val r = app.get(absStream, referer = data, headers = uaHeaders)
+                                    r.code in 200..299 && r.text.contains("#EXTM3U")
+                                }.getOrDefault(false)
+                            }
+                            if (probeOk) {
+                                emit(
+                                    newExtractorLink(
+                                        name,
+                                        label,
+                                        absStream,
+                                        if (isMp4) ExtractorLinkType.VIDEO else ExtractorLinkType.M3U8,
+                                    ) {
+                                        referer = data
+                                        quality = getQualityFromName(label)
+                                    }
+                                )
+                            }
                         }
                     }
 
@@ -275,7 +288,12 @@ class CizgimaxProvider : MainAPI() {
                             val h = app.get(fixUrl(src), referer = data, allowRedirects = false, headers = uaHeaders).headers
                             (h["location"] ?: h["Location"])?.let { absolute(it) }
                         }
-                        if (!embed.isNullOrBlank()) loadExtractor(embed, data, subtitleFilter, emit)
+                        if (!embed.isNullOrBlank()) {
+                            com.bigbull.common.loadCommonEmbed(
+                                name, mainUrl, embed, data,
+                                subtitleCallback = subtitleFilter, callback = emit,
+                            )
+                        }
                     }
 
                     resolveUrl.isNotBlank() -> {

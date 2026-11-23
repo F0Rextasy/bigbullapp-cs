@@ -180,10 +180,16 @@ class DiziAbiProvider : MainAPI() {
         val text = resp.text.replace("\\/", "/").replace("\\\"", "\"")
         var found = false
         val seen = mutableSetOf<String>()
-        suspend fun emit(stream: String, label: String, referer: String, forcedQuality: Int? = null) {
+        suspend fun emit(
+            stream: String,
+            label: String,
+            referer: String,
+            forcedQuality: Int? = null,
+            forcedType: ExtractorLinkType? = null,
+        ) {
             val quality = forcedQuality ?: getQualityFromName(label)
             if (!stream.startsWith("http") || !seen.add("$quality|$stream")) return
-            val type = if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+            val type = forcedType ?: if (stream.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
             if (!Settings.qualityAllowed(quality)) return
             callback.invoke(newExtractorLink(name, label, stream, type) {
                 this.referer = referer
@@ -207,10 +213,10 @@ class DiziAbiProvider : MainAPI() {
                 val stream = cfg.optString("stream").orEmpty()
                 val baseLabel = if (pvs.size > 1) "Pilavyer ${idx + 1}" else "Pilavyer"
                 if (stream.startsWith("http")) {
-                    emit(stream, baseLabel, refUrl, forcedQuality = 0)
+                    emit(stream, baseLabel, refUrl, forcedQuality = 0, forcedType = ExtractorLinkType.M3U8)
                     val masterText = runCatching { app.get(stream, headers = uaHeaders, referer = refUrl).text }.getOrNull().orEmpty()
                     for ((h, variantUrl) in parseHlsVariants(stream, masterText)) {
-                        emit(variantUrl, "$baseLabel • ${h}p", refUrl, forcedQuality = h)
+                        emit(variantUrl, "$baseLabel • ${h}p", refUrl, forcedQuality = h, forcedType = ExtractorLinkType.M3U8)
                     }
                     val subs = cfg.optJSONArray("subs")
                     for (i in 0 until (subs?.length() ?: 0)) {

@@ -158,9 +158,20 @@ class WebteIzleProvider : MainAPI() {
                 ).text
             }.getOrNull() ?: continue
             val rows = runCatching { JSONObject(body).optJSONArray("data") }.getOrNull() ?: continue
+            val sortedRows = (0 until rows.length()).mapNotNull { rows.optJSONObject(it) }
+                .sortedBy {
+                    when (it.optString("baslik").trim().lowercase()) {
+                        "vidmoly" -> 0
+                        "sruby", "streamruby" -> 1
+                        "ok.ru", "okru" -> 2
+                        "mail.ru", "mailru" -> 3
+                        "filemoon" -> 4
+                        "pixel" -> 6
+                        else -> 5
+                    }
+                }
 
-            for (i in 0 until rows.length()) {
-                val row = rows.optJSONObject(i) ?: continue
+            for (row in sortedRows) {
                 val rowId = row.optString("id").trim()
                 val provider = row.optString("baslik").trim()
                 if (rowId.isBlank() || provider.isBlank()) continue
@@ -221,10 +232,19 @@ class WebteIzleProvider : MainAPI() {
                 // Site protokol-göreli iframe yazıyor ("//vidmoly.net/embed-x.html").
                 val src = if (raw.startsWith("//")) "https:$raw" else raw
                 if (src.contains("vidmoly") && resolveVidmoly(src, label, callback)) return true
-                return loadExtractor(src, referer, subtitleCallback, callback)
+                return com.bigbull.common.loadCommonEmbed(
+                    name, mainUrl, src, referer,
+                    subtitleCallback = subtitleCallback, callback = callback,
+                )
             }
 
         VID_URL.find(html)?.groupValues?.get(1)?.trim()?.takeIf { it.isNotBlank() }?.let { url ->
+            if (url.contains("pixeldrain.com", ignoreCase = true)) {
+                val code = runCatching {
+                    app.get(url, headers = uaHeaders + mapOf("Range" to "bytes=0-0")).code
+                }.getOrDefault(0)
+                if (code !in 200..299) return false
+            }
             callback(
                 newExtractorLink(name, label, url, ExtractorLinkType.VIDEO) {
                     this.referer = referer
@@ -258,7 +278,10 @@ class WebteIzleProvider : MainAPI() {
             "sruby" -> "https://streamruby.com/$arg.html"
             else -> return false
         }
-        return loadExtractor(url, referer, subtitleCallback, callback)
+        return com.bigbull.common.loadCommonEmbed(
+            name, mainUrl, url, referer,
+            subtitleCallback = subtitleCallback, callback = callback,
+        )
     }
 
     private suspend fun resolveVidmoly(embed: String, label: String, callback: (ExtractorLink) -> Unit): Boolean {

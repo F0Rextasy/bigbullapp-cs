@@ -170,31 +170,37 @@ class FilmKovasiProvider : MainAPI() {
 
     /** ok.ru/odnoklassniki gömme kabuğu; aynı kimliğe videoPlayerMetadata `videos` dizisini verir. */
     private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
-        val videos = com.bigbull.common.fetchOkRuMetadata(embed, userAgent = ANDROID_UA)
+        val ua = browserHeaders.getValue("user-agent")
+        val videos = com.bigbull.common.fetchOkRuMetadata(embed, userAgent = ua)
             ?.optJSONArray("videos") ?: return false
 
-        var found = false
-        for (i in 0 until videos.length()) {
-            val item = videos.optJSONObject(i) ?: continue
-            val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
-            val quality = when (item.optString("name").lowercase()) {
-                "mobile", "lowest" -> 240
+        val parsed = (0 until videos.length()).mapNotNull { i ->
+            val item = videos.optJSONObject(i) ?: return@mapNotNull null
+            val bucket = item.optString("name").lowercase()
+            if (bucket == "mobile") return@mapNotNull null
+            val stream = item.optString("url").takeIf { it.startsWith("http") } ?: return@mapNotNull null
+            val quality = when (bucket) {
+                "lowest" -> 240
                 "low" -> 360
                 "sd" -> 480
                 "hd" -> 720
                 "full" -> 1080
-                else -> getQualityFromName(item.optString("name").uppercase())
+                else -> getQualityFromName(bucket.uppercase())
             }
-            if (!Settings.qualityAllowed(quality)) continue
+            if (!Settings.qualityAllowed(quality)) return@mapNotNull null
+            quality to stream
+        }.sortedByDescending { it.first }
+
+        for ((quality, stream) in parsed) {
             callback.invoke(
                 newExtractorLink(name, "$name • Ok.Ru", stream, ExtractorLinkType.VIDEO) {
                     this.referer = "https://ok.ru/"
+                    this.headers = mapOf("User-Agent" to ua)
                     this.quality = quality
                 }
             )
-            found = true
         }
-        return found
+        return parsed.isNotEmpty()
     }
 
     /** my.mail.ru gömme kabuğu: `/+/video/meta/<id>` `videos[]` mp4 URL'lerini verir. */
@@ -270,7 +276,6 @@ class FilmKovasiProvider : MainAPI() {
 
         private const val CARD = "#listehizala .movie-box"
         private const val PAGE_SIZE = 20
-        private const val ANDROID_UA = "Mozilla/5.0 (Linux; Android 13)"
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
 

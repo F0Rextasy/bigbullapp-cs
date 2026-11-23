@@ -281,20 +281,36 @@ class HDFilmDiziIzleProvider : MainAPI() {
                     }
                     continue
                 }
-                if (loadExtractor(target, data, Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback))) {
+                if (com.bigbull.common.loadCommonEmbed(
+                        name, mainUrl, target, data,
+                        subtitleCallback = Settings.filterSubtitles(subtitleCallback),
+                        callback = Settings.filterLinks(callback),
+                    )
+                ) {
                     found = true
                     continue
                 }
+                val embedRef = if (target.contains("player=vidmoly", ignoreCase = true)) "https://vidmoly.net/" else target
                 for (m in Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""")
                     .findAll(innerHtml)) {
-                    emit(m.value, btnLabel, target)
+                    val mRef = if (m.value.contains("vmnow.") || m.value.contains("vmpx.") || m.value.contains("vmcld.")) {
+                        "https://vidmoly.net/"
+                    } else {
+                        embedRef
+                    }
+                    emit(m.value, btnLabel, mRef)
                 }
                 for (m in Regex("""["'](/[^"']+\.m3u8(?:\?[^"']*)?)["']""").findAll(innerHtml)) {
                     emit(fixUrl(m.groupValues[1]), btnLabel, target)
                 }
                 for (frame in inner.select("iframe[src]")) {
                     val sub = fixUrlNull(frame.attr("src")) ?: continue
-                    if (loadExtractor(sub, target, Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback))) found = true
+                    if (com.bigbull.common.loadCommonEmbed(
+                            name, mainUrl, sub, target,
+                            subtitleCallback = Settings.filterSubtitles(subtitleCallback),
+                            callback = Settings.filterLinks(callback),
+                        )
+                    ) found = true
                     val subDoc = runCatching { app.get(sub, headers = uaHeaders, referer = target).document }
                         .getOrNull() ?: continue
                     for (m in Regex("""["'](/[^"']+\.m3u8(?:\?[^"']*)?)["']""").findAll(subDoc.outerHtml())) {

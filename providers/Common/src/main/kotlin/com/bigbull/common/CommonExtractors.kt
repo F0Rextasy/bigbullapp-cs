@@ -5,6 +5,7 @@ import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
+import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import java.net.URI
@@ -542,6 +543,44 @@ suspend fun loadCommonEmbedWithHints(
                 },
             )
             return true
+        }
+        val okUa = reqHeaders["User-Agent"] ?: EMBED_UA.getValue("User-Agent")
+        if (emitOkRuVideos(u, labelPrefix = "$sourceName [Ok.ru]", userAgent = okUa, headers = reqHeaders, callback = callback)) {
+            return true
+        }
+    }
+
+    if (u.contains("my.mail.ru", ignoreCase = true)) {
+        val mailId = Regex("""/video/embed/(\d+)""").find(u)?.groupValues?.get(1).orEmpty()
+        if (mailId.isNotEmpty()) {
+            val metaBody = runCatching {
+                app.get(
+                    "https://my.mail.ru/+/video/meta/$mailId",
+                    referer = "https://my.mail.ru/video/embed/$mailId",
+                    headers = reqHeaders,
+                ).text
+            }.getOrNull().orEmpty()
+            val videos = runCatching { JSONObject(metaBody).optJSONArray("videos") }.getOrNull()
+            if (videos != null) {
+                val parsed = (0 until videos.length()).mapNotNull { idx ->
+                    val item = videos.optJSONObject(idx) ?: return@mapNotNull null
+                    val raw = item.optString("url").trim()
+                    val stream = if (raw.startsWith("//")) "https:$raw" else raw
+                    if (!stream.startsWith("http")) return@mapNotNull null
+                    val label = item.optString("key").ifBlank { "MailRu" }
+                    Triple(getQualityFromName(label.uppercase()), label, stream)
+                }.sortedByDescending { it.first }
+                for ((q, label, stream) in parsed) {
+                    callback(
+                        newExtractorLink(sourceName, "$sourceName [Mail.ru $label]", stream, ExtractorLinkType.VIDEO) {
+                            this.referer = "https://my.mail.ru/"
+                            this.quality = q
+                            this.headers = reqHeaders
+                        },
+                    )
+                }
+                if (parsed.isNotEmpty()) return true
+            }
         }
     }
 

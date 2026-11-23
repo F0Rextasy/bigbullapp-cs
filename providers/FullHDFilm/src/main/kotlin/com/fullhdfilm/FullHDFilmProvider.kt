@@ -132,17 +132,26 @@ class FullHDFilmProvider : MainAPI() {
     ): Boolean {
         val page = runCatching { app.get(data, headers = uaHeaders).document }.getOrNull()
             ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
-        val attribute = page.selectFirst("[data-video-player]")?.attr("x-data").orEmpty()
+        val attribute = page.selectFirst("[data-video-player], [x-data*=PlayerData]")?.attr("x-data").orEmpty()
+        val rawPayload = jsPayload(attribute, "PlayerData(JSON.parse('")
+            .ifEmpty { jsPayload(attribute, "JSON.parse('") }
         val videos = runCatching {
-            JSONObject(jsUnescape(jsPayload(attribute, "JSON.parse('")))
+            JSONObject(jsUnescape(rawPayload))
         }.getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
 
         var found = false
         for (language in videos.keys()) {
             val label = languageLabel(language)
-            val items = videos.optJSONArray(language) ?: continue
-            for (i in 0 until items.length()) {
-                val item = items.optJSONObject(i) ?: continue
+            val arr = videos.optJSONArray(language) ?: continue
+            val orderedItems = (0 until arr.length()).mapNotNull { arr.optJSONObject(it) }
+                .sortedBy {
+                    when (it.optString("service_slug").lowercase()) {
+                        "vip" -> 0
+                        "vidlop" -> 1
+                        else -> 2
+                    }
+                }
+            for (item in orderedItems) {
                 val template = runCatching {
                     String(Base64.decode(item.optString("template"), Base64.DEFAULT), Charsets.UTF_8)
                 }.getOrNull() ?: continue
@@ -155,10 +164,20 @@ class FullHDFilmProvider : MainAPI() {
                 // hdload.top only answers with a site referer.
                 val embedDoc = runCatching {
                     app.get(embed, headers = uaHeaders + ("Referer" to data)).text
-                }.getOrNull() ?: continue
+                }.getOrNull().orEmpty()
                 val config = runCatching {
                     JSONObject(jsUnescape(jsPayload(embedDoc, "setup(JSON.parse('")))
-                }.getOrNull() ?: continue
+                }.getOrNull()
+                if (config == null) {
+                    if (com.bigbull.common.loadCommonEmbed(
+                            name, mainUrl, embed, data,
+                            subtitleCallback = subtitleCallback, callback = callback,
+                        )
+                    ) {
+                        found = true
+                    }
+                    continue
+                }
                 val stream = config.optString("file").takeIf { it.isNotBlank() } ?: continue
                 val quality = Qualities.Unknown.value
 

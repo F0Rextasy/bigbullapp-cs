@@ -131,7 +131,10 @@ class AnimeTRProvider : MainAPI() {
                         embed.contains("drive.google.com/file/d/") -> loadGDrive(embed, linkCallback)
                         embed.contains("ok.ru/videoembed") || embed.contains("odnoklassniki.ru/videoembed") ->
                             loadOkRu(embed, label, linkCallback)
-                        else -> loadExtractor(embed, "$mainUrl/", subtitleFilter, linkCallback)
+                        else -> com.bigbull.common.loadCommonEmbed(
+                            name, mainUrl, embed, "$mainUrl/",
+                            subtitleCallback = subtitleFilter, callback = linkCallback,
+                        )
                     }
                 }.getOrDefault(false)
                 if (ok) found = true

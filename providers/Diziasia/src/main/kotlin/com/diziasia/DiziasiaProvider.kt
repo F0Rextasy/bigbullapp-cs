@@ -25,7 +25,6 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.INFER_TYPE
 import com.lagradost.cloudstream3.utils.Qualities
-import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -209,7 +208,10 @@ class DiziasiaProvider : MainAPI() {
             val ok = when {
                 embed.contains("ok.ru") || embed.contains("odnoklassniki") -> loadOkRu(embed, linkCallback)
                 embed.contains("vk.com/video_ext") || embed.contains("vkvideo.ru") -> loadVk(embed, linkCallback)
-                else -> loadExtractor(embed, "$mainUrl/", subtitleFilter, linkCallback)
+                else -> com.bigbull.common.loadCommonEmbed(
+                    name, mainUrl, embed, "$mainUrl/",
+                    subtitleCallback = subtitleFilter, callback = linkCallback,
+                )
             }
             if (ok) found = true
         }

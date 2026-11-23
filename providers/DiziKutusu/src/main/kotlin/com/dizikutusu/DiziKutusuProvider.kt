@@ -175,29 +175,36 @@ class DiziKutusuProvider : MainAPI() {
         return true
     }
 
-    /** ok.ru/odnoklassniki videoembed player JSON'unu HTML-escape'ten çözer ve `videos` dizisini okur. */
+    /** ok.ru/odnoklassniki videoembed player JSON'unu HTML-escape'ten çözer ve `videos` dizisini doğrudan MP4 olarak verir. */
     private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
         val url = embed.replace("odnoklassniki.ru", "ok.ru")
+        val ua = browserHeaders.getValue("user-agent")
         val body = runCatching { app.get(url, referer = "$mainUrl/", headers = uaHeaders).text }
             .getOrNull()?.replace("&quot;", "\"") ?: return false
         val array = Regex(""""videos"\s*:\s*(\[.*?])""", RegexOption.DOT_MATCHES_ALL)
             .find(body)?.groupValues?.get(1) ?: return false
         val videos = runCatching { JSONArray(array) }.getOrNull() ?: return false
 
-        var found = false
-        for (i in 0 until videos.length()) {
-            val video = videos.optJSONObject(i) ?: continue
-            val stream = video.optString("url")
-            if (stream.isBlank()) continue
+        val parsed = (0 until videos.length()).mapNotNull { i ->
+            val video = videos.optJSONObject(i) ?: return@mapNotNull null
+            val bucket = video.optString("name").lowercase()
+            if (bucket == "mobile") return@mapNotNull null
+            val stream = video.optString("url").takeIf { it.startsWith("http") } ?: return@mapNotNull null
+            val quality = okRuQuality(bucket)
+            if (!Settings.qualityAllowed(quality)) return@mapNotNull null
+            quality to stream
+        }.sortedByDescending { it.first }
+
+        for ((quality, stream) in parsed) {
             callback.invoke(
-                newExtractorLink(name, "ok.ru", stream, ExtractorLinkType.M3U8) {
+                newExtractorLink(name, "ok.ru", stream, ExtractorLinkType.VIDEO) {
                     this.referer = "https://ok.ru/"
-                    this.quality = okRuQuality(video.optString("name"))
+                    this.headers = mapOf("User-Agent" to ua)
+                    this.quality = quality
                 }
             )
-            found = true
         }
-        return found
+        return parsed.isNotEmpty()
     }
 
     /** vk.com embed'i anonim `access_token` taşır; `video.getEmbed` mp4_* ve hls dosyalarını JSON döner. */

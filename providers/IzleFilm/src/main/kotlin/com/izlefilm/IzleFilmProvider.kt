@@ -154,7 +154,7 @@ class IzleFilmProvider : MainAPI() {
             app.post(
                 "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
                 data = emptyMap(),
-                headers = mapOf("Referer" to "https://ok.ru/"),
+                headers = mapOf("Referer" to "https://ok.ru/", "user-agent" to browserHeaders.getValue("user-agent")),
             ).text
         }.getOrNull() ?: return false
         val json = runCatching { JSONObject(body) }.getOrNull() ?: return false
@@ -164,13 +164,12 @@ class IzleFilmProvider : MainAPI() {
         // beklediği için cihazda açılmayabiliyor; mp4 yedeği her zaman çalışıyor.
         val hls = json.optString("hlsManifestUrl").takeIf { it.isNotBlank() }
         val videos = json.optJSONArray("videos") ?: JSONArray()
-        var found = false
-        for (index in 0 until videos.length()) {
-            val video = videos.optJSONObject(index) ?: continue
-            val stream = video.optString("url").takeIf { it.isNotBlank() } ?: continue
-            val bucket = video.optString("name")
-            val quality = when (bucket.lowercase()) {
-                "mobile" -> 144
+        val parsed = (0 until videos.length()).mapNotNull { index ->
+            val video = videos.optJSONObject(index) ?: return@mapNotNull null
+            val bucket = video.optString("name").lowercase()
+            if (bucket == "mobile") return@mapNotNull null
+            val stream = video.optString("url").takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            val quality = when (bucket) {
                 "lowest" -> 240
                 "low" -> 360
                 "sd" -> 480
@@ -178,7 +177,11 @@ class IzleFilmProvider : MainAPI() {
                 "full" -> 1080
                 else -> Qualities.Unknown.value
             }
-            if (!Settings.qualityAllowed(quality)) continue
+            if (!Settings.qualityAllowed(quality)) return@mapNotNull null
+            Triple(quality, bucket, stream)
+        }.sortedByDescending { it.first }
+        var found = false
+        for ((quality, bucket, stream) in parsed) {
             found = true
             callback.invoke(
                 newExtractorLink(
