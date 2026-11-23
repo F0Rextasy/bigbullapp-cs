@@ -35,82 +35,154 @@ class HDFilmCehennemiProvider : MainAPI() {
     override var mainUrl = "https://www.hdfilmcehennemi.nl"
     private val uaHeaders get() = browserHeaders
     private val killer = CloudflareKiller()
-    private val cfQueue = ArrayDeque<kotlin.coroutines.Continuation<Unit>>()
-    private var cfLocked = false
-    @Volatile
-    private var cfWarmed = false
     private val posterHdrs get() = uaHeaders + mapOf("Referer" to "$mainUrl/") + killer.getCookieHeaders(mainUrl).toMap()
-
-    /** Paralel ana sayfa isteklerinde tek WebView açılması için ilk Cloudflare geçişini sıraya alır. */
-    private suspend fun getWithCf(
-        url: String,
-        headers: Map<String, String> = uaHeaders,
-        referer: String? = null,
-    ) = if (cfWarmed) {
-        app.get(url, referer = referer, headers = headers, interceptor = killer)
-    } else {
-        while (!cfWarmed) {
-            val acquired = synchronized(cfQueue) {
-                if (!cfLocked) {
-                    cfLocked = true
-                    true
-                } else {
-                    false
-                }
-            }
-            if (acquired) break
-            kotlin.coroutines.suspendCoroutine<Unit> { cont ->
-                val resumeNow = synchronized(cfQueue) {
-                    if (!cfLocked || cfWarmed) {
-                        true
-                    } else {
-                        cfQueue.addLast(cont)
-                        false
-                    }
-                }
-                if (resumeNow) cont.resumeWith(Result.success(Unit))
-            }
-        }
-        if (cfWarmed) {
-            app.get(url, referer = referer, headers = headers, interceptor = killer)
-        } else {
-            try {
-                app.get(url, referer = referer, headers = headers, interceptor = killer).also {
-                    cfWarmed = true
-                }
-            } finally {
-                val waiters = synchronized(cfQueue) {
-                    cfLocked = false
-                    if (cfWarmed) cfQueue.toList().also { cfQueue.clear() }
-                    else listOfNotNull(cfQueue.removeFirstOrNull())
-                }
-                waiters.forEach { it.resumeWith(Result.success(Unit)) }
-            }
-        }
-    }
     override var name = "HDFilmCehennemi"
     override var lang = "tr"
     override val hasMainPage = true
     override val mainPage get() = ROWS.mapNotNull { name ->
         if (!Settings.rowEnabled(name)) return@mapNotNull null
         when (name) {
-            "Son Eklenen Filmler" -> MainPageData(name, "$mainUrl/")
-            "Aile" -> MainPageData(name, "$mainUrl/tur/aile-filmleri-izleyin-7/")
-            "Aksiyon" -> MainPageData(name, "$mainUrl/tur/aksiyon-filmleri-izleyin-9/")
-            "Animasyon" -> MainPageData(name, "$mainUrl/tur/animasyon-filmlerini-izleyin-5/")
-            "Belgesel" -> MainPageData(name, "$mainUrl/tur/belgesel-filmlerini-izle-2/")
-            "Bilim Kurgu" -> MainPageData(name, "$mainUrl/tur/bilim-kurgu-filmlerini-izleyin-7/")
-            "Dram" -> MainPageData(name, "$mainUrl/tur/dram-filmlerini-izle-3/")
-            "Fantastik" -> MainPageData(name, "$mainUrl/tur/fantastik-filmlerini-izleyin-5/")
-            "Gerilim" -> MainPageData(name, "$mainUrl/tur/gerilim-filmlerini-izle-5/")
-            "Gizem" -> MainPageData(name, "$mainUrl/tur/gizem-filmleri-izle-6/")
+            "Son Eklenen Filmler" -> MainPageData(name, "home")
+            "Aile" -> MainPageData(name, "genres/aile-filmleri-izleyin-11")
+            "Aksiyon" -> MainPageData(name, "genres/aksiyon-filmleri-izleyin-9")
+            "Animasyon" -> MainPageData(name, "genres/animasyon-filmlerini-izleyin-5")
+            "Belgesel" -> MainPageData(name, "genres/belgesel-filmlerini-izle-2")
+            "Bilim Kurgu" -> MainPageData(name, "genres/bilim-kurgu-filmlerini-izleyin-9")
+            "Dram" -> MainPageData(name, "genres/dram-filmlerini-izle-4")
+            "Fantastik" -> MainPageData(name, "genres/fantastik-filmlerini-izleyin-9")
+            "Gerilim" -> MainPageData(name, "genres/gerilim-filmlerini-izle-5")
+            "Gizem" -> MainPageData(name, "genres/gizem-filmleri-izle-9")
             else -> null
         }
     }
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
 
+    /**
+     * OkHttp TLS parmak izi HTML sayfalarında 403 alırken Android Chromium WebView (BoringSSL)
+     * challenge olmadan doğrudan 200 alır ama `cf_clearance` çerezi oluşmadığı için
+     * CloudflareKiller 60 sn bekleyip 403 döner. Bu yardımcı önce OkHttp dener, 403 gelirse
+     * doğrudan WebView DOM'undan HTML'i (~1.5 sn) okur.
+     */
+    private fun isValidDoc(d: org.jsoup.nodes.Document): Boolean {
+        val h1Text = d.selectFirst("h1")?.text().orEmpty()
+        if (h1Text.contains("desteklenmiyor", ignoreCase = true)) return false
+        return h1Text.isNotBlank() || d.select("button[data-video]").isNotEmpty()
+    }
+
+    private suspend fun fetchDoc(url: String): org.jsoup.nodes.Document? {
+        runCatching {
+            val res = app.get(url, headers = uaHeaders + mapOf("X-Requested-With" to "XMLHttpRequest"))
+            if (res.code in 200..299) {
+                val d = res.document
+                if (isValidDoc(d)) return d
+            }
+        }
+        webViewHtml(url)?.let { html ->
+            val d = Jsoup.parse(html, url)
+            if (isValidDoc(d)) return d
+        }
+        return runCatching {
+            app.get(
+                url,
+                headers = uaHeaders + mapOf("X-Requested-With" to "XMLHttpRequest"),
+                interceptor = killer,
+            ).document.takeIf(::isValidDoc)
+        }.getOrNull()
+    }
+
+    private suspend fun webViewHtml(url: String, timeoutMs: Long = 15_000L): String? {
+        val ctx = runCatching { com.lagradost.cloudstream3.CloudStreamApp.context }.getOrNull() ?: return null
+        val mainLooper = runCatching { android.os.Looper.getMainLooper() }.getOrNull() ?: return null
+        val handler = android.os.Handler(mainLooper)
+        return kotlin.coroutines.suspendCoroutine { cont ->
+            val done = java.util.concurrent.atomic.AtomicBoolean(false)
+            var webView: android.webkit.WebView? = null
+            fun finish(html: String?) {
+                if (!done.compareAndSet(false, true)) return
+                handler.post {
+                    runCatching {
+                        webView?.stopLoading()
+                        webView?.destroy()
+                        webView = null
+                    }
+                }
+                cont.resumeWith(Result.success(html))
+            }
+            val jsCheck = """
+                (function(){
+                    if (window.__bbHtml) return window.__bbHtml;
+                    var h1 = document.querySelector('h1');
+                    var txt = h1 ? (h1.textContent || '') : '';
+                    if (txt.toLowerCase().indexOf('desteklenmiyor') !== -1) {
+                        if (!window.__bbFetching) {
+                            window.__bbFetching = true;
+                            fetch(location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                                .then(function(r){ return r.text(); })
+                                .then(function(t){ if (t && t.indexOf('desteklenmiyor') === -1) window.__bbHtml = t; })
+                                .catch(function(){});
+                        }
+                        return '';
+                    }
+                    return (h1 || document.querySelector('button[data-video]')) ? document.documentElement.outerHTML : '';
+                })()
+            """.trimIndent()
+            val pollTask = object : Runnable {
+                override fun run() {
+                    if (done.get()) return
+                    val wv = webView ?: return
+                    runCatching {
+                        wv.evaluateJavascript(jsCheck) { raw ->
+                            if (done.get()) return@evaluateJavascript
+                            val decoded = if (!raw.isNullOrBlank() && raw != "null" && raw != "\"\"") {
+                                runCatching { org.json.JSONTokener(raw).nextValue()?.toString() }.getOrNull()
+                            } else null
+                            if (!decoded.isNullOrBlank() && decoded.length > 500) {
+                                finish(decoded)
+                            } else {
+                                handler.postDelayed(this, 500L)
+                            }
+                        }
+                    }.onFailure { finish(null) }
+                }
+            }
+            handler.postDelayed({ finish(null) }, timeoutMs)
+            handler.post {
+                runCatching {
+                    val wv = android.webkit.WebView(ctx)
+                    webView = wv
+                    wv.settings.javaScriptEnabled = true
+                    wv.settings.domStorageEnabled = true
+                    wv.webViewClient = object : android.webkit.WebViewClient() {
+                        override fun onPageFinished(view: android.webkit.WebView?, loadedUrl: String?) {
+                            handler.post(pollTask)
+                        }
+                    }
+                    wv.loadUrl(url, mapOf("Referer" to "$mainUrl/", "X-Requested-With" to "XMLHttpRequest"))
+                    handler.postDelayed(pollTask, 1_000L)
+                }.onFailure { finish(null) }
+            }
+        }
+    }
+
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val doc = getWithCf(request.data).document
+        val action = request.data.removePrefix("$mainUrl/").trim('/')
+        val apiUrl = "$mainUrl/load/page/$page/$action/"
+        val json = runCatching {
+            app.get(
+                apiUrl,
+                headers = uaHeaders + mapOf(
+                    "X-Requested-With" to "fetch",
+                    "Accept" to "application/json",
+                ),
+            ).text
+        }.getOrNull().orEmpty()
+        val htmlFrag = runCatching { JSONObject(json).optString("html") }.getOrNull().orEmpty()
+        val doc = if (htmlFrag.isNotBlank()) {
+            Jsoup.parse(htmlFrag, mainUrl)
+        } else {
+            fetchDoc(if (action == "home") "$mainUrl/" else "$mainUrl/$action/")
+                ?: return newHomePageResponse(request.name, emptyList(), hasNext = false)
+        }
         val items = doc.select("a.poster[href]").mapNotNull { card ->
             val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
             val title = card.attr("title").removeSuffix(" izle").trim()
@@ -121,12 +193,12 @@ class HDFilmCehennemiProvider : MainAPI() {
                 this.posterHeaders = posterHdrs
             }
         }.distinctBy { it.url }
-        return newHomePageResponse(request.name, items, hasNext = false)
+        return newHomePageResponse(request.name, items, hasNext = items.isNotEmpty())
     }
 
     /** Site's live-search JSON: results are ready-made HTML fragments. */
     override suspend fun search(query: String): List<SearchResponse> {
-        val json = getWithCf(
+        val json = app.get(
             "$mainUrl/search?q=${java.net.URLEncoder.encode(query.trim(), "UTF-8")}",
             headers = uaHeaders + mapOf(
                 "X-Requested-With" to "fetch",
@@ -153,8 +225,8 @@ class HDFilmCehennemiProvider : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val doc = runCatching { getWithCf(url).document }
-            .getOrNull() ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
+        val doc = fetchDoc(url)
+            ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
 
         val h1 = doc.selectFirst("h1")
             ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
@@ -194,7 +266,9 @@ class HDFilmCehennemiProvider : MainAPI() {
                 this.score = score
             }
         }
-        return newMovieLoadResponse(title, url, TvType.Movie, url) {
+        val videoIds = doc.select("button[data-video]").mapNotNull { it.attr("data-video").takeIf(String::isNotBlank) }.distinct()
+        val movieData = if (videoIds.isNotEmpty()) "$url|${videoIds.joinToString(",")}" else url
+        return newMovieLoadResponse(title, url, TvType.Movie, movieData) {
             this.posterUrl = posterUrl
             this.posterHeaders = posterHdrs
             this.plot = plot
@@ -213,18 +287,23 @@ class HDFilmCehennemiProvider : MainAPI() {
     ): Boolean {
         val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
         val subtitleFilter: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
-        val doc = runCatching { getWithCf(data).document }
-            .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
+        val pageUrl = data.substringBefore('|')
+        val preIds = data.substringAfter('|', "").split(',').filter(String::isNotBlank)
+        val doc = if (preIds.isEmpty()) {
+            fetchDoc(pageUrl) ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
+        } else null
+        val videoIds = preIds.ifEmpty {
+            doc?.select("button[data-video]")?.mapNotNull { it.attr("data-video").takeIf(String::isNotBlank) }?.distinct().orEmpty()
+        }
 
         // Iframe src doğrudan 404 döner: player, /video/<id>/ AJAX yanıtından tazelenir.
-        val ajaxEmbeds = doc.select("button[data-video]").mapNotNull { it.attr("data-video").takeIf(String::isNotBlank) }
-            .distinct()
+        val ajaxEmbeds = videoIds
             .mapNotNull { id ->
                 val ajax = "$mainUrl/video/$id/"
                 runCatching {
-                    val body = getWithCf(
+                    val body = app.get(
                         ajax,
-                        referer = data,
+                        referer = pageUrl,
                         headers = uaHeaders + mapOf(
                             "X-Requested-With" to "fetch",
                             "Accept" to "application/json",
@@ -240,9 +319,10 @@ class HDFilmCehennemiProvider : MainAPI() {
                         ?.let { Embed(it, ajax) }
                 }.getOrNull()
             }
-        val plainEmbeds = doc.select("div.video-container iframe[data-src], div.video-container iframe[src]")
-            .mapNotNull { fixUrlNull(it.attr("data-src").ifBlank { it.attr("src") }) }
-            .map { Embed(it, "$mainUrl/") }
+        val plainEmbeds = doc?.select("div.video-container iframe[data-src], div.video-container iframe[src]")
+            ?.mapNotNull { fixUrlNull(it.attr("data-src").ifBlank { it.attr("src") }) }
+            ?.map { Embed(it, "$mainUrl/") }
+            .orEmpty()
         val embeds = (ajaxEmbeds + plainEmbeds).distinctBy { it.url }
         if (embeds.isEmpty()) throw ErrorLoadingException("$name: oynatıcı bulunamadı. $REPORT_HINT")
 
@@ -265,7 +345,7 @@ class HDFilmCehennemiProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
     ): Boolean {
         val embedUrl = embedRef.url
-        val embed = getWithCf(
+        val embed = app.get(
             embedUrl,
             referer = embedRef.referer,
             headers = uaHeaders + mapOf(
