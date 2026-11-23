@@ -698,11 +698,14 @@ suspend fun loadCommonEmbedWithHints(
     val unpacked = runCatching { unpackAllJsPacker(rawHtml) }.getOrNull().orEmpty()
     val cryptoDec = decryptCryptoJsJson(rawHtml).orEmpty()
     val rapidDec = decodeRapidVidAv(rawHtml).orEmpty()
+    val deobf = runCatching { deobfuscateCommonJs(rawHtml) }.getOrNull()
+    val deobfLayers = deobf?.first?.joinToString("\n").orEmpty()
     val searchPool = buildString {
         append(rawHtml)
         if (unpacked.isNotEmpty()) append('\n').append(unpacked)
         if (cryptoDec.isNotEmpty()) append('\n').append(cryptoDec)
         if (rapidDec.isNotEmpty()) append('\n').append(rapidDec)
+        if (deobfLayers.isNotEmpty()) append('\n').append(deobfLayers)
     }
     val directM3u8 = extractDirectM3u8Streams(searchPool)
     if (directM3u8.isNotEmpty()) {
