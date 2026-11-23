@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.35] - 2026-11-23
+
+### İyileştirildi
+- **HDFilmCehennemi**: Ana sayfa yüklemesinde paralel bağlantı kararlılığı iyileştirildi.
+
 ## [1.7.34] - 2026-11-23
 
 ### Düzeltildi

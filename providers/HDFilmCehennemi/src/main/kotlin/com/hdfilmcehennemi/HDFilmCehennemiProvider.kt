@@ -35,7 +35,59 @@ class HDFilmCehennemiProvider : MainAPI() {
     override var mainUrl = "https://www.hdfilmcehennemi.nl"
     private val uaHeaders get() = browserHeaders
     private val killer = CloudflareKiller()
+    private val cfQueue = ArrayDeque<kotlin.coroutines.Continuation<Unit>>()
+    private var cfLocked = false
+    @Volatile
+    private var cfWarmed = false
     private val posterHdrs get() = uaHeaders + mapOf("Referer" to "$mainUrl/") + killer.getCookieHeaders(mainUrl).toMap()
+
+    /** Paralel ana sayfa isteklerinde tek WebView açılması için ilk Cloudflare geçişini sıraya alır. */
+    private suspend fun getWithCf(
+        url: String,
+        headers: Map<String, String> = uaHeaders,
+        referer: String? = null,
+    ) = if (cfWarmed) {
+        app.get(url, referer = referer, headers = headers, interceptor = killer)
+    } else {
+        while (!cfWarmed) {
+            val acquired = synchronized(cfQueue) {
+                if (!cfLocked) {
+                    cfLocked = true
+                    true
+                } else {
+                    false
+                }
+            }
+            if (acquired) break
+            kotlin.coroutines.suspendCoroutine<Unit> { cont ->
+                val resumeNow = synchronized(cfQueue) {
+                    if (!cfLocked || cfWarmed) {
+                        true
+                    } else {
+                        cfQueue.addLast(cont)
+                        false
+                    }
+                }
+                if (resumeNow) cont.resumeWith(Result.success(Unit))
+            }
+        }
+        if (cfWarmed) {
+            app.get(url, referer = referer, headers = headers, interceptor = killer)
+        } else {
+            try {
+                app.get(url, referer = referer, headers = headers, interceptor = killer).also {
+                    cfWarmed = true
+                }
+            } finally {
+                val waiters = synchronized(cfQueue) {
+                    cfLocked = false
+                    if (cfWarmed) cfQueue.toList().also { cfQueue.clear() }
+                    else listOfNotNull(cfQueue.removeFirstOrNull())
+                }
+                waiters.forEach { it.resumeWith(Result.success(Unit)) }
+            }
+        }
+    }
     override var name = "HDFilmCehennemi"
     override var lang = "tr"
     override val hasMainPage = true
@@ -58,7 +110,7 @@ class HDFilmCehennemiProvider : MainAPI() {
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val doc = app.get(request.data, headers = uaHeaders, interceptor = killer).document
+        val doc = getWithCf(request.data).document
         val items = doc.select("a.poster[href]").mapNotNull { card ->
             val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
             val title = card.attr("title").removeSuffix(" izle").trim()
@@ -74,13 +126,12 @@ class HDFilmCehennemiProvider : MainAPI() {
 
     /** Site's live-search JSON: results are ready-made HTML fragments. */
     override suspend fun search(query: String): List<SearchResponse> {
-        val json = app.get(
+        val json = getWithCf(
             "$mainUrl/search?q=${java.net.URLEncoder.encode(query.trim(), "UTF-8")}",
             headers = uaHeaders + mapOf(
                 "X-Requested-With" to "fetch",
                 "Accept" to "application/json",
             ),
-            interceptor = killer,
         ).text
         val arr = runCatching { JSONObject(json).optJSONArray("results") }.getOrNull()
             ?: throw ErrorLoadingException("$name: arama yanıtı çözümlenemedi. $REPORT_HINT")
@@ -102,7 +153,7 @@ class HDFilmCehennemiProvider : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val doc = runCatching { app.get(url, headers = uaHeaders, interceptor = killer).document }
+        val doc = runCatching { getWithCf(url).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
 
         val h1 = doc.selectFirst("h1")
@@ -162,7 +213,7 @@ class HDFilmCehennemiProvider : MainAPI() {
     ): Boolean {
         val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
         val subtitleFilter: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
-        val doc = runCatching { app.get(data, headers = uaHeaders, interceptor = killer).document }
+        val doc = runCatching { getWithCf(data).document }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
 
         // Iframe src doğrudan 404 döner: player, /video/<id>/ AJAX yanıtından tazelenir.
@@ -171,14 +222,13 @@ class HDFilmCehennemiProvider : MainAPI() {
             .mapNotNull { id ->
                 val ajax = "$mainUrl/video/$id/"
                 runCatching {
-                    val body = app.get(
+                    val body = getWithCf(
                         ajax,
                         referer = data,
                         headers = uaHeaders + mapOf(
                             "X-Requested-With" to "fetch",
                             "Accept" to "application/json",
                         ),
-                        interceptor = killer,
                     ).text
                     val html = Regex(""""html"\s*:\s*"((?:[^"\\]|\\.)*)"""")
                         .find(body)?.groupValues?.get(1)
@@ -215,7 +265,7 @@ class HDFilmCehennemiProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
     ): Boolean {
         val embedUrl = embedRef.url
-        val embed = app.get(
+        val embed = getWithCf(
             embedUrl,
             referer = embedRef.referer,
             headers = uaHeaders + mapOf(
@@ -224,7 +274,6 @@ class HDFilmCehennemiProvider : MainAPI() {
                 "Sec-Fetch-Mode" to "navigate",
                 "Sec-Fetch-Site" to if (embedUrl.startsWith(mainUrl, true)) "same-origin" else "cross-site",
             ),
-            interceptor = killer,
         ).text
         // Yeni oynatıcı: gerçek adres /kn/ POST yanıtında; eski c6rbn çözümü artık yalnızca örnek (decoy) video verir.
         val kn = knStream(embedUrl, embed)
