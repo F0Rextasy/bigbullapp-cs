@@ -6,5 +6,8 @@
   "item": "<a href=\"https://www.ddizi.tel/diziler/[^\"]*\"[^>]*title=\"[^\"]*\"[\\s\\S]*?</a>",
   "title": ">([^<]+)</a>",
   "href": "href=\"([^\"]+)\"",
-  "limit": 40
+  "group": [
+    "latest-series"
+  ],
+  "limit": 80
 }

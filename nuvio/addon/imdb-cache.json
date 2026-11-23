@@ -3166,5 +3166,21 @@
  "movie|ates cemberi": {
   "id": "tt0182740",
   "poster": "https://m.media-amazon.com/images/M/MV5BNmMyZTllYzQtNmQ3ZS00YzBiLWIxNTUtMjIzMTYxYzJlOGQzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|clashing through the snow": {
+  "id": "tt39316936",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjE0MWFjMDAtZWY2MS00N2RlLTlmMzMtNDllY2ViOWQ4OWUxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|chiara ferragni front facing": {
+  "id": "tt51547822",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2Q2YjI5ZTQtYzEyMi00MzFlLTk5ODYtZGUyN2I3NzIwY2ZiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|karlar duserken ask": {
+  "id": "tt39316936",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjE0MWFjMDAtZWY2MS00N2RlLTlmMzMtNDllY2ViOWQ4OWUxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|shadows of the ten ninja": {
+  "id": "tt49276663",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTMxOTI4YTYtZGU0Mi00MTM3LTk5OGQtNTU3OGEzZDYyNDBkXkEyXkFqcGc@._V1_.jpg"
  }
 }

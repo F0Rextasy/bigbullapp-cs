@@ -1,4 +1,4 @@
-// @provider {"id":"rectv", "name":"RecTV", "types":["movie", "tv"], "domain":"rectv.org.tr", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"RecTV imzalı resmî API film ve dizi kataloğu (attest/nonce + HMAC-SHA256; arama ve sezon/bölüm uçları, token'lı m3u8).", "verified":true, "version":"1.0.5"}
+// @provider {"id":"rectv", "name":"RecTV", "types":["movie", "tv"], "domain":"rectv.org.tr", "formats":["m3u8"], "sample":"tt0903747:tv:1:1", "description":"RecTV imzalı resmî API film ve dizi kataloğu (attest/nonce + HMAC-SHA256; arama ve sezon/bölüm uçları, token'lı m3u8).", "verified":true, "version":"1.0.6"}
 var CFG = {
   id: "rectv",
   name: "RecTV",
@@ -336,7 +336,17 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
       })
       .catch(function () { return ""; });
   }
-  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
+  function fromTmdbTitle() {
+    if (!key) return Promise.resolve("");
+    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "?api_key=" + encodeURIComponent(key) + "&language=tr-TR", { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        var t = (json && (json.original_name || json.name || json.original_title || json.title)) || "";
+        return t ? "__alt__:" + encodeURIComponent(t) : "";
+      })
+      .catch(function () { return ""; });
+  }
+  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) { return imdb || fromTmdbTitle(); }).then(function (imdb) {
     try {
       return Promise.resolve(__origGetStreams(imdb || raw, mt, season, episode)).catch(function () { return []; });
     } catch (e) {

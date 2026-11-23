@@ -1,4 +1,4 @@
-// @provider {"id":"hdfilmcehennemi2", "name":"HDFilmCehennemi2", "types":["movie", "tv"], "domain":"hdfilmcehennemi2.biz", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi2 - Turkce dublaj ve altyazili film/dizi (vidload.top + vidmoly + altyazi).", "verified":true, "version":"1.0.1"}
+// @provider {"id":"hdfilmcehennemi2", "name":"HDFilmCehennemi2", "types":["movie", "tv"], "domain":"hdfilmcehennemi2.biz", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi2 - Turkce dublaj ve altyazili film/dizi (vidload.top + vidmoly + altyazi).", "verified":true, "version":"1.0.2"}
 /**
  * hdfilmcehennemi2 — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta meta -> /api/search?q= JSON -> movie/series page (IMDb / title verification)
@@ -403,7 +403,17 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
       })
       .catch(function () { return ""; });
   }
-  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
+  function fromTmdbTitle() {
+    if (!key) return Promise.resolve("");
+    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "?api_key=" + encodeURIComponent(key) + "&language=tr-TR", { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        var t = (json && (json.original_name || json.name || json.original_title || json.title)) || "";
+        return t ? "__alt__:" + encodeURIComponent(t) : "";
+      })
+      .catch(function () { return ""; });
+  }
+  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) { return imdb || fromTmdbTitle(); }).then(function (imdb) {
     try {
       return Promise.resolve(__origGetStreams(imdb || raw, mt, season, episode)).catch(function () { return []; });
     } catch (e) {

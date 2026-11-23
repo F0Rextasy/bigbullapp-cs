@@ -1,4 +1,4 @@
-// @provider {"id":"jetfilmizle", "name":"JetFilmizle", "types":["movie"], "domain":"jetfilmizle.app", "formats":["m3u8", "mp4"], "sample":"tt0133093:movie:1:1", "description":"JetFilmizle Türkçe dublaj/altyazılı film arşivi (godrive + videopark).", "version":"1.1.4", "verified":true}
+// @provider {"id":"jetfilmizle", "name":"JetFilmizle", "types":["movie"], "domain":"jetfilmizle.app", "formats":["m3u8", "mp4"], "sample":"tt0133093:movie:1:1", "description":"JetFilmizle Türkçe dublaj/altyazılı film arşivi (godrive + videopark).", "version":"1.1.5", "verified":true}
 /**
  * jetfilmizle — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /arama -> strict card match -> film page (film_id) ->
@@ -301,7 +301,17 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
       })
       .catch(function () { return ""; });
   }
-  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
+  function fromTmdbTitle() {
+    if (!key) return Promise.resolve("");
+    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "?api_key=" + encodeURIComponent(key) + "&language=tr-TR", { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        var t = (json && (json.original_name || json.name || json.original_title || json.title)) || "";
+        return t ? "__alt__:" + encodeURIComponent(t) : "";
+      })
+      .catch(function () { return ""; });
+  }
+  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) { return imdb || fromTmdbTitle(); }).then(function (imdb) {
     try {
       return Promise.resolve(__origGetStreams(imdb || raw, mt, season, episode)).catch(function () { return []; });
     } catch (e) {

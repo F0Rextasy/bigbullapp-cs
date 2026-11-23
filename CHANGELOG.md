@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.30] - 2026-11-23
+
+### İyileştirildi
+- **Nuvio yerli diziler**: YerliDiziler kategori/bölüm araması, Ddizi katalog kapsamı ve TMDB kimliğinden Türkçe başlık çözümü iyileştirildi.
+
 ## [1.7.29] - 2026-11-23
 
 ### Eklendi

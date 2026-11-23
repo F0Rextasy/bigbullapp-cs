@@ -1,4 +1,4 @@
-// @provider {"id":"webdramaturkey2", "name":"WebdramaTurkey2", "types":["movie", "tv"], "domain":"webdramaturkey2.com", "formats":["m3u8"], "sample":"tt29569035:tv:1:1", "description":"WebdramaTurkey2 Kore/Cin/Japon dizileri, filmleri ve animeleri (Turkce altyazili).", "version":"1.0.11"}
+// @provider {"id":"webdramaturkey2", "name":"WebdramaTurkey2", "types":["movie", "tv"], "domain":"webdramaturkey2.com", "formats":["m3u8"], "sample":"tt29569035:tv:1:1", "description":"WebdramaTurkey2 Kore/Cin/Japon dizileri, filmleri ve animeleri (Turkce altyazili).", "version":"1.0.12"}
 /**
  * webdramaturkey2 — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /arama/<q> -> dizi|film page -> episode -> /ajax/embed -> video.php
@@ -258,7 +258,17 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
       })
       .catch(function () { return ""; });
   }
-  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
+  function fromTmdbTitle() {
+    if (!key) return Promise.resolve("");
+    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "?api_key=" + encodeURIComponent(key) + "&language=tr-TR", { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        var t = (json && (json.original_name || json.name || json.original_title || json.title)) || "";
+        return t ? "__alt__:" + encodeURIComponent(t) : "";
+      })
+      .catch(function () { return ""; });
+  }
+  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) { return imdb || fromTmdbTitle(); }).then(function (imdb) {
     try {
       return Promise.resolve(__origGetStreams(imdb || raw, mt, season, episode)).catch(function () { return []; });
     } catch (e) {

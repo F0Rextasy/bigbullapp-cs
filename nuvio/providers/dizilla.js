@@ -1,4 +1,4 @@
-// @provider {"id":"dizilla", "name":"Dizilla", "types":["tv"], "domain":"dizilla.la", "formats":["m3u8"], "sample":"tt27497448:tv:1:1", "description":"Dizilla yabanci dizi arsivi (HLS + Turkce altyazi).", "version":"1.0.18"}
+// @provider {"id":"dizilla", "name":"Dizilla", "types":["tv"], "domain":"dizilla.la", "formats":["m3u8"], "sample":"tt27497448:tv:1:1", "description":"Dizilla yabanci dizi arsivi (HLS + Turkce altyazi).", "version":"1.0.19"}
 /**
  * dizilla — Nuvio provider (bb-nuvio).
  * Next.js site: series metadata + episode list live in the JSON-LD blocks, the
@@ -415,7 +415,17 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
       })
       .catch(function () { return ""; });
   }
-  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
+  function fromTmdbTitle() {
+    if (!key) return Promise.resolve("");
+    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "?api_key=" + encodeURIComponent(key) + "&language=tr-TR", { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        var t = (json && (json.original_name || json.name || json.original_title || json.title)) || "";
+        return t ? "__alt__:" + encodeURIComponent(t) : "";
+      })
+      .catch(function () { return ""; });
+  }
+  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) { return imdb || fromTmdbTitle(); }).then(function (imdb) {
     try {
       return Promise.resolve(__origGetStreams(imdb || raw, mt, season, episode)).catch(function () { return []; });
     } catch (e) {

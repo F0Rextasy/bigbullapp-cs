@@ -1,4 +1,4 @@
-// @provider {"id": "filmmodu", "name": "FilmModu", "types": ["movie"], "domain": "filmmodu.icu", "formats": ["m3u8"], "sample": "tt0133093:movie:1:1", "description": "FilmModu Türkçe dublaj/altyazılı film arşivi (pilavyerplay HLS + altyazı).", "version":"1.1.6", "verified": true}
+// @provider {"id": "filmmodu", "name": "FilmModu", "types": ["movie"], "domain": "filmmodu.icu", "formats": ["m3u8"], "sample": "tt0133093:movie:1:1", "description": "FilmModu Türkçe dublaj/altyazılı film arşivi (pilavyerplay HLS + altyazı).", "version":"1.1.7", "verified": true}
 /**
  * filmmodu — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /ara?q= -> strict card match -> film page -> data-pv slug ->
@@ -261,7 +261,17 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
       })
       .catch(function () { return ""; });
   }
-  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
+  function fromTmdbTitle() {
+    if (!key) return Promise.resolve("");
+    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "?api_key=" + encodeURIComponent(key) + "&language=tr-TR", { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        var t = (json && (json.original_name || json.name || json.original_title || json.title)) || "";
+        return t ? "__alt__:" + encodeURIComponent(t) : "";
+      })
+      .catch(function () { return ""; });
+  }
+  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) { return imdb || fromTmdbTitle(); }).then(function (imdb) {
     try {
       return Promise.resolve(__origGetStreams(imdb || raw, mt, season, episode)).catch(function () { return []; });
     } catch (e) {

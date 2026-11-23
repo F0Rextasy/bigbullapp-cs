@@ -1,4 +1,4 @@
-// @provider {"id":"yerlidiziler", "name":"YerliDiziler", "types":["tv"], "domain":"yerlidiziler.com.tr", "formats":["m3u8"], "sample":"tt38647499:tv:2:7", "description":"YerliDiziler yerli dizi arşivi (tüm ulusal kanallar); Vidmoly HLS akışları.", "version":"1.0.1"}
+// @provider {"id":"yerlidiziler", "name":"YerliDiziler", "types":["tv"], "domain":"yerlidiziler.com.tr", "formats":["m3u8"], "sample":"tt38647499:tv:2:7", "description":"YerliDiziler yerli dizi arşivi (tüm ulusal kanallar); Vidmoly HLS akışları.", "version":"1.0.2"}
 /**
  * yerlidiziler — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta (+ videos cumulative episode map) / IMDb / TVMaze / Wikidata TR
@@ -108,7 +108,11 @@ function getStreams(tmdbId, mediaType, season, episode) {
       if (!info.title) return null;
       wanted = info.title;
       absEp = info.absEp || absEp;
-      return getJson(BASE + "/wp-json/wp/v2/categories?per_page=100&_fields=id,count,name,slug");
+      return getJson(BASE + "/wp-json/wp/v2/categories?search=" + encodeURIComponent(wanted) + "&per_page=20&_fields=id,count,name,slug")
+        .then(function (cats) {
+          if (Array.isArray(cats) && cats.length) return cats;
+          return getJson(BASE + "/wp-json/wp/v2/categories?per_page=100&_fields=id,count,name,slug");
+        });
     })
     .then(function (cats) {
       if (!Array.isArray(cats)) return null;
@@ -122,23 +126,29 @@ function getStreams(tmdbId, mediaType, season, episode) {
         }
       }
       if (!best) return null;
-      return getJson(BASE + "/wp-json/wp/v2/posts?categories=" + best.id + "&per_page=50&_fields=link,title");
-    })
-    .then(function (posts) {
-      if (!Array.isArray(posts)) return null;
       var targets = [];
       if (absEp > 0) targets.push(absEp);
-      if (want === 1 && targets.indexOf(wantEp) === -1) targets.push(wantEp);
-      for (var t = 0; t < targets.length; t++) {
-        for (var i = 0; i < posts.length; i++) {
-          var p = posts[i] || {};
-          var title = String((p.title && p.title.rendered) || "");
-          var link = String(p.link || "");
-          var m = /(\d+)\.\s*B[oö]l[uü]m/i.exec(title) || /-(\d+)-bolum/i.exec(link);
-          if (m && parseInt(m[1], 10) === targets[t]) return link;
+      if (targets.indexOf(wantEp) === -1) targets.push(wantEp);
+      function pickPost(posts) {
+        if (!Array.isArray(posts)) return "";
+        for (var t = 0; t < targets.length; t++) {
+          for (var j = 0; j < posts.length; j++) {
+            var p = posts[j] || {};
+            var title = String((p.title && p.title.rendered) || "");
+            var link = String(p.link || "");
+            var m = /(\d+)\.\s*B[oö]l[uü]m/i.exec(title) || /-(\d+)-bolum/i.exec(link);
+            if (m && parseInt(m[1], 10) === targets[t]) return link;
+          }
         }
+        return "";
       }
-      return null;
+      return getJson(BASE + "/wp-json/wp/v2/posts?categories=" + best.id + "&per_page=50&_fields=link,title")
+        .then(function (posts) {
+          var hit = pickPost(posts);
+          if (hit || !targets.length) return hit || null;
+          return getJson(BASE + "/wp-json/wp/v2/posts?categories=" + best.id + "&search=" + encodeURIComponent(String(targets[0])) + "&per_page=20&_fields=link,title")
+            .then(function (more) { return pickPost(more) || null; });
+        });
     })
     .then(function (epUrl) {
       if (!epUrl) return [];
@@ -218,7 +228,17 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
       })
       .catch(function () { return ""; });
   }
-  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
+  function fromTmdbTitle() {
+    if (!key) return Promise.resolve("");
+    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "?api_key=" + encodeURIComponent(key) + "&language=tr-TR", { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        var t = (json && (json.original_name || json.name || json.original_title || json.title)) || "";
+        return t ? "__alt__:" + encodeURIComponent(t) : "";
+      })
+      .catch(function () { return ""; });
+  }
+  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) { return imdb || fromTmdbTitle(); }).then(function (imdb) {
     try {
       return Promise.resolve(__origGetStreams(imdb || raw, mt, season, episode)).catch(function () { return []; });
     } catch (e) {

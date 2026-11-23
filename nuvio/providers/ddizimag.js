@@ -1,4 +1,4 @@
-// @provider {"id": "ddizimag", "name": "DDizimag", "types": ["tv", "movie"], "domain": "ddizimag2.icu", "formats": ["m3u8"], "sample": "tt13675832:tv:1:1", "description": "DDizimag yerli ve yabanc\u0131 dizi/film ar\u015fivi; pilavyer HLS ak\u0131\u015f\u0131 ve altyaz\u0131lar.", "version":"1.0.3"}
+// @provider {"id": "ddizimag", "name": "DDizimag", "types": ["tv", "movie"], "domain": "ddizimag2.icu", "formats": ["m3u8"], "sample": "tt13675832:tv:1:1", "description": "DDizimag yerli ve yabanc\u0131 dizi/film ar\u015fivi; pilavyer HLS ak\u0131\u015f\u0131 ve altyaz\u0131lar.", "version":"1.0.4"}
 /**
  * ddizimag — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta (+ Wikidata TR / IMDb / TVMaze) -> /ara?q= -> /dizi/<slug>/sezon-S/bolum-E
@@ -215,7 +215,17 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
       })
       .catch(function () { return ""; });
   }
-  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
+  function fromTmdbTitle() {
+    if (!key) return Promise.resolve("");
+    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "?api_key=" + encodeURIComponent(key) + "&language=tr-TR", { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        var t = (json && (json.original_name || json.name || json.original_title || json.title)) || "";
+        return t ? "__alt__:" + encodeURIComponent(t) : "";
+      })
+      .catch(function () { return ""; });
+  }
+  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) { return imdb || fromTmdbTitle(); }).then(function (imdb) {
     try {
       return Promise.resolve(__origGetStreams(imdb || raw, mt, season, episode)).catch(function () { return []; });
     } catch (e) {
