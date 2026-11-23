@@ -25,14 +25,14 @@ import org.json.JSONObject
 import org.jsoup.nodes.Element
 
 /**
- * Dizibaba — dizibaba.net film arşivi.
+ * Dizibaba — dizibaba.icu film arşivi.
  *
  * Film detayında `/izle` sayfasındaki `data-pv` slug'ı
  * `pilavyerplay.top/assets/js/s.php?s=<slug>` player'ını yükler; yanıt
  * `window.__PLAYER__.stream` imzalı HLS master adresini taşır.
  */
 class DizibabaProvider : MainAPI() {
-    override var mainUrl = "https://dizibaba.net"
+    override var mainUrl = "https://dizibaba.icu"
     override var name = "Dizibaba"
     override var lang = "tr"
     override val hasMainPage = true

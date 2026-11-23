@@ -1,4 +1,4 @@
-// @provider {"id":"fullhdfilmizlesene", "name":"FullHDFilmizlesene", "types":["movie"], "domain":"fullhdfilmizlesene.now", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.", "verified":true, "version":"1.0.13"}
+// @provider {"id":"fullhdfilmizlesene", "name":"FullHDFilmizlesene", "types":["movie"], "domain":"fullhdfilmizlesene.now", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"FullHDFilmizlesene - Turkce dublaj/altyazili filmler; scx kaynagi -> rapidvid atom HLS + altyazi.", "verified":true, "version":"1.0.15"}
 /**
  * fullhdfilmizlesene — Nuvio provider (bb-nuvio).
  * Flow: TMDB id -> Wikidata -> IMDb -> Cinemeta title -> /arama/<q> -> film page
@@ -214,7 +214,7 @@ function subtitleLang(label) {
   return String(label || "").trim().toLowerCase().slice(0, 2) || "tr";
 }
 
-/** rapidvid embed -> atomCodecTelemetry h264 HLS master + jwSetup.tracks subtitles. */
+/** rapidvid embed -> atomCodecTelemetry, window._p8 (/vx/) or jwSetup.sources HLS master + captions. */
 function resolveAtom(embed, label) {
   return text(embed, { referer: BASE + "/" }).then(function (html) {
     var raw = first(/atomCodecTelemetry=(\{[\s\S]*?\});/, html);
@@ -226,24 +226,39 @@ function resolveAtom(embed, label) {
         telemetry = {};
       }
     }
+    var p8 = null;
+    var p8Raw = first(/window\._p8\s*=\s*['"]([^'"]+)['"]/, html);
+    if (p8Raw) {
+      try {
+        p8 = JSON.parse(avDecode(p8Raw));
+      } catch (e) {
+        p8 = null;
+      }
+    }
     var sources = first(/jwSetup\.sources\s*=\s*(\[[\s\S]*?\]);/, html);
     var encoded = sources ? first(/av\('([^']+)'\)/, sources) : null;
     var plain = sources ? first(/"file"\s*:\s*"([^"]+)"/, sources) : null;
     var stream = /^http/.test(telemetry.h264 || "") ? telemetry.h264
       : /^http/.test(telemetry.av1 || "") ? telemetry.av1
+      : p8 && /^http/.test(p8.cm || "") ? p8.cm
+      : p8 && /^http/.test(p8.tm || "") ? p8.tm
       : encoded ? avDecode(encoded)
       : plain;
     if (!/^http/.test(stream || "")) return null;
 
     var subs = [];
-    var tracks = first(/jwSetup\.tracks\s*=\s*(\[[\s\S]*?\]);/, html);
-    if (tracks) {
-      var parsed;
-      try {
-        parsed = JSON.parse(tracks);
-      } catch (e) {
-        parsed = [];
+    var parsed = p8 && Array.isArray(p8.ct) ? p8.ct : null;
+    if (!parsed) {
+      var tracks = first(/jwSetup\.tracks\s*=\s*(\[[\s\S]*?\]);/, html);
+      if (tracks) {
+        try {
+          parsed = JSON.parse(tracks);
+        } catch (e) {
+          parsed = [];
+        }
       }
+    }
+    if (parsed) {
       for (var i = 0; i < parsed.length && subs.length < 4; i++) {
         var file = parsed[i] && parsed[i].file;
         if (!file) continue;
@@ -332,7 +347,10 @@ function getStreams(tmdbId, mediaType) {
       for (var key in scx) {
         var source = scx[key];
         if (!source || !source.sx || !source.sx.t) continue;
-        for (var i = 0; i < source.sx.t.length; i++) jobs.push(job(source, key, source.sx.t[i], filmUrl));
+        var entries = Array.isArray(source.sx.t)
+          ? source.sx.t
+          : (typeof source.sx.t === "object" ? Object.keys(source.sx.t).map(function (k) { return source.sx.t[k]; }) : []);
+        for (var i = 0; i < entries.length; i++) jobs.push(job(source, key, entries[i], filmUrl));
       }
       if (!jobs.length) return [];
       return Promise.all(jobs);
@@ -483,8 +501,23 @@ var __cinemetaGetStreams = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   var raw = String(id || "");
   try {
-    return Promise.resolve(__cinemetaGetStreams(raw, mediaType, season, episode)).then(function (streams) {
-      if ((streams && streams.length) || /^__alt__:/.test(raw)) return streams || [];
+    if (/^__alt__:/.test(raw)) return Promise.resolve(__cinemetaGetStreams(raw, mediaType, season, episode)).catch(function () { return []; });
+    function tryPrimary() {
+      if (!/^tt\d+$/.test(raw)) return Promise.resolve(__cinemetaGetStreams(raw, mediaType, season, episode)).catch(function () { return []; });
+      var h = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
+      return fetch("https://v3.sg.media-imdb.com/suggestion/t/" + raw + ".json", { headers: h })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          var t = j && j.d && j.d[0] && j.d[0].l ? String(j.d[0].l).replace(/\s*\([^)]*\)\s*$/, "").trim() : "";
+          return t ? __cinemetaGetStreams("__alt__:" + encodeURIComponent(t), mediaType, season, episode) : [];
+        })
+        .catch(function () { return []; })
+        .then(function (streams) {
+          return (streams && streams.length) ? streams : __cinemetaGetStreams(raw, mediaType, season, episode);
+        });
+    }
+    return tryPrimary().then(function (streams) {
+      if (streams && streams.length) return streams;
       return __altTitles(raw, mediaType).then(function (titles) {
         var chain = Promise.resolve([]);
         titles.forEach(function (t) {

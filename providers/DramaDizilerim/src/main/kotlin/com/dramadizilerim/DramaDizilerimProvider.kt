@@ -48,7 +48,7 @@ class DramaDizilerimProvider : MainAPI() {
     override var name = "DramaDizilerim"
     override var lang = "tr"
     override val hasMainPage = true
-    override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
+    override val supportedTypes = setOf(TvType.AsianDrama)
 
     private val uaHeaders get() = browserHeaders
 

@@ -1,11 +1,11 @@
-version = 6
+version = 7
 
 
 cloudstream {
     description = "SonAnime — Türkçe içerik"
     authors = listOf("F0Rextasy")
     status = 1
-    tvTypes = listOf("Movie", "TvSeries")
+    tvTypes = listOf("Anime", "AnimeMovie")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=sonanime.com&sz=%size%"
 }

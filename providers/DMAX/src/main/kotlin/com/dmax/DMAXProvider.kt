@@ -2,6 +2,7 @@ package com.dmax
 
 import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.posterSrcLazy
+import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
 import com.lagradost.cloudstream3.LoadResponse
@@ -26,6 +27,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.json.JSONObject
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 /**
@@ -41,7 +43,7 @@ class DMAXProvider : MainAPI() {
     override var lang = "tr"
     override val hasMainPage = true
     override val hasQuickSearch = false
-    override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
+    override val supportedTypes = setOf(TvType.Documentary, TvType.TvSeries)
 
     private val headers = mapOf(
         "user-agent" to UA,
@@ -50,6 +52,13 @@ class DMAXProvider : MainAPI() {
 
     override val mainPage get() = mainPageOf(
         "$mainUrl/" to "Programlar",
+        "$mainUrl/kesfet/belgesel" to "Belgesel",
+        "$mainUrl/kesfet/zorlu-isler" to "Zorlu İşler",
+        "$mainUrl/kesfet/nasil-yapiliyor" to "Nasıl Yapılıyor?",
+        "$mainUrl/kesfet/dogayla-ic-ice" to "Doğayla İç İçe",
+        "$mainUrl/kesfet/turbo" to "Turbo",
+        "$mainUrl/kesfet/spor" to "Spor",
+        "$mainUrl/kesfet/filmler" to "Filmler",
         "$mainUrl/kesfet/a-z" to "Tüm Programlar (A-Z)",
     ).filter { Settings.rowEnabled(it.name) }
 
@@ -85,16 +94,12 @@ class DMAXProvider : MainAPI() {
             }
         }
 
-        val episodes = doc.select("a[href]").mapNotNull { card ->
-            val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
-            if (!href.startsWith(pageUrl.trimEnd('/') + "/")) return@mapNotNull null
-            val match = EPISODE.find(href) ?: return@mapNotNull null
-            newEpisode(href) {
-                this.name = card.text().trim().ifBlank { "Bölüm ${match.groupValues[2]}" }
-                this.season = match.groupValues[1].toIntOrNull()
-                this.episode = match.groupValues[2].toIntOrNull()
-            }
-        }.distinctBy { it.data }
+        val programId = doc.selectFirst("[data-program-id]")?.attr("data-program-id")?.trim()
+        val episodes = if (!programId.isNullOrBlank()) {
+            seasonEpisodes(programId, pageUrl, doc).ifEmpty { inlineEpisodes(doc, pageUrl) }
+        } else {
+            inlineEpisodes(doc, pageUrl)
+        }
         if (episodes.isNotEmpty()) {
             return newTvSeriesLoadResponse(title, pageUrl, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
@@ -106,6 +111,70 @@ class DMAXProvider : MainAPI() {
             this.plot = plot
         }
     }
+
+    private suspend fun seasonEpisodes(
+        programId: String,
+        pageUrl: String,
+        doc: Document,
+    ): List<Episode> {
+        val seasons = doc.select("#video-filter-changer option")
+            .map { it.attr("value").trim() }
+            .filter { it.isNotBlank() }
+            .distinct()
+            .ifEmpty {
+                listOfNotNull(doc.selectFirst(".load-more[data-season]")?.attr("data-season")?.trim()?.ifBlank { null })
+                    .ifEmpty { listOf("") }
+            }
+        val ajaxHeaders = headers + mapOf("X-Requested-With" to "XMLHttpRequest")
+        val episodes = mutableListOf<Episode>()
+        for (season in seasons) {
+            var page = 0
+            while (page < MAX_SEASON_PAGES) {
+                val fragment = runCatching {
+                    app.post(
+                        "$mainUrl/ajax/more",
+                        data = mapOf(
+                            "type" to "episodes",
+                            "program_id" to programId,
+                            "page" to page.toString(),
+                            "season" to season,
+                        ),
+                        headers = ajaxHeaders,
+                        referer = pageUrl,
+                    ).text
+                }.getOrNull().orEmpty()
+                if (fragment.isBlank()) break
+                val found = Jsoup.parse(fragment).select(".item > a[href], a[href]").mapNotNull { card ->
+                    val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
+                    val match = EPISODE.find(href) ?: return@mapNotNull null
+                    val label = card.selectFirst(".item-meta-title")?.text()?.trim()?.ifBlank { null }
+                        ?: card.text().trim().ifBlank { "Bölüm ${match.groupValues[2]}" }
+                    newEpisode(href) {
+                        this.name = label
+                        this.season = match.groupValues[1].toIntOrNull()
+                        this.episode = match.groupValues[2].toIntOrNull()
+                    }
+                }
+                if (found.isEmpty()) break
+                episodes += found
+                page++
+            }
+        }
+        return episodes.distinctBy { it.data }
+            .sortedWith(compareBy({ it.season ?: 0 }, { it.episode ?: 0 }))
+    }
+
+    private fun inlineEpisodes(doc: Document, pageUrl: String): List<Episode> =
+        doc.select("a[href]").mapNotNull { card ->
+            val href = fixUrlNull(card.attr("href")) ?: return@mapNotNull null
+            if (!href.startsWith(pageUrl.trimEnd('/') + "/")) return@mapNotNull null
+            val match = EPISODE.find(href) ?: return@mapNotNull null
+            newEpisode(href) {
+                this.name = card.text().trim().ifBlank { "Bölüm ${match.groupValues[2]}" }
+                this.season = match.groupValues[1].toIntOrNull()
+                this.episode = match.groupValues[2].toIntOrNull()
+            }
+        }.distinctBy { it.data }
 
     override suspend fun loadLinks(
         data: String,
@@ -157,10 +226,21 @@ class DMAXProvider : MainAPI() {
         .replace('ı', 'i').replace('ş', 's').replace('ğ', 'g')
         .replace('ü', 'u').replace('ö', 'o').replace('ç', 'c')
     companion object {
-        val ROWS = listOf("Programlar", "Tüm Programlar (A-Z)")
+        val ROWS = listOf(
+            "Programlar",
+            "Belgesel",
+            "Zorlu İşler",
+            "Nasıl Yapılıyor?",
+            "Doğayla İç İçe",
+            "Turbo",
+            "Spor",
+            "Filmler",
+            "Tüm Programlar (A-Z)",
+        )
         private val UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
+        private const val MAX_SEASON_PAGES = 40
         private val EPISODE = Regex("""(\d+)-sezon-(\d+)-bolum""")
         private val VIDEO_CODE = Regex("""data-video-code="([^"]+)"""")
         private val STATIC = setOf("arama", "yayin-akisi", "canli-yayin", "blog", "kesfet")

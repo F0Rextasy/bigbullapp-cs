@@ -43,13 +43,19 @@ class ShowTVProvider : MainAPI() {
     override var lang = "tr"
     override val hasMainPage = true
     override val hasQuickSearch = false
-    override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
+    override val supportedTypes = setOf(TvType.TvSeries)
 
     private val headers get() = browserHeaders
 
     override val mainPage get() = mainPageOf(
         "$mainUrl/diziler" to "Diziler",
+        "$mainUrl/diziler/arsivdeki-diziler" to "Arşivdeki Diziler",
+        "$mainUrl/diziler/aksiyon" to "Aksiyon",
+        "$mainUrl/diziler/dram" to "Dram",
+        "$mainUrl/diziler/komedi" to "Komedi",
+        "$mainUrl/diziler/romantik" to "Romantik",
         "$mainUrl/programlar" to "Programlar",
+        "$mainUrl/programlar/arsivdeki-programlar" to "Arşivdeki Programlar",
     ).filter { Settings.rowEnabled(it.name) }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
@@ -152,7 +158,16 @@ class ShowTVProvider : MainAPI() {
         }.distinctBy { it.url }
 
     companion object {
-        val ROWS = listOf("Diziler", "Programlar")
+        val ROWS = listOf(
+            "Diziler",
+            "Arşivdeki Diziler",
+            "Aksiyon",
+            "Dram",
+            "Komedi",
+            "Romantik",
+            "Programlar",
+            "Arşivdeki Programlar",
+        )
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
         private val YEAR = Regex("""\b((?:19|20)\d{2})\b""")

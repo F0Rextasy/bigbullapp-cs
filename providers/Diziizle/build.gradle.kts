@@ -1,4 +1,4 @@
-version = 4
+version = 5
 
 
 cloudstream {
@@ -7,5 +7,5 @@ cloudstream {
     status = 1
     tvTypes = listOf("TvSeries")
     language = "tr"
-    iconUrl = "https://www.google.com/s2/favicons?domain=diziizle.cloud&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=diziizle2.icu&sz=%size%"
 }

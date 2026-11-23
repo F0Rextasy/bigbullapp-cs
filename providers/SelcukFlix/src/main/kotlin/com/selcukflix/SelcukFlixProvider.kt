@@ -1,5 +1,6 @@
 package com.selcukflix
 
+import com.bigbull.common.browserHeaders
 import com.bigbull.common.parseHlsVariants
 import com.bigbull.common.pichiveSign
 import android.util.Base64
@@ -49,6 +50,8 @@ class SelcukFlixProvider : MainAPI() {
     override val hasMainPage = true
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
+
+    private val posterHdrs get() = browserHeaders + mapOf("Referer" to "$mainUrl/")
 
     private val uaHeaders get() = mapOf("user-agent" to UA, "Accept-Language" to "tr-TR,tr;q=0.9")
 
@@ -109,6 +112,7 @@ class SelcukFlixProvider : MainAPI() {
             if (episodes.isEmpty()) throw ErrorLoadingException("$name: bölüm listesi bulunamadı. $REPORT_HINT")
             return newTvSeriesLoadResponse(title, pageUrl, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
+                this.posterHeaders = posterHdrs
                 this.plot = plot
                 this.year = year
                 this.score = score
@@ -119,6 +123,7 @@ class SelcukFlixProvider : MainAPI() {
         }
         return newMovieLoadResponse(title, pageUrl, TvType.Movie, pageUrl) {
             this.posterUrl = poster
+            this.posterHeaders = posterHdrs
             this.plot = plot
             this.year = year
             this.score = score
@@ -176,11 +181,13 @@ class SelcukFlixProvider : MainAPI() {
         return if (isSeries) {
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
                 this.posterUrl = poster
+                this.posterHeaders = posterHdrs
                 this.year = year
             }
         } else {
             newMovieSearchResponse(title, href, TvType.Movie) {
                 this.posterUrl = poster
+                this.posterHeaders = posterHdrs
                 this.year = year
             }
         }
@@ -198,12 +205,14 @@ class SelcukFlixProvider : MainAPI() {
         return if (slug.startsWith("dizi/")) {
             newTvSeriesSearchResponse(title, url, TvType.TvSeries) {
                 this.posterUrl = poster
+                this.posterHeaders = posterHdrs
                 this.year = year
                 this.score = score
             }
         } else {
             newMovieSearchResponse(title, url, TvType.Movie) {
                 this.posterUrl = poster
+                this.posterHeaders = posterHdrs
                 this.year = year
                 this.score = score
             }

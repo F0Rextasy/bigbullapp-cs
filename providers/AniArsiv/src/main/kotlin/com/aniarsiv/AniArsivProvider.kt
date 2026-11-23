@@ -35,7 +35,7 @@ class AniArsivProvider : MainAPI() {
     override var mainUrl = "https://aniarsiv.com"
     override var name = "AniArsiv"
     override var lang = "tr"
-    override val supportedTypes = setOf(TvType.Anime, TvType.TvSeries, TvType.Movie)
+    override val supportedTypes = setOf(TvType.Anime)
     override val hasMainPage = true
     override val hasQuickSearch = false
     override val mainPage get() = ROWS.mapNotNull { row ->

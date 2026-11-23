@@ -47,7 +47,7 @@ class DeokwaveProvider : MainAPI() {
     override var mainUrl = "https://deokwave.com"
     override var name = "Deokwave"
     override var lang = "tr"
-    override val supportedTypes = setOf(TvType.Anime, TvType.Movie, TvType.TvSeries)
+    override val supportedTypes = setOf(TvType.Anime)
 
     override val hasMainPage = true
     override val mainPage get() = ROWS.mapNotNull { rowName ->

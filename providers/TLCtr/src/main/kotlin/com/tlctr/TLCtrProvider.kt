@@ -44,7 +44,7 @@ class TLCtrProvider : MainAPI() {
     override var lang = "tr"
     override val hasMainPage = true
     override val hasQuickSearch = true
-    override val supportedTypes = setOf(TvType.TvSeries, TvType.Live)
+    override val supportedTypes = setOf(TvType.Documentary, TvType.TvSeries, TvType.Live)
 
     private val uaHeaders get() = browserHeaders
     private val ajaxHeaders = uaHeaders + mapOf("X-Requested-With" to "XMLHttpRequest")
@@ -140,7 +140,7 @@ class TLCtrProvider : MainAPI() {
         }
 
         val plot = doc.selectFirst(".slide-description p.full")?.text()?.trim()?.ifBlank { null }
-        val programId = doc.selectFirst(".dyn-content.program-episodes[data-program-id]")?.attr("data-program-id")
+        val programId = doc.selectFirst("[data-program-id]")?.attr("data-program-id")?.trim()
         val episodes = if (programId.isNullOrBlank()) inlineEpisodes(doc) else seasonEpisodes(programId, url, doc)
         if (episodes.isEmpty()) throw ErrorLoadingException("$name: bölüm bulunamadı. $REPORT_HINT")
 
@@ -228,9 +228,13 @@ class TLCtrProvider : MainAPI() {
         doc: Document,
     ): List<Episode> {
         val seasons = doc.select("#video-filter-changer option")
-            .map { it.attr("value") }
+            .map { it.attr("value").trim() }
             .filter { it.isNotBlank() }
-            .ifEmpty { listOf("") }
+            .distinct()
+            .ifEmpty {
+                listOfNotNull(doc.selectFirst(".load-more[data-season]")?.attr("data-season")?.trim()?.ifBlank { null })
+                    .ifEmpty { listOf("") }
+            }
         val episodes = mutableListOf<Episode>()
         for (season in seasons) {
             var page = 0

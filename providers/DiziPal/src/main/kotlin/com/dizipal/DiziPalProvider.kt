@@ -1,5 +1,6 @@
 package com.dizipal
 
+import com.bigbull.common.browserHeaders
 import com.bigbull.common.parseHlsVariants
 import com.bigbull.common.pichiveSign
 import android.util.Base64
@@ -54,6 +55,8 @@ class DiziPalProvider : MainAPI() {
     override val hasMainPage = true
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
+
+    private val posterHdrs get() = browserHeaders + mapOf("Referer" to "$mainUrl/")
 
     // Oynatıcı CDN'i (aşağıdaki UA sabitinin yorumu) Chrome UA'ya 403 verdiği için tüm
     // istekler Firefox UA ile gider; browserHeaders (Chrome/130) burada bilinçli kullanılmaz.
@@ -115,6 +118,7 @@ class DiziPalProvider : MainAPI() {
             }
             return newTvSeriesLoadResponse(title, pageUrl, TvType.TvSeries, episodes) {
                 this.posterUrl = posterOf(doc, ld)
+                this.posterHeaders = posterHdrs
                 this.plot = ld?.optString("description")?.trim()?.takeIf { it.isNotEmpty() }
                 this.year = yearOf(ld)
                 this.score = Score.from10(ld?.optJSONObject("aggregateRating")?.optString("ratingValue"))
@@ -127,6 +131,7 @@ class DiziPalProvider : MainAPI() {
 
         return newMovieLoadResponse(title, pageUrl, TvType.Movie, pageUrl) {
             this.posterUrl = posterOf(doc, ld)
+            this.posterHeaders = posterHdrs
             this.plot = ld?.optString("description")?.trim()?.takeIf { it.isNotEmpty() }
             this.year = yearOf(ld)
             this.score = Score.from10(ld?.optJSONObject("aggregateRating")?.optString("ratingValue"))
@@ -181,11 +186,13 @@ class DiziPalProvider : MainAPI() {
         return if (isSeries) {
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
                 this.posterUrl = poster
+                this.posterHeaders = posterHdrs
                 this.year = year
             }
         } else {
             newMovieSearchResponse(title, href, TvType.Movie) {
                 this.posterUrl = poster
+                this.posterHeaders = posterHdrs
                 this.year = year
             }
         }
@@ -204,12 +211,14 @@ class DiziPalProvider : MainAPI() {
         return if (optString("used_type").equals("Series", ignoreCase = true)) {
             newTvSeriesSearchResponse(title, url, TvType.TvSeries) {
                 this.posterUrl = poster
+                this.posterHeaders = posterHdrs
                 this.year = year
                 this.score = score
             }
         } else {
             newMovieSearchResponse(title, url, TvType.Movie) {
                 this.posterUrl = poster
+                this.posterHeaders = posterHdrs
                 this.year = year
                 this.score = score
             }

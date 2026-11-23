@@ -1,4 +1,4 @@
-// @provider {"id":"webdramaturkey2", "name":"WebdramaTurkey2", "types":["movie", "tv"], "domain":"webdramaturkey2.com", "formats":["m3u8"], "sample":"tt29569035:tv:1:1", "description":"WebdramaTurkey2 Kore/Cin/Japon dizileri, filmleri ve animeleri (Turkce altyazili).", "version":"1.0.12"}
+// @provider {"id":"webdramaturkey2", "name":"WebdramaTurkey2", "types":["movie", "tv"], "domain":"webdramaturkey2.com", "formats":["m3u8"], "sample":"tt29569035:tv:1:1", "description":"WebdramaTurkey2 Kore/Cin/Japon dizileri, filmleri ve animeleri (Turkce altyazili).", "version":"1.0.13"}
 /**
  * webdramaturkey2 — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /arama/<q> -> dizi|film page -> episode -> /ajax/embed -> video.php
@@ -327,8 +327,23 @@ var __cinemetaGetStreams = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   var raw = String(id || "");
   try {
-    return Promise.resolve(__cinemetaGetStreams(raw, mediaType, season, episode)).then(function (streams) {
-      if ((streams && streams.length) || /^__alt__:/.test(raw)) return streams || [];
+    if (/^__alt__:/.test(raw)) return Promise.resolve(__cinemetaGetStreams(raw, mediaType, season, episode)).catch(function () { return []; });
+    function tryPrimary() {
+      if (!/^tt\d+$/.test(raw)) return Promise.resolve(__cinemetaGetStreams(raw, mediaType, season, episode)).catch(function () { return []; });
+      var h = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
+      return fetch("https://v3.sg.media-imdb.com/suggestion/t/" + raw + ".json", { headers: h })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          var t = j && j.d && j.d[0] && j.d[0].l ? String(j.d[0].l).replace(/\s*\([^)]*\)\s*$/, "").trim() : "";
+          return t ? __cinemetaGetStreams("__alt__:" + encodeURIComponent(t), mediaType, season, episode) : [];
+        })
+        .catch(function () { return []; })
+        .then(function (streams) {
+          return (streams && streams.length) ? streams : __cinemetaGetStreams(raw, mediaType, season, episode);
+        });
+    }
+    return tryPrimary().then(function (streams) {
+      if (streams && streams.length) return streams;
       return __altTitles(raw, mediaType).then(function (titles) {
         var chain = Promise.resolve([]);
         titles.forEach(function (t) {

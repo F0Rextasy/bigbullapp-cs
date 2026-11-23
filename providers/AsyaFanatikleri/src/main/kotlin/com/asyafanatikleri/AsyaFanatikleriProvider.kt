@@ -50,7 +50,7 @@ class AsyaFanatikleriProvider : MainAPI() {
     override var lang = "tr"
     override val hasMainPage = true
     override val hasQuickSearch = true
-    override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
+    override val supportedTypes = setOf(TvType.AsianDrama)
 
     override val mainPage get() = ROWS.mapNotNull { row ->
         if (!Settings.rowEnabled(row)) return@mapNotNull null

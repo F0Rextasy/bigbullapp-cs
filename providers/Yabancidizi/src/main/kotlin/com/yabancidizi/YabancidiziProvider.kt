@@ -50,6 +50,8 @@ class YabancidiziProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
 
+    private val posterHdrs get() = browserHeaders + mapOf("Referer" to "$mainUrl/")
+
     override val mainPage get() = ROWS.mapNotNull { name ->
         if (!Settings.rowEnabled(name)) return@mapNotNull null
         when (name) {
@@ -93,11 +95,13 @@ class YabancidiziProvider : MainAPI() {
             if (isMovie) {
                 newMovieSearchResponse(title, href, TvType.Movie) {
                     this.posterUrl = poster
+                    this.posterHeaders = posterHdrs
                     this.score = score
                 }
             } else {
                 newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
                     this.posterUrl = poster
+                    this.posterHeaders = posterHdrs
                     this.score = score
                 }
             }
@@ -145,9 +149,9 @@ class YabancidiziProvider : MainAPI() {
                     ?: return@mapNotNull null
                 val rPoster = fixUrlNull(item.optString("img").ifBlank { item.optString("poster") })
                 if (rUrl.contains("/film/")) {
-                    newMovieSearchResponse(rTitle, rUrl, TvType.Movie) { this.posterUrl = rPoster }
+                    newMovieSearchResponse(rTitle, rUrl, TvType.Movie) { this.posterUrl = rPoster ; this.posterHeaders = posterHdrs }
                 } else {
-                    newTvSeriesSearchResponse(rTitle, rUrl, TvType.TvSeries) { this.posterUrl = rPoster }
+                    newTvSeriesSearchResponse(rTitle, rUrl, TvType.TvSeries) { this.posterUrl = rPoster ; this.posterHeaders = posterHdrs }
                 }
             }
         }?.takeIf { it.isNotEmpty() }
@@ -155,6 +159,7 @@ class YabancidiziProvider : MainAPI() {
         if (url.contains("/film/")) {
             return newMovieLoadResponse(title, url, TvType.Movie, url) {
                 this.posterUrl = poster
+                this.posterHeaders = posterHdrs
                 this.plot = plot
                 this.year = year
                 this.tags = tags
@@ -209,6 +214,7 @@ class YabancidiziProvider : MainAPI() {
             episodes.values.sortedWith(compareBy({ it.season ?: 0 }, { it.episode ?: 0 })),
         ) {
             this.posterUrl = poster
+            this.posterHeaders = posterHdrs
             this.plot = plot
             this.year = year
             this.tags = tags

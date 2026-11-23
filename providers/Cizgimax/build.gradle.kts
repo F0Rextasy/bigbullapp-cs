@@ -1,4 +1,4 @@
-version = 13
+version = 14
 
 
 cloudstream {
@@ -14,7 +14,7 @@ cloudstream {
      **/
     status = 1
 
-    tvTypes = listOf("TvSeries")
+    tvTypes = listOf("Cartoon")
     language = "tr"
 
     iconUrl = "https://www.google.com/s2/favicons?domain=cizgimax.online&sz=%size%"

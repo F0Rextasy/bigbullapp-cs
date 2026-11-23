@@ -32,6 +32,16 @@ def kt_surum(metin):
     return int(m.group(1)) if m else None
 
 
+def gradle_tv_types(metin):
+    m = re.search(r"tvTypes\s*=\s*listOf\(([^)]*)\)", metin or "", re.S)
+    return sorted(re.findall(r'"([^"]+)"', m.group(1))) if m else []
+
+
+def provider_supported_types(metin):
+    m = re.search(r"override\s+val\s+supportedTypes\s*=\s*setOf\(([^)]*)\)", metin or "", re.S)
+    return sorted(re.findall(r"TvType\.(\w+)", m.group(1))) if m else []
+
+
 def js_surum(metin):
     m = re.search(r'"version"\s*:\s*"([^"]+)"', (metin or "").split("\n", 1)[0])
     return m.group(1) if m else None
@@ -284,6 +294,8 @@ def envanter():
         has_settings = False
         has_open_settings = False
         has_main_false = False
+        g_types = gradle_tv_types(open(f"{kok}/build.gradle.kts", encoding="utf-8").read())
+        k_types = []
         for dirpath, _dirs, files in os.walk(kok):
             for fn in files:
                 yol = os.path.join(dirpath, fn)
@@ -293,14 +305,18 @@ def envanter():
                     if "openSettings" in open(yol, encoding="utf-8").read():
                         has_open_settings = True
                 elif fn.endswith("Provider.kt"):
-                    if re.search(r"\bhasMainPage\s*=\s*false\b", open(yol, encoding="utf-8").read()):
+                    ptxt = open(yol, encoding="utf-8").read()
+                    if re.search(r"\bhasMainPage\s*=\s*false\b", ptxt):
                         has_main_false = True
+                    k_types = provider_supported_types(ptxt)
         if not has_settings:
             hata.append(f"{mod}: Settings.kt eksik")
         if not has_open_settings:
             hata.append(f"{mod}: Plugin.kt içinde openSettings eksik")
         if has_main_false:
             hata.append(f"{mod}: hasMainPage = false yasak")
+        if g_types != k_types:
+            hata.append(f"{mod}: tvTypes {g_types} != supportedTypes {k_types}")
 
     disk_nuvio = {os.path.splitext(os.path.basename(p))[0] for p in glob.glob("nuvio/providers/*.js")}
     if len(disk_nuvio) < 20:
@@ -339,6 +355,8 @@ def test():
     assert ra == {"Dizibox"} and rp == {"AsyaLuna"}
     common_syms = bump_common.extract_public_symbols("providers/Common/src/main/kotlin/com/bigbull/common/Common.kt")
     assert "pichiveGateNonce" in common_syms and "parseHlsVariants" in common_syms
+    assert gradle_tv_types('tvTypes = listOf("TvSeries", "Movie")') == ["Movie", "TvSeries"]
+    assert provider_supported_types("override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)") == ["Movie", "TvSeries"]
     env_hatalari = envanter()
     assert not env_hatalari, f"envanter hatası: {env_hatalari}"
     print("kapi.py: testler geçti")

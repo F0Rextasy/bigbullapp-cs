@@ -55,6 +55,8 @@ class P720pizleProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.Movie)
 
+    private val posterHdrs get() = browserHeaders + mapOf("Referer" to "$mainUrl/")
+
     override val mainPage get() = ROWS.mapNotNull { row ->
         if (!Settings.rowEnabled(row)) return@mapNotNull null
         val path = ROW_PATHS[row] ?: return@mapNotNull null
@@ -124,6 +126,7 @@ class P720pizleProvider : MainAPI() {
         val url = if (slug.startsWith("http")) slug else "$mainUrl/$slug"
         return newMovieSearchResponse(title, url, TvType.Movie) {
             this.posterUrl = fixUrlNull(optString("object_poster_url"))
+            this.posterHeaders = posterHdrs
             this.year = optInt("object_release_year", 0).takeIf { it in 1900..2100 }
             this.score = optDouble("object_related_imdb_point", 0.0).takeIf { it > 0 }
                 ?.let { Score.from10(it) }
@@ -147,6 +150,7 @@ class P720pizleProvider : MainAPI() {
 
         return newMovieLoadResponse(title, pageUrl, TvType.Movie, pageUrl) {
             this.posterUrl = doc.selectFirst("img.detail-poster-image")?.posterSrcLazy()
+            this.posterHeaders = posterHdrs
             this.plot = doc.selectFirst("div.synopsis")?.text()?.trim()?.takeIf { it.isNotEmpty() }
                 ?: schema?.optString("description")?.trim()?.takeIf { it.isNotEmpty() }
             this.year = doc.labeledValue("Yayın")?.selectFirst("a[href*=/yil/]")?.text()
@@ -191,6 +195,7 @@ class P720pizleProvider : MainAPI() {
         return newMovieSearchResponse(title, url, TvType.Movie) {
             this.posterUrl = selectFirst("img.poster-img")?.posterSrcLazy()
                 ?: selectFirst("img")?.posterSrcLazy()
+            this.posterHeaders = posterHdrs
             this.year = selectFirst("a[href*=/yil/]")?.text()
                 ?.let { YEAR.find(it)?.value?.toIntOrNull() }
             this.score = selectFirst("span.tag--imdb")?.text()

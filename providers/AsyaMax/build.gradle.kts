@@ -1,10 +1,10 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "AsyaMax — Türkçe altyazılı Asya dizileri ve filmleri (asyamax.com)"
     authors = listOf("F0Rextasy")
     status = 1
-    tvTypes = listOf("TvSeries", "Movie")
+    tvTypes = listOf("AsianDrama")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=asyamax.com&sz=%size%"
 }

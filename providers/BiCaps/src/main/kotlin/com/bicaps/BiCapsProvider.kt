@@ -44,6 +44,8 @@ class BiCapsProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.Movie)
 
+    private val posterHdrs get() = browserHeaders + mapOf("Referer" to "$mainUrl/")
+
     override val mainPage get() = ROWS.mapNotNull { row ->
         if (!Settings.rowEnabled(row)) return@mapNotNull null
         val url = rowUrl(row) ?: return@mapNotNull null
@@ -71,6 +73,7 @@ class BiCapsProvider : MainAPI() {
         val title = selectFirst(".film-ismi a")?.text()?.trim()?.takeIf { it.isNotBlank() } ?: return null
         return newMovieSearchResponse(title, href, TvType.Movie) {
             this.posterUrl = selectFirst("img")?.posterSrcLazy()?.let { fixUrlNull(it) }
+            this.posterHeaders = posterHdrs
             this.year = selectFirst(".film-yil")?.text()?.trim()?.toIntOrNull()
         }
     }
@@ -86,6 +89,7 @@ class BiCapsProvider : MainAPI() {
             .flatMap { it.select("a[rel=tag]").map { a -> a.text().trim() }.filter { n -> n.isNotEmpty() } }
         return newMovieLoadResponse(title, url, TvType.Movie, url) {
             this.posterUrl = doc.selectFirst(".film-afis img")?.posterSrcLazy()?.let { fixUrlNull(it) }
+            this.posterHeaders = posterHdrs
             this.year = doc.select("div.list-item a[href*='/yil/']").firstOrNull()?.text()?.trim()?.toIntOrNull()
             this.plot = doc.selectFirst("#film-aciklama")?.text()?.trim()
             this.tags = elements.filter { !it.contains("izlenme") && !it.startsWith("IMDb") }

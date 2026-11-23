@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "BiCaps — Türkçe dublaj & altyazılı HD film arşivi"

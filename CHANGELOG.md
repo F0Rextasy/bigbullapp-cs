@@ -5,6 +5,22 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.32] - 2026-11-23
+
+### Düzeltildi
+- **FullHDFilmizlesene**: Yeni oynatıcı kullanan bazı filmlerin açılmama sorunu giderildi (Cloudstream ve Nuvio).
+- **DMAX & TLCtr**: Programlarda yalnızca ilk birkaç bölümün listelenmesi düzeltildi; tüm sezon ve bölümler artık tam listeleniyor.
+- **Kapak görselleri**: BiCaps, DiziPal, Dizist, P720pizle, RoketDizi, SelcukFlix ve Yabancidizi'de afişlerin yüklenmeme sorunu giderildi.
+- **Alan adları**: Dizibaba, Diziizle ve DiziYou güncel adreslerine taşındı (Cloudstream ve Nuvio).
+
+### İyileştirildi
+- **Canlı yayın & TV kanalları**: DMAX, KanalD, ShowTV, TV8 ve TV2 ana sayfalarına kategori, arşiv ve program satırları eklendi.
+- **Sayfalı arama**: FullHDFilmizlesene, FilmMakinesi, AsyaMax, DiziPod, FilmKovasi ve SetFilmIzle sağlayıcılarına sayfalı arama desteği eklendi.
+
+### Değişti
+- **Kategori filtreleri**: Eklenti seçimindeki tür etiketleri (Asya Dizisi, Çizgi Film, Belgesel, Anime, Dizi, Film) içeriğe göre ayrıldı; gereksiz Film etiketleri temizlendi.
+- **Nuvio**: Sağlayıcıların başlık çözümlemesi öncelikli olarak IMDb arama önerisine taşındı.
+
 ## [1.7.31] - 2026-11-23
 
 ### Düzeltildi

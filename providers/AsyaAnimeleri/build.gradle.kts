@@ -1,11 +1,11 @@
-version = 13
+version = 14
 
 
 cloudstream {
     description = "AsyaAnimeleri — Türkçe altyazılı anime ve donghua arşivi (asyaanimeleri.top)"
     authors = listOf("F0Rextasy")
     status = 1
-    tvTypes = listOf("Anime", "Movie")
+    tvTypes = listOf("Anime")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=asyaanimeleri.top&sz=%size%"
 }

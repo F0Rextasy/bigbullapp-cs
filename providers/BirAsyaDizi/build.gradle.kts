@@ -1,11 +1,11 @@
-version = 9
+version = 10
 
 
 cloudstream {
     description = "BirAsyaDizi — Türkçe içerik"
     authors = listOf("F0Rextasy")
     status = 1
-    tvTypes = listOf("Movie", "TvSeries")
+    tvTypes = listOf("AsianDrama")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=birasyadizi.cx&sz=%size%"
 }

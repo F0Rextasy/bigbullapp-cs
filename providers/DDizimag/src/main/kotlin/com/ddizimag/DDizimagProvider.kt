@@ -41,7 +41,7 @@ class DDizimagProvider : MainAPI() {
     override var mainUrl = "https://ddizimag2.icu"
     override var name = "DDizimag"
     override var lang = "tr"
-    override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
+    override val supportedTypes = setOf(TvType.TvSeries)
 
     override val hasMainPage = true
     override val mainPage get() = ROWS.mapNotNull { rowName ->

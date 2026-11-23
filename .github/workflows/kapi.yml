@@ -36,3 +36,30 @@ jobs:
         run: python3 .github/scripts/kapi.py surum "${{ github.event.pull_request.base.sha || github.event.before }}"
       - name: Envanter ve README senkron kontrolü
         run: python3 .github/scripts/kapi.py envanter
+      - name: JDK 17 kur
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Gradle ve Cloudstream bağımlılık önbelleği
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/caches/cloudstream
+            ~/.gradle/caches/build-cache-1
+            ~/.gradle/wrapper
+          key: bagimlilar-v2-${{ hashFiles('build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            bagimlilar-v2-
+      - name: Android SDK paketleri
+        run: |
+          SDK="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
+          TOOL="$SDK/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$TOOL" ]; then TOOL="$(command -v sdkmanager)"; fi
+          yes | "$TOOL" --licenses >/dev/null 2>&1 || true
+          "$TOOL" "platforms;android-35" "build-tools;35.0.0" >/dev/null
+      - name: Kotlin birim testleri
+        run: |
+          chmod +x gradlew
+          ./gradlew testUnit --console=plain

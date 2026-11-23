@@ -32,7 +32,7 @@ Nuvio'da plugin desteği yalnız **sideload** sürümlerde vardır (mağaza sür
 | Ne için | Adres |
 |---|---|
 | Ana sayfa film/dizi satırları | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json` |
-| Canlı TV (8 satır, 151 kanal) | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json` |
+| Canlı TV (8 satır, 150 kanal) | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json` |
 
 Nuvio plugin deposu: `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json`
 
@@ -118,7 +118,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 
 - **Cloudstream:** tek sağlayıcı `CanliTV` — 159 kanal (seçilmiş HLS + iptv-org). "Doğrulanmış"
   yalnız HTTP 200 HLS adresi demektir; oynatma garantisi değildir.
-- **Nuvio:** `BigBull Canlı TV` addon'u — 8 satır, 151 kanal, doğrudan HLS. Kanal listesi Cloudstream
+- **Nuvio:** `BigBull Canlı TV` addon'u — 8 satır, 150 kanal, doğrudan HLS. Kanal listesi Cloudstream
   `CanliTV` kaynağından üretilir; ölü kanallar ayıklanır.
 - Yeni kanal önerisi için site/kanal adını issue olarak bırak.
 
@@ -193,7 +193,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `FilmKovasi` | filmkovasi.co | Film | ✓ | — | — | ✓ | — | — |
 | `FilmModu` | filmmodu.icu | Film | — | — | ✓ | ✓ | ✓ | ✓ |
 | `FullHDFilm` | fullhdfilmizlebox.vip | Film | ✓ | — | — | — | — | ✓ |
-| `FullHDFilmizlesene` | fullhdfilmizlesene.now | Film | — | — | ✓ | — | — | ✓ |
+| `FullHDFilmizlesene` | fullhdfilmizlesene.now | Film | ✓ | — | ✓ | — | — | ✓ |
 | `HDFilmCehennemi` | hdfilmcehennemi.nl | Film | ✓ | — | — | — | ✓ | ✓ |
 | `HDFilmCehennemi2` | hdfilmcehennemi2.biz | Film | ✓ | — | — | — | — | ✓ |
 | `HDFilmDelisi` | hdfilmdelisi1.com | Film | ✓ | — | — | — | ✓ | ✓ |
@@ -218,7 +218,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Rectv` | a.psrectv80.xyz (imzalı API) | Film/Dizi | ✓ | — | ✓ | — | ✓ | ✓ |
 | `RoketDizi` | roketdizi.life | Dizi | ✓ | ✓ | — | — | ✓ | ✓ |
 | `SelcukFlix` | selcukflix.app | Dizi/Film | ✓ | — | — | ✓ | ✓ | ✓ |
-| `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | — | ✓ | ✓ | — | ✓ | ✓ |
+| `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `Sezonlukdizi` | sezonlukdizi.cc | Dizi | ✓ | — | ✓ | — | ✓ | ✓ |
 | `ShowTV` | showtv.com.tr | Dizi | ✓ | — | — | — | — | — |
 | `SinemaCX` | sinemacc.com | Film | — | — | — | ✓ | ✓ | ✓ |

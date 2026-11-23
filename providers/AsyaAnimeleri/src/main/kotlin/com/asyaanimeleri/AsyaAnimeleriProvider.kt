@@ -46,7 +46,7 @@ class AsyaAnimeleriProvider : MainAPI() {
     override var lang = "tr"
     override val hasMainPage = true
     override val hasQuickSearch = true
-    override val supportedTypes = setOf(TvType.Anime, TvType.Movie)
+    override val supportedTypes = setOf(TvType.Anime)
 
     override val mainPage get() = ROWS.mapNotNull { name ->
         if (!Settings.rowEnabled(name)) return@mapNotNull null

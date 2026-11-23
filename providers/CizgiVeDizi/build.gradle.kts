@@ -1,11 +1,11 @@
-version = 3
+version = 4
 
 
 cloudstream {
     description = "CizgiVeDizi — Türkçe çizgi dizi, anime, dizi ve film arşivi (cizgivedizi.net)"
     authors = listOf("F0Rextasy")
     status = 1
-    tvTypes = listOf("TvSeries", "Movie", "Anime")
+    tvTypes = listOf("Cartoon", "Anime")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=cizgivedizi.net&sz=%size%"
 }

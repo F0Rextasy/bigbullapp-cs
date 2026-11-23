@@ -45,7 +45,7 @@ class AniziumProvider : MainAPI() {
     override var name = "Anizium"
     override var lang = "tr"
     override val hasMainPage = true
-    override val supportedTypes = setOf(TvType.Anime, TvType.Movie)
+    override val supportedTypes = setOf(TvType.Anime, TvType.AnimeMovie)
 
     private val apiUrl = "https://api.anizium.co"
 

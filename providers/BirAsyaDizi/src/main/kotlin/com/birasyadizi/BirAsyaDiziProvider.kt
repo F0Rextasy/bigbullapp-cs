@@ -47,7 +47,7 @@ class BirAsyaDiziProvider : MainAPI() {
     override var mainUrl = "https://www.birasyadizi.cx"
     override var name = "BirAsyaDizi"
     override var lang = "tr"
-    override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
+    override val supportedTypes = setOf(TvType.AsianDrama)
 
     override val hasMainPage = true
     override val mainPage get() = ROWS.mapNotNull { rowName ->

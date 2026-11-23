@@ -42,7 +42,7 @@ class CizgiSiteProvider : MainAPI() {
     override var lang = "tr"
     override val hasMainPage = true
     override val hasQuickSearch = false
-    override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
+    override val supportedTypes = setOf(TvType.Cartoon)
 
     private val uaHeaders get() = browserHeaders
 

@@ -59,6 +59,8 @@ class RoketDiziProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
 
+    private val posterHdrs get() = browserHeaders + mapOf("Referer" to "$mainUrl/")
+
     override val mainPage get() = ROWS.mapNotNull { row ->
         if (!Settings.rowEnabled(row)) return@mapNotNull null
         val data = when (row) {
@@ -127,6 +129,7 @@ class RoketDiziProvider : MainAPI() {
         if (pageUrl.contains("/film/")) {
             return newMovieLoadResponse(title, pageUrl, TvType.Movie, pageUrl) {
                 this.posterUrl = poster
+                this.posterHeaders = posterHdrs
                 this.plot = plot
                 this.year = year
                 this.tags = tags
@@ -141,6 +144,7 @@ class RoketDiziProvider : MainAPI() {
         if (episodes.isEmpty()) throw ErrorLoadingException("$name: bölüm listesi bulunamadı. $REPORT_HINT")
         return newTvSeriesLoadResponse(title, pageUrl, TvType.TvSeries, episodes) {
             this.posterUrl = poster
+            this.posterHeaders = posterHdrs
             this.plot = plot
             this.year = year
             this.tags = tags
@@ -226,11 +230,13 @@ class RoketDiziProvider : MainAPI() {
         return if (isMovie) {
             newMovieSearchResponse(title, url, TvType.Movie) {
                 this.posterUrl = poster
+                this.posterHeaders = posterHdrs
                 this.score = score
             }
         } else {
             newTvSeriesSearchResponse(title, url, TvType.TvSeries) {
                 this.posterUrl = poster
+                this.posterHeaders = posterHdrs
                 this.score = score
             }
         }
@@ -266,9 +272,9 @@ class RoketDiziProvider : MainAPI() {
             val url = fixUrlNull(item.optString("href")) ?: return@mapNotNull null
             val poster = fixUrlNull(item.optString("img"))
             if (url.contains("/film/")) {
-                newMovieSearchResponse(title, url, TvType.Movie) { this.posterUrl = poster }
+                newMovieSearchResponse(title, url, TvType.Movie) { this.posterUrl = poster ; this.posterHeaders = posterHdrs }
             } else {
-                newTvSeriesSearchResponse(title, url, TvType.TvSeries) { this.posterUrl = poster }
+                newTvSeriesSearchResponse(title, url, TvType.TvSeries) { this.posterUrl = poster ; this.posterHeaders = posterHdrs }
             }
         }
 

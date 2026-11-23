@@ -1,11 +1,11 @@
-version = 8
+version = 9
 
 
 cloudstream {
     description = "Asyadizileriizle — Türkçe içerik"
     authors = listOf("F0Rextasy")
     status = 1
-    tvTypes = listOf("Movie", "TvSeries")
+    tvTypes = listOf("AsianDrama")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=asyadizileriizle.com&sz=%size%"
 }

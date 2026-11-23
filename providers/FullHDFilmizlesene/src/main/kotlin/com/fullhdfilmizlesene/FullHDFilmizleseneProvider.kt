@@ -11,6 +11,7 @@ import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SearchResponse
+import com.lagradost.cloudstream3.SearchResponseList
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
@@ -18,6 +19,7 @@ import com.lagradost.cloudstream3.fixUrlNull
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
+import com.lagradost.cloudstream3.newSearchResponseList
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
@@ -67,9 +69,14 @@ class FullHDFilmizleseneProvider : MainAPI() {
         return if (alt.isBlank() || local.contains(alt, true)) local else "$local ($alt)"
     }
 
-    override suspend fun search(query: String): List<SearchResponse> {
-        val doc = app.get("$mainUrl/arama/${query.trim().replace(" ", "+")}", headers = siteHeaders).document
-        return doc.select("li.film").mapNotNull { it.toSearchResult() }
+    override suspend fun search(query: String, page: Int): SearchResponseList? {
+        val term = query.trim().replace(" ", "+")
+        val url = if (page <= 1) "$mainUrl/arama/$term" else "$mainUrl/arama/$term/$page"
+        val doc = runCatching { app.get(url, headers = siteHeaders).document }.getOrNull()
+            ?: return newSearchResponseList(emptyList(), false)
+        val items = doc.select("li.film").mapNotNull { it.toSearchResult() }
+        val hasNext = doc.selectFirst("a[href*='/arama/$term/${page + 1}']") != null || items.size >= 18
+        return newSearchResponseList(items, hasNext)
     }
 
     override suspend fun load(url: String): LoadResponse? {
@@ -116,9 +123,14 @@ class FullHDFilmizleseneProvider : MainAPI() {
         scx.keys().forEach { sourceKey ->
             val source = scx.optJSONObject(sourceKey) ?: return@forEach
             val label = decode(source.optString("tt")).trim().ifBlank { sourceKey }
-            val streams = source.optJSONObject("sx")?.optJSONArray("t") ?: JSONArray()
-            for (i in 0 until streams.length()) {
-                val embed = decodeEncoded(streams.optString(i)) ?: continue
+            val tRaw = source.optJSONObject("sx")?.opt("t")
+            val streams = when (tRaw) {
+                is JSONArray -> (0 until tRaw.length()).map { tRaw.optString(it) }
+                is JSONObject -> tRaw.keys().asSequence().map { tRaw.optString(it) }.toList()
+                else -> emptyList()
+            }
+            for (encodedEntry in streams) {
+                val embed = decodeEncoded(encodedEntry) ?: continue
                 val ok = when {
                     embed.contains("rapidvid.") -> resolveAtom(embed, label, subtitleFilter, linkCallback)
                     embed.contains(".m3u8") -> {
@@ -141,7 +153,7 @@ class FullHDFilmizleseneProvider : MainAPI() {
         return found
     }
 
-    /** rapidvid embed -> atomCodecTelemetry veya `jwSetup.sources` HLS master + jwSetup.tracks subtitles. */
+    /** rapidvid embed -> atomCodecTelemetry, `window._p8` (/vx/) veya `jwSetup.sources` HLS master + altyazılar. */
     private suspend fun resolveAtom(
         embed: String,
         label: String,
@@ -153,12 +165,18 @@ class FullHDFilmizleseneProvider : MainAPI() {
         }.getOrNull() ?: return false
         val telemetry = Regex("""atomCodecTelemetry=(\{.*?\});""", RegexOption.DOT_MATCHES_ALL)
             .find(html)?.groupValues?.get(1)?.let { runCatching { JSONObject(it) }.getOrNull() }
+        val p8 = Regex("""window\._p8\s*=\s*['"]([^'"]+)['"]""")
+            .find(html)?.groupValues?.get(1)
+            ?.let { rapidVidAvDecode(it) }
+            ?.let { runCatching { JSONObject(it) }.getOrNull() }
         val jwSources = Regex("""jwSetup\.sources\s*=\s*\[(.*?)\];""", RegexOption.DOT_MATCHES_ALL)
             .find(html)?.groupValues?.get(1).orEmpty()
         val encoded = Regex("""av\('([^']+)'\)""").find(jwSources)?.groupValues?.get(1)
         val plain = Regex("\"file\"\\s*:\\s*\"([^\"]+)\"").find(jwSources)?.groupValues?.get(1)
         val stream = telemetry?.optString("h264")?.takeIf { it.startsWith("http") }
             ?: telemetry?.optString("av1")?.takeIf { it.startsWith("http") }
+            ?: p8?.optString("cm")?.takeIf { it.startsWith("http") }
+            ?: p8?.optString("tm")?.takeIf { it.startsWith("http") }
             ?: encoded?.let { rapidVidAvDecode(it) }?.takeIf { it.startsWith("http") }
             ?: plain?.takeIf { it.startsWith("http") }
             ?: return false
@@ -171,8 +189,9 @@ class FullHDFilmizleseneProvider : MainAPI() {
                 this.quality = quality
             }
         )
-        val tracks = Regex("""jwSetup\.tracks\s*=\s*(\[.*?\]);""", RegexOption.DOT_MATCHES_ALL)
-            .find(html)?.groupValues?.get(1)?.let { runCatching { JSONArray(it) }.getOrNull() }
+        val tracks = p8?.optJSONArray("ct")
+            ?: Regex("""jwSetup\.tracks\s*=\s*(\[.*?\]);""", RegexOption.DOT_MATCHES_ALL)
+                .find(html)?.groupValues?.get(1)?.let { runCatching { JSONArray(it) }.getOrNull() }
         for (i in 0 until (tracks?.length() ?: 0)) {
             val track = tracks?.optJSONObject(i) ?: continue
             val file = track.optString("file").takeIf { it.isNotBlank() } ?: continue

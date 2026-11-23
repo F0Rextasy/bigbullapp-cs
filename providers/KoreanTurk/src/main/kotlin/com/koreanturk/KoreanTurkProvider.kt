@@ -32,7 +32,7 @@ class KoreanTurkProvider : MainAPI() {
     override var name = "KoreanTurk"
     override var lang = "tr"
     override val hasMainPage = true
-    override val supportedTypes = setOf(TvType.TvSeries)
+    override val supportedTypes = setOf(TvType.AsianDrama)
 
     override val mainPage get() = ROWS.mapNotNull { name ->
         if (!Settings.rowEnabled(name)) return@mapNotNull null

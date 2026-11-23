@@ -13,6 +13,7 @@ import com.lagradost.cloudstream3.MainAPI
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SearchResponse
+import com.lagradost.cloudstream3.SearchResponseList
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
@@ -23,6 +24,7 @@ import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
+import com.lagradost.cloudstream3.newSearchResponseList
 import com.lagradost.cloudstream3.newTvSeriesLoadResponse
 import com.lagradost.cloudstream3.newTvSeriesSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
@@ -77,10 +79,12 @@ class DiziPodProvider : MainAPI() {
         return newHomePageResponse(request.name, doc.cards(), hasNext = doc.hasNextPage(page))
     }
 
-    override suspend fun search(query: String): List<SearchResponse> {
+    override suspend fun search(query: String, page: Int): SearchResponseList? {
         val encoded = URLEncoder.encode(query.trim(), "UTF-8")
-        val doc = app.get("$mainUrl/?s=$encoded", headers = uaHeaders).document
-        return doc.cards()
+        val url = if (page <= 1) "$mainUrl/?s=$encoded" else "$mainUrl/page/$page/?s=$encoded"
+        val doc = runCatching { app.get(url, headers = uaHeaders).document }.getOrNull()
+            ?: return newSearchResponseList(emptyList(), false)
+        return newSearchResponseList(doc.cards(), doc.hasNextPage(page))
     }
 
     override suspend fun load(url: String): LoadResponse? {

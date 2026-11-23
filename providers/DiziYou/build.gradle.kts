@@ -1,13 +1,13 @@
-version = 11
+version = 12
 
 
 cloudstream {
-    description = "DiziYou — Türkçe dublaj & altyazılı yabancı dizi (diziyou.one)"
+    description = "DiziYou — Türkçe dublaj & altyazılı yabancı dizi (diziyou.love)"
     authors = listOf("F0Rextasy")
     status = 1
     tvTypes = listOf("TvSeries")
     language = "tr"
-    iconUrl = "https://www.google.com/s2/favicons?domain=diziyou.one&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=diziyou.love&sz=%size%"
 }
 
 android {

@@ -1,11 +1,11 @@
-version = 12
+version = 13
 
 
 cloudstream {
     description = "AsyaWatch — Kore ve Asya web dramaları, Türkçe altyazılı (asyawatch.com)"
     authors = listOf("F0Rextasy")
     status = 1
-    tvTypes = listOf("TvSeries", "Movie")
+    tvTypes = listOf("AsianDrama")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=asyawatch.com&sz=%size%"
 }

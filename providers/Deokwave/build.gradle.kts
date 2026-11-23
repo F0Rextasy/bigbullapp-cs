@@ -1,11 +1,11 @@
-version = 10
+version = 11
 
 
 cloudstream {
     description = "Deokwave — Türkçe içerik"
     authors = listOf("F0Rextasy")
     status = 1
-    tvTypes = listOf("Movie", "TvSeries")
+    tvTypes = listOf("Anime")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=deokwave.com&sz=%size%"
 }

@@ -1,11 +1,11 @@
-version = 6
+version = 7
 
 
 cloudstream {
     description = "BelgeselX — Türkçe belgesel arşivi (belgeselx.com)"
     authors = listOf("F0Rextasy")
     status = 1
-    tvTypes = listOf("TvSeries")
+    tvTypes = listOf("Documentary")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=belgeselx.com&sz=%size%"
 }

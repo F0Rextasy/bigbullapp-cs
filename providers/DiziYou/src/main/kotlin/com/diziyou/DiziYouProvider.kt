@@ -29,9 +29,9 @@ import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import java.net.URLEncoder
 
-/** DiziYou — diziyou.one (CSS: storage.diziyou.one, m3u8 + VTT) */
+/** DiziYou — diziyou.love (CSS: storage.diziyou.love, m3u8 + VTT) */
 class DiziYouProvider : MainAPI() {
-    override var mainUrl = "https://www.diziyou.one"
+    override var mainUrl = "https://www.diziyou.love"
     private val uaHeaders get() = browserHeaders
     override var name = "DiziYou"
     override var lang = "tr"

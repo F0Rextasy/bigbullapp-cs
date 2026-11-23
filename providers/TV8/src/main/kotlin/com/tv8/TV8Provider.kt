@@ -39,7 +39,7 @@ class TV8Provider : MainAPI() {
     override var lang = "tr"
     override val hasMainPage = true
     override val hasQuickSearch = false
-    override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
+    override val supportedTypes = setOf(TvType.TvSeries)
 
     private val headers = mapOf(
         "user-agent" to UA,
@@ -48,6 +48,8 @@ class TV8Provider : MainAPI() {
 
     override val mainPage get() = mainPageOf(
         "$mainUrl/programlar" to "Programlar",
+        "$mainUrl/diziler" to "Diziler",
+        "$mainUrl/yarismalar" to "Yarışmalar",
     ).filter { Settings.rowEnabled(it.name) }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
@@ -58,12 +60,12 @@ class TV8Provider : MainAPI() {
 
     override suspend fun search(query: String, page: Int): SearchResponseList? {
         if (page > 1) return newSearchResponseList(emptyList(), false)
-        val doc = app.get("$mainUrl/programlar", headers = headers).document
         val q = query.trim().lowercase()
-        return newSearchResponseList(
-            doc.cards().filter { it.name.lowercase().contains(q) || it.url.lowercase().contains(q) },
-            false,
-        )
+        val items = listOf("/programlar", "/diziler", "/yarismalar").flatMap { path ->
+            runCatching { app.get("$mainUrl$path", headers = headers).document.cards() }.getOrDefault(emptyList())
+        }.distinctBy { it.url }
+            .filter { it.name.lowercase().contains(q) || it.url.lowercase().contains(q) }
+        return newSearchResponseList(items, false)
     }
 
     override suspend fun load(url: String): LoadResponse? {
@@ -183,7 +185,7 @@ class TV8Provider : MainAPI() {
     }
 
     companion object {
-        val ROWS = listOf("Programlar")
+        val ROWS = listOf("Programlar", "Diziler", "Yarışmalar")
         private val UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"

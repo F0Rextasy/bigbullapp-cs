@@ -50,7 +50,7 @@ class WebdramaTurkey2Provider : MainAPI() {
     override var name = "WebdramaTurkey2"
     override var lang = "tr"
     override val hasMainPage = true
-    override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie, TvType.Anime)
+    override val supportedTypes = setOf(TvType.AsianDrama, TvType.Anime)
 
     private val browserHeaders = mapOf(
         "user-agent" to UA,

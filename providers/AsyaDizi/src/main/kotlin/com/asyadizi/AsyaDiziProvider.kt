@@ -48,7 +48,7 @@ class AsyaDiziProvider : MainAPI() {
     override var mainUrl = "https://asyadizi.com"
     override var name = "AsyaDizi"
     override var lang = "tr"
-    override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
+    override val supportedTypes = setOf(TvType.AsianDrama)
 
     override val hasMainPage = true
     override val mainPage get() = ROWS.mapNotNull { rowName ->

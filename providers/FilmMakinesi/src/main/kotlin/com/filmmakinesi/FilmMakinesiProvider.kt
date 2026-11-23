@@ -10,6 +10,7 @@ import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SearchResponse
+import com.lagradost.cloudstream3.SearchResponseList
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
@@ -18,6 +19,7 @@ import com.lagradost.cloudstream3.fixUrlNull
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
+import com.lagradost.cloudstream3.newSearchResponseList
 import com.lagradost.cloudstream3.newSubtitleFile
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
@@ -73,9 +75,13 @@ class FilmMakinesiProvider : MainAPI() {
         }
     }
 
-    override suspend fun search(query: String): List<SearchResponse> {
-        val doc = app.get("$mainUrl/", headers = uaHeaders, params = mapOf("s" to query.trim())).document
-        return doc.select(CARD).mapNotNull { it.toSearchResult() }.distinctBy { it.url }
+    override suspend fun search(query: String, page: Int): SearchResponseList? {
+        val url = if (page <= 1) "$mainUrl/" else "$mainUrl/page/$page/"
+        val doc = runCatching { app.get(url, headers = uaHeaders, params = mapOf("s" to query.trim())).document }.getOrNull()
+            ?: return newSearchResponseList(emptyList(), false)
+        val items = doc.select(CARD).mapNotNull { it.toSearchResult() }.distinctBy { it.url }
+        val hasNext = doc.selectFirst("a[href*='/page/${page + 1}/']") != null
+        return newSearchResponseList(items, hasNext)
     }
 
     override suspend fun quickSearch(query: String): List<SearchResponse> {
@@ -83,7 +89,7 @@ class FilmMakinesiProvider : MainAPI() {
         if (q.length < 2) return emptyList()
         val url = "$mainUrl/?knl_ajax_search=1&s=" + java.net.URLEncoder.encode(q, "UTF-8")
         val doc = runCatching { app.get(url, headers = uaHeaders).document }.getOrNull()
-            ?: return search(q)
+            ?: return search(q, 1)?.items.orEmpty()
         val ajaxHits = doc.select("a.search-result[href]").mapNotNull { a ->
             val href = fixUrlNull(a.attr("href")) ?: return@mapNotNull null
             val title = a.selectFirst("span.title")?.text()?.trim()
@@ -93,7 +99,7 @@ class FilmMakinesiProvider : MainAPI() {
                 this.posterHeaders = uaHeaders
             }
         }.distinctBy { it.url }
-        return ajaxHits.ifEmpty { search(q) }
+        return ajaxHits.ifEmpty { search(q, 1)?.items.orEmpty() }
     }
 
     override suspend fun load(url: String): LoadResponse? {

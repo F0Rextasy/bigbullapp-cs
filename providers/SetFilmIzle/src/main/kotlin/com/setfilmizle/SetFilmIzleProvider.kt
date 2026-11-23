@@ -14,6 +14,7 @@ import com.lagradost.cloudstream3.MainAPI
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.Score
 import com.lagradost.cloudstream3.SearchResponse
+import com.lagradost.cloudstream3.SearchResponseList
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
@@ -23,6 +24,7 @@ import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
+import com.lagradost.cloudstream3.newSearchResponseList
 import com.lagradost.cloudstream3.newSubtitleFile
 import com.lagradost.cloudstream3.newTvSeriesLoadResponse
 import com.lagradost.cloudstream3.newTvSeriesSearchResponse
@@ -103,11 +105,13 @@ class SetFilmIzleProvider : MainAPI() {
         )
     }
 
-    /** Site aramayı tek sayfada döndürür (`?s=` sonuçları sayfalanmaz), bu yüzden sayfa parametresi yok. */
-    override suspend fun search(query: String): List<SearchResponse> {
-        val term = URLEncoder.encode(query, "UTF-8")
-        val doc = app.get("$mainUrl/?s=$term", headers = uaHeaders).document
-        return doc.listCards()
+    override suspend fun search(query: String, page: Int): SearchResponseList? {
+        val term = URLEncoder.encode(query.trim(), "UTF-8")
+        val url = if (page <= 1) "$mainUrl/?s=$term" else "$mainUrl/page/$page/?s=$term"
+        val doc = runCatching { app.get(url, headers = uaHeaders).document }.getOrNull()
+            ?: return newSearchResponseList(emptyList(), false)
+        val hasNext = doc.selectFirst("a[href*='/page/${page + 1}/']") != null
+        return newSearchResponseList(doc.listCards(), hasNext)
     }
 
     override suspend fun load(url: String): LoadResponse? {

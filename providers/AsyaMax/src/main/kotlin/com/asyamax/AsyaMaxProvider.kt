@@ -9,6 +9,7 @@ import com.lagradost.cloudstream3.MainAPI
 import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.SearchResponse
+import com.lagradost.cloudstream3.SearchResponseList
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
@@ -18,6 +19,7 @@ import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
+import com.lagradost.cloudstream3.newSearchResponseList
 import com.lagradost.cloudstream3.newTvSeriesLoadResponse
 import com.lagradost.cloudstream3.newTvSeriesSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
@@ -45,7 +47,7 @@ class AsyaMaxProvider : MainAPI() {
     override var mainUrl = "https://asyamax.com"
     override var name = "AsyaMax"
     override var lang = "tr"
-    override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
+    override val supportedTypes = setOf(TvType.AsianDrama)
 
     private fun absolute(raw: String): String = when {
         raw.startsWith("//") -> "https:$raw"
@@ -66,9 +68,14 @@ class AsyaMaxProvider : MainAPI() {
         return newHomePageResponse(request.name, cards(doc, movieRow), hasNext = hasNext)
     }
 
-    override suspend fun search(query: String): List<SearchResponse> {
-        val url = "$mainUrl/?s=" + URLEncoder.encode(query, "UTF-8")
-        return cards(app.get(url, headers = browserHeaders).document, null)
+    override suspend fun search(query: String, page: Int): SearchResponseList? {
+        val term = URLEncoder.encode(query.trim(), "UTF-8")
+        val url = if (page <= 1) "$mainUrl/?s=$term" else "$mainUrl/page/$page/?s=$term"
+        val doc = runCatching { app.get(url, headers = browserHeaders).document }.getOrNull()
+            ?: return newSearchResponseList(emptyList(), false)
+        val items = cards(doc, null)
+        val hasNext = doc.selectFirst("a[href*='/page/${page + 1}/']") != null
+        return newSearchResponseList(items, hasNext)
     }
 
     /** Liste/sayfalama kartları. [movieRow] null ise tür başlıktan tahmin edilir; gerçek tür load() sırasında belirlenir. */

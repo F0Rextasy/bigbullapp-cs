@@ -10,6 +10,7 @@ import com.lagradost.cloudstream3.MainAPI
 import com.lagradost.cloudstream3.MainPageData
 import com.lagradost.cloudstream3.MainPageRequest
 import com.lagradost.cloudstream3.SearchResponse
+import com.lagradost.cloudstream3.SearchResponseList
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.app
@@ -17,6 +18,7 @@ import com.lagradost.cloudstream3.fixUrlNull
 import com.lagradost.cloudstream3.newHomePageResponse
 import com.lagradost.cloudstream3.newMovieLoadResponse
 import com.lagradost.cloudstream3.newMovieSearchResponse
+import com.lagradost.cloudstream3.newSearchResponseList
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
@@ -59,10 +61,13 @@ class FilmKovasiProvider : MainAPI() {
         return newHomePageResponse(request.name, cards, hasNext = cards.size >= PAGE_SIZE)
     }
 
-    override suspend fun search(query: String): List<SearchResponse> {
-        val encoded = URLEncoder.encode(query, "UTF-8")
-        val doc = app.get("$mainUrl/?s=$encoded", headers = uaHeaders).document
-        return doc.select(CARD).mapNotNull { it.toSearchResult() }.distinctBy { it.url }
+    override suspend fun search(query: String, page: Int): SearchResponseList? {
+        val encoded = URLEncoder.encode(query.trim(), "UTF-8")
+        val url = if (page <= 1) "$mainUrl/?s=$encoded" else "$mainUrl/page/$page/?s=$encoded"
+        val doc = runCatching { app.get(url, headers = uaHeaders).document }.getOrNull()
+            ?: return newSearchResponseList(emptyList(), false)
+        val cards = doc.select(CARD).mapNotNull { it.toSearchResult() }.distinctBy { it.url }
+        return newSearchResponseList(cards, cards.size >= PAGE_SIZE)
     }
 
     private fun Element.toSearchResult(): SearchResponse? {

@@ -38,7 +38,7 @@ class KanalDProvider : MainAPI() {
     override var lang = "tr"
     override val hasMainPage = true
     override val hasQuickSearch = false
-    override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie)
+    override val supportedTypes = setOf(TvType.TvSeries)
 
     private val headers = mapOf(
         "user-agent" to UA,
@@ -47,6 +47,7 @@ class KanalDProvider : MainAPI() {
 
     override val mainPage get() = mainPageOf(
         "$mainUrl/diziler" to "Diziler",
+        "$mainUrl/diziler/arsiv" to "Arşiv Diziler",
         "$mainUrl/programlar" to "Programlar",
     ).filter { Settings.rowEnabled(it.name) }
 
@@ -59,7 +60,7 @@ class KanalDProvider : MainAPI() {
     override suspend fun search(query: String, page: Int): SearchResponseList? {
         if (page > 1) return newSearchResponseList(emptyList(), false)
         val q = query.trim().lowercase()
-        val docs = listOf("/diziler", "/programlar").mapNotNull { path ->
+        val docs = listOf("/diziler", "/diziler/arsiv", "/programlar").mapNotNull { path ->
             runCatching { app.get("$mainUrl$path", headers = headers).document }.getOrNull()
         }
         val items = docs.flatMap { it.cards() }
@@ -157,7 +158,7 @@ class KanalDProvider : MainAPI() {
         }.distinctBy { it.url }
 
     companion object {
-        val ROWS = listOf("Diziler", "Programlar")
+        val ROWS = listOf("Diziler", "Arşiv Diziler", "Programlar")
         private val UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"

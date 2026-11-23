@@ -59,6 +59,8 @@ class DizistProvider : MainAPI() {
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.TvSeries)
 
+    private val posterHdrs get() = browserHeaders + mapOf("Referer" to "$mainUrl/")
+
     override val mainPage get() = ROWS.mapNotNull { row ->
         if (!Settings.rowEnabled(row)) return@mapNotNull null
         MainPageData(row, mainUrl.trimEnd('/') + (ROW_PATHS[row] ?: "/"))
@@ -126,6 +128,7 @@ class DizistProvider : MainAPI() {
         return newTvSeriesLoadResponse(title, pageUrl, TvType.TvSeries, episodes) {
             this.posterUrl = doc.selectFirst(".series-profile-image img")?.posterSrcLazy()
                 ?: fixUrlNull(schema?.optString("image"))
+            this.posterHeaders = posterHdrs
             this.plot = doc.selectFirst(".series-profile-summary p")?.text()?.trim()
                 ?.takeIf { it.isNotEmpty() }
                 ?: schema?.optString("description")?.trim()?.takeIf { it.isNotEmpty() }
@@ -256,6 +259,7 @@ class DizistProvider : MainAPI() {
         // Site tüm kayıtları `/dizi/` altında tutuyor; yanıtlar daima `used_type: "Series"`.
         return newTvSeriesSearchResponse(title, url, TvType.TvSeries) {
             this.posterUrl = poster
+            this.posterHeaders = posterHdrs
             this.year = year
             this.score = score
         }
@@ -279,9 +283,7 @@ class DizistProvider : MainAPI() {
             if (slug.isEmpty() || slug == href.substringAfter("/izle/") || !seenSlugs.add(slug)) return@mapNotNull null
             val title = card.selectFirst("h2")?.text()?.trim()?.takeIf { it.isNotEmpty() }
                 ?: return@mapNotNull null
-            newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-                this.posterUrl = card.selectFirst("img")?.posterSrcLazy()
-            }
+            newTvSeriesSearchResponse(title, href, TvType.TvSeries) { this.posterUrl = card.selectFirst("img")?.posterSrcLazy(); this.posterHeaders = posterHdrs }
         }
     }
 
@@ -292,6 +294,7 @@ class DizistProvider : MainAPI() {
             .ifEmpty { return null }
         return newTvSeriesSearchResponse(title, url, TvType.TvSeries) {
             this.posterUrl = selectFirst("img")?.posterSrcLazy()
+            this.posterHeaders = posterHdrs
             this.score = selectFirst("span.rating")?.text()?.trim()?.toDoubleOrNull()
                 ?.takeIf { it > 0 }?.let { Score.from10(it) }
         }

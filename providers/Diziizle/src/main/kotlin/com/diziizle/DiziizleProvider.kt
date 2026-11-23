@@ -32,14 +32,14 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 /**
- * Diziizle — diziizle.cloud, yabancı dizi arşivi (TR/EN altyazı).
+ * Diziizle — diziizle2.icu, yabancı dizi arşivi (TR/EN altyazı).
  * Bölüm sayfasındaki `div[data-pv]` slug'ı, core.js kaynağından türetilen oynatıcı host'unda
  * `/assets/js/s.php?s=<slug>` olarak çözülür; referer zorunlu (403). Yanıt `window.__PLAYER__`
  * JSON'u: {stream → HLS master, subs[] → TR/EN VTT}.
  */
 
 class DiziizleProvider : MainAPI() {
-    override var mainUrl = "https://diziizle.cloud"
+    override var mainUrl = "https://diziizle2.icu"
     override var name = "Diziizle"
     override var lang = "tr"
     override val hasMainPage = true

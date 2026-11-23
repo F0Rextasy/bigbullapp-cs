@@ -1,11 +1,11 @@
-version = 7
+version = 8
 
 
 cloudstream {
     description = "DiziAsia — Asya dizileri ve filmleri (diziasia.com)"
     authors = listOf("F0Rextasy")
     status = 1
-    tvTypes = listOf("TvSeries", "Movie")
+    tvTypes = listOf("AsianDrama")
     language = "tr"
     iconUrl = "https://www.google.com/s2/favicons?domain=diziasia.com&sz=%size%"
 }

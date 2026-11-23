@@ -137,6 +137,18 @@ class CommonFixesTest {
 
         assertEquals(target, rapidVidAvDecode(encoded))
         assertEquals(target, decodeRapidVidAv("""av('$encoded');"""))
+
+        val p8Json = """{"cm":"https://cdn.example/master.m3u8","tm":"https://cdn.example/alt.m3u8","ct":[{"label":"Türkçe","file":"https://subs.example/1.vtt"}]}"""
+        val p8Inner = Base64.getEncoder().encodeToString(p8Json.toByteArray(Charsets.UTF_8))
+        val p8Unshifted = buildString(p8Inner.length) {
+            p8Inner.forEachIndexed { idx, ch ->
+                append((ch.code + (salt[idx % salt.length].code % 5 + 1)).toChar())
+            }
+        }
+        val p8Encoded = Base64.getEncoder().encodeToString(p8Unshifted.toByteArray(Charsets.ISO_8859_1)).reversed()
+        val p8Decoded = org.json.JSONObject(rapidVidAvDecode(p8Encoded)!!)
+        assertEquals("https://cdn.example/master.m3u8", p8Decoded.optString("cm"))
+        assertEquals("https://subs.example/1.vtt", p8Decoded.optJSONArray("ct").optJSONObject(0).optString("file"))
     }
 
     @Test

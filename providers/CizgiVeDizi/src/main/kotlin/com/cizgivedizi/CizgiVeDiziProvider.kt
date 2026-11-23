@@ -43,7 +43,7 @@ class CizgiVeDiziProvider : MainAPI() {
     override var lang = "tr"
     override val hasMainPage = true
     override val hasQuickSearch = false
-    override val supportedTypes = setOf(TvType.TvSeries, TvType.Movie, TvType.Anime)
+    override val supportedTypes = setOf(TvType.Cartoon, TvType.Anime)
 
     override val mainPage
         get() = ROWS.mapNotNull { rowName ->
