@@ -37,6 +37,14 @@ private val IFRAME_SRC_RE = Regex("""<iframe[^>]+src\s*=\s*["']([^"']+)["']""", 
 private val SIBNET_SRC_RE = Regex("""player\.src\(\[\s*\{\s*src\s*:\s*["']([^"']+\.mp4[^"']*)["']""")
 private val OKRU_HLS_RE = Regex(""""(?:hlsManifestUrl|ondemandHls)"\s*:\s*"([^"]+)"""")
 private val VK_HLS_RE = Regex(""""(?:hls|url\d+)"\s*:\s*"([^"]+\.(?:m3u8|mp4)[^"]*)"""")
+private val STREAMTAPE_LINK_RE = Regex(
+    """(?:no)?robotlink['"]\)\.innerHTML\s*=\s*['"]([^'"]+)['"]\s*\+\s*\(['"]([^'"]+)['"]\)\.substring\((\d+)\)""",
+)
+private val MIXDROP_WURL_RE = Regex("""MDCore\.wurl\s*=\s*["']([^"']+)["']""")
+private val VOE_HLS_RE = Regex("""['"]hls['"]\s*:\s*['"]([^'"]+)['"]""")
+private val PIXELDRAIN_RE = Regex("""https?://(?:www\.)?pixeldrain\.com/(?:u|e|file)/([A-Za-z0-9_-]+)""", RegexOption.IGNORE_CASE)
+private val DOOD_PASS_RE = Regex("""(/pass_md5/[^'"\s)]+)""")
+private val DOOD_TOKEN_RE = Regex("""[?&]token=([A-Za-z0-9_-]+)""")
 
 private val EMBED_UA: Map<String, String> = mapOf(
     "User-Agent" to (
@@ -267,6 +275,65 @@ fun extractDirectM3u8Streams(html: String): List<String> {
     return rawUrls.map { pichiveSign(clean, it, nonce) }.distinct()
 }
 
+/** StreamTape (`norobotlink`/`robotlink`) parçalı doğrudan video URL'sini çıkarır. */
+fun extractStreamTapeUrl(html: String): String? {
+    val m = STREAMTAPE_LINK_RE.find(html) ?: return null
+    val prefix = m.groupValues[1]
+    val tailRaw = m.groupValues[2]
+    val cut = m.groupValues[3].toIntOrNull() ?: 0
+    if (cut < 0 || cut > tailRaw.length) return null
+    val rawUrl = (prefix + tailRaw.substring(cut)).trim()
+    return when {
+        rawUrl.startsWith("//") -> "https:$rawUrl"
+        rawUrl.startsWith("http://") || rawUrl.startsWith("https://") -> rawUrl
+        else -> null
+    }
+}
+
+/** Mixdrop (`MDCore.wurl`) video URL'sini (ham veya JS-Packer içinden) çıkarır. */
+fun extractMixdropUrl(html: String): String? {
+    val pool = buildString {
+        append(html)
+        runCatching { unpackAllJsPacker(html) }.getOrNull()?.takeIf { it.isNotBlank() }?.let {
+            append('\n').append(it)
+        }
+    }
+    val raw = MIXDROP_WURL_RE.find(pool)?.groupValues?.get(1)?.trim().orEmpty()
+    if (raw.isEmpty()) return null
+    return when {
+        raw.startsWith("//") -> "https:$raw"
+        raw.startsWith("http://") || raw.startsWith("https://") -> raw
+        else -> null
+    }
+}
+
+/** VOE oynatıcı sayfasındaki düz veya Base64 kodlu `.m3u8` URL'sini çıkarır. */
+fun extractVoeUrl(html: String): String? {
+    val pool = html.replace("\\/", "/")
+    val raw = VOE_HLS_RE.find(pool)?.groupValues?.get(1)?.trim().orEmpty()
+    if (raw.startsWith("http://") || raw.startsWith("https://")) return raw
+    if (raw.startsWith("//")) return "https:$raw"
+    if (raw.length >= 16) {
+        val decoded = decodeBase64Bytes(raw)?.let { String(it, Charsets.UTF_8) }?.trim().orEmpty()
+        if (decoded.startsWith("http://") || decoded.startsWith("https://")) return decoded
+    }
+    return null
+}
+
+/** Pixeldrain `/u/<id>` veya `/e/<id>` bağlantısını doğrudan API akış adresine dönüştürür. */
+fun extractPixeldrainUrl(embedUrl: String): String? {
+    val id = PIXELDRAIN_RE.find(embedUrl.trim())?.groupValues?.get(1)?.trim().orEmpty()
+    return if (id.isNotEmpty()) "https://pixeldrain.com/api/file/$id" else null
+}
+
+/** DoodStream `/pass_md5/<hash>` yolunu ve varsa `token` değerini çıkarır. */
+fun extractDoodPassMd5Path(html: String): Pair<String, String>? {
+    val passPath = DOOD_PASS_RE.find(html)?.groupValues?.get(1)?.trim().orEmpty()
+    if (passPath.isEmpty()) return null
+    val token = DOOD_TOKEN_RE.find(html)?.groupValues?.get(1)?.trim().orEmpty()
+    return passPath to token
+}
+
 internal fun resolveCandidateUrl(raw: String, baseUrl: String, out: MutableSet<String>) {
     val trimmed = raw.trim()
     if (trimmed.isEmpty() || trimmed.startsWith("#") || trimmed.startsWith("javascript:") || trimmed.startsWith("data:")) return
@@ -355,6 +422,19 @@ suspend fun loadCommonEmbedWithHints(
     val reqHeaders = if (useFirefox) FIREFOX_UA else EMBED_UA
     val originOf: (String) -> String = { target ->
         uriOrigin(target) ?: mainUrl.trimEnd('/')
+    }
+
+    if (u.contains("pixeldrain.com", ignoreCase = true)) {
+        extractPixeldrainUrl(u)?.let { directPd ->
+            callback(
+                newExtractorLink(sourceName, "$sourceName [Pixeldrain]", directPd, ExtractorLinkType.VIDEO) {
+                    this.referer = "https://pixeldrain.com/"
+                    this.quality = Qualities.Unknown.value
+                    this.headers = reqHeaders
+                },
+            )
+            return true
+        }
     }
 
     if (u.contains("vixolity.com", ignoreCase = true)) {
@@ -559,6 +639,62 @@ suspend fun loadCommonEmbedWithHints(
     }
 
     val rawHtml = runCatching { app.get(u, referer = ref, headers = reqHeaders).text }.getOrNull().orEmpty()
+    if (u.contains("streamtape.", ignoreCase = true) || rawHtml.contains("robotlink")) {
+        extractStreamTapeUrl(rawHtml)?.let { stUrl ->
+            callback(
+                newExtractorLink(sourceName, "$sourceName [StreamTape]", stUrl, ExtractorLinkType.VIDEO) {
+                    this.referer = "${originOf(u)}/"
+                    this.quality = Qualities.Unknown.value
+                    this.headers = reqHeaders
+                },
+            )
+            return true
+        }
+    }
+    if (u.contains("mixdrop.", ignoreCase = true) || rawHtml.contains("MDCore.wurl")) {
+        extractMixdropUrl(rawHtml)?.let { mdUrl ->
+            callback(
+                newExtractorLink(sourceName, "$sourceName [Mixdrop]", mdUrl, ExtractorLinkType.VIDEO) {
+                    this.referer = "${originOf(u)}/"
+                    this.quality = Qualities.Unknown.value
+                    this.headers = reqHeaders
+                },
+            )
+            return true
+        }
+    }
+    if (u.contains("voe.", ignoreCase = true) || rawHtml.contains("'hls'") || rawHtml.contains("\"hls\"")) {
+        extractVoeUrl(rawHtml)?.let { voeUrl ->
+            callback(
+                newExtractorLink(sourceName, "$sourceName [VOE]", voeUrl, ExtractorLinkType.M3U8) {
+                    this.referer = "${originOf(u)}/"
+                    this.quality = Qualities.Unknown.value
+                    this.headers = reqHeaders
+                },
+            )
+            return true
+        }
+    }
+    if (u.contains("dood", ignoreCase = true) || rawHtml.contains("/pass_md5/")) {
+        extractDoodPassMd5Path(rawHtml)?.let { (passPath, tok) ->
+            val orig = originOf(u)
+            val passBody = runCatching {
+                app.get("$orig$passPath", referer = u, headers = reqHeaders).text
+            }.getOrNull().orEmpty().trim()
+            if (passBody.startsWith("http")) {
+                val rand = "1234567890"
+                val doodUrl = if (tok.isNotEmpty()) "$passBody$rand?token=$tok&expiry=${System.currentTimeMillis()}" else "$passBody$rand"
+                callback(
+                    newExtractorLink(sourceName, "$sourceName [DoodStream]", doodUrl, ExtractorLinkType.VIDEO) {
+                        this.referer = "$orig/"
+                        this.quality = Qualities.Unknown.value
+                        this.headers = reqHeaders
+                    },
+                )
+                return true
+            }
+        }
+    }
     val unpacked = runCatching { unpackAllJsPacker(rawHtml) }.getOrNull().orEmpty()
     val cryptoDec = decryptCryptoJsJson(rawHtml).orEmpty()
     val rapidDec = decodeRapidVidAv(rawHtml).orEmpty()

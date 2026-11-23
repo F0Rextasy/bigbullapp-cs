@@ -39,6 +39,44 @@ function defaultBotDir() {
   return home ? path.join(home, ".omp", "local", "bigbull-bot") : "";
 }
 
+function loadProxyConfig() {
+  let proxyUrl = (process.env.BIGBULL_PROXY || "").trim();
+  let hostsRaw = (process.env.BIGBULL_PROXY_HOSTS || "").trim();
+  if (!proxyUrl || !hostsRaw) {
+    try {
+      const botDir = defaultBotDir();
+      const envFile = botDir ? path.join(botDir, "token.env") : "";
+      if (envFile && fs.existsSync(envFile)) {
+        for (const rawLine of fs.readFileSync(envFile, "utf8").split(/\r?\n/)) {
+          const line = rawLine.trim();
+          if (!line || line.startsWith("#")) continue;
+          const eq = line.indexOf("=");
+          if (eq <= 0) continue;
+          const k = line.slice(0, eq).trim();
+          let v = line.slice(eq + 1).trim();
+          if (v.length >= 2 && ((v[0] === '"' && v[v.length - 1] === '"') || (v[0] === "'" && v[v.length - 1] === "'"))) {
+            v = v.slice(1, -1);
+          }
+          if (k === "BIGBULL_PROXY" && !proxyUrl) proxyUrl = v;
+          if (k === "BIGBULL_PROXY_HOSTS" && !hostsRaw) hostsRaw = v;
+        }
+      }
+    } catch {}
+  }
+  const hosts = hostsRaw.split(",").map((s) => s.trim().toLowerCase().replace(/^www\./, "")).filter(Boolean);
+  return { proxyUrl, hosts };
+}
+
+const PROXY_CFG = loadProxyConfig();
+const proxyForcedHosts = new Set();
+
+function isProxyEligible(hostname) {
+  const h = String(hostname || "").toLowerCase().replace(/^www\./, "");
+  if (!h || !PROXY_CFG.proxyUrl) return false;
+  if (proxyForcedHosts.has(h)) return true;
+  return PROXY_CFG.hosts.some((pat) => h === pat || h.endsWith("." + pat));
+}
+
 /** Clearance exported by the bot's solver (`cf_browser.remember_curl`) for blocked hosts. */
 function cfState(host) {
   try {
@@ -143,46 +181,67 @@ function makeHeaders(rawHeaderText) {
 
 /** Fallback when Cloudflare/CDN blocks Node/undici's TLS JA3 with 403 while curl/Android works (AGENTS.md). */
 async function curlFallback(url, options = {}) {
-  const hdrFile = path.join(os.tmpdir(), `bb-curl-${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2)}.hdr`);
-  try {
-    const args = ["-s", "--max-time", "15", "-D", hdrFile, "-w", "\n__HTTP_STATUS__:%{http_code}"];
-    if (options.redirect !== "manual") args.push("-L");
-    if (options.method && options.method !== "GET") args.push("-X", options.method);
-    const cf = cfState(new URL(String(url)).hostname);
-    const hdrs = { ...(options.headers || {}) };
-    if (cf) {
-      if (cf.ua) args.push("-A", cf.ua);  // cf_clearance UA'ya bağlı
-      hdrs.Cookie = hdrs.Cookie ? `${hdrs.Cookie}; ${cf.cookie}` : cf.cookie;
+  const runCurl = async (proxyArg = "") => {
+    const hdrFile = path.join(os.tmpdir(), `bb-curl-${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2)}.hdr`);
+    try {
+      const args = ["-s", "--max-time", "15", "-D", hdrFile, "-w", "\n__HTTP_STATUS__:%{http_code}"];
+      if (proxyArg) args.push("-x", proxyArg);
+      if (options.redirect !== "manual") args.push("-L");
+      if (options.method && options.method !== "GET") args.push("-X", options.method);
+      const cf = cfState(new URL(String(url)).hostname);
+      const hdrs = { ...(options.headers || {}) };
+      if (cf) {
+        if (cf.ua) args.push("-A", cf.ua);  // cf_clearance UA'ya bağlı
+        hdrs.Cookie = hdrs.Cookie ? `${hdrs.Cookie}; ${cf.cookie}` : cf.cookie;
+      }
+      for (const [k, v] of Object.entries(hdrs)) {
+        if (v == null) continue;
+        if (cf && k.toLowerCase() === "user-agent") continue;
+        args.push("-H", `${k}: ${v}`);
+      }
+      if (options.body) args.push("--data-raw", String(options.body));
+      args.push(String(url));
+      const { stdout: raw } = await execFileAsync(curlBin, args, { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
+      const rawHeaders = fs.existsSync(hdrFile) ? fs.readFileSync(hdrFile, "utf8") : "";
+      const headers = makeHeaders(rawHeaders);
+      const idx = raw.lastIndexOf("\n__HTTP_STATUS__:");
+      const status = idx >= 0 ? Number(raw.slice(idx + 17).trim()) || 0 : 200;
+      const body = idx >= 0 ? raw.slice(0, idx) : raw;
+      return { status, body, headers };
+    } catch {
+      return { status: 0, body: "", headers: makeHeaders("") };
+    } finally {
+      try { fs.unlinkSync(hdrFile); } catch {}
     }
-    for (const [k, v] of Object.entries(hdrs)) {
-      if (v == null) continue;
-      if (cf && k.toLowerCase() === "user-agent") continue;
-      args.push("-H", `${k}: ${v}`);
-    }
-    if (options.body) args.push("--data-raw", String(options.body));
-    args.push(String(url));
-    const { stdout: raw } = await execFileAsync(curlBin, args, { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
-    const rawHeaders = fs.existsSync(hdrFile) ? fs.readFileSync(hdrFile, "utf8") : "";
-    const headers = makeHeaders(rawHeaders);
-    const idx = raw.lastIndexOf("\n__HTTP_STATUS__:");
-    const status = idx >= 0 ? Number(raw.slice(idx + 17).trim()) || 0 : 200;
-    const body = idx >= 0 ? raw.slice(0, idx) : raw;
-    if (status >= 200 && status < 400) {
+  };
+  const hostname = new URL(String(url)).hostname;
+  const bareHost = hostname.toLowerCase().replace(/^www\./, "");
+  const direct = await runCurl("");
+  if (direct.status >= 200 && direct.status < 400 && !/error code:\s*1006/i.test(direct.body)) {
+    return {
+      ok: direct.status >= 200 && direct.status < 300,
+      status: direct.status,
+      url: String(url),
+      headers: direct.headers,
+      text: async () => direct.body,
+      json: async () => JSON.parse(direct.body),
+    };
+  }
+  if (PROXY_CFG.proxyUrl && (isProxyEligible(hostname) || direct.status === 451 || /error code:\s*1006/i.test(direct.body))) {
+    const proxied = await runCurl(PROXY_CFG.proxyUrl);
+    if (proxied.status >= 200 && proxied.status < 400 && !/error code:\s*1006/i.test(proxied.body)) {
+      proxyForcedHosts.add(bareHost);
       return {
-        ok: status >= 200 && status < 300,
-        status,
+        ok: proxied.status >= 200 && proxied.status < 300,
+        status: proxied.status,
         url: String(url),
-        headers,
-        text: async () => body,
-        json: async () => JSON.parse(body),
+        headers: proxied.headers,
+        text: async () => proxied.body,
+        json: async () => JSON.parse(proxied.body),
       };
     }
-    return await solverFetchFallback(url, options);
-  } catch {
-    return await solverFetchFallback(url, options);
-  } finally {
-    try { fs.unlinkSync(hdrFile); } catch {}
   }
+  return await solverFetchFallback(url, options);
 }
 
 const dpiHosts = new Set();
@@ -399,7 +458,7 @@ export async function fetchWithDpi(url, options = {}, signal = null) {
       res = await dpiFetch(url, reqOpts);
     }
   }
-  if (res.status === 403 || res.status === 503) {
+  if (res.status === 403 || res.status === 451 || res.status === 503) {
     const viaCurl = await curlFallback(url, options);
     if (viaCurl) return viaCurl;
   }

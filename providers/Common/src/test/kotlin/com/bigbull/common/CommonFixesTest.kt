@@ -162,4 +162,21 @@ class CommonFixesTest {
         resolveCandidateUrl("/embed/456", "/bad/relative/base", out)
         assertEquals(setOf("https://site.test:8080/embed/123"), out)
     }
+
+    @Test
+    fun openPlayerExtractorsDecodeStreamTapeMixdropVoePixeldrainAndDood() {
+        val stHtml = """<div id="norobotlink"></div><script>document.getElementById('norobotlink').innerHTML = '//streamtape.com/get_video?id=' + ('xxxxabc123&token=tok').substring(4);</script>"""
+        assertEquals("https://streamtape.com/get_video?id=abc123&token=tok", extractStreamTapeUrl(stHtml))
+
+        val mdHtml = """<script>MDCore.wurl="//cdn.mixdrop.ag/v/demo.mp4?s=1";</script>"""
+        assertEquals("https://cdn.mixdrop.ag/v/demo.mp4?s=1", extractMixdropUrl(mdHtml))
+
+        val voeB64 = Base64.getEncoder().encodeToString("https://cdn.voe.test/master.m3u8".toByteArray(Charsets.UTF_8))
+        assertEquals("https://cdn.voe.test/master.m3u8", extractVoeUrl("""var sources = {'hls': '$voeB64'};"""))
+
+        assertEquals("https://pixeldrain.com/api/file/XyZ987", extractPixeldrainUrl("https://pixeldrain.com/u/XyZ987"))
+
+        val doodHtml = """$.get('/pass_md5/12345-hash/xyz', function(data){ return data + '?token=tok99&expiry='; });"""
+        assertEquals("/pass_md5/12345-hash/xyz" to "tok99", extractDoodPassMd5Path(doodHtml))
+    }
 }
