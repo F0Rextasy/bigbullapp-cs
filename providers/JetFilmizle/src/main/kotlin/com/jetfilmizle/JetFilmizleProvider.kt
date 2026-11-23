@@ -116,6 +116,8 @@ class JetFilmizleProvider : MainAPI() {
         val filmId = doc.selectFirst("input[name=film_id]")?.attr("value")?.trim().orEmpty()
         if (filmId.isBlank()) throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
 
+        val safeSub = Settings.filterSubtitles(subtitleCallback)
+        val safeCb = Settings.filterLinks(callback)
         var found = false
         doc.select("div.player-sources-group").forEach { group ->
             val type = group.attr("data-player-group").ifBlank { "genel" }
@@ -134,7 +136,7 @@ class JetFilmizleProvider : MainAPI() {
                     ).text
                     val player = Regex("""<iframe[^>]+src=['"]([^'"]+)""").find(iframe)?.groupValues?.get(1)
                         ?: return@runCatching
-                    if (resolvePlayer(player, data, label, subtitleCallback, callback)) found = true
+                    if (resolvePlayer(player, data, label, safeSub, safeCb)) found = true
                 }
             }
         }

@@ -127,7 +127,8 @@ class FilmgecesiProvider : MainAPI() {
         val labels = TAB.findAll(html).associate {
             it.groupValues[1] to it.groupValues[2].replace(TAG, "").trim()
         }
-        val subCallback: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
+        val subCallback: (SubtitleFile) -> Unit = Settings.filterSubtitles(subtitleCallback)
+        val linkCallback: (ExtractorLink) -> Unit = Settings.filterLinks(callback)
         var found = false
         for (part in PART.findAll(html)) {
             val partId = part.groupValues[1]
@@ -138,7 +139,7 @@ class FilmgecesiProvider : MainAPI() {
                 ?: continue
             if (YOUTUBE.containsMatchIn(iframe)) continue
             val label = labels[partId.removePrefix("prt_")].orEmpty().ifBlank { "Bluray" }
-            if (resolveSource(iframe, pageUrl, label, subCallback, callback)) found = true
+            if (resolveSource(iframe, pageUrl, label, subCallback, linkCallback)) found = true
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir kaynak yok. $REPORT_HINT")
         return true

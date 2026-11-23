@@ -298,8 +298,7 @@ class BelgeselXProvider : MainAPI() {
         private const val CACHE_MS = 10 * 60 * 1000L
 
         private val UA = mapOf(
-            "user-agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-                "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+            "user-agent" to com.bigbull.common.browserHeaders.getValue("user-agent")
         )
 
         /** ic1 / ic2 / ic3 slot code -> `/video/data/<file>.php` endpoint. */

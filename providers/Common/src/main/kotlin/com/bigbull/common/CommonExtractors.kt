@@ -5,6 +5,7 @@ import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
+import com.lagradost.cloudstream3.utils.getQualityFromName
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import java.net.URI
@@ -164,10 +165,7 @@ fun decryptCryptoJsJson(text: String, passphrases: List<String> = emptyList()): 
 /** rapidvid `av('...')` gömülü kaynağını (Android bağımlılığı olmadan JVM/JUnit'te de çalışarak) çözer. */
 fun decodeRapidVidAv(html: String): String? {
     for (m in RAPIDVID_AV_RE.findAll(html)) {
-        val step1Bytes = decodeBase64Bytes(m.groupValues[1].reversed()) ?: continue
-        val step1 = runCatching { String(step1Bytes, Charsets.ISO_8859_1) }.getOrNull() ?: continue
-        val step2Bytes = decodeBase64Bytes(rapidVidShift(step1)) ?: continue
-        val decoded = runCatching { String(step2Bytes, Charsets.UTF_8) }.getOrNull().orEmpty().replace("\\/", "/")
+        val decoded = rapidVidAvDecode(m.groupValues[1])?.replace("\\/", "/") ?: continue
         if (decoded.contains("http")) return decoded
     }
     return null
@@ -251,25 +249,32 @@ fun extractVidmolyStreams(html: String): List<String> =
         .distinct()
         .toList()
 
+internal fun uriOrigin(url: String): String? = runCatching {
+    val u = URI(url.trim())
+    val scheme = u.scheme?.takeIf { it.isNotBlank() } ?: return null
+    val host = u.host?.takeIf { it.isNotBlank() } ?: return null
+    if (u.port > 0) "$scheme://$host:${u.port}" else "$scheme://$host"
+}.getOrNull()
+
 /** Sayfa HTML içindeki doğrudan `.m3u8` bağlantılarının listesini (varsa pichive imzalı) döner. */
 fun extractDirectM3u8Streams(html: String): List<String> {
     val clean = html.replace("\\/", "/")
-    return DIRECT_M3U8_RE.findAll(clean)
-        .map { pichiveSign(clean, it.value) }
-        .distinct()
-        .toList()
+    val rawUrls = DIRECT_M3U8_RE.findAll(clean).map { it.value }.distinct().toList()
+    if (rawUrls.isEmpty()) return emptyList()
+    val nonce = if (rawUrls.any {
+            (it.contains("/nm.php") || it.contains("/nsub.php")) && !it.contains("&p=") && !it.contains("?p=")
+        }
+    ) pichiveGateNonce(clean) else null
+    return rawUrls.map { pichiveSign(clean, it, nonce) }.distinct()
 }
 
-private fun resolveCandidateUrl(raw: String, baseUrl: String, out: MutableSet<String>) {
+internal fun resolveCandidateUrl(raw: String, baseUrl: String, out: MutableSet<String>) {
     val trimmed = raw.trim()
     if (trimmed.isEmpty() || trimmed.startsWith("#") || trimmed.startsWith("javascript:") || trimmed.startsWith("data:")) return
     when {
         trimmed.startsWith("http://") || trimmed.startsWith("https://") -> out.add(trimmed)
         trimmed.startsWith("//") -> out.add("https:$trimmed")
-        trimmed.startsWith("/") -> {
-            val base = runCatching { URI(baseUrl) }.getOrNull() ?: return
-            out.add("${base.scheme}://${base.host}$trimmed")
-        }
+        trimmed.startsWith("/") -> uriOrigin(baseUrl)?.let { out.add("$it$trimmed") }
     }
 }
 
@@ -350,7 +355,7 @@ suspend fun loadCommonEmbedWithHints(
     val useFirefox = firefoxUaHosts.any { u.contains(it, ignoreCase = true) }
     val reqHeaders = if (useFirefox) FIREFOX_UA else EMBED_UA
     val originOf: (String) -> String = { target ->
-        runCatching { val p = URI(target); "${p.scheme}://${p.host}" }.getOrDefault(mainUrl.trimEnd('/'))
+        uriOrigin(target) ?: mainUrl.trimEnd('/')
     }
 
     if (u.contains("vixolity.com", ignoreCase = true)) {
@@ -555,7 +560,7 @@ suspend fun loadCommonEmbedWithHints(
     }
 
     val rawHtml = runCatching { app.get(u, referer = ref, headers = reqHeaders).text }.getOrNull().orEmpty()
-    val unpacked = runCatching { unpackJsPacker(rawHtml) }.getOrNull().orEmpty()
+    val unpacked = runCatching { unpackAllJsPacker(rawHtml) }.getOrNull().orEmpty()
     val cryptoDec = decryptCryptoJsJson(rawHtml).orEmpty()
     val rapidDec = decodeRapidVidAv(rawHtml).orEmpty()
     val searchPool = buildString {
@@ -595,93 +600,187 @@ suspend fun loadCommonEmbedWithHints(
     return directMp4.isNotEmpty()
 }
 
-/**
- * Sayfa içi iframe, `srcdoc`, `atob`, DooPlay `doo_player_ajax` ve `?part=` sekmelerini
- * tarayıp tüm gömülü oynatıcıları [loadCommonEmbed] ile çözer (`H5`).
- */
-suspend fun loadCommonPageLinks(
-    sourceName: String,
-    mainUrl: String,
-    dataUrl: String,
-    extraApis: List<String> = emptyList(),
-    noRefererHosts: List<String> = listOf("video.twimg.com", "twimg.com"),
-    subtitleCallback: (SubtitleFile) -> Unit,
+private val OKRU_ID_RE = Regex("""videoembed/(\d+)""")
+private const val OKRU_UA = "Mozilla/5.0 (Linux; Android 13)"
+private const val DYG_API = "https://dygvideo.dygdigital.com/api/video_info"
+const val DYG_DEFAULT_SECRET = "NtvApiSecret2014*"
+
+suspend fun fetchOkRuMetadata(
+    embed: String,
+    userAgent: String = OKRU_UA,
+    data: Map<String, String> = emptyMap(),
+): JSONObject? {
+    val id = OKRU_ID_RE.find(embed)?.groupValues?.get(1) ?: return null
+    val body = runCatching {
+        app.post(
+            "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
+            data = data,
+            headers = mapOf("user-agent" to userAgent, "Referer" to "https://ok.ru/"),
+            referer = "https://ok.ru/videoembed/$id",
+        ).text
+    }.getOrNull() ?: return null
+    return runCatching { JSONObject(body) }.getOrNull()
+}
+
+suspend fun emitOkRuVideos(
+    embed: String,
+    seen: MutableSet<String>? = null,
+    labelPrefix: String = "OkRu",
+    userAgent: String = OKRU_UA,
+    headers: Map<String, String>? = null,
+    qualityAllowed: (Int) -> Boolean = { true },
     callback: (ExtractorLink) -> Unit,
-    originHosts: List<String> = emptyList(),
-    firefoxUaHosts: List<String> = emptyList(),
 ): Boolean {
-    val base = mainUrl.trimEnd('/')
-    val html = runCatching {
-        app.get(dataUrl, referer = "$base/", headers = EMBED_UA).text
-    }.getOrNull().orEmpty()
-    if (html.isBlank()) return false
-
-    var ok = false
-    val seen = HashSet<String>()
-    val cleanHtml = html.replace("\\/", "/")
-
-    for (m3u8 in extractDirectM3u8Streams(cleanHtml)) {
-        if (!seen.add(m3u8)) continue
-        val noRef = noRefererHosts.any { m3u8.contains(it, ignoreCase = true) }
+    val meta = fetchOkRuMetadata(embed, userAgent = userAgent) ?: return false
+    val videos = meta.optJSONArray("videos") ?: return false
+    var found = false
+    for (i in 0 until videos.length()) {
+        val item = videos.optJSONObject(i) ?: continue
+        val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
+        if (seen != null && !seen.add(stream)) continue
+        val label = item.optString("name").ifBlank { "OkRu" }
+        val q = when (label.lowercase()) {
+            "mobile", "lowest" -> 240
+            "low" -> 360
+            "sd" -> 480
+            "hd" -> 720
+            "full" -> 1080
+            else -> getQualityFromName(label.uppercase())
+        }
+        if (!qualityAllowed(q)) continue
+        val linkName = if (labelPrefix.isBlank()) label else "$labelPrefix $label"
         callback(
-            newExtractorLink(sourceName, sourceName, m3u8, ExtractorLinkType.M3U8) {
-                this.referer = if (noRef) "" else dataUrl
-                this.quality = Qualities.Unknown.value
-                this.headers = EMBED_UA
+            newExtractorLink(labelPrefix.ifBlank { "OkRu" }, linkName, stream, ExtractorLinkType.VIDEO) {
+                this.referer = "https://ok.ru/"
+                this.quality = q
+                headers?.let { this.headers = it }
             },
         )
-        ok = true
+        found = true
     }
+    return found
+}
 
-    val embeds = LinkedHashSet<String>(extractPageEmbedCandidates(html, dataUrl))
+suspend fun fetchDygVideoInfo(
+    publisherId: Int,
+    referenceId: String,
+    mainUrl: String,
+    headers: Map<String, String> = browserHeaders,
+    secret: String = DYG_DEFAULT_SECRET,
+): JSONObject? {
+    val dygUrl = "$DYG_API?akamai=true&PublisherId=$publisherId&ReferenceId=$referenceId&SecretKey=$secret"
+    return runCatching {
+        JSONObject(app.get(dygUrl, headers = headers, referer = "${mainUrl.trimEnd('/')}/").text)
+            .optJSONObject("data")
+    }.getOrNull()
+}
 
-    val doc = Jsoup.parse(html, dataUrl)
-    for (btn in doc.select("[data-post][data-nume]").take(4)) {
-        val postId = btn.attr("data-post").trim()
-        val nume = btn.attr("data-nume").trim()
-        val ptype = btn.attr("data-type").ifBlank { "movie" }.trim()
-        if (postId.isEmpty() || nume.isEmpty()) continue
-        val ajaxResp = runCatching {
-            app.post(
-                "$base/wp-admin/admin-ajax.php",
-                referer = dataUrl,
-                headers = EMBED_UA + mapOf("X-Requested-With" to "XMLHttpRequest"),
-                data = mapOf("action" to "doo_player_ajax", "post" to postId, "nume" to nume, "type" to ptype),
-            ).text
-        }.getOrNull().orEmpty().replace("\\/", "/")
-        val embedUrl = runCatching { JSONObject(ajaxResp).optString("embed_url") }.getOrNull().orEmpty()
-        if (embedUrl.startsWith("http") || embedUrl.startsWith("//")) {
-            embeds.add(if (embedUrl.startsWith("//")) "https:$embedUrl" else embedUrl)
-        } else {
-            IFRAME_SRC_RE.findAll(ajaxResp).forEach { m -> resolveCandidateUrl(m.groupValues[1], base, embeds) }
+suspend fun emitMasterOrHlsVariants(
+    sourceName: String,
+    label: String,
+    masterUrl: String,
+    referer: String,
+    headers: Map<String, String> = browserHeaders,
+    settings: BaseSettings? = null,
+    fallbackMinIfFiltered: Boolean = false,
+    callback: (ExtractorLink) -> Unit,
+): Int {
+    val playlist = runCatching {
+        app.get(masterUrl, headers = headers, referer = referer).text
+    }.getOrNull().orEmpty()
+    val variants = parseHlsVariants(masterUrl, playlist)
+    var emitted = 0
+    suspend fun emitOne(url: String, quality: Int) {
+        if (settings != null && !settings.qualityAllowed(quality)) return
+        val linkLabel = if (quality > 0) "$label ${quality}p" else label
+        callback(newExtractorLink(sourceName, linkLabel, url, ExtractorLinkType.M3U8) {
+            this.referer = referer
+            this.quality = quality
+            this.headers = headers
+        })
+        emitted++
+    }
+    if (variants.isEmpty()) {
+        emitOne(masterUrl, Qualities.Unknown.value)
+    } else {
+        val allowed = if (settings != null) variants.filter { settings.qualityAllowed(it.first) } else variants
+        val toEmit = if (allowed.isNotEmpty() || !fallbackMinIfFiltered) allowed else listOf(variants.minBy { it.first })
+        toEmit.forEach { (q, u) -> emitOne(u, q) }
+    }
+    return emitted
+}
+
+/** Deokwave / DiziLife / Sezonlukdizi / TurkceDizi ortak embed çözücüsü (Vixolity, VideoPark, PlayerX, loadExtractor, direkt m3u8). */
+suspend fun extractCommonSiteEmbed(
+    sourceName: String,
+    mainUrl: String,
+    url: String,
+    referer: String?,
+    settings: BaseSettings,
+    subtitleCallback: (SubtitleFile) -> Unit,
+    callback: (ExtractorLink) -> Unit,
+): Boolean {
+    val u = if (url.startsWith("//")) "https:$url" else url
+    val ref = referer ?: "${mainUrl.trimEnd('/')}/"
+    val ua = mapOf("User-Agent" to browserHeaders.getValue("user-agent"))
+    if (u.contains("vixolity.com", ignoreCase = true)) {
+        val html = runCatching { app.get(u, referer = ref, headers = ua).text }.getOrNull().orEmpty()
+        decodeVixolityStream(html)?.let { streamUrl ->
+            val origin = uriOrigin(u) ?: "https://pl.vixolity.com"
+            callback(newExtractorLink(sourceName, "$sourceName [Vixolity]", streamUrl, ExtractorLinkType.M3U8) {
+                this.referer = "$origin/"
+                this.quality = Qualities.Unknown.value
+                this.headers = ua + mapOf("Origin" to origin)
+            })
+            return true
         }
     }
-
-    for (ep in extraApis) {
-        if (ep.isBlank()) continue
-        val apiUrl = if (ep.startsWith("http")) ep else "$base/${ep.trimStart('/')}"
-        val body = runCatching { app.get(apiUrl, referer = dataUrl, headers = EMBED_UA).text }.getOrNull().orEmpty()
-            .replace("\\/", "/")
-        for (m in DIRECT_M3U8_RE.findAll(body)) {
-            val u = pichiveSign(body, m.value)
-            if (!seen.add(u)) continue
-            val noRef = noRefererHosts.any { u.contains(it, ignoreCase = true) }
-            callback(
-                newExtractorLink(sourceName, "$sourceName [API]", u, ExtractorLinkType.M3U8) {
-                    this.referer = if (noRef) "" else dataUrl
-                    this.quality = Qualities.Unknown.value
-                    this.headers = EMBED_UA
-                },
-            )
-            ok = true
+    if (u.contains("videopark.top", ignoreCase = true)) {
+        val html = runCatching { app.get(u, referer = ref, headers = ua).text }.getOrNull().orEmpty()
+        extractVideoParkStream(u, html)?.let { vp ->
+            callback(newExtractorLink(sourceName, "$sourceName [${vp.label}]", vp.url, if (vp.isM3u8) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO) {
+                this.referer = vp.referer
+                this.quality = vp.quality
+                this.headers = ua
+            })
+            return true
         }
     }
-
-    for (c in embeds) {
-        if (!seen.add(c)) continue
-        if (loadCommonEmbedWithHints(sourceName, mainUrl, c, dataUrl, noRefererHosts, originHosts, firefoxUaHosts, subtitleCallback, callback)) {
-            ok = true
+    if (u.contains("playerx.info", ignoreCase = true)) {
+        val hash = u.substringAfterLast("/").substringBefore("?").trim()
+        if (hash.isNotEmpty()) {
+            val json = runCatching {
+                app.post(
+                    "https://playerx.info/api/source/$hash",
+                    referer = u,
+                    headers = ua + mapOf("X-Requested-With" to "XMLHttpRequest"),
+                    data = mapOf("r" to ref, "d" to "playerx.info"),
+                ).text
+            }.getOrNull().orEmpty()
+            var found = false
+            for (m in PLAYERX_FILE_RE.findAll(json)) {
+                val f = m.groupValues[1].replace("\\/", "/")
+                if (f.startsWith("http")) {
+                    callback(newExtractorLink(sourceName, "$sourceName [PlayerX]", f, if (f.contains(".m3u8")) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO) {
+                        this.referer = "https://playerx.info/"
+                        this.quality = Qualities.Unknown.value
+                        this.headers = ua
+                    })
+                    found = true
+                }
+            }
+            if (found) return true
         }
     }
-    return ok
+    if (loadExtractor(u, ref, settings.filterSubtitles(subtitleCallback), settings.filterLinks(callback))) return true
+    val html = runCatching { app.get(u, referer = ref, headers = ua).text }.getOrNull().orEmpty().replace("\\/", "/")
+    val direct = extractDirectM3u8Streams(html)
+    direct.forEach { m3u8 ->
+        callback(newExtractorLink(sourceName, sourceName, m3u8, ExtractorLinkType.M3U8) {
+            this.referer = u
+            this.quality = Qualities.Unknown.value
+            this.headers = ua
+        })
+    }
+    return direct.isNotEmpty()
 }

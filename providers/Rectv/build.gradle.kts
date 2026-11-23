@@ -1,4 +1,4 @@
-version = 6
+version = 7
 
 cloudstream {
     description = "RecTV — imzalı resmi API üzerinden Türkçe film ve dizi (host: a.psrectv80.xyz)"

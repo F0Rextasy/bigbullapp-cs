@@ -15,7 +15,7 @@
  * Kullanım: node nuvio/addon-live/build.mjs
  */
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -56,11 +56,68 @@ function constants(text) {
   return out;
 }
 
-function block(text, marker) {
-  const i = text.indexOf(marker);
-  if (i < 0) return "";
-  const j = text.indexOf("\n        )", i);
-  return text.slice(i, j < 0 ? undefined : j);
+export function block(text, marker) {
+  const start = text.indexOf(marker);
+  if (start < 0) return "";
+  const open = text.indexOf("(", start);
+  if (open < 0) return "";
+  let depth = 0;
+  let mode = "code"; // code | str | rawstr | lc | bc
+  for (let i = open; i < text.length; i++) {
+    const ch = text[i];
+    const nx = text[i + 1];
+    if (mode === "lc") {
+      if (ch === "\n") mode = "code";
+      continue;
+    }
+    if (mode === "bc") {
+      if (ch === "*" && nx === "/") {
+        mode = "code";
+        i++;
+      }
+      continue;
+    }
+    if (mode === "rawstr") {
+      if (ch === '"' && text[i + 1] === '"' && text[i + 2] === '"') {
+        mode = "code";
+        i += 2;
+      }
+      continue;
+    }
+    if (mode === "str") {
+      if (ch === "\\") {
+        i++;
+        continue;
+      }
+      if (ch === '"') mode = "code";
+      continue;
+    }
+    if (ch === "/" && nx === "/") {
+      mode = "lc";
+      i++;
+      continue;
+    }
+    if (ch === "/" && nx === "*") {
+      mode = "bc";
+      i++;
+      continue;
+    }
+    if (ch === '"') {
+      if (text[i + 1] === '"' && text[i + 2] === '"') {
+        mode = "rawstr";
+        i += 2;
+      } else {
+        mode = "str";
+      }
+      continue;
+    }
+    if (ch === "(") depth++;
+    else if (ch === ")") {
+      depth--;
+      if (depth === 0) return text.slice(start, i + 1);
+    }
+  }
+  return text.slice(start);
 }
 
 function parseProvider() {
@@ -124,11 +181,15 @@ const VERIFY = process.argv.includes("--verify");
 const CHECK = process.argv.includes("--check");
 const writeJson = (path, value) => writeFileSync(path, JSON.stringify(value) + "\n");
 
-async function probeStream(url, referer) {
+export async function probeStream(url, referer) {
   const headers = { "User-Agent": UA };
   if (referer) headers.Referer = referer;
   try {
     const r = await fetch(url, { headers, redirect: "follow", signal: AbortSignal.timeout(6000) });
+    if (r.status === 451) {
+      await r.body?.cancel?.().catch(() => {});
+      return { ok: true, geoBlocked: true, reason: "HTTP 451 (geo-blocked)" };
+    }
     if (r.status < 200 || r.status >= 300) {
       await r.body?.cancel?.().catch(() => {});
       return { ok: false, reason: `HTTP ${r.status}` };
@@ -160,12 +221,14 @@ async function verifyChannels(channels, staticKeys, concurrency = 24) {
   const keepIds = new Set();
   const deadStatic = [];
   let deadDynamic = 0;
+  let geoBlocked = 0;
   let idx = 0;
   async function worker() {
     while (idx < channels.length) {
       const cur = channels[idx++];
       const res = await probeStream(cur.url, cur.referer);
       if (res.ok) {
+        if (res.geoBlocked) geoBlocked += 1;
         keepIds.add(cur.id);
       } else if (staticKeys.has(cur.key)) {
         deadStatic.push({ id: cur.id, name: cur.name, url: cur.url, reason: res.reason });
@@ -180,6 +243,7 @@ async function verifyChannels(channels, staticKeys, concurrency = 24) {
     keepIds,
     deadStatic,
     deadDynamic,
+    geoBlocked,
     aliveCount: keepIds.size - deadStatic.length,
   };
 }
@@ -222,6 +286,7 @@ async function main() {
         ok: true,
         total: live.length,
         alive: report.aliveCount,
+        geoBlocked: report.geoBlocked,
         deadStatic: report.deadStatic,
         deadDynamic: report.deadDynamic,
       }));
@@ -230,11 +295,11 @@ async function main() {
     live = live.filter((c) => report.keepIds.has(c.id));
     ids.clear();
     for (const c of live) ids.add(c.id);
-    if (report.deadDynamic || report.deadStatic.length) {
-      console.error(`canlı tarama: ${report.aliveCount} açık, ${report.deadDynamic} ölü dinamik elendi, ${report.deadStatic.length} ölü statik`);
+    if (report.deadDynamic || report.deadStatic.length || report.geoBlocked) {
+      console.error(`canlı tarama: ${report.aliveCount} açık (${report.geoBlocked} HTTP 451 bölge kilitli korundu), ${report.deadDynamic} ölü dinamik elendi, ${report.deadStatic.length} ölü statik`);
     }
   } else if (CHECK) {
-    console.log(JSON.stringify({ ok: true, total: live.length, alive: live.length, deadStatic: [], deadDynamic: 0 }));
+    console.log(JSON.stringify({ ok: true, total: live.length, alive: live.length, geoBlocked: 0, deadStatic: [], deadDynamic: 0 }));
     return;
   }
 
@@ -301,4 +366,6 @@ async function main() {
   console.log(`canlı tv: ${live.length} kanal, ${catalogs.length} satır, manifest ${manifest.version}`);
 }
 
-await main();
+if (resolve(process.argv[1] || "") === import.meta.filename) {
+  await main();
+}

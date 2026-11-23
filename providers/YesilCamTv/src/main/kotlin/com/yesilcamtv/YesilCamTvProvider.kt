@@ -1,5 +1,6 @@
 package com.yesilcamtv
 
+import com.bigbull.common.extractYear
 import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.posterSrcLazy
@@ -130,8 +131,7 @@ class YesilCamTvProvider : MainAPI() {
         val plot = doc.selectFirst("#film-aciklama")?.text()?.trim()?.takeIf { it.isNotEmpty() }
             ?: doc.jsonLdDescription()
             ?: doc.selectFirst("meta[name=description]")?.attr("content")?.trim()
-        val year = Regex("""\b(19|20)\d{2}\b""").find(title)?.value?.toIntOrNull()
-            ?: Regex("""\b(19|20)\d{2}\b""").find(raw)?.value?.toIntOrNull()
+        val year = doc.extractYear(title)
         val score = Score.from10(
             doc.selectFirst("[itemprop=ratingValue]")?.attr("content")
                 ?: Regex(""""(?:imdbPuani|ratingValue|imdb)"\s*:\s*"?([0-9.]+)""").find(raw)?.groupValues?.get(1)
@@ -203,7 +203,7 @@ class YesilCamTvProvider : MainAPI() {
         }
         val frames = resp.document.select("iframe[src]").mapNotNull { fixUrlNull(it.attr("src")) }.distinct()
         for (frame in frames) {
-            if (!frame.contains("rumble.com/embed") && loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
+            if (!frame.contains("rumble.com/embed") && loadExtractor(frame, "$mainUrl/", Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback))) found = true
         }
         val rumble = (frames.filter { it.contains("rumble.com/embed") } +
             Regex("""rumble\.com/embed/[^/?#"'\s<>]+""").findAll(text).map { "https://${it.value}" })
@@ -214,7 +214,7 @@ class YesilCamTvProvider : MainAPI() {
             val id = Regex("""rumble\.com/embed/([^/?#"']+)""").find(oembed)?.groupValues?.get(1) ?: continue
             if (loadRumble(id, callback)) found = true
         }
-        val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
+        val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in subs) {
             if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))
         }

@@ -5,6 +5,16 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.29] - 2026-11-23
+
+### Eklendi
+- **Nuvio**: HDFilmCehennemi2 sağlayıcısı ve katalog satırları eklendi.
+
+### Düzeltildi
+- **Nuvio**: Tüm sağlayıcılarda uygulama içi test butonu ve başlık eşleştirme akışı düzeltildi.
+- **Cloudstream**: Sağlayıcı kalite/altyazı filtreleri, yayın bağlantısı çıkarımı, çıkış yılı ayrıştırması ve Canlı TV kanal akışları iyileştirildi.
+- **Nuvio katalog ve canlı TV**: Katalog üretimi ve canlı yayın doğrulama akışları kararlı hale getirildi.
+
 ## [1.7.28] - 2026-11-22
 
 ### Düzeltildi

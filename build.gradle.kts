@@ -58,6 +58,7 @@ subprojects {
 
     android {
         namespace = "com.bigbull.${project.name.lowercase()}"
+        compileSdkVersion(35)
         sourceSets["main"].java.srcDir(rootProject.file("providers/Common/src/main/kotlin"))
         if (project.name == commonTestHost) {
             sourceSets["test"].java.srcDir(rootProject.file("providers/Common/src/test/kotlin"))
@@ -65,8 +66,6 @@ subprojects {
 
         defaultConfig {
             minSdk = 21
-            compileSdkVersion(35)
-            targetSdk = 35
         }
 
         compileOptions {
@@ -91,6 +90,10 @@ subprojects {
         val implementation by configurations
         val testImplementation by configurations
 
+        val localCloudstreamJar = file("${gradle.gradleUserHomeDir}/caches/cloudstream/cloudstream/cloudstream.jar")
+        if (localCloudstreamJar.isFile) {
+            testImplementation(files(localCloudstreamJar))
+        }
         testImplementation("junit:junit:4.13.2")
 
         // Stubs for all cloudstream classes. "pre-release" kayan etikettir; CI jar'ı anahtarlı önbellekle sabitler.

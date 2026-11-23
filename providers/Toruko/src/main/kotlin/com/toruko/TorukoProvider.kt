@@ -174,7 +174,14 @@ class TorukoProvider : MainAPI() {
                 if (target == null) {
                     val frame = Regex("""<iframe[^>]+src="([^"]+)""").find(player)?.groupValues?.get(1)
                         ?.let { fixUrl(it) } ?: continue
-                    if (emitTau(frame, label, quality, subtitleCallback, callback)) found = true
+                    if (emitTau(
+                            frame,
+                            label,
+                            quality,
+                            Settings.filterSubtitles(subtitleCallback),
+                            Settings.filterLinks(callback),
+                        )
+                    ) found = true
                     continue
                 }
                 val stream = if (target.startsWith("/")) "$mainUrl$target" else target

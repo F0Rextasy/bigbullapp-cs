@@ -1,5 +1,7 @@
 package com.webdramaturkey2
 
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.parseHlsVariants
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -272,14 +274,7 @@ class WebdramaTurkey2Provider : MainAPI() {
     ): Boolean {
         val playlist = runCatching { app.get(masterUrl, referer = referer, headers = browserHeaders).text }
             .getOrNull() ?: return false
-        val hasAudio = playlist.contains("TYPE=AUDIO", ignoreCase = true) || playlist.contains("AUDIO=", ignoreCase = true)
-        val variants = if (hasAudio) emptyList() else VARIANT.findAll(playlist).mapNotNull { match ->
-            val height = RESOLUTION.find(match.groupValues[1])?.groupValues?.get(1)?.toIntOrNull() ?: 0
-            val uri = match.groupValues[2].trim()
-            if (uri.isEmpty()) return@mapNotNull null
-            // Variant URIs are root-relative and resolve against the master's origin.
-            runCatching { URI(masterUrl).resolve(uri).toString() }.getOrNull()?.let { it to height }
-        }.distinctBy { it.first }.toList()
+        val variants = parseHlsVariants(masterUrl, playlist)
 
         if (variants.isEmpty()) {
             callback.invoke(
@@ -291,7 +286,7 @@ class WebdramaTurkey2Provider : MainAPI() {
             return true
         }
 
-        for ((variantUrl, height) in variants) {
+        for ((height, variantUrl) in variants) {
             callback.invoke(
                 newExtractorLink(name, if (height > 0) "$label ${height}p" else label, variantUrl, ExtractorLinkType.M3U8) {
                     this.referer = referer
@@ -379,8 +374,7 @@ class WebdramaTurkey2Provider : MainAPI() {
             "Dram",
             "Komedi",
         )
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+        private val UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
 
@@ -390,7 +384,5 @@ class WebdramaTurkey2Provider : MainAPI() {
         private val IFRAME_SRC = Regex("""<iframe[^>]*\ssrc=["']([^"']+)["']""")
         private val MAIN_IFRAME_SRC = Regex("""id=["']main-iframe["'][^>]*\ssrc=["']([^"']+)["']""")
         private val FIREPLAYER = Regex("""^(https?://[^/]+)/(?:video|embed|e)/([0-9a-zA-Z]{16,})""")
-        private val VARIANT = Regex("""#EXT-X-STREAM-INF:([^\r\n]*)\r?\n([^\r\n#]+)""")
-        private val RESOLUTION = Regex("""RESOLUTION=\d+x(\d+)""")
     }
 }

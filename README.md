@@ -32,7 +32,7 @@ Nuvio'da plugin desteği yalnız **sideload** sürümlerde vardır (mağaza sür
 | Ne için | Adres |
 |---|---|
 | Ana sayfa film/dizi satırları | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json` |
-| Canlı TV (8 satır, 172 kanal) | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json` |
+| Canlı TV (8 satır, 157 kanal) | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json` |
 
 Nuvio plugin deposu: `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json`
 
@@ -40,7 +40,7 @@ Nuvio plugin deposu: `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/
 
 | İş | Sağlayan |
 |---|---|
-| Film/dizi arama ve oynatma | Plugin deposu (33 sağlayıcı; 32 aktif) |
+| Film/dizi arama ve oynatma | Plugin deposu (34 sağlayıcı; 33 aktif) |
 | Film/dizi detayı: özet, kadro, bölümler | **Bir metadata addon'u zorunlu**: Cinemeta (`https://v3-cinemeta.strem.io/manifest.json`) veya AIOMetadata/TMDB |
 | Ana sayfada film/dizi satırları | **BigBull TR Katalog** addon'u |
 | Canlı TV satırları ve kanal oynatma | **BigBull Canlı TV** addon'u |
@@ -118,7 +118,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 
 - **Cloudstream:** tek sağlayıcı `CanliTV` — 159 kanal (seçilmiş HLS + iptv-org). "Doğrulanmış"
   yalnız HTTP 200 HLS adresi demektir; oynatma garantisi değildir.
-- **Nuvio:** `BigBull Canlı TV` addon'u — 8 satır, 172 kanal, doğrudan HLS. Kanal listesi Cloudstream
+- **Nuvio:** `BigBull Canlı TV` addon'u — 8 satır, 157 kanal, doğrudan HLS. Kanal listesi Cloudstream
   `CanliTV` kaynağından üretilir; ölü kanallar ayıklanır.
 - Yeni kanal önerisi için site/kanal adını issue olarak bırak.
 
@@ -128,137 +128,136 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 
 | Eklenti | Kaynak | Tür | Sayfalama | Öneri | Fragman | Kadro | Süre | Puan |
 |---|---|---|---|---|---|---|---|---|
-| `AniArsiv` | aniarsiv.com | Dizi | — | — | — | — | — | — |
-| `AnimeciX` | animecix.tv | Anime | — | — | — | — | — | ✓ |
+| `AniArsiv` | aniarsiv.com | Dizi | ✓ | — | — | — | — | ✓ |
+| `AnimeciX` | animecix.tv | Anime | ✓ | — | — | — | — | ✓ |
 | `AnimeTR` | animetr.co | Anime | ✓ | — | — | — | — | ✓ |
-| `Animeler` | animeler.live | Anime | — | — | — | — | — | — |
-| `Anizm` | turkanime.info | Anime | — | — | ✓ | — | — | ✓ |
-| `Anizium` | anizium.co | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
-| `AsyaAnimeleri` | asyaanimeleri.top | Anime | ✓ | ✓ | ✓ | — | ✓ | ✓ |
+| `Animeler` | animeler.live | Anime | ✓ | — | — | — | — | ✓ |
+| `Anizm` | turkanime.info | Anime | ✓ | — | ✓ | — | — | ✓ |
+| `Anizium` | anizium.co | Anime | ✓ | ✓ | — | — | ✓ | ✓ |
+| `AsyaAnimeleri` | asyaanimeleri.top | Anime | ✓ | ✓ | — | — | ✓ | ✓ |
 | `AsyaBox` **pasif** | asyabox.co | Dizi | — | — | — | — | — | — |
-| `AsyaDizi` | asyadizi.com | Dizi | — | — | — | — | — | — |
-| `Asyadizileriizle` | asyadizileriizle.com | Dizi | — | — | — | — | — | — |
-| `AsyaFanatikleri` | asyafanatikleri.vip | Asya dizi/film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `AsyaDizi` | asyadizi.com | Dizi | ✓ | — | — | — | — | ✓ |
+| `Asyadizileriizle` | asyadizileriizle.com | Dizi | ✓ | — | — | — | — | ✓ |
+| `AsyaFanatikleri` | asyafanatikleri.vip | Asya dizi/film | ✓ | ✓ | ✓ | — | ✓ | ✓ |
 | `AsyaLog` **pasif** | asyalog.co | Asya dizi/film | ✓ | ✓ | — | — | ✓ | ✓ |
 | `AsyaLuna` **pasif** | asyaluna.com | Dizi | — | — | — | — | — | — |
 | `AsyaMax` | asyamax.com | Asya dizi/film | ✓ | — | — | — | — | — |
-| `AsyaWatch` | asyawatch.com | Asya dizi/film | ✓ | ✓ | — | ✓ | — | ✓ |
-| `ATV` | atv.com.tr | Dizi | — | — | — | — | — | — |
+| `AsyaWatch` | asyawatch.com | Asya dizi/film | ✓ | ✓ | — | — | — | ✓ |
+| `ATV` | atv.com.tr | Dizi | ✓ | — | — | — | — | — |
 | `BelgeselX` | belgeselx.com | Belgesel | — | — | — | — | — | — |
-| `BiCaps` | bicaps.live | Film | ✓ | — | ✓ | ✓ | — | ✓ |
-| `BirAsyaDizi` | birasyadizi.cx | Dizi | — | — | — | — | — | — |
-| `CanliDizi` | canlidizi.sbs | Dizi | — | — | — | — | — | — |
-| `CanliTV` | iptv-org TR M3U + sabit HLS | Canlı TV | — | — | — | — | — | — |
+| `BiCaps` | bicaps.live | Film | — | — | ✓ | ✓ | — | ✓ |
+| `BirAsyaDizi` | birasyadizi.cx | Dizi | ✓ | — | — | — | — | ✓ |
+| `CanliDizi` | canlidizi.sbs | Dizi | ✓ | — | — | — | — | ✓ |
+| `CanliTV` | iptv-org TR M3U + sabit HLS | Canlı TV | ✓ | — | — | — | — | — |
 | `Cizgimax` | cizgimax.online | Çizgi | ✓ | ✓ | — | — | — | ✓ |
-| `CizgiSite` | cizgi.site | Dizi | — | — | — | — | — | — |
+| `CizgiSite` | cizgi.site | Dizi | ✓ | — | — | — | — | — |
 | `CizgiVeDizi` | cizgivedizi.net | Çizgi/Anime/Dizi/Film | ✓ | ✓ | — | — | — | — |
 | `Ddizi` | ddizi.tel | Dizi | ✓ | — | — | — | — | — |
-| `DDizimag` | ddizimag2.icu | Dizi | — | — | — | — | — | — |
-| `Deokwave` | deokwave.com | Anime | — | — | — | — | — | ✓ |
-| `DiziAbi` | diziabi.net | Film | — | — | — | — | — | — |
+| `DDizimag` | ddizimag2.icu | Dizi | ✓ | — | — | — | — | ✓ |
+| `Deokwave` | deokwave.com | Anime | ✓ | — | — | — | — | ✓ |
+| `DiziAbi` | diziabi.net | Film | ✓ | — | — | — | — | ✓ |
 | `Dizibaba` | dizibaba.net | Film | — | — | — | — | — | — |
 | `DiziBal` | dizibal.org | Dizi/Film | ✓ | — | ✓ | ✓ | film | ✓ |
-| `DiziBol` | dizibol.org | Dizi | — | — | — | — | — | — |
-| `DiziBoxTv` | diziboxtv.com | Dizi | — | — | — | — | — | — |
-| `DiziCaN` | dizican.cc | Dizi | — | — | — | — | — | — |
-| `DiziFilmIzle` | dizifilmizle.to | Film | — | — | — | — | — | — |
-| `Dizifon` | dizifon.cc | Dizi | — | — | — | — | — | — |
+| `DiziBol` | dizibol.org | Dizi | ✓ | — | ✓ | ✓ | ✓ | ✓ |
+| `DiziBoxTv` | diziboxtv.com | Dizi | ✓ | — | — | — | — | ✓ |
+| `DiziCaN` | dizican.cc | Dizi | ✓ | — | — | — | — | ✓ |
+| `DiziFilmIzle` | dizifilmizle.to | Film | ✓ | — | — | — | — | ✓ |
+| `Dizifon` | dizifon.cc | Dizi | ✓ | — | — | — | — | ✓ |
 | `Dizigecesi` | dizigecesi.com | Film | — | — | — | — | — | — |
-| `Dizigom` | dizigom.news | Film | — | — | — | — | — | — |
-| `Diziizle` | diziizle.cloud | Dizi | ✓ | — | ✓ | ✓ | — | ✓ |
-| `DiziKutusu` | dizikutusu.com | Dizi | ✓ | — | — | ✓ | — | ✓ |
+| `Dizigom` | dizigom.news | Film | ✓ | — | — | — | — | ✓ |
+| `Diziizle` | diziizle.cloud | Dizi | — | — | ✓ | ✓ | — | ✓ |
+| `DiziKutusu` | dizikutusu.com | Dizi | ✓ | — | — | — | — | ✓ |
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
-| `DiziLife` | dizi87.life | Dizi/Film | ✓ | ✓ | — | ✓ | film | ✓ |
-| `Dizimanya` | dizimanya.com | Dizi | — | — | — | — | — | ✓ |
+| `DiziLife` | dizi87.life | Dizi/Film | ✓ | ✓ | — | — | film | ✓ |
+| `Dizimanya` | dizimanya.com | Dizi | ✓ | — | — | — | — | ✓ |
 | `DiziModu` **pasif** | dizimodu.com | Dizi | — | — | — | — | — | — |
-| `Dizirella` | dizirella.one | Dizi | — | — | — | — | — | — |
-| `DiziSol` | dizisol.com | Film/Dizi | ✓ | — | — | — | ✓ | — |
-| `Dizist` | dizist.live | Dizi | — | — | — | — | — | ✓ |
-| `DiziYou` | diziyou.one | Dizi | — | — | ✓ | ✓ | — | ✓ |
+| `Dizirella` | dizirella.one | Dizi | ✓ | — | — | — | — | ✓ |
+| `DiziSol` | dizisol.com | Film/Dizi | — | — | — | — | — | ✓ |
+| `Dizist` | dizist.live | Dizi | ✓ | — | — | ✓ | — | ✓ |
+| `DiziYou` | diziyou.one | Dizi | ✓ | — | ✓ | — | — | ✓ |
 | `Diziasia` | diziasia.com | Asya dizi | ✓ | ✓ | — | — | — | — |
-| `Dizibox` | dizibox.live | Dizi | — | — | ✓ | ✓ | — | ✓ |
-| `DiziboxIzle` | diziboxizle.com | Dizi | ✓ | — | ✓ | ✓ | — | ✓ |
-| `Dizikorea3` | dizikorea3.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | film | ✓ |
-| `Dizilla` | dizilla.la | Dizi | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `DiziMom` | ddizimom.icu | Dizi | — | — | — | — | — | — |
-| `DiziPal` | dizipal1597.com | Dizi/Film | — | ✓ | — | ✓ | ✓ | ✓ |
+| `Dizibox` | dizibox.live | Dizi | ✓ | — | ✓ | — | — | ✓ |
+| `DiziboxIzle` | diziboxizle.com | Dizi | ✓ | — | ✓ | — | — | ✓ |
+| `Dizikorea3` | dizikorea3.com | Dizi/Film | ✓ | ✓ | ✓ | — | film | ✓ |
+| `Dizilla` | dizilla.la | Dizi | ✓ | ✓ | ✓ | — | ✓ | ✓ |
+| `DiziMom` | ddizimom.icu | Dizi | ✓ | — | — | — | — | ✓ |
+| `DiziPal` | dizipal1597.com | Dizi/Film | ✓ | ✓ | — | ✓ | ✓ | ✓ |
 | `DiziPod` | dizipod.com | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `DMAX` | dmax.com.tr | Dizi | — | — | — | — | — | — |
+| `DMAX` | dmax.com.tr | Dizi | ✓ | — | — | — | — | — |
 | `DramaDizilerim` | dramadizilerim1.com | Dizi | ✓ | ✓ | — | — | — | ✓ |
 | `FilmDozu` | filmdozu.com | Film | ✓ | — | — | — | — | ✓ |
 | `FilmEkseni` **pasif** | filmekseni.vip | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
 | `Filmgecesi` | filmgecesi.vip | Film/Dizi | ✓ | — | — | — | ✓ | ✓ |
 | `FilmMakinesi` | filmmakinesi.co | Film | ✓ | — | — | — | ✓ | ✓ |
-| `Filmizyon` | filmizyon.net | Film | — | — | — | — | — | — |
+| `Filmizyon` | filmizyon.net | Film | ✓ | — | — | — | — | ✓ |
 | `FilmKovasi` | filmkovasi.co | Film | ✓ | — | — | ✓ | — | — |
-| `FilmModu` | filmmodu.icu | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `FullHDFilm` | fullhdfilmizlebox.vip | Film | — | — | — | — | — | ✓ |
+| `FilmModu` | filmmodu.icu | Film | — | — | ✓ | ✓ | ✓ | ✓ |
+| `FullHDFilm` | fullhdfilmizlebox.vip | Film | ✓ | — | — | — | — | ✓ |
 | `FullHDFilmizlesene` | fullhdfilmizlesene.now | Film | — | — | ✓ | — | — | ✓ |
-| `HDFilmCehennemi` | hdfilmcehennemi.nl | Film | — | — | — | — | — | — |
-| `HDFilmCehennemi2` | hdfilmcehennemi2.biz | Film | — | — | — | — | — | — |
+| `HDFilmCehennemi` | hdfilmcehennemi.nl | Film | ✓ | — | — | — | ✓ | ✓ |
+| `HDFilmCehennemi2` | hdfilmcehennemi2.biz | Film | ✓ | — | — | — | — | ✓ |
 | `HDFilmDelisi` | hdfilmdelisi1.com | Film | ✓ | — | — | — | ✓ | ✓ |
-| `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | — | — | — | — | — | — |
-| `HDFilmizle` | hdfilmizle.ink | Dizi/Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `HDFilmizleBest` | hdfilmizle.best | Film | — | — | — | — | — | — |
-| `Izle7` | izle7.com | Dizi/Film | ✓ | — | — | — | ✓ | — |
-| `IzleFilm` | izlefilm.net | Film | ✓ | — | — | — | ✓ | ✓ |
-| `JetFilmizle` | jetfilmizle.app | Film | — | — | ✓ | ✓ | — | ✓ |
-| `KanalD` | kanald.com.tr | Dizi | — | — | — | — | — | — |
+| `HDFilmDiziIzle` | hdfilmdiziizle.com | Dizi | ✓ | — | — | — | — | ✓ |
+| `HDFilmizle` | hdfilmizle.ink | Dizi/Film | — | — | ✓ | ✓ | ✓ | ✓ |
+| `HDFilmizleBest` | hdfilmizle.best | Film | ✓ | — | — | — | — | ✓ |
+| `Izle7` | izle7.com | Dizi/Film | — | — | — | — | ✓ | — |
+| `IzleFilm` | izlefilm.net | Film | ✓ | — | — | — | — | ✓ |
+| `JetFilmizle` | jetfilmizle.app | Film | — | — | ✓ | — | — | ✓ |
+| `KanalD` | kanald.com.tr | Dizi | ✓ | — | — | — | — | — |
 | `KoreanTurk` | koreanturk.tv | Dizi | ✓ | — | — | — | — | — |
 | `Kultfilmler` | kultfilmler.net | Film | ✓ | — | — | ✓ | ✓ | ✓ |
 | `LoveFilm` | lovefilmizle.net | Film | ✓ | — | ✓ | ✓ | ✓ | ✓ |
-| `MinikaCocuk` | minikacocuk.com.tr | Çocuk/Dizi | — | — | — | — | — | — |
+| `MinikaCocuk` | minikacocuk.com.tr | Çocuk/Dizi | ✓ | — | — | — | — | — |
 | `MinikaGO` | minikago.com.tr | Çocuk | — | — | — | — | — | — |
-| `NetFilmizle` | netfilmizle.com | Film | — | — | — | — | — | — |
+| `NetFilmizle` | netfilmizle.com | Film | ✓ | — | — | — | — | ✓ |
 | `NowTV` | nowtv.com.tr | Dizi/Film | ✓ | — | — | — | — | — |
-| `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | ✓ | — |
+| `Onepacetr` | onepacetr.net | Anime | ✓ | — | — | — | — | — |
 | `OnlineDizi` | onlinedizi.sbs | Dizi | ✓ | — | — | ✓ | — | — |
 | `P720pizle` | 720pizle.my | Film | ✓ | — | — | ✓ | ✓ | ✓ |
 | `PuhuTV` | puhutv.com | Dizi/Film | ✓ | — | — | ✓ | film | — |
-| `Rectv` | a.psrectv80.xyz (imzalı API) | Film/Dizi | ✓ | — | — | — | ✓ | ✓ |
-| `RoketDizi` | roketdizi.life | Dizi | ✓ | — | — | — | — | — |
-| `SelcukFlix` | selcukflix.app | Dizi/Film | — | — | — | — | ✓ | ✓ |
-| `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `Sezonlukdizi` | sezonlukdizi.cc | Dizi | — | — | ✓ | ✓ | ✓ | ✓ |
-| `ShowTV` | showtv.com.tr | Dizi | — | — | — | — | — | — |
+| `Rectv` | a.psrectv80.xyz (imzalı API) | Film/Dizi | ✓ | — | ✓ | — | ✓ | ✓ |
+| `RoketDizi` | roketdizi.life | Dizi | ✓ | ✓ | — | — | ✓ | ✓ |
+| `SelcukFlix` | selcukflix.app | Dizi/Film | ✓ | — | — | ✓ | ✓ | ✓ |
+| `SetFilmIzle` | setfilmizle.ltd | Dizi/Film | — | ✓ | ✓ | — | ✓ | ✓ |
+| `Sezonlukdizi` | sezonlukdizi.cc | Dizi | ✓ | — | ✓ | — | ✓ | ✓ |
+| `ShowTV` | showtv.com.tr | Dizi | ✓ | — | — | — | — | — |
 | `SinemaCX` | sinemacc.com | Film | — | — | — | ✓ | ✓ | ✓ |
-| `Sinemetrik` | sinemetrik.com | Film/Dizi | ✓ | — | — | ✓ | ✓ | ✓ |
+| `Sinemetrik` | sinemetrik.com | Film/Dizi | ✓ | — | — | — | ✓ | ✓ |
 | `Sinezy` | sinezy.si | Film | — | — | — | — | — | — |
-| `Sinemakolik` | sinemakolik.com | Film | — | — | — | — | — | — |
-| `SonAnime` | sonanime.com | Dizi | — | — | — | — | — | — |
-| `StarTV` | startv.com.tr | Dizi | — | — | — | — | — | — |
+| `Sinemakolik` | sinemakolik.com | Film | ✓ | — | — | — | — | ✓ |
+| `SonAnime` | sonanime.com | Dizi | ✓ | — | — | — | — | ✓ |
+| `StarTV` | startv.com.tr | Dizi | ✓ | — | — | — | — | — |
 | `TLCtr` | tlctv.com.tr | Dizi | ✓ | — | — | — | — | — |
-| `Toruko` | turkceanime.com | Anime | — | — | — | — | ✓ | ✓ |
-| `TrDiziIzle` | trdiziizle.tv | Dizi | ✓ | — | — | — | — | — |
-| `TRT1` | trt1.com.tr | Dizi | — | — | — | — | — | — |
-| `TurkAnimeTV` | turkanime.live | Anime | ✓ | — | — | — | — | — |
-| `TurkceDizi` | turkcedizi.com | Film | — | — | — | — | — | ✓ |
+| `Toruko` | turkceanime.com | Anime | ✓ | — | — | — | ✓ | ✓ |
+| `TrDiziIzle` | trdiziizle.tv | Dizi | ✓ | — | ✓ | ✓ | — | ✓ |
+| `TRT1` | trt1.com.tr | Dizi | ✓ | — | — | — | — | — |
+| `TurkAnimeTV` | turkanime.live | Anime | — | — | — | ✓ | — | ✓ |
+| `TurkceDizi` | turkcedizi.com | Film | ✓ | — | — | — | — | ✓ |
 | `TV2` | tv2.com.tr | Dizi/Film | ✓ | — | — | — | — | — |
-| `TV8` | tv8.com.tr | Dizi | — | — | — | — | — | — |
-| `TvDiziler` | tvdiziler.tv | Dizi | — | — | — | — | — | ✓ |
-| `UltraFilmizle` | ultraiz.net | Film | — | — | — | — | — | — |
+| `TV8` | tv8.com.tr | Dizi | ✓ | — | — | — | — | — |
+| `TvDiziler` | tvdiziler.tv | Dizi | ✓ | — | — | — | — | ✓ |
+| `UltraFilmizle` | ultraiz.net | Film | ✓ | — | — | — | — | ✓ |
 | `VenusFilmizle` | venusfilmizle.com | Film | ✓ | — | — | — | ✓ | ✓ |
 | `WebdramaTurkey2` | webdramaturkey2.com | Asya dizi/film | ✓ | — | — | ✓ | ✓ | — |
-| `WebFilmizle` | webfilmizle.com | Film | ✓ | — | — | — | — | — |
-| `Weboo` | weboo.com.tr | Dizi | — | — | — | — | — | — |
-| `WebteIzle` | webteizle.info | Film | ✓ | — | ✓ | ✓ | ✓ | — |
-| `Yabancidizi` | ybncidizi.com | Dizi/Film | — | ✓ | — | ✓ | film | ✓ |
+| `WebFilmizle` | webfilmizle.com | Film | ✓ | — | — | — | — | ✓ |
+| `Weboo` | weboo.com.tr | Dizi | ✓ | — | — | — | — | ✓ |
+| `WebteIzle` | webteizle.info | Film | ✓ | — | ✓ | — | ✓ | — |
+| `Yabancidizi` | ybncidizi.com | Dizi/Film | ✓ | ✓ | — | — | film | ✓ |
 | `YerliDiziler` | yerlidiziler.com.tr | Yerli Dizi | ✓ | — | — | — | — | — |
-| `YesilCamTv` | yesilcamtv.com.tr | Film | — | — | — | — | — | — |
+| `YesilCamTv` | yesilcamtv.com.tr | Film | ✓ | — | — | — | — | ✓ |
 
 **Kapsam notu:** Depoda aktif **112 modül** var ve tamamı doğrulanmış durumda (`status = 1`).
-`AsyaLuna` (alan adı ölü) ve `DiziModu` (tüm oynatıcı sunucuları
-ölü/404, 2026-11-21) `status = 0` ile pasif. İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle
-kaldırıldı; düzeldiğinde tekrar eklenir. Bu tablo ve özellik matrisi her sağlayıcı değişikliğinde
-güncellenir.
+`status = 0` ile pasif **5 modül**: `AsyaBox`, `AsyaLog`, `AsyaLuna`, `DiziModu`, `FilmEkseni`.
+İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle kaldırıldı; düzeldiğinde tekrar eklenir.
+Bu tablo ve özellik matrisi her sağlayıcı değişikliğinde güncellenir.
 
-## Nuvio sağlayıcıları (33)
+## Nuvio sağlayıcıları (34)
 
 - **Anime (3):** `Anizium`, `AnimeciX`, `AsyaAnimeleri`
 - **Çizgi & Karma (1):** `CizgiVeDizi` *(varsayılan kapalı — 2 MB/60 sn sunucu sınırı)*
 - **Dizi (14):** `Dizibox`, `Dizilla`, `DiziPal`, `SelcukFlix`, `Ddizi`, `DDizimag`, `YerliDiziler`, `WebdramaTurkey2`, `Dizikorea3`, `Sezonlukdizi`, `DiziYou`, `DiziBal`, `DiziMom`, `DiziPod`
 - **Film (8):** `HDFilmCehennemi`, `FullHDFilmizlesene`, `SetFilmIzle`, `YesilCamTv`, `FilmMakinesi`, `WebteIzle`, `FilmModu`, `JetFilmizle`
-- **Film & Dizi (4):** `PuhuTV`, `RecTV`, `Sinemetrik`, `TurkceDizi`
+- **Film & Dizi (5):** `PuhuTV`, `RecTV`, `Sinemetrik`, `TurkceDizi`, `HDFilmCehennemi2`
 - **Belgesel & TV (3):** `BelgeselX`, `DMAX`, `TLCtr`
 
 ## Geliştiriciler

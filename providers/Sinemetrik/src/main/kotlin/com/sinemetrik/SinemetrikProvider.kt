@@ -247,7 +247,12 @@ class SinemetrikProvider : MainAPI() {
             }
             if (!found) hints.optString("vip").takeIf { it.startsWith("http") }?.let { embed ->
                 found = runCatching {
-                    com.lagradost.cloudstream3.utils.loadExtractor(embed, "$mainUrl/", subtitleCallback, callback)
+                    com.lagradost.cloudstream3.utils.loadExtractor(
+                        embed,
+                        "$mainUrl/",
+                        Settings.filterSubtitles(subtitleCallback),
+                        Settings.filterLinks(callback),
+                    )
                 }.getOrDefault(false)
             }
         } else {

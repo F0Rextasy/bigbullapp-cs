@@ -1,5 +1,6 @@
 package com.deokwave
 
+import com.bigbull.common.extractYear
 import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.parseHlsVariants
@@ -129,8 +130,7 @@ class DeokwaveProvider : MainAPI() {
         val genres = doc.select("[itemprop=genre], a[href*='/tur/'], a[href*='/kategori/']")
             .mapNotNull { it.attr("content").ifBlank { it.text() }.trim().takeIf(String::isNotBlank) }
             .distinct().take(8)
-        val year = Regex("""\b(19|20)\d{2}\b""").find(title)?.value?.toIntOrNull()
-            ?: Regex("""\b(19|20)\d{2}\b""").find(raw)?.value?.toIntOrNull()
+        val year = doc.extractYear(title)
         val score = Score.from10(
             doc.selectFirst("[itemprop=ratingValue]")?.attr("content")
                 ?: Regex(""""(?:imdbPuani|ratingValue|imdb)"\s*:\s*"?([0-9.]+)""").find(raw)?.groupValues?.get(1)
@@ -272,7 +272,7 @@ class DeokwaveProvider : MainAPI() {
             }
             if (resolveCustomFallbackEmbed(frame, "$mainUrl/", subtitleCallback, callback)) found = true
         }
-        val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
+        val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in subs) {
             if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))
         }
@@ -364,95 +364,5 @@ class DeokwaveProvider : MainAPI() {
         referer: String? = null,
         subtitleCallback: (com.lagradost.cloudstream3.SubtitleFile) -> Unit,
         callback: (com.lagradost.cloudstream3.utils.ExtractorLink) -> Unit,
-    ): Boolean {
-        val u = if (url.startsWith("//")) "https:$url" else url
-        val ref = referer ?: "$mainUrl/"
-        val ua = mapOf("User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36")
-        if (u.contains("vixolity.com", ignoreCase = true)) {
-            val html = runCatching { com.lagradost.cloudstream3.app.get(u, referer = ref, headers = ua).text }.getOrNull().orEmpty()
-            for (m in Regex(""""([0-9a-fA-F]{80,})"""").findAll(html)) {
-                val hex = m.groupValues[1]
-                if (hex.length % 2 != 0) continue
-                val step1 = runCatching { ByteArray(hex.length / 2) { i -> hex.substring(i * 2, i * 2 + 2).toInt(16).toByte() }.toString(Charsets.ISO_8859_1) }.getOrNull() ?: continue
-                val step2 = runCatching { String(java.util.Base64.getDecoder().decode(step1.reversed()), Charsets.ISO_8859_1) }.getOrNull() ?: continue
-                for (shift in listOf(3, 1, 2, 4, 5, 6, 7)) {
-                    val shifted = buildString(step2.length) { for (ch in step2) append((ch.code - shift).toChar()) }
-                    val dec = runCatching { String(java.util.Base64.getDecoder().decode(shifted), Charsets.UTF_8) }.getOrNull() ?: continue
-                    val km = Regex(""""(?:kaynak|file|src)"\s*:\s*"([^"]+\.m3u8[^"]*)"""").find(dec)
-                    if (km != null) {
-                        val streamUrl = km.groupValues[1].replace("\\/", "/")
-                        val origin = runCatching { val p = java.net.URI(u); "${p.scheme}://${p.host}" }.getOrDefault("https://pl.vixolity.com")
-                        callback(com.lagradost.cloudstream3.utils.newExtractorLink(name, "$name [Vixolity]", streamUrl, com.lagradost.cloudstream3.utils.ExtractorLinkType.M3U8) {
-                            this.referer = "$origin/"
-                            this.quality = com.lagradost.cloudstream3.utils.Qualities.Unknown.value
-                            this.headers = ua + mapOf("Origin" to origin)
-                        })
-                        return true
-                    }
-                }
-            }
-        }
-        if (u.contains("videopark.top", ignoreCase = true)) {
-            val html = runCatching { com.lagradost.cloudstream3.app.get(u, referer = ref, headers = ua).text }.getOrNull().orEmpty()
-            val vid = Regex("""VIDEO_ID\s*=\s*"([^"]+)"""").find(html)?.groupValues?.get(1).orEmpty()
-            val worker = Regex("""WORKER_URL\s*=\s*"([^"]+)"""").find(html)?.groupValues?.get(1).orEmpty()
-            if (vid.isNotEmpty() && worker.isNotEmpty()) {
-                val mp4 = "${worker.trimEnd('/')}/v/$vid?q=1080"
-                callback(com.lagradost.cloudstream3.utils.newExtractorLink(name, "$name [VIP]", mp4, com.lagradost.cloudstream3.utils.ExtractorLinkType.VIDEO) {
-                    this.referer = "${worker.trimEnd('/')}/"
-                    this.quality = com.lagradost.cloudstream3.utils.Qualities.P1080.value
-                    this.headers = ua
-                })
-                return true
-            }
-            if (vid.isNotEmpty() && (u.contains("/apollo/") || u.contains("/go/"))) {
-                val m3u8 = "https://videopark.top/apollo/get_video.php?id=$vid"
-                callback(com.lagradost.cloudstream3.utils.newExtractorLink(name, "$name [Apollo]", m3u8, com.lagradost.cloudstream3.utils.ExtractorLinkType.M3U8) {
-                    this.referer = "https://videopark.top/"
-                    this.quality = com.lagradost.cloudstream3.utils.Qualities.Unknown.value
-                    this.headers = ua
-                })
-                return true
-            }
-        }
-        if (u.contains("playerx.info", ignoreCase = true)) {
-            val hash = u.substringAfterLast("/").substringBefore("?").trim()
-            if (hash.isNotEmpty()) {
-                val json = runCatching {
-                    com.lagradost.cloudstream3.app.post(
-                        "https://playerx.info/api/source/$hash",
-                        referer = u,
-                        headers = ua + mapOf("X-Requested-With" to "XMLHttpRequest"),
-                        data = mapOf("r" to ref, "d" to "playerx.info"),
-                    ).text
-                }.getOrNull().orEmpty()
-                var found = false
-                for (m in Regex(""""file"\s*:\s*"([^"]+)"""").findAll(json)) {
-                    val f = m.groupValues[1].replace("\\/", "/")
-                    if (f.startsWith("http")) {
-                        callback(com.lagradost.cloudstream3.utils.newExtractorLink(name, "$name [PlayerX]", f, if (f.contains(".m3u8")) com.lagradost.cloudstream3.utils.ExtractorLinkType.M3U8 else com.lagradost.cloudstream3.utils.ExtractorLinkType.VIDEO) {
-                            this.referer = "https://playerx.info/"
-                            this.quality = com.lagradost.cloudstream3.utils.Qualities.Unknown.value
-                            this.headers = ua
-                        })
-                        found = true
-                    }
-                }
-                if (found) return true
-            }
-        }
-        if (com.lagradost.cloudstream3.utils.loadExtractor(u, ref, subtitleCallback, callback)) return true
-        val html = runCatching { com.lagradost.cloudstream3.app.get(u, referer = ref, headers = ua).text }.getOrNull().orEmpty().replace("\\/", "/")
-        var foundDirect = false
-        for (m in Regex("""https?://[^"'\s<>]+\.m3u8(?:\?[^"'\s<>]*)?""").findAll(html)) {
-            val m3u8 = com.bigbull.common.pichiveSign(html, m.value)
-            callback(com.lagradost.cloudstream3.utils.newExtractorLink(name, name, m3u8, com.lagradost.cloudstream3.utils.ExtractorLinkType.M3U8) {
-                this.referer = u
-                this.quality = com.lagradost.cloudstream3.utils.Qualities.Unknown.value
-                this.headers = ua
-            })
-            foundDirect = true
-        }
-        return foundDirect
-    }
+    ): Boolean = com.bigbull.common.extractCommonSiteEmbed(name, mainUrl, url, referer, Settings, subtitleCallback, callback)
 }

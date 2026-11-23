@@ -165,15 +165,8 @@ class FilmKovasiProvider : MainAPI() {
 
     /** ok.ru/odnoklassniki gömme kabuğu; aynı kimliğe videoPlayerMetadata `videos` dizisini verir. */
     private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
-        val id = OK_ID.find(embed)?.groupValues?.get(1) ?: return false
-        val body = runCatching {
-            app.post(
-                "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
-                data = emptyMap(),
-                headers = mapOf("user-agent" to ANDROID_UA, "Referer" to "https://ok.ru/"),
-            ).text
-        }.getOrNull() ?: return false
-        val videos = runCatching { JSONObject(body).optJSONArray("videos") }.getOrNull() ?: return false
+        val videos = com.bigbull.common.fetchOkRuMetadata(embed, userAgent = ANDROID_UA)
+            ?.optJSONArray("videos") ?: return false
 
         var found = false
         for (i in 0 until videos.length()) {

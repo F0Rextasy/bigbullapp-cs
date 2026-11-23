@@ -1,5 +1,6 @@
 package com.ultrafilmizle
 
+import com.bigbull.common.decryptBePlayerJson
 import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.posterSrcLazy
@@ -26,11 +27,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
-import java.security.MessageDigest
 import java.util.Base64
-import javax.crypto.Cipher
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
 import org.json.JSONObject
 import org.json.JSONArray
 import org.jsoup.nodes.Document
@@ -142,7 +139,7 @@ class UltraFilmizleProvider : MainAPI() {
             app.get(embed, headers = headers, referer = pageUrl).text
         }.getOrNull() ?: throw ErrorLoadingException("$name: oynatıcı yanıt vermedi. $REPORT_HINT")
         val player = BE_PLAYER.find(embedHtml)?.let { match ->
-            decrypt(match.groupValues[1], JSONObject(match.groupValues[2]))
+            decryptBePlayerJson(match.groupValues[1], JSONObject(match.groupValues[2]))
         } ?: BE_CONFIG.find(embedHtml)?.let { match ->
             val rawConfig = match.groupValues[1]
                 .replace("&quot;", "\"")
@@ -152,7 +149,7 @@ class UltraFilmizleProvider : MainAPI() {
             val videoId = cfg.optString("videoId")
             val settingsRaw = cfg.optString("settings")
             if (videoId.isNotEmpty() && settingsRaw.isNotEmpty()) {
-                decrypt(videoId, JSONObject(settingsRaw))
+                decryptBePlayerJson(videoId, JSONObject(settingsRaw))
             } else null
         } ?: throw ErrorLoadingException("$name: oynatıcı yapılandırması okunamadı. $REPORT_HINT")
         val stream = player.optString("video_location").trim()
@@ -187,28 +184,6 @@ class UltraFilmizleProvider : MainAPI() {
         }
         return true
     }
-
-    private fun decrypt(hash: String, params: JSONObject): JSONObject {
-        val password = hash.toByteArray(Charsets.UTF_8)
-        val salt = hex(params.optString("s"))
-        val iv = hex(params.optString("iv"))
-        val cipherText = Base64.getDecoder().decode(params.optString("ct"))
-        val first = md5(password, salt)
-        val second = md5(first, password, salt)
-        val key = (first + second).copyOf(32)
-        val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-        cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(iv))
-        return JSONObject(String(cipher.doFinal(cipherText), Charsets.UTF_8))
-    }
-
-    private fun md5(vararg parts: ByteArray): ByteArray {
-        val digest = MessageDigest.getInstance("MD5")
-        parts.forEach { digest.update(it) }
-        return digest.digest()
-    }
-
-    private fun hex(value: String): ByteArray =
-        value.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
 
     private fun Document.cards(): List<SearchResponse> =
         select("div.movie-box").mapNotNull { box ->

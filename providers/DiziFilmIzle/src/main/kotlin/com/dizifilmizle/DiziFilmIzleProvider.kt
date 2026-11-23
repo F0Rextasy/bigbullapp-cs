@@ -1,8 +1,9 @@
 package com.dizifilmizle
 
+import com.bigbull.common.extractYear
 import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
-import com.bigbull.common.evpMd5AesCbcDecrypt
+import com.bigbull.common.decryptBePlayerConfig
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -86,8 +87,8 @@ class DiziFilmIzleProvider : MainAPI() {
     companion object {
         val ROWS = listOf("Diziler", "Türkçe Dublaj", "Türkçe Altyazı", "Yerli Filmler", "Seri Filmler", "Efsane Diziler", "Filmler")
         private val BE_PLAYER = Regex("""bePlayer\('([^']+)'\s*,\s*'(\{.*?\})'""", RegexOption.DOT_MATCHES_ALL)
-        private val MEDIA = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""")
-        private val SUBS = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""")
+        private val MEDIA = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""")
+        private val SUBS = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)?""")
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
@@ -166,8 +167,7 @@ class DiziFilmIzleProvider : MainAPI() {
         val genres = doc.select("[itemprop=genre], a[href*='/tur/'], a[href*='/kategori/']")
             .mapNotNull { it.attr("content").ifBlank { it.text() }.trim().takeIf(String::isNotBlank) }
             .distinct().take(8)
-        val year = Regex("""\b(19|20)\d{2}\b""").find(title)?.value?.toIntOrNull()
-            ?: Regex("""\b(19|20)\d{2}\b""").find(raw)?.value?.toIntOrNull()
+        val year = doc.extractYear(title)
         val score = Score.from10(
             doc.selectFirst("[itemprop=ratingValue]")?.attr("content")
                 ?: Regex(""""(?:imdbPuani|ratingValue|imdb)"\s*:\s*"?([0-9.]+)""").find(raw)?.groupValues?.get(1)
@@ -272,7 +272,7 @@ class DiziFilmIzleProvider : MainAPI() {
             if (inner != null) {
                 for (m in MEDIA.findAll(inner.replace("\\/", "/"))) emit(m.value, "Embed", frame)
             }
-            if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
+            if (loadExtractor(frame, "$mainUrl/", Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback))) found = true
         }
 
         for (m in SUBS.findAll(text)) {
@@ -282,13 +282,8 @@ class DiziFilmIzleProvider : MainAPI() {
         return true
     }
 
-    private fun decryptBePlayer(html: String): String? {
-        val match = BE_PLAYER.find(html) ?: return null
-        val params = JSONObject(match.groupValues[2])
-        val cipherText = Base64.getDecoder().decode(params.optString("ct"))
-        val clear = evpMd5AesCbcDecrypt(cipherText, match.groupValues[1], params.optString("s"), params.optString("iv"))
-        return JSONObject(clear).optString("video_location").trim().takeIf { it.startsWith("http") }
-    }
+    private fun decryptBePlayer(html: String): String? =
+        decryptBePlayerConfig(html)?.optString("video_location")?.trim()?.takeIf { it.startsWith("http") }
 
 
 }

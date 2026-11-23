@@ -67,7 +67,7 @@ for (const file of fs.readdirSync(providersDir).sort()) {
     problems.push(`${file}: header is not valid JSON (${e.message})`);
     continue;
   }
-  for (const key of ["id", "name", "types", "domain"]) {
+  for (const key of ["id", "name", "types", "domain", "sample"]) {
     if (!meta[key]) problems.push(`${file}: header missing "${key}"`);
   }
   const id = meta.id || path.basename(file, ".js");

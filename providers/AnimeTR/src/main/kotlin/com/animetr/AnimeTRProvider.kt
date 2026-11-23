@@ -171,17 +171,11 @@ class AnimeTRProvider : MainAPI() {
 
     /** ok.ru embed'i JS kabuğu; aynı kimliğe `videoPlayerMetadata` imzalı HLS master'ı JSON olarak verir. */
     private suspend fun loadOkRu(embed: String, label: String, callback: (ExtractorLink) -> Unit): Boolean {
-        val id = Regex("""videoembed/(\d+)""").find(embed)?.groupValues?.get(1) ?: return false
-        val body = runCatching {
-            app.post(
-                "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
-                data = mapOf("cmd" to "videoPlayerMetadata", "mid" to id),
-                headers = mapOf("user-agent" to BROWSER_UA),
-                referer = "https://ok.ru/videoembed/$id",
-            ).text
-        }.getOrNull() ?: return false
-        val stream = runCatching { JSONObject(body).optString("ondemandHls") }.getOrNull().orEmpty()
-        if (!stream.startsWith("http")) return false
+        val stream = com.bigbull.common.fetchOkRuMetadata(
+            embed,
+            userAgent = BROWSER_UA,
+            data = mapOf("cmd" to "videoPlayerMetadata"),
+        )?.optString("ondemandHls")?.takeIf { it.startsWith("http") } ?: return false
         callback(
             newExtractorLink(name, label, stream, ExtractorLinkType.M3U8) {
                 this.referer = "https://ok.ru/"
@@ -210,9 +204,7 @@ class AnimeTRProvider : MainAPI() {
     companion object {
         val ROWS = listOf("Son Eklenenler", "Popüler", "Tamamlananlar", "Puanı Yüksek")
         private const val MAX_PLAYERS = 10
-        private const val BROWSER_UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
-                "Chrome/130.0.0.0 Safari/537.36"
+        private val BROWSER_UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

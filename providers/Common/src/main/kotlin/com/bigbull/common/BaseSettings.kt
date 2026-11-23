@@ -10,6 +10,8 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
+import com.lagradost.cloudstream3.SubtitleFile
+import com.lagradost.cloudstream3.utils.ExtractorLink
 
 open class BaseSettings(private val file: String) {
     private var prefs: SharedPreferences? = null
@@ -45,6 +47,14 @@ open class BaseSettings(private val file: String) {
             "en" -> label.contains("en") || label.contains("ingiliz") || label.contains("english")
             else -> true
         }
+    }
+
+    fun filterLinks(callback: (ExtractorLink) -> Unit): (ExtractorLink) -> Unit = { link ->
+        if (qualityAllowed(link.quality)) callback(link)
+    }
+
+    fun filterSubtitles(subtitleCallback: (SubtitleFile) -> Unit): (SubtitleFile) -> Unit = { sub ->
+        if (subtitleAllowed(sub.lang)) subtitleCallback(sub)
     }
 
     open fun rowEnabled(name: String): Boolean = prefs?.getStringSet(ROW_KEY, null)?.contains(name) != true

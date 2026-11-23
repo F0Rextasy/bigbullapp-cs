@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "AsyaMax — Türkçe altyazılı Asya dizileri ve filmleri (asyamax.com)"

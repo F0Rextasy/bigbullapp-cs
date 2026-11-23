@@ -1,4 +1,4 @@
-version = 11
+version = 12
 
 cloudstream {
     description = "DiziboxIzle — güncel yabancı dizi (diziboxizle.com)"

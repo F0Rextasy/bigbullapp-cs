@@ -93,7 +93,8 @@ class CanliTVProvider : MainAPI() {
         MainPageData(label, group)
     }
 
-    private var channels: List<Channel>? = null
+    @Volatile private var channels: List<Channel>? = null
+    private val channelsLock = Any()
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val items = getChannels()
@@ -117,7 +118,7 @@ class CanliTVProvider : MainAPI() {
         }
     }
 
-    /** Seçilmiş kanallar önce gelir; iptv-org aynı adı taşıyan kaydı ezmez. */
+    /** Seçilmiş kanallar önce gelir; iptv-org aynı adı taşıyan kaydı ezmez ama eksik logoyu tamamlar. */
     private suspend fun getChannels(): List<Channel> {
         channels?.let { return it }
         val playlist = runCatching { app.get(mainUrl).text }.getOrNull()
@@ -125,14 +126,30 @@ class CanliTVProvider : MainAPI() {
         if (dynamic.isEmpty() && STATIC.isEmpty()) {
             throw ErrorLoadingException("$name: kanal listesi alınamadı. $REPORT_HINT")
         }
-        val merged = LinkedHashMap<String, Channel>()
-        (STATIC + dynamic).forEach { merged.putIfAbsent(it.key, it) }
-        val live = merged.values.mapNotNull { ch ->
-            if (ch.key in SKIP) return@mapNotNull null
-            OVERRIDES[ch.key]?.let { ch.copy(url = it, referer = null) } ?: ch
+        synchronized(channelsLock) {
+            channels?.let { return it }
+            val merged = LinkedHashMap<String, Channel>()
+            STATIC.forEach { merged.putIfAbsent(it.key, it) }
+            dynamic.forEach { ch ->
+                val cur = merged[ch.key]
+                if (cur == null) {
+                    merged[ch.key] = ch
+                } else {
+                    val dynLogo = ch.logo
+                    if ((cur.logo.isNullOrBlank() || cur.logo == DEFAULT_LOGO) &&
+                        !dynLogo.isNullOrBlank() && dynLogo != DEFAULT_LOGO
+                    ) {
+                        merged[ch.key] = cur.copy(logo = dynLogo)
+                    }
+                }
+            }
+            val live = merged.values.mapNotNull { ch ->
+                if (ch.key in SKIP) return@mapNotNull null
+                OVERRIDES[ch.key]?.let { ch.copy(url = it, referer = null) } ?: ch
+            }
+            // Uzak liste alınamadıysa önbelleğe alma; sonraki satır isteği yeniden dener.
+            return live.also { if (dynamic.isNotEmpty()) channels = it }
         }
-        // Uzak liste alınamadıysa önbelleğe alma; sonraki satır isteği yeniden dener.
-        return live.also { if (dynamic.isNotEmpty()) channels = it }
     }
 
     private fun Channel.toSearchResponse() = newLiveSearchResponse(name, url, TvType.Live) {
@@ -147,8 +164,13 @@ class CanliTVProvider : MainAPI() {
     ): Boolean {
         if (!data.startsWith("http")) throw ErrorLoadingException("$name: geçersiz kanal adresi")
         val referer = (channels ?: STATIC).firstOrNull { it.url == data }?.referer
+        val linkType = when {
+            data.contains(".mpd", ignoreCase = true) -> ExtractorLinkType.DASH
+            Regex("""\.(mp4|ts|mkv|webm)(\?|$)""", RegexOption.IGNORE_CASE).containsMatchIn(data) -> ExtractorLinkType.VIDEO
+            else -> ExtractorLinkType.M3U8
+        }
         callback.invoke(
-            newExtractorLink(name, "Canlı", data, ExtractorLinkType.M3U8) {
+            newExtractorLink(name, "Canlı", data, linkType) {
                 if (referer != null) this.referer = referer
             }
         )

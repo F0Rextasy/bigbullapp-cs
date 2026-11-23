@@ -307,8 +307,7 @@ class DiziBolProvider : MainAPI() {
     companion object {
         /** Ana sayfa satırları; ayarlardan kapatılabilir. */
         val ROWS = listOf("Diziler", "Filmler")
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+        private val UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
 

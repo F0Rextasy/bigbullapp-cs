@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "FilmDozu — Türkçe dublaj & altyazılı film arşivi"

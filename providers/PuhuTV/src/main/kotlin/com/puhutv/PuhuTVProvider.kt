@@ -1,7 +1,8 @@
 package com.puhutv
 
 import com.bigbull.common.browserHeaders
-import com.bigbull.common.parseHlsVariants
+import com.bigbull.common.emitMasterOrHlsVariants
+import com.bigbull.common.fetchDygVideoInfo
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -179,8 +180,7 @@ class PuhuTVProvider : MainAPI() {
             ?: wData.optJSONArray("assets")?.optJSONObject(0)?.optString("video_id")?.takeIf(String::isNotBlank)
             ?: throw ErrorLoadingException("$name: video kimliği bulunamadı. $REPORT_HINT")
 
-        val dygUrl = "$DYG_API?akamai=true&PublisherId=29&ReferenceId=$videoId&SecretKey=$DYG_SECRET"
-        val vData = fetchJson(dygUrl)?.optJSONObject("data")
+        val vData = fetchDygVideoInfo(29, videoId, mainUrl, browserHeaders)
             ?: throw ErrorLoadingException("$name: video bilgisi alınamadı. $REPORT_HINT")
 
         for (track in vData.optJSONArray("tracks").toObjects()) {
@@ -197,26 +197,7 @@ class PuhuTVProvider : MainAPI() {
             ?: flavors.optJSONObject("0")?.optString("file_url_1")?.takeIf { it.startsWith("http") }
             ?: throw ErrorLoadingException("$name: HLS adresi bulunamadı. $REPORT_HINT")
 
-        val playlist = runCatching {
-            app.get(master, headers = browserHeaders, referer = "$mainUrl/").text
-        }.getOrNull().orEmpty()
-        val variants = parseHlsVariants(master, playlist)
-        var emitted = 0
-        suspend fun emit(streamUrl: String, quality: Int) {
-            if (!Settings.qualityAllowed(quality)) return
-            val label = if (quality > 0) "$name ${quality}p" else name
-            callback(newExtractorLink(name, label, streamUrl, ExtractorLinkType.M3U8) {
-                this.referer = "$mainUrl/"
-                this.quality = quality
-                this.headers = browserHeaders
-            })
-            emitted++
-        }
-        if (variants.isEmpty()) {
-            emit(master, Qualities.Unknown.value)
-        } else {
-            variants.distinctBy { it.second }.forEach { (q, u) -> emit(u, q) }
-        }
+        val emitted = emitMasterOrHlsVariants(name, name, master, "$mainUrl/", browserHeaders, Settings, callback = callback)
         if (emitted == 0) throw ErrorLoadingException("$name: oynatılabilir kaynak yok. $REPORT_HINT")
         return true
     }
@@ -308,8 +289,6 @@ class PuhuTVProvider : MainAPI() {
             "super_wide" to listOf("640x246", "main"),
         )
         private const val SEARCH_API = "https://appservice.puhutv.com/search/search"
-        private const val DYG_API = "https://dygvideo.dygdigital.com/api/video_info"
-        private const val DYG_SECRET = "NtvApiSecret2014*"
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

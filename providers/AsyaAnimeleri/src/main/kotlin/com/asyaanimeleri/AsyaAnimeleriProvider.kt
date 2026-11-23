@@ -297,16 +297,11 @@ class AsyaAnimeleriProvider : MainAPI() {
      * JSON with the signed HLS master in `ondemandHls`. Blocked uploads omit that field.
      */
     private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
-        val id = Regex("""videoembed/(\d+)""").find(embed)?.groupValues?.get(1) ?: return false
-        val body = runCatching {
-            app.post(
-                "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
-                data = mapOf("cmd" to "videoPlayerMetadata", "mid" to id),
-                headers = mapOf("user-agent" to BROWSER_UA),
-                referer = "https://ok.ru/videoembed/$id",
-            ).text
-        }.getOrNull() ?: return false
-        val stream = JSONObject(body).optString("ondemandHls").takeIf { it.isNotBlank() } ?: return false
+        val stream = com.bigbull.common.fetchOkRuMetadata(
+            embed,
+            userAgent = BROWSER_UA,
+            data = mapOf("cmd" to "videoPlayerMetadata"),
+        )?.optString("ondemandHls")?.takeIf { it.isNotBlank() } ?: return false
         emitHls("OK.RU", stream, "https://ok.ru/", callback)
         return true
     }
@@ -354,9 +349,7 @@ class AsyaAnimeleriProvider : MainAPI() {
         /** Homepage rows in display order; all map to live listing pages. */
         val ROWS = listOf("Son Eklenenler", "Aksiyon", "Spor", "Dövüş Sanatları", "Komedi", "Ecchi", "Harem", "Okul", "Shounen", "Comic", "Fantastik", "Macera", "Reenkarnasyon", "Tarihsel", "Romantizm", "Bilim-Kurgu", "Büyü", "Doğaüstü", "Isekai", "Tarihi", "Askeri", "Dedektif", "Dram", "Gerilim", "Gizem", "Hayat Dilimi", "Hayatta Kalma", "Josei", "Kanlı", "Korku", "Mecha", "Mitoloji", "Müzik", "Oyun", "Parodi", "Psikolojik", "Romantik", "Sağlık", "Samuray", "Seinen", "Şeytanlar", "Shoujo", "Strateji Oyunu", "Süper Güç", "Ters Harem", "Uzay", "Vahşet", "Vampir", "Yarış", "Zaman Yolculuğu")
 
-        private const val BROWSER_UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
-                "Chrome/130.0.0.0 Safari/537.36"
+        private val BROWSER_UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }

@@ -122,7 +122,7 @@ class TRT1Provider : MainAPI() {
             "youtube" -> {
                 val id = media.optString("id").takeIf { it.isNotBlank() }
                     ?: throw ErrorLoadingException("$name: YouTube kimliği yok. $REPORT_HINT")
-                if (!loadExtractor("https://www.youtube.com/embed/$id", "$mainUrl/", subtitleCallback, callback))
+                if (!loadExtractor("https://www.youtube.com/embed/$id", "$mainUrl/", Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback)))
                     throw ErrorLoadingException("$name: YouTube akışı çözülemedi. $REPORT_HINT")
             }
             else -> throw ErrorLoadingException(

@@ -1,7 +1,8 @@
 package com.tlctr
 
+import com.bigbull.common.DYG_DEFAULT_SECRET
 import com.bigbull.common.browserHeaders
-import com.bigbull.common.parseHlsVariants
+import com.bigbull.common.emitMasterOrHlsVariants
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.Episode
 import com.lagradost.cloudstream3.HomePageResponse
@@ -168,7 +169,7 @@ class TLCtrProvider : MainAPI() {
             runCatching {
                 app.get(
                     "https://dygvideo.dygdigital.com/api/redirect?PublisherId=20&ReferenceId=$code" +
-                        "&SecretKey=$PLAYER_SECRET",
+                        "&SecretKey=$DYG_DEFAULT_SECRET",
                     headers = uaHeaders,
                     referer = data,
                 ).url
@@ -176,19 +177,16 @@ class TLCtrProvider : MainAPI() {
                 ?: throw ErrorLoadingException("$name: video kaynağı alınamadı. $REPORT_HINT")
         }
 
-        val playlist = runCatching {
-            app.get(master, headers = uaHeaders, referer = "$mainUrl/").text
-        }.getOrNull() ?: throw ErrorLoadingException("$name: oynatma listesi alınamadı. $REPORT_HINT")
-
-        val variants = parseHlsVariants(master, playlist)
-        if (variants.isEmpty()) {
-            // Single-rendition playlist: unknown quality, so the cap must not drop the only link.
-            emit(master, Qualities.Unknown.value, callback)
-        } else {
-            variants.filter { Settings.qualityAllowed(it.first) }
-                .ifEmpty { listOf(variants.minBy { it.first }) }
-                .forEach { (height, link) -> emit(link, height, callback) }
-        }
+        emitMasterOrHlsVariants(
+            name,
+            name,
+            master,
+            "$mainUrl/",
+            mapOf("user-agent" to UA),
+            Settings,
+            fallbackMinIfFiltered = true,
+            callback = callback,
+        )
         return true
     }
 
@@ -276,15 +274,6 @@ class TLCtrProvider : MainAPI() {
         }
     }
 
-    private suspend fun emit(link: String, quality: Int, callback: (ExtractorLink) -> Unit) {
-        val label = if (quality > 0) "$name ${quality}p" else name
-        callback(newExtractorLink(name, label, link, ExtractorLinkType.M3U8) {
-            this.referer = "$mainUrl/"
-            this.quality = quality
-            this.headers = mapOf("user-agent" to UA)
-        })
-    }
-
     private fun liveUrl() = "$mainUrl/canli-izle"
 
     private fun absolute(raw: String?): String? {
@@ -312,15 +301,11 @@ class TLCtrProvider : MainAPI() {
             "Korelendik",
             "A-Z",
         )
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+        private val UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
         private const val LIVE = "live"
         private const val LIVE_NAME = "TLC Canlı"
-
-        // Published by the site's own player (media-player/js/bundle.js): TLC is publisher 20.
-        private const val PLAYER_SECRET = "NtvApiSecret2014*"
 
         // shortcut: season pages stop at 40 (200 episodes); the endpoint has no larger page size.
         private const val MAX_SEASON_PAGES = 40

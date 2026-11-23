@@ -1,4 +1,4 @@
-version = 1
+version = 2
 cloudstream {
     description = "Türk Anime TV — Türkçe altyazılı anime izle (turkanime.live)"
     authors = listOf("F0Rextasy")

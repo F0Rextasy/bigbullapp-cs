@@ -1,4 +1,4 @@
-version = 10
+version = 11
 
 cloudstream {
     description = "Dizist — dizist.live (Türkçe altyazılı yabancı dizi)"

@@ -1,5 +1,6 @@
 package com.asyadizileriizle
 
+import com.bigbull.common.extractYear
 import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.parseHlsVariants
@@ -124,8 +125,7 @@ class AsyadizileriizleProvider : MainAPI() {
         ).ifBlank { throw ErrorLoadingException("$name: başlık okunamadı") }
         val poster = fixUrlNull(doc.selectFirst("meta[property=og:image]")?.attr("content"))
         val plot = doc.jsonLdDescription()
-        val year = Regex("""\b(19|20)\d{2}\b""").find(title)?.value?.toIntOrNull()
-            ?: Regex("""\b(19|20)\d{2}\b""").find(raw)?.value?.toIntOrNull()
+        val year = doc.extractYear(title)
         val score = Score.from10(
             doc.selectFirst("[itemprop=ratingValue]")?.attr("content")
                 ?: Regex(""""(?:imdbPuani|ratingValue|imdb)"\s*:\s*"?([0-9.]+)""").find(raw)?.groupValues?.get(1)
@@ -241,12 +241,12 @@ class AsyadizileriizleProvider : MainAPI() {
                     }
                     for (sub in Regex("""<iframe[^>]+(?:src|data-src)="([^"]+)""").findAll(innerText)) {
                         val subUrl = fixUrl(sub.groupValues[1])
-                        if (loadExtractor(subUrl, frame, subtitleCallback, callback)) found = true
+                        if (loadExtractor(subUrl, frame, Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback))) found = true
                     }
                 }
-                if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
+                if (loadExtractor(frame, "$mainUrl/", Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback))) found = true
             }
-            val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)""").findAll(text)
+            val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)?""").findAll(text)
             for (m in subs) {
                 if (Settings.subtitleAllowed("tr")) subtitleCallback.invoke(SubtitleFile("tr", m.value))
             }
@@ -257,39 +257,6 @@ class AsyadizileriizleProvider : MainAPI() {
         return found
     }
 
-    private suspend fun loadOkRu(embed: String, seen: MutableSet<String>, callback: (ExtractorLink) -> Unit): Boolean {
-        val id = Regex("""videoembed/(\d+)""").find(embed)?.groupValues?.get(1) ?: return false
-        val body = runCatching {
-            app.post(
-                "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
-                data = emptyMap(),
-                headers = mapOf("user-agent" to "Mozilla/5.0 (Linux; Android 13)", "Referer" to "https://ok.ru/"),
-            ).text
-        }.getOrNull() ?: return false
-        val videos = runCatching { JSONObject(body).optJSONArray("videos") }.getOrNull() ?: return false
-        var found = false
-        for (i in 0 until videos.length()) {
-            val item = videos.optJSONObject(i) ?: continue
-            val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
-            if (!seen.add(stream)) continue
-            val label = item.optString("name").ifBlank { "OkRu" }
-            val q = when (label.lowercase()) {
-                "mobile", "lowest" -> 240
-                "low" -> 360
-                "sd" -> 480
-                "hd" -> 720
-                "full" -> 1080
-                else -> getQualityFromName(label.uppercase())
-            }
-            if (!Settings.qualityAllowed(q)) continue
-            callback.invoke(
-                newExtractorLink(name, "OkRu $label", stream, ExtractorLinkType.VIDEO) {
-                    this.referer = "https://ok.ru/"
-                    this.quality = q
-                }
-            )
-            found = true
-        }
-        return found
-    }
+    private suspend fun loadOkRu(embed: String, seen: MutableSet<String>, callback: (ExtractorLink) -> Unit): Boolean =
+        com.bigbull.common.emitOkRuVideos(embed, seen = seen, qualityAllowed = Settings::qualityAllowed, callback = callback)
 }

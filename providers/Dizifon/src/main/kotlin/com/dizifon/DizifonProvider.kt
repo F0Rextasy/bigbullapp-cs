@@ -1,5 +1,6 @@
 package com.dizifon
 
+import com.bigbull.common.extractYear
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.decodeVixolityStream
 import com.bigbull.common.posterSrcLazy
@@ -141,8 +142,7 @@ class DizifonProvider : MainAPI() {
         val genres = doc.select("[itemprop=genre], a[href*='/tur/'], a[href*='/kategori/']")
             .mapNotNull { it.attr("content").ifBlank { it.text() }.trim().takeIf(String::isNotBlank) }
             .distinct().take(8)
-        val year = Regex("""\b(19|20)\d{2}\b""").find(title)?.value?.toIntOrNull()
-            ?: Regex("""\b(19|20)\d{2}\b""").find(raw)?.value?.toIntOrNull()
+        val year = doc.extractYear(title)
         val score = Score.from10(
             doc.selectFirst("[itemprop=ratingValue]")?.attr("content")
                 ?: Regex(""""(?:imdbPuani|ratingValue|imdb)"\s*:\s*"?([0-9.]+)""").find(raw)?.groupValues?.get(1)
@@ -222,7 +222,7 @@ class DizifonProvider : MainAPI() {
             if (vid != null && origin != null) {
                 emit("$origin/source2.php?v=$vid.m3u8", "Player", "$origin/")
             }
-            if (loadExtractor(op, data, subtitleCallback, callback)) found = true
+            if (loadExtractor(op, data, Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback))) found = true
         }
         val embeds = Regex(""""(?:embedUrl|contentUrl|embed_url|player_url)"\s*:\s*"([^"]+)""")
             .findAll(text).map { it.groupValues[1] }.toList()
@@ -259,10 +259,10 @@ class DizifonProvider : MainAPI() {
                 }
                 for (sub in Regex("""<iframe[^>]+(?:src|data-src)="([^"]+)""").findAll(innerText)) {
                     val subUrl = fixUrl(sub.groupValues[1])
-                    if (loadExtractor(subUrl, frame, subtitleCallback, callback)) found = true
+                    if (loadExtractor(subUrl, frame, Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback))) found = true
                 }
             }
-            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) { if (loadOkRu(frame, callback)) found = true } else if (loadExtractor(frame, "$mainUrl/", subtitleCallback, callback)) found = true
+            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) { if (loadOkRu(frame, callback)) found = true } else if (loadExtractor(frame, "$mainUrl/", Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback))) found = true
         }
         val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in subs) {
@@ -274,36 +274,6 @@ class DizifonProvider : MainAPI() {
         return found
     }
 
-    private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
-        val id = Regex("""videoembed/(\d+)""").find(embed)?.groupValues?.get(1) ?: return false
-        val body = runCatching {
-            app.post(
-                "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
-                data = emptyMap(),
-                headers = mapOf("User-Agent" to "Mozilla/5.0 (Linux; Android 13)", "Referer" to "https://ok.ru/"),
-            ).text
-        }.getOrNull() ?: return false
-        val videos = runCatching { JSONObject(body).optJSONArray("videos") }.getOrNull() ?: return false
-        var found = false
-        for (i in 0 until videos.length()) {
-            val item = videos.optJSONObject(i) ?: continue
-            val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
-            val label = item.optString("name").ifBlank { "OkRu" }
-            callback.invoke(
-                newExtractorLink(name, "OkRu $label", stream, ExtractorLinkType.VIDEO) {
-                    this.referer = "https://ok.ru/"
-                    this.quality = when (label.lowercase()) {
-                        "mobile", "lowest" -> 240
-                        "low" -> 360
-                        "sd" -> 480
-                        "hd" -> 720
-                        "full" -> 1080
-                        else -> getQualityFromName(label.uppercase())
-                    }
-                }
-            )
-            found = true
-        }
-        return found
-    }
+    private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean =
+        com.bigbull.common.emitOkRuVideos(embed, callback = callback)
 }

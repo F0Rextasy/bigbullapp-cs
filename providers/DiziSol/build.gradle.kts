@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "DiziSol — Yabancı dizi ve film arşivi (dizisol.com)"

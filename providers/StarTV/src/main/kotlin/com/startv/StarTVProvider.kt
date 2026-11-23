@@ -1,6 +1,8 @@
 package com.startv
 
-import com.bigbull.common.parseHlsVariants
+import com.bigbull.common.browserHeaders
+import com.bigbull.common.emitMasterOrHlsVariants
+import com.bigbull.common.fetchDygVideoInfo
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -103,30 +105,13 @@ class StarTVProvider : MainAPI() {
         val contentId = TAGS.find(page)?.groupValues?.get(1)?.split(',')?.lastOrNull()?.trim()
             ?: REFERENCE.find(page)?.groupValues?.get(1)
             ?: throw ErrorLoadingException("$name: içerik kimliği bulunamadı. $REPORT_HINT")
-        val api = "$DYG_API?akamai=true&PublisherId=1&ReferenceId=StarTv_$contentId&SecretKey=$DYG_SECRET"
-        val json = runCatching {
-            JSONObject(app.get(api, headers = mapOf("user-agent" to UA), referer = "$mainUrl/").text)
-        }.getOrNull() ?: throw ErrorLoadingException("$name: video bilgisi alınamadı. $REPORT_HINT")
-        val flavors = json.optJSONObject("data")?.optJSONObject("flavors")
+        val flavors = fetchDygVideoInfo(1, "StarTv_$contentId", mainUrl, browserHeaders)
+            ?.optJSONObject("flavors")
             ?: throw ErrorLoadingException("$name: video kaynağı yok. $REPORT_HINT")
         val master = flavors.optString("hls").takeIf { it.startsWith("http") }
             ?: flavors.optJSONObject("0")?.optString("file_url_1")?.takeIf { it.startsWith("http") }
             ?: throw ErrorLoadingException("$name: HLS adresi yok. $REPORT_HINT")
-        val playlist = runCatching {
-            app.get(master, referer = "$mainUrl/", headers = mapOf("user-agent" to UA)).text
-        }.getOrNull().orEmpty()
-        val variants = parseHlsVariants(master, playlist)
-        var emitted = 0
-        suspend fun emit(url: String, quality: Int) {
-            if (!Settings.qualityAllowed(quality)) return
-            callback(newExtractorLink(name, if (quality > 0) "$name ${quality}p" else name, url, ExtractorLinkType.M3U8) {
-                this.referer = "$mainUrl/"
-                this.quality = quality
-                this.headers = mapOf("user-agent" to UA)
-            })
-            emitted++
-        }
-        if (variants.isEmpty()) emit(master, 0) else variants.forEach { (quality, url) -> emit(url, quality) }
+        val emitted = emitMasterOrHlsVariants(name, name, master, "$mainUrl/", browserHeaders, Settings, callback = callback)
         if (emitted == 0) throw ErrorLoadingException("$name: oynatılabilir kaynak yok. $REPORT_HINT")
         return true
     }
@@ -186,10 +171,6 @@ class StarTVProvider : MainAPI() {
     }
     companion object {
         val ROWS = listOf("Diziler", "Programlar")
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
-        private const val DYG_API = "https://dygvideo.dygdigital.com/api/video_info"
-        private const val DYG_SECRET = "NtvApiSecret2014*"
         private val SERIES = Regex("\"name\"\\s*:\\s*\"([^\"]+)\"\\s*,\\s*\"slug\"\\s*:\\s*\"([^\"]+)\"")
         private val EPISODE_NO = Regex("""/bolumler/(\d+)-bolum""")
         private val TAGS = Regex("""dyg:tags"\s+content="([^"]+)"""")

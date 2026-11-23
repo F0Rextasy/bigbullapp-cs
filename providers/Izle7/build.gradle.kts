@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "İzle7 — Kanal 7 dizi ve TV filmi arşivi (izle7.com)"

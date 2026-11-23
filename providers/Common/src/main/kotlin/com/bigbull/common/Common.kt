@@ -190,11 +190,14 @@ fun pichiveGateNonce(html: String): String? {
     return null
 }
 
-/** `nm.php`/`nsub.php` adresine [pichiveGateNonce] ile bulunan `&p=` imzasını ekler; diğer adresler değişmez. */
-fun pichiveSign(html: String, url: String): String {
-    if (!(url.contains("/nm.php") || url.contains("/nsub.php")) || url.contains("&p=")) return url
-    val nonce = pichiveGateNonce(html) ?: return url
-    return "$url&p=$nonce"
+/** `nm.php`/`nsub.php` adresine [pichiveGateNonce] ile bulunan `p=` imzasını ekler; diğer adresler değişmez. */
+fun pichiveSign(html: String, url: String, precomputedNonce: String? = null): String {
+    if (!(url.contains("/nm.php") || url.contains("/nsub.php")) ||
+        url.contains("&p=") || url.contains("?p=")
+    ) return url
+    val nonce = precomputedNonce ?: pichiveGateNonce(html) ?: return url
+    val sep = if ('?' in url) '&' else '?'
+    return "$url${sep}p=$nonce"
 }
 
 /**
@@ -239,13 +242,60 @@ private fun JSONObject.ldNodes(): List<JSONObject> = buildList {
 
 private fun cleanJsonLd(raw: String): String = Jsoup.parse(raw).text().trim()
 
-/** rapidvid `av('...')` kaynağı: ters base64 -> K9L kaydırması -> base64. */
+private val TITLE_PARENS_YEAR_RE = Regex("""\((\d{4})\)""")
+private val YEAR_4_RE = Regex("""\b(19\d{2}|20\d{2})\b""")
+
+private fun Int?.validMediaYear(): Int? = this?.takeIf { it in 1920..2030 }
+
+/**
+ * Sayfa başlığı, JSON-LD ve meta etiketlerinden içerik yılını çıkarır;
+ * ham HTML gövdesinde rastgele 4 haneli sayıları (`/uploads/2025/` vb.) aramaz.
+ */
+fun Document.extractYear(title: String? = null): Int? {
+    if (!title.isNullOrBlank()) {
+        TITLE_PARENS_YEAR_RE.find(title)?.groupValues?.get(1)?.toIntOrNull()?.validMediaYear()?.let { return it }
+        YEAR_4_RE.find(title)?.groupValues?.get(1)?.toIntOrNull()?.validMediaYear()?.let { return it }
+    }
+    val nodes = select("script[type=application/ld+json]").flatMap { element ->
+        runCatching {
+            val raw = element.data().trim()
+            if (raw.startsWith("[")) {
+                val array = JSONArray(raw)
+                (0 until array.length()).mapNotNull { array.optJSONObject(it) }
+            } else {
+                listOf(JSONObject(raw))
+            }
+        }.getOrDefault(emptyList())
+    }.flatMap { it.ldNodes() }
+    for (node in nodes) {
+        for (key in listOf("datePublished", "releaseDate", "copyrightYear")) {
+            val raw = node.optString(key).trim()
+            if (raw.isNotEmpty()) {
+                YEAR_4_RE.find(raw)?.groupValues?.get(1)?.toIntOrNull()?.validMediaYear()?.let { return it }
+            }
+        }
+    }
+    for (sel in listOf(
+        "meta[property=video:release_date]",
+        "meta[itemprop=datePublished]",
+        "[itemprop=datePublished]",
+        "meta[name=date]",
+        "a[href*='/yil/']",
+        ".year",
+    )) {
+        val el = selectFirst(sel) ?: continue
+        val text = el.attr("content").ifBlank { el.attr("datetime") }.ifBlank { el.text() }
+        YEAR_4_RE.find(text)?.groupValues?.get(1)?.toIntOrNull()?.validMediaYear()?.let { return it }
+    }
+    return null
+}
+
+/** rapidvid `av('...')` kaynağı: ters base64 -> K9L kaydırması -> base64 (saf JVM uyumlu). */
 fun rapidVidAvDecode(value: String): String? = runCatching {
-    val first = String(
-        android.util.Base64.decode(value.reversed(), android.util.Base64.DEFAULT),
-        Charsets.ISO_8859_1,
-    )
-    String(android.util.Base64.decode(rapidVidShift(first), android.util.Base64.DEFAULT), Charsets.UTF_8)
+    val firstBytes = decodeBase64Bytes(value.reversed()) ?: return@runCatching null
+    val first = String(firstBytes, Charsets.ISO_8859_1)
+    val decodedBytes = decodeBase64Bytes(rapidVidShift(first)) ?: return@runCatching null
+    String(decodedBytes, Charsets.UTF_8)
 }.getOrNull()
 
 internal fun rapidVidShift(value: String): String = buildString(value.length) {
@@ -254,3 +304,19 @@ internal fun rapidVidShift(value: String): String = buildString(value.length) {
         append((char.code - (salt[index % salt.length].code % 5 + 1)).toChar())
     }
 }
+
+private val BE_PLAYER_RE = Regex("""bePlayer\('([^']+)'\s*,\s*'(\{.*?\})'""", RegexOption.DOT_MATCHES_ALL)
+
+/** `bePlayer('hash', '{"ct":...,"s":...,"iv":...}')` CryptoJS/OpenSSL payload'ını çözer. */
+fun decryptBePlayerConfig(html: String): JSONObject? = runCatching {
+    val match = BE_PLAYER_RE.find(html) ?: return null
+    val params = JSONObject(match.groupValues[2])
+    val cipherText = decodeBase64Bytes(params.optString("ct")) ?: return null
+    val clear = evpMd5AesCbcDecrypt(cipherText, match.groupValues[1], params.optString("s"), params.optString("iv"))
+    JSONObject(clear)
+}.getOrNull()
+
+fun decryptBePlayerJson(password: String, params: JSONObject): JSONObject? = runCatching {
+    val cipherText = decodeBase64Bytes(params.optString("ct")) ?: return null
+    JSONObject(evpMd5AesCbcDecrypt(cipherText, password, params.optString("s"), params.optString("iv")))
+}.getOrNull()

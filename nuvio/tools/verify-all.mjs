@@ -9,21 +9,26 @@
  *
  * Prints a PASS/FAIL table; exit code 1 if any provider returns no stream.
  */
-import { execFileSync } from "node:child_process";
+import { execFile } from "node:child_process";
 import dns from "node:dns/promises";
 import fs from "node:fs";
 import net from "node:net";
+import os from "node:os";
 import path from "node:path";
 import { Duplex } from "node:stream";
 import tls from "node:tls";
+import { promisify } from "node:util";
 import vm from "node:vm";
 import zlib from "node:zlib";
+
+const execFileAsync = promisify(execFile);
 
 const root = path.resolve(import.meta.dirname, "..");
 const providersDir = path.join(root, "providers");
 const argv = process.argv.slice(2);
 const jobsAt = argv.indexOf("--jobs");
 const jobs = Math.max(1, Number(jobsAt >= 0 ? argv[jobsAt + 1] : process.env.NUVIO_VERIFY_JOBS || 6) || 6);
+const testProvider = argv.includes("--test-provider");
 const only = argv.find((a, i) => !a.startsWith("--") && (jobsAt < 0 || i !== jobsAt + 1));
 const curlBin = process.platform === "win32" ? "curl.exe" : "curl";
 
@@ -50,10 +55,41 @@ function cfState(host) {
   }
 }
 
+function makeHeaders(rawHeaderText) {
+  const blocks = String(rawHeaderText || "").trim().split(/\r?\n\r?\n/);
+  const lastBlock = blocks[blocks.length - 1] || "";
+  const map = Object.create(null);
+  const setCookies = [];
+  for (const line of lastBlock.split(/\r?\n/)) {
+    const idx = line.indexOf(":");
+    if (idx <= 0) continue;
+    const k = line.slice(0, idx).trim().toLowerCase();
+    const v = line.slice(idx + 1).trim();
+    if (k === "set-cookie") setCookies.push(v);
+    if (!map[k]) map[k] = [];
+    map[k].push(v);
+  }
+  return {
+    map,
+    get(name) {
+      const vals = map[String(name || "").toLowerCase()];
+      return vals && vals.length ? vals.join(", ") : null;
+    },
+    getAll(name) {
+      return (map[String(name || "").toLowerCase()] || []).slice();
+    },
+    getSetCookie() {
+      return setCookies.slice();
+    },
+  };
+}
+
 /** Fallback when Cloudflare/CDN blocks Node/undici's TLS JA3 with 403 while curl/Android works (AGENTS.md). */
-function curlFallback(url, options = {}) {
+async function curlFallback(url, options = {}) {
+  const hdrFile = path.join(os.tmpdir(), `bb-curl-${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2)}.hdr`);
   try {
-    const args = ["-sL", "--max-time", "15", "-w", "\n__HTTP_STATUS__:%{http_code}"];
+    const args = ["-s", "--max-time", "15", "-D", hdrFile, "-w", "\n__HTTP_STATUS__:%{http_code}"];
+    if (options.redirect !== "manual") args.push("-L");
     if (options.method && options.method !== "GET") args.push("-X", options.method);
     const cf = cfState(new URL(String(url)).hostname);
     const hdrs = { ...(options.headers || {}) };
@@ -68,7 +104,9 @@ function curlFallback(url, options = {}) {
     }
     if (options.body) args.push("--data-raw", String(options.body));
     args.push(String(url));
-    const raw = execFileSync(curlBin, args, { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
+    const { stdout: raw } = await execFileAsync(curlBin, args, { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
+    const rawHeaders = fs.existsSync(hdrFile) ? fs.readFileSync(hdrFile, "utf8") : "";
+    const headers = makeHeaders(rawHeaders);
     const idx = raw.lastIndexOf("\n__HTTP_STATUS__:");
     const status = idx >= 0 ? Number(raw.slice(idx + 17).trim()) || 0 : 200;
     const body = idx >= 0 ? raw.slice(0, idx) : raw;
@@ -77,11 +115,14 @@ function curlFallback(url, options = {}) {
       ok: status >= 200 && status < 300,
       status,
       url: String(url),
+      headers,
       text: async () => body,
       json: async () => JSON.parse(body),
     };
   } catch {
     return null;
+  } finally {
+    try { fs.unlinkSync(hdrFile); } catch {}
   }
 }
 
@@ -163,6 +204,7 @@ export function dpiFetch(urlStr, options = {}, redirects = 4) {
       const ip = await resolveDpiIp(u.hostname);
       raw = net.connect(Number(u.port) || 443, ip);
       raw.setNoDelay(true);
+      raw.setTimeout(15000, () => raw.destroy(new Error("tcp timeout")));
       raw.on("error", (e) => done(reject, e));
       let firstWrite = true;
       const proxy = new Duplex({
@@ -232,21 +274,41 @@ export function dpiFetch(urlStr, options = {}, redirects = 4) {
           const sep = buf.indexOf("\r\n\r\n");
           if (sep < 0) return done(reject, new Error("invalid HTTP response"));
           const headStr = buf.subarray(0, sep).toString("latin1");
+          const headers = makeHeaders(headStr);
           let bodyBuf = buf.subarray(sep + 4);
           const status = Number((headStr.match(/^HTTP\/\d\.\d\s+(\d+)/) || [])[1]) || 0;
-          const loc = (headStr.match(/^location:\s*(.+)$/im) || [])[1]?.trim();
-          if ([301, 302, 303, 307, 308].includes(status) && loc && redirects > 0) {
-            return done(resolve, dpiFetch(new URL(loc, u).toString(), options, redirects - 1));
+          const loc = headers.get("location");
+          if ([301, 302, 303, 307, 308].includes(status) && loc && options.redirect !== "manual" && redirects > 0) {
+            const origMethod = String(options.method || "GET").toUpperCase();
+            const dropBody = status === 303 || ((status === 301 || status === 302) && origMethod === "POST");
+            const nextHeaders = {};
+            for (const [k, v] of Object.entries(options.headers || {})) {
+              const lk = k.toLowerCase();
+              if (lk === "host" || (dropBody && (lk === "content-length" || lk === "content-type"))) continue;
+              nextHeaders[k] = v;
+            }
+            const nextOpts = {
+              ...options,
+              method: dropBody ? "GET" : origMethod,
+              headers: nextHeaders,
+              body: dropBody ? undefined : options.body,
+            };
+            return done(resolve, dpiFetch(new URL(loc, u).toString(), nextOpts, redirects - 1));
           }
           if (/^transfer-encoding:\s*chunked/im.test(headStr)) bodyBuf = decodeChunked(bodyBuf);
           const enc = (headStr.match(/^content-encoding:\s*(\S+)/im) || [])[1]?.toLowerCase();
-          if (enc === "gzip") bodyBuf = zlib.gunzipSync(bodyBuf);
-          else if (enc === "deflate") bodyBuf = zlib.inflateSync(bodyBuf);
+          if (bodyBuf.length > 0) {
+            if (enc === "gzip") bodyBuf = zlib.gunzipSync(bodyBuf);
+            else if (enc === "deflate") {
+              try { bodyBuf = zlib.inflateSync(bodyBuf); } catch { bodyBuf = zlib.inflateRawSync(bodyBuf); }
+            }
+          }
           const bodyText = bodyBuf.toString("utf8");
           done(resolve, {
             ok: status >= 200 && status < 300,
             status,
             url: u.toString(),
+            headers,
             text: async () => bodyText,
             json: async () => JSON.parse(bodyText),
           });
@@ -279,7 +341,7 @@ export async function fetchWithDpi(url, options = {}, signal = null) {
     }
   }
   if (res.status === 403) {
-    const viaCurl = curlFallback(url, options);
+    const viaCurl = await curlFallback(url, options);
     if (viaCurl) return viaCurl;
   }
   return res;
@@ -387,6 +449,58 @@ async function verify(id, file) {
   return { id, ok, note };
 }
 
+/** NuvioMobile/NuvioTV Test Provider dugmesinin birebir simulasyonu: TMDB "603" + movie/tv/series asla throw/reject/hang etmemeli. */
+async function verifyTestProvider(id, file) {
+  const code = fs.readFileSync(path.join(providersDir, file), "utf8");
+  const head = code.split("\n").slice(0, 12).join("\n");
+  const meta = JSON.parse(head.match(/^\/\/\s*@provider\s+(\{.*\})\s*$/m)[1]);
+  const types = Array.isArray(meta.types) && meta.types.length ? meta.types : ["movie", "tv"];
+  const mobileType = types.includes("movie") ? "movie" : "tv";
+  const tvType = types.includes("movie") ? "movie" : "series";
+  const probes = mobileType === tvType ? [mobileType] : [mobileType, tvType];
+  const module = { exports: {} };
+  const controller = new AbortController();
+  const timeoutMs = Number(process.env.NUVIO_TEST_PROVIDER_TIMEOUT_MS || 25000);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  const timedFetch = (url, options = {}) => fetchWithDpi(url, options, controller.signal);
+  const sandbox = { module, exports: module.exports, console: { log() {} }, fetch: timedFetch, URL, encodeURIComponent, decodeURIComponent, Promise };
+  vm.createContext(sandbox);
+  let ok = false;
+  let note = "";
+  try {
+    vm.runInContext(code, sandbox, { filename: file });
+    const summary = [];
+    for (const mt of probes) {
+      const out = await module.exports.getStreams("603", mt, 1, 1);
+      if (controller.signal.aborted) {
+        throw new Error(`timeout ${timeoutMs}ms on ${mt}`);
+      }
+      if (!Array.isArray(out)) {
+        throw new Error(`${mt}: non-array result`);
+      }
+      for (const s of out) {
+        if (!s || typeof s.url !== "string" || !/^https?:\/\//i.test(s.url)) {
+          throw new Error(`${mt}: invalid stream url (${s && s.url})`);
+        }
+      }
+      summary.push(`${mt}=${out.length}`);
+    }
+    if (controller.signal.aborted) {
+      ok = false;
+      note = `timeout ${timeoutMs}ms`;
+    } else {
+      ok = true;
+      note = `test-provider ok (${summary.join(", ")})`;
+    }
+  } catch (e) {
+    ok = false;
+    note = controller.signal.aborted ? `timeout ${timeoutMs}ms` : `threw: ${e.message}`;
+  } finally {
+    clearTimeout(timer);
+  }
+  return { id, ok, note };
+}
+
 if (path.resolve(process.argv[1] || "") === import.meta.filename) {
   const files = fs.readdirSync(providersDir).sort().filter((f) => f.endsWith(".js") && (!only || path.basename(f, ".js") === only));
   const rows = new Array(files.length);
@@ -396,7 +510,9 @@ if (path.resolve(process.argv[1] || "") === import.meta.filename) {
     Array.from({ length: Math.min(jobs, files.length) }, async () => {
       while (next < files.length) {
         const i = next++;
-        rows[i] = await verify(path.basename(files[i], ".js"), files[i]);
+        rows[i] = testProvider
+          ? await verifyTestProvider(path.basename(files[i], ".js"), files[i])
+          : await verify(path.basename(files[i], ".js"), files[i]);
       }
     }),
   );

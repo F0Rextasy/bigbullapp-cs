@@ -1,4 +1,4 @@
-version = 7
+version = 8
 
 cloudstream {
     description = "CanliTV — Türkçe canlı TV: seçilmiş HLS kanalları + iptv-org Türkiye listesi"

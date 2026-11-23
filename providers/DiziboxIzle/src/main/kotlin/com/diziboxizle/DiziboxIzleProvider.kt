@@ -272,19 +272,7 @@ class DiziboxIzleProvider : MainAPI() {
      * only unescapes `\&quot;`. Unescape before reading the `videos` array.
      */
     private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
-        val id = Regex("""videoembed/(\d+)""").find(embed)?.groupValues?.get(1) ?: return false
-        val body = runCatching {
-            app.post(
-                "https://ok.ru/dk?cmd=videoPlayerMetadata&mid=$id",
-                data = emptyMap(),
-                headers = mapOf(
-                    "user-agent" to "Mozilla/5.0 (Linux; Android 13)",
-                    "Referer" to "https://ok.ru/",
-                ),
-            ).text
-        }.getOrNull() ?: return false
-        val json = runCatching { JSONObject(body) }.getOrNull() ?: return false
-        val videos = json.optJSONArray("videos") ?: return false
+        val videos = com.bigbull.common.fetchOkRuMetadata(embed)?.optJSONArray("videos") ?: return false
         var found = false
         for (i in 0 until videos.length()) {
             val item = videos.optJSONObject(i) ?: continue

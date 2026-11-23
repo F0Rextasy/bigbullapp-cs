@@ -3,7 +3,8 @@
 
   kapi.py surum <taban-sha>   providers/<X>/src ve nuvio/providers/<id>.js değişince sürüm artmalı
   kapi.py sayi                providers/*/build/*.cs3 sayısı aktif modül sayısına eşit olmalı
-  kapi.py envanter            README tablosu, Settings/openSettings/hasMainPage ve Nuvio=32 uyumu
+  kapi.py envanter            README tablosu, Settings/openSettings/hasMainPage ve Nuvio/CanlıTV uyumu
+  kapi.py sync-readme         README.md sayılarını ve 6 özellik sütununu koda göre günceller
   kapi.py test                kendi kendine kontrol
 """
 import glob
@@ -109,6 +110,152 @@ def readme_satirlari(metin=None):
     return aktif, pasif
 
 
+def _strip_kotlin_comments(code):
+    code = re.sub(r"/\*[\s\S]*?\*/", "", code)
+    return re.sub(r"//[^\n]*", "", code)
+
+
+def _has_pagination(code):
+    for m in re.finditer(r"newHomePageResponse\(([^;\n]+)", code):
+        arg = m.group(1)
+        if re.search(r"\bhasNext\s*=\s*(?!false\b)", arg):
+            return True
+        if not re.search(r"\bhasNext\s*=", arg) and arg.count(",") >= 2:
+            if arg.rsplit(",", 1)[-1].strip().rstrip(")") != "false":
+                return True
+    for m in re.finditer(r"newSearchResponseList\(([^;\n]+)", code):
+        arg = m.group(1)
+        if re.search(r"\bhasNext\s*=\s*(?!false\b)", arg):
+            return True
+        if not re.search(r"\bhasNext\s*=", arg) and "," in arg:
+            if arg.rsplit(",", 1)[-1].strip().rstrip(")") != "false":
+                return True
+    for m in re.finditer(r"HomePageList\(([^;\n]+)", code):
+        if re.search(r"\bhasNext\s*=\s*(?!false\b)", m.group(1)):
+            return True
+    return False
+
+
+def modul_ozellikleri(mod):
+    kok = f"providers/{mod}/src/main/kotlin"
+    parcalar = []
+    for dirpath, _dirs, files in os.walk(kok):
+        for fn in files:
+            if fn.endswith(".kt"):
+                parcalar.append(open(os.path.join(dirpath, fn), encoding="utf-8", errors="replace").read())
+    c = _strip_kotlin_comments("\n".join(parcalar))
+    return (
+        _has_pagination(c),
+        bool(re.search(r"\bthis\.recommendations\s*=", c)),
+        bool(re.search(r"\baddTrailer\s*\(", c)),
+        bool(re.search(r"\baddActors\s*\(", c)),
+        bool(re.search(r"\bthis\.duration\s*=", c)),
+        bool(re.search(r"\bthis\.score\s*=", c)),
+    )
+
+
+def _readme_metrikleri():
+    aktif = aktif_moduller()
+    pasif = sorted(devre_disi())
+    manifest = json.load(open("nuvio/manifest.json", encoding="utf-8"))
+    scrapers = [s for s in manifest.get("scrapers", []) if isinstance(s, dict) and s.get("id")]
+    nuvio_total = len(scrapers)
+    nuvio_active = sum(1 for s in scrapers if s.get("enabled", True))
+    live_rows, live_channels = 0, 0
+    if os.path.exists("nuvio/addon-live/manifest.json"):
+        lm = json.load(open("nuvio/addon-live/manifest.json", encoding="utf-8"))
+        live_rows = len(lm.get("catalogs", []))
+    if os.path.exists("nuvio/addon-live/catalog/tv/canlitv.json"):
+        lc = json.load(open("nuvio/addon-live/catalog/tv/canlitv.json", encoding="utf-8"))
+        live_channels = len(lc.get("metas", []))
+    return {
+        "aktif": aktif,
+        "pasif": pasif,
+        "nuvio_total": nuvio_total,
+        "nuvio_active": nuvio_active,
+        "live_rows": live_rows,
+        "live_channels": live_channels,
+        "scrapers": scrapers,
+    }
+
+
+def _yeni_readme_metni(eski, m):
+    yeni = eski
+    aktif_n, pasif_l = len(m["aktif"]), m["pasif"]
+    pasif_set = set(pasif_l)
+
+    yeni = re.sub(r"(mod%C3%BCl-)\d+(-blue)", rf"\g<1>{aktif_n}\2", yeni)
+    if m["live_rows"] and m["live_channels"]:
+        yeni = re.sub(
+            r"\| Canlı TV \([^|]+\) \|",
+            f"| Canlı TV ({m['live_rows']} satır, {m['live_channels']} kanal) |",
+            yeni,
+        )
+        yeni = re.sub(
+            r"(- \*\*Nuvio:\*\* `BigBull Canlı TV` addon'u — )\d+ satır, \d+ kanal",
+            rf"\g<1>{m['live_rows']} satır, {m['live_channels']} kanal",
+            yeni,
+        )
+    yeni = re.sub(
+        r"\| Film/dizi arama ve oynatma \| Plugin deposu \([^|]+\) \|",
+        f"| Film/dizi arama ve oynatma | Plugin deposu ({m['nuvio_total']} sağlayıcı; {m['nuvio_active']} aktif) |",
+        yeni,
+    )
+    yeni = re.sub(r"^## Nuvio sağlayıcıları \(\d+\)", f"## Nuvio sağlayıcıları ({m['nuvio_total']})", yeni, flags=re.M)
+
+    # HDFilmCehennemi2 nuvio listesinde yoksa Film & Dizi satirina ekle
+    if any(s.get("id") == "hdfilmcehennemi2" for s in m["scrapers"]) and "`HDFilmCehennemi2`" not in yeni.split("## Nuvio sağlayıcıları")[-1].split("## Geliştiriciler")[0]:
+        yeni = re.sub(
+            r"(- \*\*Film & Dizi \(4\):\*\* `PuhuTV`, `RecTV`, `Sinemetrik`, `TurkceDizi`)",
+            "- **Film & Dizi (5):** `PuhuTV`, `RecTV`, `Sinemetrik`, `TurkceDizi`, `HDFilmCehennemi2`",
+            yeni,
+        )
+
+    # Kapsam notunu guncelle
+    pasif_str = ", ".join(f"`{p}`" for p in pasif_l)
+    yeni = re.sub(
+        r"\*\*Kapsam notu:\*\* Depoda aktif \*\*\d+ modül\*\*[^\n]*(?:\n[^\n*][^\n]*)*",
+        f"**Kapsam notu:** Depoda aktif **{aktif_n} modül** var ve tamamı doğrulanmış durumda (`status = 1`).\n"
+        f"`status = 0` ile pasif **{len(pasif_l)} modül**: {pasif_str}.\n"
+        "İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle kaldırıldı; düzeldiğinde tekrar eklenir.\n"
+        "Bu tablo ve özellik matrisi her sağlayıcı değişikliğinde güncellenir.",
+        yeni,
+    )
+
+    # 6 ozellik sutununu ve pasif etiketini guncelle
+    out_lines = []
+    for satir in yeni.splitlines():
+        row_m = re.match(r"^\|\s*`([^`]+)`([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|", satir)
+        if row_m:
+            ad = row_m.group(1).strip()
+            kaynak = row_m.group(3).strip()
+            tur = row_m.group(4).strip()
+            eski_sure = row_m.group(9).strip()
+            durum = " **pasif**" if ad in pasif_set else ""
+            if ad not in pasif_set and os.path.isdir(f"providers/{ad}/src/main/kotlin"):
+                flags = modul_ozellikleri(ad)
+                sem = ["✓" if v else "—" for v in flags]
+                if flags[4] and eski_sure == "film":
+                    sem[4] = "film"
+            else:
+                sem = [row_m.group(i).strip() for i in range(5, 11)]
+            satir = f"| `{ad}`{durum} | {kaynak} | {tur} | {' | '.join(sem)} |"
+        out_lines.append(satir)
+    return "\n".join(out_lines) + ("\n" if eski.endswith("\n") else "")
+
+
+def sync_readme():
+    m = _readme_metrikleri()
+    eski = open("README.md", encoding="utf-8").read()
+    yeni = _yeni_readme_metni(eski, m)
+    if yeni != eski:
+        open("README.md", "w", encoding="utf-8", newline="").write(yeni)
+        print(f"README.md güncellendi (aktif={len(m['aktif'])}, pasif={len(m['pasif'])}, nuvio={m['nuvio_total']}, canlı={m['live_channels']})")
+    else:
+        print("README.md zaten güncel")
+    return []
+
+
 def envanter():
     hata = []
     aktif_disk = set(aktif_moduller())
@@ -170,6 +317,14 @@ def envanter():
             hata.append(f"nuvio/manifest.json diskte olmayan sağlayıcılar: {', '.join(fazla_m)}")
     except Exception as exc:
         hata.append(f"nuvio/manifest.json okunamadı: {exc}")
+
+    try:
+        mevcut_readme = open("README.md", encoding="utf-8").read()
+        beklenen_readme = _yeni_readme_metni(mevcut_readme, _readme_metrikleri())
+        if mevcut_readme != beklenen_readme:
+            hata.append("README.md sayıları veya özellik matrisi güncel değil (python .github/scripts/kapi.py sync-readme çalıştır)")
+    except OSError:
+        pass
     return hata
 
 
@@ -198,6 +353,7 @@ if __name__ == "__main__":
         surum(sys.argv[2] if len(sys.argv) > 2 else "") if komut == "surum"
         else sayi() if komut == "sayi"
         else envanter() if komut == "envanter"
+        else sync_readme() if komut == "sync-readme"
         else None
     )
     if hatalar is None:

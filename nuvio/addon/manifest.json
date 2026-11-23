@@ -1,6 +1,6 @@
 {
   "id": "org.bigbull.trcatalog",
-  "version": "1.7.28",
+  "version": "1.7.29",
   "name": "BigBull TR Katalog",
   "description": "Cloudstream sağlayıcılarının film ve dizi listeleri; öne çıkan toplu satırlar. Katalog verir; meta Nuvio'nun yerleşik TMDB zenginleştirmesi ve kurulu metadata addon'larından, akış BigBull Nuvio eklentilerinden gelir; canlı TV ayrı addon'dadır.",
   "resources": [
@@ -95,6 +95,16 @@
       "type": "movie",
       "id": "hdfilmcehennemi",
       "name": "HDFilmCehennemi"
+    },
+    {
+      "type": "series",
+      "id": "hdfilmcehennemi2-series",
+      "name": "HDFilmCehennemi2"
+    },
+    {
+      "type": "movie",
+      "id": "hdfilmcehennemi2",
+      "name": "HDFilmCehennemi2"
     },
     {
       "type": "movie",

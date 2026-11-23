@@ -147,8 +147,7 @@ class MinikaGOProvider : MainAPI() {
 
     companion object {
         val ROWS = listOf("Videolar")
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+        private val UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private val MP4 = Regex("""https?://[^\s"'<>\\]+?\.mp4[^\s"'<>\\]*""")
         private val QUALITY = Regex("""[_-](\d{3,4})p[_-]""")
         private val SKIP = Regex("(?i)(tanıtım|tanitim|yakında|yakinda|fragman)")

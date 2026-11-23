@@ -1,4 +1,4 @@
-version = 2
+version = 3
 cloudstream {
     description = "Asya Fanatikleri — Kore/Çin/Japon/Tayland/Tayvan/Filipin dizileri ve filmleri (asyafanatikleri.vip)"
     authors = listOf("F0Rextasy")

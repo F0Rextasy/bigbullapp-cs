@@ -127,6 +127,7 @@ class VenusFilmizleProvider : MainAPI() {
             ?: throw ErrorLoadingException("$name: kaynak listesi okunamadı. $REPORT_HINT")
 
         val seen = mutableSetOf<String>()
+        val subOut = Settings.filterSubtitles(subtitleCallback)
         val linkOut: (ExtractorLink) -> Unit = {
             if (seen.add(it.url) && Settings.qualityAllowed(it.quality)) callback(it)
         }
@@ -142,7 +143,7 @@ class VenusFilmizleProvider : MainAPI() {
                     target.contains("hd.player.rest/") -> hdPlayerLinks(target, server, linkOut)
                     target.contains("vidmoly.") -> vidmolyLinks(target, playUrl, server, linkOut)
                     YOUTUBE.containsMatchIn(target) -> false
-                    else -> runCatching { loadExtractor(target, playUrl, {}, linkOut) }.getOrDefault(false)
+                    else -> runCatching { loadExtractor(target, playUrl, subOut, linkOut) }.getOrDefault(false)
                 }
                 if (ok) found = true
             }

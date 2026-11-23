@@ -279,8 +279,7 @@ class DizimanyaProvider : MainAPI() {
         /** Ana sayfa satırları; ayarlardan kapatılabilir. */
         val ROWS = listOf("Son Eklenen Diziler", "Popüler Diziler")
 
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+        private val UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
 

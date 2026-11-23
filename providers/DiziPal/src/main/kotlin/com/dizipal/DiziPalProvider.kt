@@ -1,5 +1,6 @@
 package com.dizipal
 
+import com.bigbull.common.parseHlsVariants
 import com.bigbull.common.pichiveSign
 import android.util.Base64
 import com.lagradost.cloudstream3.Episode
@@ -393,7 +394,7 @@ class DiziPalProvider : MainAPI() {
     ) {
         val playlist = runCatching { app.get(masterUrl, headers = uaHeaders, referer = referer).text }
             .getOrNull()
-        val variants = parseVariants(playlist.orEmpty())
+        val variants = parseHlsVariants(masterUrl, playlist.orEmpty())
         if (variants.size <= 1) {
             emit(hlsLink(masterUrl, label, Qualities.Unknown.value, referer))
             return
@@ -403,28 +404,6 @@ class DiziPalProvider : MainAPI() {
             val variantLabel = if (quality > 0) "$label ${quality}p" else label
             emit(hlsLink(url, variantLabel, quality, referer))
         }
-    }
-
-    /** Master'daki `#EXT-X-STREAM-INF` bloklarını (yükseklik, adres) çiftlerine çevirir. */
-    private fun parseVariants(playlist: String): List<Pair<Int, String>> {
-        if (!playlist.startsWith("#EXTM3U") ||
-            playlist.contains("TYPE=AUDIO", ignoreCase = true) ||
-            playlist.contains("AUDIO=", ignoreCase = true)
-        ) return emptyList()
-        val variants = mutableListOf<Pair<Int, String>>()
-        var height: Int? = null
-        for (raw in playlist.lineSequence()) {
-            val line = raw.trim()
-            if (line.startsWith("#EXT-X-STREAM-INF")) {
-                height = RESOLUTION.find(line)?.groupValues?.get(1)?.toIntOrNull() ?: 0
-                continue
-            }
-            val pending = height ?: continue
-            if (line.isEmpty() || line.startsWith("#")) continue
-            variants.add(pending to line)
-            height = null
-        }
-        return variants.distinctBy { it.second }
     }
 
     private suspend fun hlsLink(url: String, label: String, quality: Int, referer: String): ExtractorLink =

@@ -1,4 +1,4 @@
-version = 3
+version = 4
 
 cloudstream {
     description = "TrDiziIzle — trdiziizle.tv (Türkçe dizi arşivi, son bölümler, IMDb sıralı liste)"

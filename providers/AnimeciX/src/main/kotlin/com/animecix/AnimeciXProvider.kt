@@ -238,8 +238,7 @@ class AnimeciXProvider : MainAPI() {
             "Filmler",
         )
 
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        private val UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private const val TAU_HOST = "https://tau-video.xyz"
         private const val EDGE_KEY = "i4C7R2fXGocdYgFLzCbDlsJjukf8G58b"
         private const val EDGE_TAG = "{version}"

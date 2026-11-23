@@ -137,7 +137,7 @@ class IzleFilmProvider : MainAPI() {
                 embed.contains("youtube") || label.equals("Fragman", ignoreCase = true) -> Unit
                 embed.contains("ok.ru") || embed.contains("odnoklassniki") ->
                     if (loadOkRu(embed, label, callback)) found = true
-                else -> if (loadExtractor(embed, "$mainUrl/", subtitleCallback, callback)) found = true
+                else -> if (loadExtractor(embed, "$mainUrl/", Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback))) found = true
             }
         }
         return found

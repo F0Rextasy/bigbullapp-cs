@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "RoketDizi — yabancı dizi & film, Türkçe dublaj/altyazı (roketdizi.life)"

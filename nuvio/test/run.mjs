@@ -43,7 +43,37 @@ for (const scraper of manifest.scrapers) {
   const norm = code.replace(/\r\n/g, "\n");
   const langIdx = norm.indexOf("var __langLabeled = module.exports.getStreams;");
   const langHash = langIdx < 0 ? "" : crypto.createHash("sha1").update(norm.slice(langIdx).trim()).digest("hex").slice(0, 10);
-  check(langHash === "87436170a4", `${scraper.id}: canonical __langLabeled wrapper`);
+  check(langHash === "0ce1b26745", `${scraper.id}: canonical __langLabeled wrapper`);
+
+  const offlineMod = { exports: {} };
+  const offlineSb = {
+    module: offlineMod,
+    exports: offlineMod.exports,
+    console: { log() {} },
+    fetch: () => Promise.reject(new Error("offline")),
+    URL,
+    encodeURIComponent,
+    decodeURIComponent,
+    Promise
+  };
+  vm.createContext(offlineSb);
+  try {
+    vm.runInContext(code, offlineSb, { filename: scraper.filename });
+    const fnOk = typeof offlineMod.exports.getStreams === "function";
+    check(fnOk, `${scraper.id}: sandbox load + getStreams`);
+    if (fnOk) {
+      for (const [probeId, probeType, s, e] of [["603", "movie", undefined, undefined], ["603", "tv", 1, 1], ["603", "series", 1, 1]]) {
+        try {
+          const out = await offlineMod.exports.getStreams(probeId, probeType, s, e);
+          check(Array.isArray(out), `${scraper.id}: offline ${probeType} resolves array`);
+        } catch (err) {
+          check(false, `${scraper.id}: offline ${probeType} threw/rejected (${err && err.message})`);
+        }
+      }
+    }
+  } catch (e) {
+    check(false, `${scraper.id}: sandbox load (${e.message})`);
+  }
 }
 
 const declared = new Set(manifest.scrapers.map((s) => path.basename(s.filename)));

@@ -158,8 +158,7 @@ class KanalDProvider : MainAPI() {
 
     companion object {
         val ROWS = listOf("Diziler", "Programlar")
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+        private val UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
         private val YEAR = Regex("""\b((?:19|20)\d{2})\b""")

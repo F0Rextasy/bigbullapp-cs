@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     description = "VenusFilmizle — Türkçe dublaj & altyazılı film arşivi (venusfilmizle.com)"

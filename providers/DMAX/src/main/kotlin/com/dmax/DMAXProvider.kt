@@ -158,8 +158,7 @@ class DMAXProvider : MainAPI() {
         .replace('ü', 'u').replace('ö', 'o').replace('ç', 'c')
     companion object {
         val ROWS = listOf("Programlar", "Tüm Programlar (A-Z)")
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+        private val UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
         private val EPISODE = Regex("""(\d+)-sezon-(\d+)-bolum""")

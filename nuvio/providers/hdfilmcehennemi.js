@@ -1,4 +1,4 @@
-// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.19"}
+// @provider {"id":"hdfilmcehennemi", "name":"HDFilmCehennemi", "types":["movie"], "domain":"hdfilmcehennemi.nl", "formats":["m3u8"], "sample":"tt0133093:movie:1:1", "description":"HDFilmCehennemi - Turkce dublaj/altyazili filmler; obfuscated jwplayer token -> HLS + altyazi.", "verified":true, "version":"1.0.20"}
 /**
  * hdfilmcehennemi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /search/?q= JSON -> film page -> hdfilmcehennemi.mobi embed
@@ -62,7 +62,7 @@ function hlsNoDownload(url) {
 }
 
 function titleOf(id, mediaType) {
-  if (/^__alt__:/.test(String(id))) return Promise.resolve(decodeURIComponent(String(id).slice(8)));
+  if (/^__alt__:/.test(String(id))) return Promise.resolve({ name: decodeURIComponent(String(id).slice(8)), year: "" });
   var kind = mediaType === "tv" ? "series" : "movie";
   return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
     .then(function (body) {
@@ -524,9 +524,16 @@ module.exports = { getStreams };
 var __origGetStreams = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   var raw = String(id || "");
-  if (!/^\d+$/.test(raw)) return __origGetStreams(raw, mediaType, season, episode);
-  var tv = mediaType !== "movie";
-  var headers = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
+  var mt = mediaType === "series" ? "tv" : mediaType;
+  if (!/^\d+$/.test(raw)) {
+    try {
+      return Promise.resolve(__origGetStreams(raw, mt, season, episode)).catch(function () { return []; });
+    } catch (e) {
+      return Promise.resolve([]);
+    }
+  }
+  var tv = mt !== "movie";
+  var headers = { "User-Agent": "BigBullNuvio/1.0 (https://github.com/F0Rextasy/bigbullapp-cs)", "Accept": "application/json" };
   var key = typeof TMDB_API_KEY !== "undefined" ? TMDB_API_KEY : "";
   var api = "https://www.wikidata.org/w/api.php?format=json";
   var prop = tv ? "P4983" : "P4947";
@@ -560,21 +567,26 @@ module.exports.getStreams = function (id, mediaType, season, episode) {
       .catch(function () { return ""; });
   }
   return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) {
-    return __origGetStreams(imdb || raw, mediaType, season, episode);
+    try {
+      return Promise.resolve(__origGetStreams(imdb || raw, mt, season, episode)).catch(function () { return []; });
+    } catch (e) {
+      return [];
+    }
   }).catch(function () { return []; });
 };
 
 /* Cinemeta basligi yerellestirir ("Gibi" -> "As If"); sonuc bossa Wikidata TR/EN basliklariyla yeniden dene. */
 function __altTitles(raw, mediaType) {
+  var wdHeaders = { "User-Agent": "BigBullNuvio/1.0 (https://github.com/F0Rextasy/bigbullapp-cs)", "Accept": "application/json" };
   var h = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
   var api = "https://www.wikidata.org/w/api.php?format=json";
   var stmt = /^tt\d+$/.test(raw) ? "P345=" + raw : (mediaType === "movie" ? "P4947=" : "P4983=") + raw;
-  var wd = fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + stmt), { headers: h })
+  var wd = fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + stmt), { headers: wdHeaders })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (j) {
       var hits = (j && j.query && j.query.search) || [];
       if (!hits.length) return null;
-      return fetch(api + "&action=wbgetentities&props=labels|aliases&languages=tr|en&ids=" + hits[0].title, { headers: h }).then(function (r) { return r.ok ? r.json() : null; });
+      return fetch(api + "&action=wbgetentities&props=labels|aliases&languages=tr|en&ids=" + hits[0].title, { headers: wdHeaders }).then(function (r) { return r.ok ? r.json() : null; });
     })
     .then(function (j) {
       var res = [], ents = (j && j.entities) || {}, k, l, a, i;
@@ -612,36 +624,43 @@ function __altTitles(raw, mediaType) {
 var __cinemetaGetStreams = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
   var raw = String(id || "");
-  return __cinemetaGetStreams(raw, mediaType, season, episode).then(function (streams) {
-    if ((streams && streams.length) || /^__alt__:/.test(raw)) return streams || [];
-    return __altTitles(raw, mediaType).then(function (titles) {
-      var chain = Promise.resolve([]);
-      titles.forEach(function (t) {
-        chain = chain.then(function (out) {
-          return out.length ? out : __cinemetaGetStreams("__alt__:" + encodeURIComponent(t), mediaType, season, episode);
+  try {
+    return Promise.resolve(__cinemetaGetStreams(raw, mediaType, season, episode)).then(function (streams) {
+      if ((streams && streams.length) || /^__alt__:/.test(raw)) return streams || [];
+      return __altTitles(raw, mediaType).then(function (titles) {
+        var chain = Promise.resolve([]);
+        titles.forEach(function (t) {
+          chain = chain.then(function (out) {
+            return out.length ? out : __cinemetaGetStreams("__alt__:" + encodeURIComponent(t), mediaType, season, episode);
+          });
         });
+        return chain;
       });
-      return chain;
-    });
-  }).catch(function () { return []; });
+    }).catch(function () { return []; });
+  } catch (e) {
+    return Promise.resolve([]);
+  }
 };
 
-/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir.
-   Kanit: baslikta dublaj/altyazi, akisa eklenmis altyazi dosyasi ya da sitenin yalniz altyazili olmasi. Kanit yoksa etiket yok. */
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir. */
 var __subOnly = false;
 var __langLabeled = module.exports.getStreams;
 module.exports.getStreams = function (id, mediaType, season, episode) {
-  return __langLabeled.apply(this, arguments).then(function (streams) {
-    return (streams || []).map(function (s) {
-      if (!s) return s;
-      var hay = String(s.title || "") + " " + String(s.name || "");
-      var tags = [];
-      if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
-      if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
-      if (!tags.length) return s;
-      var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
-      s.quality = q + " \u2022 " + tags.join(" \u2022 ");
-      return s;
-    });
-  });
+  try {
+    return Promise.resolve(__langLabeled.apply(this, arguments)).then(function (streams) {
+      return (streams || []).map(function (s) {
+        if (!s) return s;
+        var hay = String(s.title || "") + " " + String(s.name || "");
+        var tags = [];
+        if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+        if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+        if (!tags.length) return s;
+        var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+        s.quality = q + " \u2022 " + tags.join(" \u2022 ");
+        return s;
+      });
+    }).catch(function () { return []; });
+  } catch (e) {
+    return Promise.resolve([]);
+  }
 };

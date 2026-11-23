@@ -30,6 +30,7 @@ import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.ByteArrayInputStream
+import java.net.URI
 import java.util.zip.GZIPInputStream
 import java.security.cert.X509Certificate
 import javax.net.ssl.SSLContext
@@ -52,7 +53,9 @@ class CizgiSiteProvider : MainAPI() {
         override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) = Unit
         override fun getAcceptedIssuers(): Array<X509Certificate> = emptyArray()
     }
-    private val client = OkHttpClient.Builder()
+    private val insecureSiteClient = OkHttpClient.Builder()
+        .followRedirects(false)
+        .followSslRedirects(false)
         .sslSocketFactory(
             SSLContext.getInstance("TLS").apply { init(null, arrayOf(trustAll), null) }.socketFactory,
             trustAll,
@@ -60,13 +63,13 @@ class CizgiSiteProvider : MainAPI() {
         .hostnameVerifier { _, _ -> true }
         .build()
 
-    // vk.com ve api.vk.com istekleri standart TLS sertifika doğrulamasıyla gider.
-    private val vkClient = OkHttpClient.Builder()
+    // cizgi.site dışındaki tüm hostlar (vk.com, embedler, yönlendirmeler) standart TLS doğrulamasıyla gider.
+    private val defaultClient = OkHttpClient.Builder()
         .followRedirects(true)
         .build()
 
     private fun clientFor(url: String): OkHttpClient =
-        if (url.contains("vk.com", ignoreCase = true)) vkClient else client
+        if (isCizgiSiteHost(url)) insecureSiteClient else defaultClient
 
     private fun vkApiMedia(frame: String, page: String): List<Pair<String, String>> {
         val oid = Regex("""[?&]oid=(-?\d+)""").find(frame)?.groupValues?.get(1) ?: return emptyList()
@@ -88,7 +91,7 @@ class CizgiSiteProvider : MainAPI() {
             .post(body)
             .build()
         val text = runCatching {
-            vkClient.newCall(request).execute().use { response ->
+            defaultClient.newCall(request).execute().use { response ->
                 if (response.isSuccessful) response.body?.string() else null
             }
         }.getOrNull() ?: return emptyList()
@@ -105,36 +108,46 @@ class CizgiSiteProvider : MainAPI() {
     }
 
     private fun fetchHtml(url: String, referer: String? = null, browserHeaders: Boolean = true): String {
-        val request = Request.Builder().url(url)
-            .header("User-Agent", uaHeaders.getValue("User-Agent"))
-            .header("Accept-Language", uaHeaders.getValue("Accept-Language"))
-            .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-            .apply {
-                if (browserHeaders) {
-                    header("Sec-Fetch-Dest", "iframe")
-                    header("Sec-Fetch-Mode", "navigate")
-                    header("Sec-Fetch-Site", "cross-site")
+        var currentUrl = url
+        repeat(5) {
+            val request = Request.Builder().url(currentUrl)
+                .header("User-Agent", uaHeaders.getValue("User-Agent"))
+                .header("Accept-Language", uaHeaders.getValue("Accept-Language"))
+                .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                .apply {
+                    if (browserHeaders) {
+                        header("Sec-Fetch-Dest", "iframe")
+                        header("Sec-Fetch-Mode", "navigate")
+                        header("Sec-Fetch-Site", "cross-site")
+                    }
                 }
-            }
-            .apply { if (referer != null) header("Referer", referer) }
-            .build()
-        clientFor(url).newCall(request).execute().use { response ->
-            if (!response.isSuccessful) throw ErrorLoadingException("$name: HTTP ${response.code}")
-            val raw = response.body?.bytes() ?: return ""
-            val encoding = response.header("Content-Encoding")?.lowercase()
-            val decoded = runCatching {
-                val stream = when (encoding) {
-                    "br" -> BrotliInputStream(ByteArrayInputStream(raw))
-                    "gzip" -> GZIPInputStream(ByteArrayInputStream(raw))
-                    else -> ByteArrayInputStream(raw)
+                .apply { if (referer != null) header("Referer", referer) }
+                .build()
+            clientFor(currentUrl).newCall(request).execute().use { response ->
+                if (response.code in listOf(301, 302, 303, 307, 308)) {
+                    val loc = response.header("Location")?.trim()?.takeIf { it.isNotEmpty() }
+                        ?: throw ErrorLoadingException("$name: boş yönlendirme")
+                    currentUrl = URI(currentUrl).resolve(loc).toString()
+                    return@use
                 }
-                stream.bufferedReader(Charsets.UTF_8).use { it.readText() }
-            }.getOrNull()
-            if (decoded.isNullOrBlank() && encoding == "br") {
-                throw ErrorLoadingException("$name: Brotli yanıtı çözülemedi")
+                if (!response.isSuccessful) throw ErrorLoadingException("$name: HTTP ${response.code}")
+                val raw = response.body?.bytes() ?: return ""
+                val encoding = response.header("Content-Encoding")?.lowercase()
+                val decoded = runCatching {
+                    val stream = when (encoding) {
+                        "br" -> BrotliInputStream(ByteArrayInputStream(raw))
+                        "gzip" -> GZIPInputStream(ByteArrayInputStream(raw))
+                        else -> ByteArrayInputStream(raw)
+                    }
+                    stream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                }.getOrNull()
+                if (decoded.isNullOrBlank() && encoding == "br") {
+                    throw ErrorLoadingException("$name: Brotli yanıtı çözülemedi")
+                }
+                return decoded?.takeIf { it.isNotBlank() } ?: raw.toString(Charsets.UTF_8)
             }
-            return decoded?.takeIf { it.isNotBlank() } ?: raw.toString(Charsets.UTF_8)
         }
+        throw ErrorLoadingException("$name: çok fazla yönlendirme")
     }
 
     override val mainPage get() = ROWS.mapNotNull { name ->
@@ -265,8 +278,9 @@ class CizgiSiteProvider : MainAPI() {
             }
         }
         if (!found) {
-            for (m in Regex("""https?://[^"'\s<>]+?\.(?:mp4|m3u8)(?:\?[^"'\s<>]*)""").findAll(page)) {
-                callback.invoke(newExtractorLink(name, "Direct", m.value, ExtractorLinkType.VIDEO) {
+            for (m in Regex("""https?://[^"'\s<>]+?\.(?:mp4|m3u8)(?:\?[^"'\s<>]*)?""").findAll(page)) {
+                val linkType = if (m.value.contains(".m3u8", ignoreCase = true)) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+                callback.invoke(newExtractorLink(name, "Direct", m.value, linkType) {
                     this.referer = data
                 })
                 found = true
@@ -278,5 +292,10 @@ class CizgiSiteProvider : MainAPI() {
 
     companion object {
         val ROWS = listOf("Çizgi Filmler")
+
+        internal fun isCizgiSiteHost(url: String): Boolean {
+            val host = runCatching { URI(url).host?.lowercase() }.getOrNull() ?: return false
+            return host == "cizgi.site" || host == "www.cizgi.site"
+        }
     }
 }

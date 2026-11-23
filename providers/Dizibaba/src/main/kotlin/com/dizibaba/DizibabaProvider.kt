@@ -39,8 +39,7 @@ class DizibabaProvider : MainAPI() {
     override val supportedTypes = setOf(TvType.Movie)
 
     private val headers = mapOf(
-        "user-agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-            "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+        "user-agent" to com.bigbull.common.browserHeaders.getValue("user-agent"),
         "Accept-Language" to "tr-TR,tr;q=0.9",
     )
 

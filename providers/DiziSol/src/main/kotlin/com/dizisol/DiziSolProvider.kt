@@ -218,12 +218,9 @@ class DiziSolProvider : MainAPI() {
             val master = runCatching { app.get(signed, headers = browserHeaders).text }.getOrNull().orEmpty()
             if (!master.contains("#EXTM3U")) continue
 
-            val height = RESOLUTION.findAll(master)
-                .mapNotNull { it.groupValues[1].toIntOrNull() }
-                .maxOrNull() ?: Qualities.Unknown.value
             callback(
                 newExtractorLink(name, "$name • ${providerLabel(provider)}", signed, ExtractorLinkType.M3U8) {
-                    this.quality = height
+                    this.quality = Qualities.Unknown.value
                     this.referer = "$mainUrl/"
                     this.headers = browserHeaders
                 }
@@ -409,6 +406,5 @@ class DiziSolProvider : MainAPI() {
         private val MEDIA_TYPE = Regex("""[?&]type=(movie|tv)""")
         private val SEASON_PARAM = Regex("""[?&]season=(\d+)""")
         private val EPISODE_PARAM = Regex("""[?&]episode=(\d+)""")
-        private val RESOLUTION = Regex("""RESOLUTION=\d+x(\d+)""", RegexOption.IGNORE_CASE)
     }
 }

@@ -243,6 +243,6 @@ class TvDizilerProvider : MainAPI() {
         /** jwplayer `sources: [{file:"…", label:"720p", type:"mp4"}]` girdileri. */
         private val SOURCE = Regex("""file\s*:\s*["']([^"']+)["'][^{}]*?label\s*:\s*["']([^"']*)["']""")
 
-        private val MEDIA = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)""")
+        private val MEDIA = Regex("""https?://[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?""")
     }
 }

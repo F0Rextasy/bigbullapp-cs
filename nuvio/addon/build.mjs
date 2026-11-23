@@ -28,7 +28,7 @@ import { fetchWithDpi } from "../tools/verify-all.mjs";
  * Kullanım: node nuvio/addon/build.mjs [--check] [id ...]
  */
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync, rmSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve as resolvePath } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -53,9 +53,16 @@ function repoVersion() {
   return m ? m[1] : "1.0.0";
 }
 
-const argv = process.argv.slice(2);
-const check = argv.includes("--check");
-const only = argv.filter((a) => !a.startsWith("--"));
+export function resolvePosterUrl(poster, baseUrl) {
+  if (!poster || /^data:/i.test(poster)) return undefined;
+  if (!/^https?:/i.test(poster)) return new URL(poster, baseUrl).href;
+  return poster;
+}
+
+export function shouldRewriteGlobalOutputs(onlyList) {
+  return !Array.isArray(onlyList) || onlyList.length === 0;
+}
+
 const DEFAULT_HEADERS = {
   "User-Agent": UA,
   Accept: "text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8",
@@ -87,12 +94,7 @@ async function get(url, headers) {
   }
   throw new Error(`HTTP ${status || "network"} ${url}`);
 }
-const recipes = readdirSync(SRC)
-  .filter((f) => f.endsWith(".json"))
-  .map((f) => JSON.parse(readFileSync(join(SRC, f), "utf8")))
-  .filter((r) => !only.length || only.includes(r.id));
-
-const cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, "utf8")) : {};
+let cache = {};
 
 const TR_FOLD = { ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u", â: "a", î: "i", û: "u" };
 const norm = (s) =>
@@ -317,9 +319,18 @@ async function mapLimit(items, limit, fn) {
   return out;
 }
 
-const written = [];
-const failed = [];
-for (const rc of recipes) {
+export async function main(argv = process.argv.slice(2)) {
+  const check = argv.includes("--check");
+  const only = argv.filter((a) => !a.startsWith("--"));
+  const recipes = readdirSync(SRC)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => JSON.parse(readFileSync(join(SRC, f), "utf8")))
+    .filter((r) => !only.length || only.includes(r.id));
+  cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, "utf8")) : {};
+
+  const written = [];
+  const failed = [];
+  for (const rc of recipes) {
   let items;
   try {
     let html = await get(rc.url, rc.headers);
@@ -327,30 +338,34 @@ for (const rc of recipes) {
     if (rc.unescape) html = html.replace(/\\"/g, '"');
     const blocks = html.match(new RegExp(rc.item, "gi")) || [];
     const titleRe = new RegExp(rc.title, "i");
+    const stripRe = rc.strip ? new RegExp(rc.strip, "i") : null;
+    const posterRe = rc.poster ? new RegExp(rc.poster, "i") : null;
+    const yearRe = rc.year ? new RegExp(rc.year, "i") : null;
+    const imdbRe = rc.imdb ? new RegExp(rc.imdb, "i") : null;
+    const title2Re = rc.title2 ? new RegExp(rc.title2, "i") : null;
+    const hrefRe = rc.href ? new RegExp(rc.href, "i") : null;
     const seen = new Set();
     items = [];
     for (const b of blocks) {
       const m = titleRe.exec(b);
       let title = m ? stripTags(m[1]) : "";
-      if (rc.strip) title = title.replace(new RegExp(rc.strip, "i"), "").trim();
+      if (stripRe) title = title.replace(stripRe, "").trim();
       if (title.length < 2) continue;
       const k = norm(title);
       if (seen.has(k)) continue;
       seen.add(k);
-      let poster = rc.poster ? (new RegExp(rc.poster, "i").exec(b) || [])[1] : undefined;
-      if (poster && /^data:/i.test(poster)) poster = undefined;
-      if (poster && poster.startsWith("/")) poster = new URL(poster, rc.url).origin + poster;
-      const yearStr = rc.year ? (new RegExp(rc.year, "i").exec(b) || [])[1] : undefined;
+      let poster = resolvePosterUrl(posterRe ? (posterRe.exec(b) || [])[1] : undefined, rc.url);
+      const yearStr = yearRe ? (yearRe.exec(b) || [])[1] : undefined;
       const year = yearStr && /^(19|20)\d{2}$/.test(yearStr) ? Number(yearStr) : 0;
-      const imdb = rc.imdb ? (new RegExp(rc.imdb, "i").exec(b) || [])[1] : undefined;
-      const slug = rc.title2 ? (new RegExp(rc.title2, "i").exec(b) || [])[1] : undefined;
+      const imdb = imdbRe ? (imdbRe.exec(b) || [])[1] : undefined;
+      const slug = title2Re ? (title2Re.exec(b) || [])[1] : undefined;
       items.push({
         title,
         title2: slug ? slug.replace(/-/g, " ") : undefined,
         poster,
         year,
         imdb,
-        href: rc.href ? (new RegExp(rc.href, "i").exec(b) || [])[1] : undefined,
+        href: hrefRe ? (hrefRe.exec(b) || [])[1] : undefined,
       });
       if (items.length >= (rc.limit || MAX_ITEMS)) break;
     }
@@ -393,98 +408,105 @@ for (const rc of recipes) {
   console.log(`ok ${rc.id} (${rc.type}) ${metas.length}/${items.length}`);
 }
 
-// Geçici hata (site blokajı/ağ) satır veya grup üyesi silmesin: önceki katalog dosyası korunur.
-if (!check) {
-  for (const rc of failed) {
-    const file = join(OUT, rc.type, rc.id + ".json");
-    if (!existsSync(file)) continue;
-    const metas = JSON.parse(readFileSync(file, "utf8")).metas || [];
-    if (!metas.length) continue;
-    written.push({ id: rc.id, type: rc.type, name: rc.name, hidden: !!rc.hidden, group: rc.group || [], count: metas.length, kept: true });
-    console.log(`~ ${rc.id}: önceki liste korundu (${metas.length})`);
-  }
-}
-
+// Tekli güncellemede (`only.length > 0`) diğer katalog dosyaları, grup satırları ve manifest korunur.
 if (!check) {
   for (const k of Object.keys(cache)) {
     if (!cache[k] || !cache[k].id) delete cache[k];
   }
   writeFileSync(CACHE, JSON.stringify(cache, null, 1) + "\n");
-  // Tarifi silinen katalogları kaldır; geçici hata alan tarifin eski listesi korunur.
-  const keep = new Set(written.map((w) => w.type + "/" + w.id));
-  for (const t of ["movie", "series"]) {
-    const d = join(OUT, t);
-    if (!existsSync(d)) continue;
-    for (const f of readdirSync(d)) {
-      const id = f.replace(/\.json$/, "");
-      if (id.startsWith("grp-")) continue;
-      if (!keep.has(t + "/" + id)) rmSync(join(d, f));
+  if (shouldRewriteGlobalOutputs(only)) {
+    // Geçici hata (site blokajı/ağ) satır veya grup üyesi silmesin: önceki katalog dosyası korunur.
+    for (const rc of failed) {
+      const file = join(OUT, rc.type, rc.id + ".json");
+      if (!existsSync(file)) continue;
+      const metas = JSON.parse(readFileSync(file, "utf8")).metas || [];
+      if (!metas.length) continue;
+      written.push({ id: rc.id, type: rc.type, name: rc.name, hidden: !!rc.hidden, group: rc.group || [], count: metas.length, kept: true });
+      console.log(`~ ${rc.id}: önceki liste korundu (${metas.length})`);
     }
-  }
-  // Toplu satırlar: üyeler sırayla harmanlanır (round-robin), id'ye göre tekilleşir.
-  const groupRows = [];
-  for (const g of GROUPS) {
-    const members = written.filter((w) => w.type === g.type && w.group.includes(g.id));
-    const lists = members
-      .map((m) => (JSON.parse(readFileSync(join(OUT, g.type, m.id + ".json"), "utf8")).metas || []))
-      .filter((l) => l.length);
-    if (!lists.length) continue;
-    const metas = [];
-    const seen = new Set();
-    for (let i = 0; metas.length < MAX_ITEMS; i++) {
-      let any = false;
-      for (const l of lists) {
-        const row = l[i];
-        if (!row) continue;
-        any = true;
-        if (!row.id || seen.has(row.id)) continue;
-        seen.add(row.id);
-        metas.push(row);
-        if (metas.length >= MAX_ITEMS) break;
+    // Tarifi silinen katalogları kaldır; geçici hata alan tarifin eski listesi korunur.
+    const keep = new Set(written.map((w) => w.type + "/" + w.id));
+    for (const t of ["movie", "series"]) {
+      const d = join(OUT, t);
+      if (!existsSync(d)) continue;
+      for (const f of readdirSync(d)) {
+        const id = f.replace(/\.json$/, "");
+        if (id.startsWith("grp-")) continue;
+        if (!keep.has(t + "/" + id)) rmSync(join(d, f));
       }
-      if (!any) break;
     }
-    if (metas.length < 5) {
-      console.error(`! grp ${g.id}: yalnız ${metas.length} öğe`);
-      continue;
+    // Toplu satırlar: üyeler sırayla harmanlanır (round-robin), id'ye göre tekilleşir.
+    const groupRows = [];
+    for (const g of GROUPS) {
+      const members = written.filter((w) => w.type === g.type && w.group.includes(g.id));
+      const lists = members
+        .map((m) => (JSON.parse(readFileSync(join(OUT, g.type, m.id + ".json"), "utf8")).metas || []))
+        .filter((l) => l.length);
+      if (!lists.length) continue;
+      const metas = [];
+      const seen = new Set();
+      for (let i = 0; metas.length < MAX_ITEMS; i++) {
+        let any = false;
+        for (const l of lists) {
+          const row = l[i];
+          if (!row) continue;
+          any = true;
+          if (!row.id || seen.has(row.id)) continue;
+          seen.add(row.id);
+          metas.push(row);
+          if (metas.length >= MAX_ITEMS) break;
+        }
+        if (!any) break;
+      }
+      if (metas.length < 5) {
+        console.error(`! grp ${g.id}: yalnız ${metas.length} öğe`);
+        continue;
+      }
+      const file = join(OUT, g.type, "grp-" + g.id + ".json");
+      writeFileSync(file, JSON.stringify({ metas }) + "\n");
+      groupRows.push({ type: g.type, id: "grp-" + g.id, name: g.name, count: metas.length });
+      console.log(`grp ${g.id} (${g.type}) ${metas.length} öğe / ${members.length} kaynak`);
     }
-    const file = join(OUT, g.type, "grp-" + g.id + ".json");
-    writeFileSync(file, JSON.stringify({ metas }) + "\n");
-    groupRows.push({ type: g.type, id: "grp-" + g.id, name: g.name, count: metas.length });
-    console.log(`grp ${g.id} (${g.type}) ${metas.length} öğe / ${members.length} kaynak`);
-  }
-  // Kaldırılan grubun eski dosyası kalmasın.
-  const produced = new Set(groupRows.map((g) => g.type + "/" + g.id.replace(/^grp-/, "")));
-  for (const t of ["movie", "series"]) {
-    const d = join(OUT, t);
-    if (!existsSync(d)) continue;
-    for (const f of readdirSync(d)) {
-      if (!f.startsWith("grp-")) continue;
-      const gid = f.replace(/^grp-/, "").replace(/\.json$/, "");
-      if (!produced.has(t + "/" + gid)) rmSync(join(d, f));
+    // Kaldırılan grubun eski dosyası kalmasın.
+    const produced = new Set(groupRows.map((g) => g.type + "/" + g.id.replace(/^grp-/, "")));
+    for (const t of ["movie", "series"]) {
+      const d = join(OUT, t);
+      if (!existsSync(d)) continue;
+      for (const f of readdirSync(d)) {
+        if (!f.startsWith("grp-")) continue;
+        const gid = f.replace(/^grp-/, "").replace(/\.json$/, "");
+        if (!produced.has(t + "/" + gid)) rmSync(join(d, f));
+      }
     }
+    // "Tümü" satırları kaldırıldı; eski dosyalar temizlenir.
+    for (const t of ["movie", "series"]) {
+      const stale = join(OUT, t, "all.json");
+      if (existsSync(stale)) rmSync(stale);
+    }
+    const manifest = {
+      id: ADDON_ID,
+      version: repoVersion(),
+      name: "BigBull TR Katalog",
+      description:
+        "Cloudstream sağlayıcılarının film ve dizi listeleri; öne çıkan toplu satırlar. Katalog verir; meta Nuvio'nun yerleşik TMDB zenginleştirmesi ve kurulu metadata addon'larından, akış BigBull Nuvio eklentilerinden gelir; canlı TV ayrı addon'dadır.",
+      resources: ["catalog"],
+      types: ["movie", "series"],
+      catalogs: [
+        ...groupRows.map((c) => ({ type: c.type, id: c.id, name: c.name })),
+        ...written
+          .filter((w) => !w.hidden)
+          .map((c) => ({ type: c.type, id: c.id, name: c.name }))
+          .sort((a, b) => a.name.localeCompare(b.name, "tr")),
+      ],
+    };
+    writeFileSync(join(HERE, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
+    console.log(`manifest: ${manifest.catalogs.length} katalog`);
+  } else {
+    console.log(`tekli güncelleme (${written.map((w) => w.id).join(", ") || "yok"}): manifest/gruplar korunuyor`);
   }
-  // "Tümü" satırları kaldırıldı; eski dosyalar temizlenir.
-  for (const t of ["movie", "series"]) {
-    const stale = join(OUT, t, "all.json");
-    if (existsSync(stale)) rmSync(stale);
-  }
-  const manifest = {
-    id: ADDON_ID,
-    version: repoVersion(),
-    name: "BigBull TR Katalog",
-    description:
-      "Cloudstream sağlayıcılarının film ve dizi listeleri; öne çıkan toplu satırlar. Katalog verir; meta Nuvio'nun yerleşik TMDB zenginleştirmesi ve kurulu metadata addon'larından, akış BigBull Nuvio eklentilerinden gelir; canlı TV ayrı addon'dadır.",
-    resources: ["catalog"],
-    types: ["movie", "series"],
-    catalogs: [
-      ...groupRows.map((c) => ({ type: c.type, id: c.id, name: c.name })),
-      ...written
-        .filter((w) => !w.hidden)
-        .map((c) => ({ type: c.type, id: c.id, name: c.name }))
-        .sort((a, b) => a.name.localeCompare(b.name, "tr")),
-    ],
-  };
-  writeFileSync(join(HERE, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
-  console.log(`manifest: ${manifest.catalogs.length} katalog`);
+}
+}
+
+if (resolvePath(process.argv[1] || "") === import.meta.filename) {
+  await main();
 }

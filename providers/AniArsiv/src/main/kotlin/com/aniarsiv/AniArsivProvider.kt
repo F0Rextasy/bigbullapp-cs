@@ -175,7 +175,7 @@ class AniArsivProvider : MainAPI() {
                 val handled = if (embed.contains("tau-video.xyz")) {
                     resolveTau(embed, callback)
                 } else {
-                    runCatching { loadExtractor(embed, "$mainUrl/", subtitleCallback, callback) }
+                    runCatching { loadExtractor(embed, "$mainUrl/", Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback)) }
                         .getOrDefault(false)
                 }
                 if (handled) found = true else if (embed.contains(".mp4")) emit(embed, player)
@@ -212,8 +212,7 @@ class AniArsivProvider : MainAPI() {
     companion object {
         val ROWS = listOf("Trend", "Tüm Animeler")
         private const val MAX_LINKS = 12
-        private const val UA =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+        private val UA = com.bigbull.common.browserHeaders.getValue("user-agent")
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
     }
