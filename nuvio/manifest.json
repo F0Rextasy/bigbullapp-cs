@@ -1,6 +1,6 @@
 {
   "name": "BB Nuvio",
-  "version": "1.7.29",
+  "version": "1.7.31",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -318,7 +318,7 @@
       "id": "filmmakinesi",
       "name": "FilmMakinesi",
       "description": "FilmMakinesi film kaynaklari (oynatloload secure-hls, vidmoly).",
-      "version": "1.0.8",
+      "version": "1.0.9",
       "author": "bigbull",
       "supportedTypes": [
         "movie",

@@ -1,4 +1,4 @@
-// @provider {"id":"filmmakinesi", "name":"FilmMakinesi", "types":["movie", "tv"], "domain":"filmmakinesi.co", "formats":["m3u8"], "description":"FilmMakinesi film kaynaklari (oynatloload secure-hls, vidmoly).", "sample":"tt13611778:movie:1:1", "verified":true, "version":"1.0.8"}
+// @provider {"id": "filmmakinesi", "name": "FilmMakinesi", "types": ["movie", "tv"], "domain": "filmmakinesi.co", "formats": ["m3u8"], "description": "FilmMakinesi film kaynaklari (oynatloload secure-hls, vidmoly).", "sample": "tt13611778:movie:1:1", "verified": true, "version": "1.0.9"}
 /**
  * filmmakinesi — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> /?s= -> film sayfasi -> oynatloload embed -> __ULTRA_EAUTH ->
@@ -6,7 +6,7 @@
  * Site yalniz film yayinlar; dizi turunde eslesme yoksa [] doner.
  */
 
-var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
+var UA = "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36";
 var BASE = "https://filmmakinesi.co";
 var PLAYER = "https://oynatloload.top";
 
@@ -101,7 +101,7 @@ function altLinksOf(page, filmUrl) {
 }
 
 function vidmolyRows(embedUrl, referer) {
-  var normUrl = String(embedUrl).replace(/\/\/(?:www\.)?vidmoly\.(?:to|biz|me|sx)\//i, "//vidmoly.net/");
+  var normUrl = String(embedUrl).replace(/\/\/(?:www\.)?vidmoly\.(?:to|biz|me|sx)\//i, "//vidmoly.biz/");
   return text(normUrl, { referer: referer, headers: { "Sec-Fetch-Dest": "iframe" } })
     .then(function (body) {
       var m3u8 = first(/file\s*:\s*["'](https?:\/\/[^"']+\.m3u8[^"']*)["']/, body);
@@ -120,7 +120,7 @@ function vidmolyRows(embedUrl, referer) {
         title: "FilmMakinesi - VidMoly [HLS]" + (subs.length ? " \u2022 Altyaz\u0131l\u0131" : ""),
         url: hlsNoDownload(m3u8),
         quality: "auto",
-        headers: { "User-Agent": UA, Referer: "https://vidmoly.net/" },
+        headers: { "User-Agent": UA, Referer: "https://vidmoly.biz/" },
         subtitles: subs
       }];
     })
