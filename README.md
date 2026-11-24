@@ -33,7 +33,7 @@ Nuvio'da plugin desteği yalnız **sideload** sürümlerde vardır (mağaza sür
 | Ne için | Adres |
 |---|---|
 | Ana sayfa film/dizi satırları | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json` |
-| Canlı TV (8 satır, 151 kanal) | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json` |
+| Canlı TV (8 satır, 153 kanal) | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json` |
 
 Nuvio plugin deposu: `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json`
 
@@ -119,7 +119,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 
 - **Cloudstream:** tek sağlayıcı `CanliTV` — 159 kanal (seçilmiş HLS + iptv-org). "Doğrulanmış"
   yalnız HTTP 200 HLS adresi demektir; oynatma garantisi değildir.
-- **Nuvio:** `BigBull Canlı TV` addon'u — 8 satır, 151 kanal, doğrudan HLS. Kanal listesi Cloudstream
+- **Nuvio:** `BigBull Canlı TV` addon'u — 8 satır, 153 kanal, doğrudan HLS. Kanal listesi Cloudstream
   `CanliTV` kaynağından üretilir; ölü kanallar ayıklanır.
 - Yeni kanal önerisi için site/kanal adını issue olarak bırak.
 
