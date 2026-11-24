@@ -201,7 +201,7 @@ class DizifonProvider : MainAPI() {
         var found = false
         val seen = mutableSetOf<String>()
         suspend fun emit(stream: String, label: String, referer: String) {
-            if (!stream.startsWith("http") || !seen.add(stream)) return
+            if (!stream.startsWith("http") || stream.contains("&quot;") || !seen.add(stream)) return
             val isM3u8 = stream.contains(".m3u8") || stream.contains("/vs/") || stream.endsWith(".gif")
             val type = if (isM3u8) ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
             val quality = getQualityFromName(label)
@@ -250,6 +250,10 @@ class DizifonProvider : MainAPI() {
                 emit(frame, "Embed", data)
                 continue
             }
+            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) {
+                if (loadOkRu(frame, seen, callback)) found = true
+                continue
+            }
             val inner = runCatching { app.get(frame, headers = uaHeaders, referer = data).text }.getOrNull()
             if (inner != null) {
                 decodeVixolityStream(inner)?.let { emit(it, "Vixolity", "https://pl.vixolity.com/") }
@@ -262,7 +266,7 @@ class DizifonProvider : MainAPI() {
                     if (loadExtractor(subUrl, frame, Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback))) found = true
                 }
             }
-            if (frame.contains("ok.ru") || frame.contains("odnoklassniki")) { if (loadOkRu(frame, callback)) found = true } else if (loadExtractor(frame, "$mainUrl/", Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback))) found = true
+            if (loadExtractor(frame, "$mainUrl/", Settings.filterSubtitles(subtitleCallback), Settings.filterLinks(callback))) found = true
         }
         val subs = Regex("""https?://[^"'\s<>]+?\.(?:vtt|srt)(?:\?[^"'\s<>]*)?""").findAll(text)
         for (m in subs) {
@@ -274,6 +278,6 @@ class DizifonProvider : MainAPI() {
         return found
     }
 
-    private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean =
-        com.bigbull.common.emitOkRuVideos(embed, callback = callback)
+    private suspend fun loadOkRu(embed: String, seen: MutableSet<String>, callback: (ExtractorLink) -> Unit): Boolean =
+        com.bigbull.common.emitOkRuVideos(embed, seen = seen, qualityAllowed = Settings::qualityAllowed, callback = callback)
 }

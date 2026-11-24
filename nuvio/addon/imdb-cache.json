@@ -3350,5 +3350,29 @@
  "movie|the one with hope": {
   "id": "tt0430431",
   "poster": "https://m.media-amazon.com/images/M/MV5BMTQ0NzQwNjcxOV5BMl5BanBnXkFtZTcwNDM0MDczMQ@@._V1_.jpg"
+ },
+ "movie|2026|one last order": {
+  "id": "tt39646510",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODI0YjllZjEtNzdiZS00ZGJlLWE4N2ItMzFjYTQxNDZiMjNlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2017|marvel super hero adventures": {
+  "id": "tt7726152",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjNmZjkxZDMtZWI0Ny00ZThlLTk3M2UtNjA3YThlNjk4MmZlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2017|6 super kahraman seruvenler": {
+  "id": "tt5515212",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTc3YTYwNTQtNzNmOC00YTg1LWJiNTgtYWU0ZjgyMzRjNDc2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|breeder": {
+  "id": "tt9213874",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmQ0ZjVlNmQtYTAwNS00MTg5LTljNDktZWMwZGY4MzZhZTE0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2024|nightsleeper": {
+  "id": "tt24133138",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWYwYTVjY2UtMDg3Yi00ZjYyLWE1MjAtMDIzYWU4MTc2ZDQ4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2024|the listeners": {
+  "id": "tt31490551",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2IxNjYxMTMtYzZmYy00M2JmLThjZGQtYTU5NjMyYTg4ZGQ1XkEyXkFqcGc@._V1_.jpg"
  }
 }

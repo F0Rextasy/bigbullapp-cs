@@ -5,6 +5,12 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.44] - 2026-11-24
+
+### Düzeltildi
+- **DiziPal (v17)**: taban adres `https://dizipal1597.com` -> `https://dizipal1598.com` güncellendi; Nuvio katalog kaynakları (`dizipal`, `dizipal-trendler`) `dizipal1598.com` ile senkronlandı.
+- **Dizifon (v14)**: `ok.ru` / `odnoklassniki` iframe'leri ham regex taraması öncesi `emitOkRuVideos` ile çözüldü (`vp.swf&quot;...` kırık ilk bağlantı hatası giderildi).
+
 ## [1.7.43] - 2026-11-24
 
 ### Düzeltildi
