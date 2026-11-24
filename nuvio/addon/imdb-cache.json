@@ -3194,5 +3194,161 @@
  "movie|2026|girls like girls": {
   "id": "tt32432654",
   "poster": "https://m.media-amazon.com/images/M/MV5BNzAwYmRjMzMtNTdkNC00Yzk5LTllZDYtMWRiZGZkNWY2NzMwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2023|percy jackson and the olympians": {
+  "id": "tt12324366",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGUwOTQ0ZjMtYzA3NS00YWJiLWE3YzEtOGI1YzNkZGFlOWQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the terror": {
+  "id": "tt2708480",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWQxY2Q1NGItZTM5MS00M2EzLTg2MjgtNDQ5ZDBmMWY3ZWY2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|stop that train": {
+  "id": "tt38128726",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmM2MmJkMDEtYjc2Yi00NGMzLWExYjAtMjQzN2RiNzkwZWE3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|sosyal hesaplasma the social reckoning": {
+  "id": "tt37510326",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjdlZTgzZDUtMmVjYy00M2EyLWFlNGMtNjVhYjM2ODNmZjEzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|minyonlar ve canavarlar minions monsters": {
+  "id": "tt32890033",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzBjMDg4YjctYzg3ZS00ZDFmLWI1YjctM2RkZGVjZWEyYWQ0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|robin hood rsquo un olumu the death of robin hood": {
+  "id": "tt32273171",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTRmNzlmZjEtYjkzMC00MmNjLThiOGYtZjM5MjFiZDQyM2IwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|karlar duserken ask clashing through the snow": {
+  "id": "tt39316936",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjE0MWFjMDAtZWY2MS00N2RlLTlmMzMtNDllY2ViOWQ4OWUxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|bob trevinonun favorisi bob trevino likes it": {
+  "id": "tt28613536",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGI2Yzg2MmYtMmI0Mi00ZWYwLThjMGItZTQ3MmExODFiMjI3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|kizlar kizlari sever girls like girls": {
+  "id": "tt32432654",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzAwYmRjMzMtNTdkNC00Yzk5LTllZDYtMWRiZGZkNWY2NzMwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|steps kardes kardes": {
+  "id": "tt14413964",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTQyNjk2NmUtZWZlYi00ZDY4LWExYzgtNDY1ZGY3YTA2NDhlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|gec gelen sohret late fame": {
+  "id": "tt32298494",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2VlZDk4Y2MtYzVlNC00NTY5LWI4YWEtOTBiMDZmYTQwZDRjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|rob lowe sira disi bir kariyer rob lowe the outsider": {
+  "id": "tt47597255",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjI4ZWVkZWQtNjIxNC00ZjAxLThjY2EtM2UxZDhlZDIxOWZkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|son bir siparis one last order": {
+  "id": "tt39646510",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODI0YjllZjEtNzdiZS00ZGJlLWE4N2ItMzFjYTQxNDZiMjNlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|hind rajabin sesi the voice of hind rajab": {
+  "id": "tt36943034",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWVlM2RjYTctODU4Mi00NTQzLWEzMDktZGVmYTQ2NTEwOWFiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|oglum adina ozur dilerim on behalf of my son": {
+  "id": "tt33402927",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWM0MGRmOWMtMWNjMi00YzRlLTk4YzItZmJkZTQxNWY2YThiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|sira disi vaiz primetime preacher": {
+  "id": "tt48434154",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWRmNmFlZTMtN2E2NC00OGFhLTllN2MtMjE2NzlhZDQyNTUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|kusursuz yalancilar perfect liars": {
+  "id": "tt18351090",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTM4ZWUwODYtMDVlNC00Njc3LThkZDAtZDA4NTU5YzliYWZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|cok ozel bir koruma guarding stars": {
+  "id": "tt37877083",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjdlOGI1ODQtMDlkMC00MTZiLWI4NWUtNzE1NDdjYzgzOTViXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|askin buyusu 2": {
+  "id": "tt32588798",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWUyY2UyNjgtYTg5MC00MDZmLWE1MzEtZmU2YWE2ZTMzMjUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|sosyal hesaplasma": {
+  "id": "tt37510326",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjdlZTgzZDUtMmVjYy00M2EyLWFlNGMtNjVhYjM2ODNmZjEzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|russell brand open secret": {
+  "id": "tt50969289",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTk2ZGIwZDctNTNlMS00M2MyLWFhNzAtNGEyMTExYTJmNGQzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2016|tarla": {
+  "id": "tt5586310",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjEzOWVkNDEtMzhhNS00OTE4LWE3ZDAtMzRiMzU5ZTg2NWE2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2016|surgun turkuleri yilmaz guney": {
+  "id": "tt5108818",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmYzYjJhMGYtNTA2Ni00Mzk3LTkwMDMtYjA1ZDZmNTJmYmZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2007|yolun sonu odesme": {
+  "id": "tt0804550",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTcxNzQ3ODIzNl5BMl5BanBnXkFtZTgwODc4NjAwNzE@._V1_.jpg"
+ },
+ "movie|archipelago": {
+  "id": "tt1527835",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmE2YmI5MWUtM2MxYi00Njk0LWI5ZTAtNWE4ZmFiOThhMmNmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|one last order": {
+  "id": "tt39646510",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODI0YjllZjEtNzdiZS00ZGJlLWE4N2ItMzFjYTQxNDZiMjNlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|rob lowe the outsider": {
+  "id": "tt47597255",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjI4ZWVkZWQtNjIxNC00ZjAxLThjY2EtM2UxZDhlZDIxOWZkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|fjord": {
+  "id": "tt35410859",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGQwZTQ0YzgtZjk5Mi00NTg1LTg0MmMtZmNjNGUwYjhjNWJhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|nate bargatze good for nathan": {
+  "id": "tt50828463",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGQ0MzM4NTMtOTNkOC00NDkwLTkyMTUtZmI5ZTlkYmVmYmFjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|you can see everything": {
+  "id": "tt45368240",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDkwNGRiNjYtZTQ4MC00MWFhLWI3MjYtNzk1MDY2ZTNiY2Q4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|girls like girls": {
+  "id": "tt32432654",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzAwYmRjMzMtNTdkNC00Yzk5LTllZDYtMWRiZGZkNWY2NzMwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|practical magic 2": {
+  "id": "tt32588798",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWUyY2UyNjgtYTg5MC00MDZmLWE1MzEtZmU2YWE2ZTMzMjUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the social reckoning": {
+  "id": "tt37510326",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjdlZTgzZDUtMmVjYy00M2EyLWFlNGMtNjVhYjM2ODNmZjEzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|wicker": {
+  "id": "tt29611136",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODliMTEzMTUtOGFlZS00NTgxLThjODEtMzcwNTE1OWE5Mzg2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|breeder": {
+  "id": "tt9213874",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmQ0ZjVlNmQtYTAwNS00MTg5LTljNDktZWMwZGY4MzZhZTE0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|stop that train": {
+  "id": "tt38128726",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmM2MmJkMDEtYjc2Yi00NGMzLWExYjAtMjQzN2RiNzkwZWE3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|jaws vs mega croc": {
+  "id": "tt38113512",
+  "poster": ""
+ },
+ "movie|the pursuit f1 academy": {
+  "id": "tt49813814",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmJkMTVhZmQtMGIwOS00ZTViLTlhODgtNTM3NTk3NDcwZGNiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the one with hope": {
+  "id": "tt0430431",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTQ0NzQwNjcxOV5BMl5BanBnXkFtZTcwNDM0MDczMQ@@._V1_.jpg"
  }
 }

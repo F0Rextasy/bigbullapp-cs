@@ -1,4 +1,4 @@
-// @provider {"id": "dizipal", "name": "DiziPal", "types": ["movie", "tv"], "domain": "dizipal1597.com", "formats": ["m3u8"], "sample": "tt0133093:movie:1:1", "description": "DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.", "verified": true, "version":"1.0.18"}
+// @provider {"id": "dizipal", "name": "DiziPal", "types": ["movie", "tv"], "domain": "dizipal1598.com", "formats": ["m3u8"], "sample": "tt0133093:movie:1:1", "description": "DiziPal - Turkce dizi ve film arsivi; PBKDF2+SHA512 player token -> dplayer82 HLS master.", "verified": true, "version": "1.0.19"}
 /**
  * dizipal — Nuvio provider (bb-nuvio).
  * Flow: Cinemeta title -> POST /api/mj {action:searchContent} -> content/episode page
@@ -11,7 +11,7 @@
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0";
-var BASE = "https://dizipal1597.com";
+var BASE = "https://dizipal1598.com";
 var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 var K512HEX =
   "428a2f98d728ae22 7137449123ef65cd b5c0fbcfec4d3b2f e9b5dba58189dbbc 3956c25bf348b538 59f111f1b605d019 923f82a4af194f9b ab1c5ed5da6d8118 " +
