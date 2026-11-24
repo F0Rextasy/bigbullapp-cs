@@ -7,7 +7,7 @@ Cloudstream için `.cs3` eklentileri, Nuvio için plugin deposu + iki katalog ad
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-115-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-114-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 [![Kreosus](https://img.shields.io/badge/Kreosus-Destek%20Ol-E91E63)](https://kreosus.com/f0rextasy)
@@ -171,7 +171,7 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi87.life | Dizi/Film | ✓ | ✓ | — | — | film | ✓ |
 | `Dizimanya` | dizimanya.com | Dizi | ✓ | — | — | — | — | ✓ |
-| `DiziModu` | dizimodu.com | Dizi | ✓ | — | — | ✓ | — | ✓ |
+| `DiziModu` **pasif** | dizimodu.com | Dizi | ✓ | — | — | ✓ | — | ✓ |
 | `Dizirella` | dizirella.one | Dizi | ✓ | — | — | — | — | ✓ |
 | `DiziSol` | dizisol.com | Film/Dizi | — | — | — | — | — | ✓ |
 | `Dizist` | dizist.live | Dizi | ✓ | — | — | ✓ | — | ✓ |
