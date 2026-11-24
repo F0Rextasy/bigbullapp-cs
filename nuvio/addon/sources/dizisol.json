@@ -1,0 +1,10 @@
+{
+  "id": "dizisol",
+  "name": "DiziSol",
+  "type": "movie",
+  "url": "https://dizisol.com/api/library/browse?type=movie&page=1",
+  "item": "\\{\"id\":\\d+,\"media_type\":\"movie\"[\\s\\S]*?\"genre_ids\":\\[[^\\]]*\\]\\}",
+  "title": "\"title\":\"([^\"]+)\"",
+  "poster": "\"poster_path\":\"([^\"]+)\"",
+  "year": "\"release_date\":\"(\\d{4})"
+}

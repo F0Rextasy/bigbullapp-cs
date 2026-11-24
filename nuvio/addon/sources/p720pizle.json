@@ -1,0 +1,11 @@
+{
+  "id": "p720pizle",
+  "name": "P720pizle",
+  "type": "movie",
+  "url": "https://720pizle.my/son-eklenen",
+  "item": "<article class=\"card\">[\\s\\S]*?</article>",
+  "title": "title=\"([^\"]+)\"",
+  "poster": "<img[^>]+src=\"([^\"]+)\"",
+  "year": "/yil/(\\d{4})",
+  "href": "href=\"([^\"]+)\""
+}

@@ -5,6 +5,21 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.8.0] - 2026-11-24
+
+### Eklendi
+- **78 yeni Nuvio sağlayıcısı (toplam 111 aktif Nuvio eklentisi)**: Cloudstream deposundaki tüm on-demand sağlayıcılar (yerli/yabancı dizi, film, Asya dizisi, anime, çizgi film ve ulusal TV kanalları) Nuvio plugin deposuna eklendi ve canlı doğrulandı.
+- **BigBull TR Katalog**: 76 yeni katalog kaynağı eklendi (toplam 107 kaynak); toplu satırlar ve sağlayıcı satırları güncellendi.
+
+### Düzeltildi
+- **IzleFilm v6**: `Seçkiler` ana sayfa satırı seçicisi (`article.editor-slide` -> `.editor-slide`) güncellendi.
+
+### Değişti
+- **README**: Ayrı Nuvio listesi kaldırıldı; ana sağlayıcı tablosuna **Cloudstream** ve **Nuvio** destek sütunları eklendi.
+
+### Kaldırıldı
+- **CizgiVeDizi (Nuvio)**: İstemci kaynaklı 2 MB/60 sn kısıtı nedeniyle pasif tutulan Nuvio dosyası kaldırıldı (Cloudstream tarafında aktif olarak devam eder).
+
 ## [1.7.44] - 2026-11-24
 
 ### Düzeltildi

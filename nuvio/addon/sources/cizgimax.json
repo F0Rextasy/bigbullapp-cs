@@ -1,0 +1,9 @@
+{
+  "id": "cizgimax",
+  "name": "Cizgimax",
+  "type": "series",
+  "url": "https://cizgimax.online/diziler/anime/",
+  "item": "<div class=\"film-item\"[\\s\\S]*?class=\"film-name\"[\\s\\S]*?</a>",
+  "title": "class=\"film-name\"[^>]*>([^<]+)<",
+  "poster": "<img[^>]+src=\"([^\"]+)\""
+}

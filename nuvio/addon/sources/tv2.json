@@ -1,0 +1,10 @@
+{
+  "id": "tv2",
+  "name": "TV2",
+  "type": "series",
+  "url": "https://www.tv2.com.tr/diziler",
+  "item": "<div[^>]*class=\"[^\"]*program-card[^\"]*\"[^>]*>[\\s\\S]*?<div class=\"detail-title\">[^<]+</div>",
+  "title": "<div class=\"detail-title\">([^<]+)</div>",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

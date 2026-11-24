@@ -1,18 +1,19 @@
-// @provider {"id":"cizgivedizi", "name":"CizgiVeDizi", "types":["tv", "movie"], "domain":"cizgivedizi.net", "formats":["mp4"], "description":"CizgiVeDizi Turkce cizgi dizi, anime, dizi ve film arsivi (sunucu 2 MB Range + 60 sn cerez siniri nedeniyle Nuvio'da varsayilan kapali).", "sample":"tt7678620:tv:1:1", "version":"1.0.5", "verified":false}
+// @provider {"id":"dizibol","name":"DiziBol","types":["tv","movie"],"domain":"dizibol.org","formats":["m3u8"],"sample":"tt11198330:tv:1:1","description":"DiziBol altyazili yabanci dizi ve film arsivi (Pilavyer HLS + altyazi).","verified":true,"version":"1.0.0"}
 /**
- * cizgivedizi — Nuvio provider (bb-nuvio).
- * Flow: Cinemeta title -> homepage poolData -> show/film -> video_sources/data-embeds -> yetki.php -> MP4.
+ * dizibol — Nuvio provider (bb-nuvio).
+ * Flow: Cinemeta/alt title -> /?s= -> /series/<slug> (/season/S/episode/E) or /movie/<slug>/izle
+ *       -> [data-pv] + core.js -> s.php -> window.__PLAYER__ -> HLS master + subtitles.
  */
 
 var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
-var BASE = "https://cizgivedizi.net";
-var VIDEO_ORIGIN = "https://video.cizgivedizi.net";
+var BASE = "https://dizibol.org";
+var ID = "DiziBol";
 
 function text(url, opts) {
   var o = opts || {};
   var headers = { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" };
   if (o.referer) headers.Referer = o.referer;
-  if (o.headers) for (var k in o.headers) headers[k] = o.headers[k];
+  if (o.headers) for (var k in o.headers) if (o.headers[k]) headers[k] = o.headers[k];
   return fetch(url, { method: o.method || "GET", headers: headers, body: o.body })
     .then(function (r) {
       if (!r.ok) throw new Error("HTTP " + r.status + " " + url);
@@ -27,41 +28,13 @@ function first(pattern, body) {
 
 function abs(base, href) {
   if (!href) return null;
+  href = String(href).replace(/&amp;/g, "&").trim();
   if (/^https?:/i.test(href)) return href;
   var origin = /^(https?:\/\/[^/]+)/.exec(base);
-  if (href.charAt(0) === "/") return origin ? origin[1] + href : href;
+  if (!origin) return href;
+  if (href.indexOf("//") === 0) return "https:" + href;
+  if (href.charAt(0) === "/") return origin[1] + href;
   return base.replace(/[^/]*$/, "") + href;
-}
-
-function b64decode(input) {
-  var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-  var str = String(input || "").replace(/[^A-Za-z0-9+/=]/g, "");
-  var bytes = [];
-  var i = 0;
-  while (i < str.length) {
-    var e1 = chars.indexOf(str.charAt(i++));
-    var e2 = chars.indexOf(str.charAt(i++));
-    var e3 = chars.indexOf(str.charAt(i++));
-    var e4 = chars.indexOf(str.charAt(i++));
-    if (e1 < 0 || e2 < 0) break;
-    var c1 = (e1 << 2) | (e2 >> 4);
-    var c2 = ((e2 & 15) << 4) | (e3 >> 2);
-    var c3 = ((e3 & 3) << 6) | e4;
-    bytes.push(c1);
-    if (e3 !== 64 && e3 >= 0) bytes.push(c2);
-    if (e4 !== 64 && e4 >= 0) bytes.push(c3);
-  }
-  var pct = "";
-  for (var j = 0; j < bytes.length; j++) {
-    pct += "%" + ("0" + bytes[j].toString(16)).slice(-2);
-  }
-  try {
-    return decodeURIComponent(pct);
-  } catch (e) {
-    var out = "";
-    for (var k = 0; k < bytes.length; k++) out += String.fromCharCode(bytes[k]);
-    return out;
-  }
 }
 
 function titleOf(id, mediaType) {
@@ -77,218 +50,116 @@ function titleOf(id, mediaType) {
     });
 }
 
-function normTitle(v) {
-  return String(v || "").replace(/[\u0131\u0130I]/g, "i").replace(/[\u015f\u015e]/g, "s").replace(/[\u011f\u011e]/g, "g")
-    .replace(/[\u00e7\u00c7]/g, "c").replace(/[\u00f6\u00d6]/g, "o").replace(/[\u00fc\u00dc]/g, "u")
-    .toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-}
-
-function matchKind(have, want) {
-  var h = normTitle(have);
-  var w = normTitle(want);
-  if (!w || !h) return 0;
-  if (h === w) return 2;
-  if (h.indexOf(w + " ") === 0) return 1;
-  return 0;
-}
-
-function extractEn(id, hayEn) {
-  var trimmed = String(hayEn || "").trim();
-  var lid = String(id || "").trim().toLowerCase();
-  if (!trimmed || !lid) return "";
-  var lower = trimmed.toLowerCase();
-  var prefix = lid + " ";
-  if (lower.indexOf(prefix) !== 0) return "";
-  var rest = trimmed.slice(prefix.length);
-  var restLower = lower.slice(prefix.length);
-  var asciiId = lid.replace(/\u0131/g, "i").replace(/\u011f/g, "g").replace(/\u00fc/g, "u")
-    .replace(/\u015f/g, "s").replace(/\u00f6/g, "o").replace(/\u00e7/g, "c");
-  var idx1 = restLower.indexOf(" " + lid + " ");
-  var idx2 = asciiId !== lid ? restLower.indexOf(" " + asciiId + " ") : -1;
-  var cut = -1;
-  if (idx1 > 0 && idx2 > 0) cut = Math.min(idx1, idx2);
-  else cut = idx1 > 0 ? idx1 : idx2;
-  return cut > 0 ? rest.slice(0, cut).trim() : "";
-}
-
-function findInPool(html, wantTitle, isMovie) {
-  var marker = '<script type="application/json" id="poolData">';
-  var pos = html.indexOf(marker);
-  if (pos < 0) return null;
-  pos += marker.length;
-  var endPool = html.indexOf("</script>", pos);
-  if (endPool < 0) endPool = html.length;
-
-  var best = null;
-  var bestRank = 0;
-  while (pos < endPool) {
-    var start = html.indexOf('{"dataset":{', pos);
-    if (start < 0 || start >= endPool) break;
-    var htmlIdx = html.indexOf(',"html":', start);
-    if (htmlIdx < 0 || htmlIdx >= endPool) break;
-    try {
-      var obj = JSON.parse(html.slice(start, htmlIdx) + "}");
-      var ds = obj.dataset || {};
-      var itemIsFilm = ds.type === "film";
-      if (ds.type !== "other" && itemIsFilm === isMovie) {
-        var r1 = matchKind(obj.label || ds.name, wantTitle);
-        var r2 = matchKind(extractEn(ds.id, ds.hayEn), wantTitle);
-        var rank = r1 > r2 ? r1 : r2;
-        if (rank > bestRank) {
-          bestRank = rank;
-          best = { id: ds.id, href: obj.href, type: ds.type };
-          if (rank === 2) break;
-        }
-      }
-    } catch (e) {}
-    pos = htmlIdx + 8;
+function sameTitle(have, want) {
+  function f(v) {
+    return String(v || "").replace(/[\u0131\u0130I]/g, "i").replace(/[\u015f\u015e]/g, "s").replace(/[\u011f\u011e]/g, "g")
+      .replace(/[\u00e7\u00c7]/g, "c").replace(/[\u00f6\u00d6]/g, "o").replace(/[\u00fc\u00dc]/g, "u")
+      .toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
   }
-  return best;
+  have = f(have);
+  want = f(want);
+  return !!want && (have === want || have.indexOf(want + " ") === 0);
 }
 
-function extractBridgeKey(embed) {
-  var raw = first(/[?&]k=([^&#]+)/, String(embed || ""));
-  if (!raw) return null;
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
+}
+
+function qualityOf(master, fallback) {
+  var re = /RESOLUTION=\d+x(\d+)/g;
+  var best = 0;
+  var m;
+  while ((m = re.exec(String(master || ""))) !== null) {
+    var h = parseInt(m[1], 10);
+    if (h > best) best = h;
+  }
+  return best ? best + "p" : fallback;
+}
+
+function playerConfig(frame) {
+  var m = /window\.__PLAYER__\s*=\s*(\{[\s\S]*?\});/.exec(String(frame || ""));
+  if (!m) return null;
   try {
-    return decodeURIComponent(raw);
+    return JSON.parse(m[1]);
   } catch (e) {
-    return raw;
-  }
-}
-
-function resolveKey(k, label) {
-  if (!k) return Promise.resolve(null);
-  var url = VIDEO_ORIGIN + "/yetki.php?k=" + encodeURIComponent(k);
-  return fetch(url, {
-    method: "GET",
-    headers: {
-      "User-Agent": UA,
-      "Referer": BASE + "/",
-      "Origin": BASE,
-      "Accept": "*/*",
-      "Sec-Fetch-Dest": "empty",
-      "Sec-Fetch-Mode": "cors",
-      "Sec-Fetch-Site": "same-site"
-    }
-  }).then(function (r) {
-    if (!r || !r.ok || !r.headers) return null;
-    var opaque = typeof r.headers.get === "function"
-      ? (r.headers.get("x-cvd-video-url") || r.headers.get("X-CVD-Video-URL") || "")
-      : "";
-    if (!/^\/[A-Za-z0-9_-]{43}$/.test(String(opaque).trim())) return null;
-    var rawCookies = "";
-    if (typeof r.headers.getSetCookie === "function") rawCookies = r.headers.getSetCookie().join("; ");
-    else if (typeof r.headers.getAll === "function") rawCookies = r.headers.getAll("set-cookie").join("; ");
-    else if (typeof r.headers.get === "function") rawCookies = r.headers.get("set-cookie") || "";
-    if (!rawCookies && r.headers.map && r.headers.map["set-cookie"]) {
-      rawCookies = [].concat(r.headers.map["set-cookie"]).join("; ");
-    }
-    var sid = first(/cvd_video_sid=([^;,\s]+)/, rawCookies);
-    var auth = first(/cvd_video_auth=([^;,\s]+)/, rawCookies);
-    if (!sid || !auth) return null;
-    return {
-      name: "CizgiVeDizi",
-      title: "CizgiVeDizi - " + label + " [MP4]",
-      url: VIDEO_ORIGIN + String(opaque).trim(),
-      quality: "auto",
-      headers: {
-        "User-Agent": UA,
-        "Referer": BASE + "/",
-        "Cookie": "cvd_video_sid=" + sid + "; cvd_video_auth=" + auth,
-        "Sec-Fetch-Dest": "video",
-        "Sec-Fetch-Mode": "no-cors",
-        "Sec-Fetch-Site": "same-site"
-      },
-      subtitles: []
-    };
-  }).catch(function () {
     return null;
-  });
+  }
 }
 
 function getStreams(tmdbId, mediaType, season, episode) {
-  var wantSeason = parseInt(season, 10) || 1;
-  var wantEp = parseInt(episode, 10) || 1;
   var isMovie = mediaType === "movie";
+  var want = parseInt(season, 10) || 1;
+  var wantEp = parseInt(episode, 10) || 1;
   var wantTitle = "";
-  var foundItem = null;
+  var contentUrl = null;
+  var playUrl = null;
 
   return titleOf(tmdbId, mediaType)
     .then(function (title) {
       wantTitle = title;
       if (!title) return null;
-      return text(BASE + "/");
+      return text(BASE + "/?s=" + encodeURIComponent(title));
     })
-    .then(function (homeHtml) {
-      if (!homeHtml) return null;
-      foundItem = findInPool(homeHtml, wantTitle, isMovie);
-      if (!foundItem || !foundItem.href) return null;
-      return text(abs(BASE, foundItem.href), { referer: BASE + "/" });
+    .then(function (html) {
+      if (!html) return null;
+      var pathPat = isMovie ? /\/movie\/[^/?#]+$/ : /\/series\/[^/?#]+$/;
+      var re = /<a\b[^>]*href="([^"]*\/(?:series|movie)\/[^"?#]+)"[^>]*>([\s\S]{0,4000}?)<\/a>/gi;
+      var m, best = null, bestScore = 0;
+      while ((m = re.exec(html)) !== null) {
+        var u = abs(BASE, m[1]).replace(/\/+$/, "");
+        if (!pathPat.test(u)) continue;
+        var t = first(/<h[23][^>]*>([^<]+)<\/h[23]>/i, m[2]) || first(/alt="([^"]+)"/i, m[2]) || "";
+        t = t.trim();
+        if (!t) continue;
+        if (sameTitle(t, wantTitle)) {
+          var score = t.toLowerCase() === wantTitle.toLowerCase() ? 100 : 80;
+          if (score > bestScore) { bestScore = score; best = u; }
+          if (bestScore === 100) break;
+        }
+      }
+      if (!best) return null;
+      contentUrl = best;
+      playUrl = isMovie
+        ? contentUrl + "/izle"
+        : contentUrl + "/season/" + want + "/episode/" + wantEp;
+      return text(playUrl, { referer: contentUrl }).catch(function () { return null; });
     })
-    .then(function (detailHtml) {
-      if (!detailHtml || !foundItem) return [];
-      if (isMovie) {
-        var b64 = first(/data-embeds=["']([^"']+)["']/, detailHtml);
-        if (!b64) return [];
-        var embeds = [];
-        try {
-          embeds = JSON.parse(b64decode(b64));
-        } catch (e) {
-          return [];
-        }
-        var tasks = [];
-        for (var i = 0; i < embeds.length; i++) {
-          var key = extractBridgeKey(embeds[i]);
-          if (key) tasks.push(resolveKey(key, embeds.length > 1 ? "Kaynak " + (i + 1) : "Merkez"));
-        }
-        return Promise.all(tasks);
-      }
-
-      var blocks = detailHtml.split('<section class="cvd-season-block">');
-      var overallKey = null;
-      for (var bi = 1; bi < blocks.length; bi++) {
-        var blk = blocks[bi];
-        var sHead = first(/class="cvd-sh-text"[^>]*>([^<]+)</, blk) || "";
-        var sNum = parseInt(first(/^(\d+)/, sHead.trim()), 10);
-        if (sNum !== wantSeason) continue;
-        var entries = blk.split('<tbody class="cvd-episode-entry"');
-        for (var ei = 1; ei < entries.length; ei++) {
-          var ent = entries[ei];
-          var sn = parseInt(first(/class="cvd-no-cell cvd-season-no"[^>]*>\s*([^<\s]+)\s*</, ent), 10);
-          if (sn === wantEp) {
-            overallKey = first(/class="cvd-no-cell cvd-overall-no"[^>]*>\s*([^<]+?)\s*</, ent);
-            break;
-          }
-        }
-        if (overallKey) break;
-      }
-      if (!overallKey) return [];
-      return text(BASE + "/diziyeni/video_sources.php?s=" + encodeURIComponent(foundItem.id) + "&b=" + encodeURIComponent(overallKey.trim()), {
-        referer: abs(BASE, foundItem.href)
-      }).then(function (vsBody) {
-        var vs = {};
-        try { vs = JSON.parse(vsBody); } catch (e) { return []; }
-        var rows = vs.sources || [];
-        var jobs = [];
-        for (var ri = 0; ri < rows.length; ri++) {
-          var row = rows[ri] || {};
-          var k = extractBridgeKey(row.embed);
-          if (!k) continue;
-          var lbl = String(row.ad || row.kanal || "Merkez").trim();
-          jobs.push(resolveKey(k, lbl));
-        }
-        return Promise.all(jobs);
-      });
-    })
-    .then(function (list) {
-      var out = [];
-      for (var i = 0; i < (list || []).length; i++) {
-        if (list[i] && list[i].url) out.push(list[i]);
-      }
-      return out;
+    .then(function (page) {
+      if (!page) return [];
+      var pv = first(/data-pv=["']([^"']+)["']/, page);
+      if (!pv) return [];
+      var core = first(/<script[^>]+src=["']([^"']*core\.js[^"']*)["']/, page);
+      var playerBase = core ? abs(playUrl, core).replace(/\/assets\/js\/core\.js.*$/, "") : "https://pilavyerplay.top";
+      return text(playerBase + "/assets/js/s.php?s=" + encodeURIComponent(pv), { referer: playUrl })
+        .then(function (frame) {
+          var cfg = playerConfig(frame);
+          if (!cfg || !cfg.stream || !/^https?:/i.test(cfg.stream)) return [];
+          var refUrl = playerBase + "/";
+          return text(cfg.stream, { referer: refUrl }).catch(function () { return ""; }).then(function (master) {
+            var q = qualityOf(master, "auto");
+            var subs = [];
+            var list = cfg.subs || [];
+            for (var i = 0; i < list.length && subs.length < 4; i++) {
+              var sub = list[i] || {};
+              if (!sub.src || !/^https?:/i.test(sub.src)) continue;
+              var lang = String(sub.lang || "tr").toLowerCase();
+              subs.push({ url: sub.src, language: lang, name: String(sub.label || lang.toUpperCase()) + " [" + ID + "]" });
+            }
+            return [{
+              name: ID,
+              title: ID + " - " + q + " [HLS]",
+              url: hlsNoDownload(cfg.stream),
+              quality: q,
+              headers: { Referer: BASE + "/", "User-Agent": UA },
+              subtitles: subs
+            }];
+          });
+        });
     })
     .catch(function (e) {
-      console.log("[bb-nuvio][cizgivedizi] " + (e && e.message));
+      console.log("[bb-nuvio][dizibol] " + (e && e.message));
       return [];
     });
 }

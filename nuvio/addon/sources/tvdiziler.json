@@ -1,0 +1,12 @@
+{
+  "id": "tvdiziler",
+  "name": "TvDiziler",
+  "type": "series",
+  "url": "https://tvdiziler.tv/dizi-izle",
+  "item": "<div class=\"poster-md relative\">[\\s\\S]*?</a>\\s*</div>",
+  "title": "<h3[^>]*>([^<]+)</h3>",
+  "strip": "\\s+izle$",
+  "poster": "data-src=\"([^\"]+)\"",
+  "href": "href=\"(dizi/[^\"]+)\"",
+  "limit": 40
+}

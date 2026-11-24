@@ -1,0 +1,11 @@
+{
+  "id": "hdfilmdiziizle",
+  "name": "HDFilmDiziIzle",
+  "type": "series",
+  "url": "https://www.hdfilmdiziizle.com/dizi/",
+  "item": "<a href=\"https://www\\.hdfilmdiziizle\\.com/dizi/[^\"]+\" class=\"phd-card[^\"]*\">[\\s\\S]*?</a>",
+  "title": "<h2 class=\"phd-card-title\">([^<]+)</h2>",
+  "poster": "data-src=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

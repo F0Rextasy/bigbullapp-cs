@@ -1,0 +1,12 @@
+{
+  "id": "sinemacx",
+  "name": "SinemaCX",
+  "type": "movie",
+  "url": "https://sinemacc.com/page/1/",
+  "item": "class=\"film_kutusu[^\"]*\">\\s*<a[^>]+href=\"https://sinemacc\\.com/film/[^\"]+\"[\\s\\S]*?</a>",
+  "title": "<span class=\"text\">([^<]+)</span>",
+  "poster": "data-src=\"(https?://[^\"]+)\"",
+  "year": "<span class=\"years\">(\\d{4})",
+  "group": ["latest-movie"],
+  "limit": 40
+}

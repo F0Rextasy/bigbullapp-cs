@@ -1,0 +1,11 @@
+{
+  "id": "sinemakolik",
+  "name": "Sinemakolik",
+  "type": "movie",
+  "url": "https://sinemakolik.com/film-arsivi/",
+  "item": "<a href=\"https://sinemakolik\\.com/film/[^\"]+\"[\\s\\S]*?</a>",
+  "title": "(?:title=\"([^\"]+)\"|<h[23][^>]*>([^<]+)</h[23]>)",
+  "poster": "data-src=\"(https?://[^\"]+)\"",
+  "group": ["latest-movie"],
+  "limit": 40
+}

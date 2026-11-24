@@ -1,0 +1,12 @@
+{
+  "id": "dizilab",
+  "name": "Dizilab",
+  "type": "series",
+  "url": "https://dizilab.cc/diziler/",
+  "item": "<article class=\"card\">[\\s\\S]*?</article>",
+  "title": "<h3>([^<]+)</h3>",
+  "poster": "src=\"([^\"]+)\"",
+  "year": "<span>(\\d{4})</span>",
+  "href": "href=\"([^\"]+/dizi/[^\"]+)\"",
+  "limit": 40
+}

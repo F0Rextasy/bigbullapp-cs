@@ -1,0 +1,12 @@
+{
+  "id": "diziabi",
+  "name": "DiziAbi",
+  "type": "series",
+  "url": "https://www.diziabi.net/yabanci-dizi-izle/",
+  "item": "<a href=\"https://www\\.diziabi\\.net/dizi/[^\"]+\" class=\"group block\">[\\s\\S]*?</a>",
+  "title": "<h3[^>]*>([^<]+)</h3>",
+  "poster": "src=\"(https?://[^\"]+)\"",
+  "year": "<p[^>]*>\\s*(\\d{4})\\s*</p>",
+  "href": "href=\"([^\"]+/dizi/[^\"]+)\"",
+  "limit": 40
+}

@@ -1,0 +1,11 @@
+{
+  "id": "asyafanatikleri",
+  "name": "AsyaFanatikleri",
+  "type": "series",
+  "url": "https://asyafanatikleri.vip/dizi-arsivi",
+  "item": "<a[^>]*class=\"poster-card\"[^>]*>[\\s\\S]*?</a>",
+  "title": "<img[^>]+alt=\"([^\"]+)\"",
+  "poster": "<img[^>]+src=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

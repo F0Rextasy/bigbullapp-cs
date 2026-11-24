@@ -1,0 +1,12 @@
+{
+  "id": "dizibol",
+  "name": "DiziBol",
+  "type": "series",
+  "url": "https://dizibol.org/diziler",
+  "item": "<a href=\"https://dizibol\\.org/series/[^\"]+\" class=\"group block\">[\\s\\S]*?</a>",
+  "title": "<h3[^>]*>([^<]+)</h3>",
+  "poster": "src=\"(https?://[^\"]+)\"",
+  "year": "<p[^>]*>\\s*(\\d{4})\\s*</p>",
+  "href": "href=\"([^\"]+/series/[^\"]+)\"",
+  "limit": 40
+}

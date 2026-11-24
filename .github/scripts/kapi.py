@@ -120,6 +120,22 @@ def readme_satirlari(metin=None):
     return aktif, pasif
 
 
+def readme_nuvio_satirlari(metin=None):
+    """Ana tablodaki Nuvio sütununda ✅ işaretli sağlayıcı kimliklerini (küçük harf) döner."""
+    if metin is None:
+        metin = open("README.md", encoding="utf-8").read()
+    nuvio = set()
+    for satir in metin.splitlines():
+        m = re.match(r"^\|\s*`([^`]+)`[^|]*\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|", satir)
+        if not m:
+            continue
+        ad = m.group(1).strip()
+        nv_col = m.group(5).strip()
+        if nv_col == "✅":
+            nuvio.add(ad.lower())
+    return nuvio
+
+
 def _strip_kotlin_comments(code):
     code = re.sub(r"/\*[\s\S]*?\*/", "", code)
     return re.sub(r"//[^\n]*", "", code)
@@ -193,8 +209,11 @@ def _yeni_readme_metni(eski, m):
     yeni = eski
     aktif_n, pasif_l = len(m["aktif"]), m["pasif"]
     pasif_set = set(pasif_l)
+    nuvio_map = {str(s["id"]).lower(): bool(s.get("enabled", True)) for s in m["scrapers"]}
+    has_live_addon = os.path.exists("nuvio/addon-live/manifest.json")
 
     yeni = re.sub(r"(mod%C3%BCl-)\d+(-blue)", rf"\g<1>{aktif_n}\2", yeni)
+    yeni = re.sub(r"(Nuvio-)\d+(%20plugin)", rf"\g<1>{m['nuvio_active']}\2", yeni)
     if m["live_rows"] and m["live_channels"]:
         yeni = re.sub(
             r"\| Canlı TV \([^|]+\) \|",
@@ -207,49 +226,60 @@ def _yeni_readme_metni(eski, m):
             yeni,
         )
     yeni = re.sub(
+        r"\| \*\*Plugin Deposu\*\* \| Nuvio için \d+ ([^|]+) \|",
+        rf"| **Plugin Deposu** | Nuvio için {m['nuvio_active']} \1 |",
+        yeni,
+    )
+    yeni = re.sub(
         r"\| Film/dizi arama ve oynatma \| Plugin deposu \([^|]+\) \|",
         f"| Film/dizi arama ve oynatma | Plugin deposu ({m['nuvio_total']} sağlayıcı; {m['nuvio_active']} aktif) |",
         yeni,
     )
-    yeni = re.sub(r"^## Nuvio sağlayıcıları \(\d+\)", f"## Nuvio sağlayıcıları ({m['nuvio_total']})", yeni, flags=re.M)
-
-    # HDFilmCehennemi2 nuvio listesinde yoksa Film & Dizi satirina ekle
-    if any(s.get("id") == "hdfilmcehennemi2" for s in m["scrapers"]) and "`HDFilmCehennemi2`" not in yeni.split("## Nuvio sağlayıcıları")[-1].split("## Geliştiriciler")[0]:
-        yeni = re.sub(
-            r"(- \*\*Film & Dizi \(4\):\*\* `PuhuTV`, `RecTV`, `Sinemetrik`, `TurkceDizi`)",
-            "- **Film & Dizi (5):** `PuhuTV`, `RecTV`, `Sinemetrik`, `TurkceDizi`, `HDFilmCehennemi2`",
-            yeni,
-        )
 
     # Kapsam notunu guncelle
-    pasif_str = ", ".join(f"`{p}`" for p in pasif_l)
+    pasif_satir = (
+        f"`status = 0` ile pasif **{len(pasif_l)} modül**: {', '.join(f'`{p}`' for p in pasif_l)}.\n"
+        if pasif_l
+        else ""
+    )
     yeni = re.sub(
-        r"\*\*Kapsam notu:\*\* Depoda aktif \*\*\d+ modül\*\*[^\n]*(?:\n[^\n*][^\n]*)*",
-        f"**Kapsam notu:** Depoda aktif **{aktif_n} modül** var ve tamamı doğrulanmış durumda (`status = 1`).\n"
-        f"`status = 0` ile pasif **{len(pasif_l)} modül**: {pasif_str}.\n"
-        "İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle kaldırıldı; düzeldiğinde tekrar eklenir.\n"
-        "Bu tablo ve özellik matrisi her sağlayıcı değişikliğinde güncellenir.",
+        r"\*\*Kapsam notu:\*\*[^\n]*\n(?:(?!\n|##)[^\n]*\n)*?Bu tablo[^\n]*",
+        f"**Kapsam notu:** Depoda doğrulanmış **{aktif_n} modül** (`status = 1`) var.\n"
+        f"{pasif_satir}"
+        f"Nuvio tarafında **{m['nuvio_active']} eklenti** ve **BigBull Canlı TV** addon'u aktiftir (`CizgiVeDizi` istemci kısıtı nedeniyle yalnızca Cloudstream'dedir).\n"
+        "`AsyaBox`, `AsyaLog`, `AsyaLuna`, `DiziModu`, `WFilmIzle`, İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle kaldırıldı; düzeldiğinde tekrar eklenir.\n"
+        "Bu tablo, platform desteği ve özellik matrisi her sağlayıcı değişikliğinde güncellenir.",
         yeni,
     )
 
-    # 6 ozellik sutununu ve pasif etiketini guncelle
+    # Cloudstream + Nuvio + 6 ozellik sutununu guncelle
     out_lines = []
     for satir in yeni.splitlines():
-        row_m = re.match(r"^\|\s*`([^`]+)`([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|", satir)
+        row_m = re.match(
+            r"^\|\s*`([^`]+)`([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|\s*([^|]*)\|",
+            satir,
+        )
         if row_m:
             ad = row_m.group(1).strip()
             kaynak = row_m.group(3).strip()
             tur = row_m.group(4).strip()
-            eski_sure = row_m.group(9).strip()
+            eski_sure = row_m.group(11).strip()
             durum = " **pasif**" if ad in pasif_set else ""
+            cs_col = "—" if ad in pasif_set else "✅"
+            if ad == "CanliTV" and has_live_addon:
+                nv_col = "✅ Addon"
+            elif nuvio_map.get(ad.lower()):
+                nv_col = "✅"
+            else:
+                nv_col = "—"
             if ad not in pasif_set and os.path.isdir(f"providers/{ad}/src/main/kotlin"):
                 flags = modul_ozellikleri(ad)
                 sem = ["✓" if v else "—" for v in flags]
                 if flags[4] and eski_sure == "film":
                     sem[4] = "film"
             else:
-                sem = [row_m.group(i).strip() for i in range(5, 11)]
-            satir = f"| `{ad}`{durum} | {kaynak} | {tur} | {' | '.join(sem)} |"
+                sem = [row_m.group(i).strip() for i in range(7, 13)]
+            satir = f"| `{ad}`{durum} | {kaynak} | {tur} | {cs_col} | {nv_col} | {' | '.join(sem)} |"
         out_lines.append(satir)
     return "\n".join(out_lines) + ("\n" if eski.endswith("\n") else "")
 
@@ -331,6 +361,15 @@ def envanter():
             hata.append(f"nuvio/manifest.json eksik sağlayıcılar: {', '.join(eksik_m)}")
         if fazla_m:
             hata.append(f"nuvio/manifest.json diskte olmayan sağlayıcılar: {', '.join(fazla_m)}")
+        nuvio_aktif_m = {str(p.get("id") or "").lower() for p in manifest.get("scrapers", []) if isinstance(p, dict) and p.get("id") and p.get("enabled", True)}
+        r_nuvio = readme_nuvio_satirlari()
+        if r_nuvio != nuvio_aktif_m:
+            eksik_rn = sorted(nuvio_aktif_m - r_nuvio)
+            fazla_rn = sorted(r_nuvio - nuvio_aktif_m)
+            if eksik_rn:
+                hata.append(f"README.md Nuvio sütununda eksik aktifler: {', '.join(eksik_rn)}")
+            if fazla_rn:
+                hata.append(f"README.md Nuvio sütununda fazla aktifler: {', '.join(fazla_rn)}")
     except Exception as exc:
         hata.append(f"nuvio/manifest.json okunamadı: {exc}")
 
@@ -353,6 +392,12 @@ def test():
     assert "Dizibox" in aktif_moduller()
     ra, rp = readme_satirlari("| `Dizibox` | x |\n| `AsyaLuna` **pasif** | y |\n")
     assert ra == {"Dizibox"} and rp == {"AsyaLuna"}
+    rn = readme_nuvio_satirlari(
+        "| `Dizibox` | dizibox.live | Dizi | ✅ | ✅ | ✓ | — | ✓ | — | — | ✓ |\n"
+        "| `CanliTV` | x | Canlı TV | ✅ | ✅ Addon | ✓ | — | — | — | — | — |\n"
+        "| `CizgiVeDizi` | y | Dizi | ✅ | — | ✓ | ✓ | — | — | — | — |\n"
+    )
+    assert rn == {"dizibox"}
     common_syms = bump_common.extract_public_symbols("providers/Common/src/main/kotlin/com/bigbull/common/Common.kt")
     assert "pichiveGateNonce" in common_syms and "parseHlsVariants" in common_syms
     assert gradle_tv_types('tvTypes = listOf("TvSeries", "Movie")') == ["Movie", "TvSeries"]

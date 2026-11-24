@@ -1,0 +1,11 @@
+{
+  "id": "onlinedizi",
+  "name": "OnlineDizi",
+  "type": "series",
+  "url": "https://onlinedizi.sbs/",
+  "item": "<li>\\s*<div class=\"videoitem\">[\\s\\S]*?href=\"https://onlinedizi\\.sbs/diziler/[^\"]+\"[\\s\\S]*?</li>",
+  "title": "title=\"([^\"]+)\"",
+  "strip": "\\s+İzle$",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

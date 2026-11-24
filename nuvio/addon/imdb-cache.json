@@ -3374,5 +3374,3929 @@
  "series|2024|the listeners": {
   "id": "tt31490551",
   "poster": "https://m.media-amazon.com/images/M/MV5BN2IxNjYxMTMtYzZmYy00M2JmLThjZGQtYTU5NjMyYTg4ZGQ1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|jujutsu kaisen": {
+  "id": "tt12343534",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjBlNTExMDAtMWZjZi00MDc5LWFkMjgtZDU0ZWQ5ODk3YWY5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|bleach": {
+  "id": "tt0434665",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWQwOWY5NTUtMjAyZi00YjQzLTkwODgtNmQwZjU1MGIzZDhjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|one piece": {
+  "id": "tt0388629",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTNjNGU4NTUtYmVjMy00YjRiLTkxMWUtNzZkMDNiYjZhNmViXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the god of war dominates": {
+  "id": "tt20769560",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTliZDYwNWQtMTcxMC00NTg3LWJlNjUtYmYzNjVhYzkwNTIzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|naruto shippuden": {
+  "id": "tt0988824",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTk3MDA1ZjAtNTRhYS00YzNiLTgwOGEtYWRmYTQ3NjA0NTAwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|death note": {
+  "id": "tt0877057",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTgyZDhmMTEtZDFhNi00MTc4LTg3NjUtYWJlNGE5Mzk2NzMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|case closed": {
+  "id": "tt0105968",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDUzOTU2YTYtZjgzNS00NzZjLThmMjgtY2NiMTk5OTc3MDBmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|perfect world": {
+  "id": "tt14986786",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzA4NDNhYWMtYTdiYS00MmZjLTlmNTQtMTUwZDE2YzZjMTlhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|soul land 2 the peerless tang clan": {
+  "id": "tt28022382",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDYyNDBlNDYtZjcyNy00NTViLTliNzItNDhkM2ZkOWExOTM4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|against the sky supreme": {
+  "id": "tt15816496",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjU0MmE2MWItYjU5Yy00MzE3LWFhYjEtMjRmZWMzZTIxMjVjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|throne of seal": {
+  "id": "tt19902148",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjlmNjcwMzQtYWJhNS00NmUxLWJhNzUtOGYwYjBjZTJlZmUzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hack sign": {
+  "id": "tt0361140",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjhjZWM2M2ItMjlkMi00MDkwLWE4M2MtMWZiODA4ZmU3ZWE0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|boruto naruto next generations": {
+  "id": "tt6342474",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDgzYzNhOGUtMWI1Mi00YjJkLWI2NGItOWFlNDE4ZjE0NGExXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hack roots": {
+  "id": "tt0807655",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWVjNGI3NTgtZGNlOS00OTQwLWJlNDktYzU1YmYwNjViYjYxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|tomorrow s joe": {
+  "id": "tt1690397",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjhiZTU3YWYtNDZjMy00MDVmLTgzOWItMDBmNGVkYmVmOWUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|tales of herding gods": {
+  "id": "tt33501934",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTY0OGIxZGYtZjEyZi00MzFkLTliNzItYzY4YWE1MWQyNGZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hack quantum": {
+  "id": "tt34821547",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjNiOTYwNDYtMmFlZi00NTNjLWJmMGUtMTQxY2VkNTBlMzMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|naruto": {
+  "id": "tt0409591",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTNjOWI0ZTAtOGY1OS00ZGU0LWEyOWYtMjhkYjdlYmVjMDk2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|one punch man": {
+  "id": "tt4508902",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzMwOGQ5MWItNzE3My00ZDYyLTk4NzAtZWIyYWI0NTZhYzY0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|wanmei shijie": {
+  "id": "tt32809128",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYWFiMTU0MDYtOWI0ZC00MTA4LWEzNTktOWY3YzliYTU1ODE4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|fanren xiu xian chuan": {
+  "id": "tt28512830",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjE0NjNkMDgtYWMyMC00OTFlLTk4ZWEtYzZkM2RiNmExYTBiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hunter x hunter 2011": {
+  "id": "tt2098220",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzYxOTlkYzctNGY2MC00MjNjLWIxOWMtY2QwYjcxZWIwMmEwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|spirit sword sovereign 4th season": {
+  "id": "tt19868534",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDZiZTc2ZTktZmM3Zi00ODU2LTkyOTQtZjI5N2QwYmM4YzM4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|chainsaw man movie reze hen": {
+  "id": "tt33092197",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTA5MGZjOTUtYTZjZi00NWNjLThkNjctNDFjMDFjNGVlNmUzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|supreme alchemy": {
+  "id": "tt31591491",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDg5YTNmNjAtYTg1Ny00YzljLTlhMmMtNDExZDA0OTcyNTg5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|one step towards freedom": {
+  "id": "tt20450276",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjY3NTM5MDQtZWQ0Zi00NDZjLWI4NTgtMzEyY2I2MDIyMDIxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|happy anding 2026 kore": {
+  "id": "tt50901064",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDZiZjVjY2ItNGNkZS00YmNhLWExZmYtZjRmNDU1YTc2ZTI0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hunter x hunter 2011 movie": {
+  "id": "tt2098220",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzYxOTlkYzctNGY2MC00MjNjLWIxOWMtY2QwYjcxZWIwMmEwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|the substitute 2026 kore": {
+  "id": "tt50164002",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmE1ZjRiOWUtNzg2Zi00YWM2LWFiMDItOTVjZmRkNGNkMTAzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|summer specials": {
+  "id": "tt0307811",
+  "poster": ""
+ },
+ "series|2026|your love so invincible 2026 japon": {
+  "id": "tt43711907",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjQ3NDY0ODQtMGY0Mi00NzIzLWI1NDktYWY2YzE1ZTNhOTMzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|the blue road 2026 kore": {
+  "id": "tt38336631",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTE2YjI4MDctMTY3YS00ODYyLTgwOTMtZmVkZDljZGQ3OWI1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|river of no return 2026 cin": {
+  "id": "tt38734657",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGYyM2Q5ZjctZTE2Zi00YjdmLTg0ZjktMzZmODRhOWVmODJlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|taming the husband 2026 cin": {
+  "id": "tt41400834",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTFjZjExM2MtMjNlYy00OThiLWI4NWEtZGYyMDhiYmJjYzI2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|cang yuan tu": {
+  "id": "tt27497430",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/469/1173799.jpg"
+ },
+ "series|oshi no ko 2nd season": {
+  "id": "tt21030032",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzM3ZGJkN2YtOTQ5Ny00MzEyLTlkMzQtZDVhYzM3YWFlM2QwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|07 ghost": {
+  "id": "tt1424033",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTMxZDMwYTMtYTlkYS00NWQ5LWJmZTAtYzBlNzM0NWFjOTIxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2014|akame ga kill": {
+  "id": "tt3742982",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTQyZGQzMmUtNjcwMy00ZThiLWFmMzMtOTA0NTI3OWE0MTU0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kimetsu no yaiba": {
+  "id": "tt9335498",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWU1OGEwNmQtNGM3MS00YTYyLThmYmMtN2FjYzQzNzNmNTE0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|boku no hero academia": {
+  "id": "tt5626028",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2QzODA5OTQtYWJlNi00ZjIzLThhNTItMDMwODhlYzYzMjA2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2017|classroom of the elite": {
+  "id": "tt7263328",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDg3MGVhNWUtYTQ2NS00ZDdiLTg5MTMtZmM5MjUzN2IxN2I4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2006|death note": {
+  "id": "tt0877057",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTgyZDhmMTEtZDFhNi00MTc4LTg3NjUtYWJlNGE5Mzk2NzMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|11 eyes": {
+  "id": "tt1515976",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmZmNjgwYTktZGUyZS00ZDU0LTlkYTktYWIxNGI2NWE4ZDM1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2011|fate zero": {
+  "id": "tt2051178",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTEyMjRiYjUtMzJkOC00NDBmLWI4Y2YtNDk5ZTQyMDNhMjgxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2002|naruto": {
+  "id": "tt0409591",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTNjOWI0ZTAtOGY1OS00ZGU0LWEyOWYtMjhkYjdlYmVjMDk2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|16bit sensation another layer": {
+  "id": "tt29143189",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjA4ZjU5YmQtMjIxZC00YWU4LTlmZmQtZmM1ZWYwMzdmNjE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|18if": {
+  "id": "tt8020634",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDUxZGJjNmUtMzI3MC00YzU2LWEzMDMtNTliOWRmMTk4YmU3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2011|steins gate": {
+  "id": "tt1910272",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjI1YjZiMDUtZTI3MC00YTA5LWIzMmMtZmQ0NTZiYWM4NTYwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|180 byou de kimi no mimi wo shiawase ni dekiru ka": {
+  "id": "tt15128000",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGZlNWVlODQtMTQzMi00YWJiLWE0NjgtN2VhNjI5YTE5NDlmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|dear ex 2018": {
+  "id": "tt36820861",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2ZlYWY0M2QtODhiYy00NjFhLWI0MGMtODQyOTg1N2M3Nzg1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|once upon a crime 2023": {
+  "id": "tt1843230",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDgwNTcwYmMtNjVmNi00NDdkLTllY2MtYmQ4MTM3ZThjZTllXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|oshi no ko 3rd season": {
+  "id": "tt21030032",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzM3ZGJkN2YtOTQ5Ny00MzEyLTlkMzQtZDVhYzM3YWFlM2QwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|shinjiteita nakama tachi ni dungeon okuchi de korosarekaketa ga gift mugen gacha de level 9999 no nakama tachi wo te ni irete moto party member to sekai ni fukushuu zamaa shimasu": {
+  "id": "tt36593026",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTkyZGZiN2YtYmRlNy00NzU5LWFkYzYtYjFkMTQzMmI5MDA0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a bona fide killer": {
+  "id": "tt43616775",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTU0NTY5NWEtYTg3Ny00N2NhLTkzYjQtMGZjZTU3MTA2M2JjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|dive into you": {
+  "id": "tt43088191",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWQyYTQ5MTItNjBkMC00NWIxLWJiNzAtYWRlMTlhMWYxNTcxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|make me tingle": {
+  "id": "tt47661704",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTc0MDcwNDYtYWQwOS00YmY0LWIxOTMtZWMxYjQwOTJmNDQ1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|shadow punisher": {
+  "id": "tt37357034",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzQzMjQ5ODItMTVhNC00OTMzLWIxNGItMTQ3OTQ2Njc0ZmM3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|009 re cyborg": {
+  "id": "tt0372650",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjMwMDA0ZWItMTMyZC00ZjE0LWFlODYtMDkwNDQ2ODdlYmM0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|i may love you 2023 cin": {
+  "id": "tt30137313",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmZmMzM3OTAtOGIzMy00NTFmLWE0MDMtYmYxMzcxNGFjMzJlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|bake me please 2023 tayland": {
+  "id": "tt30689360",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzYyY2QwODItOGZmYy00OGZmLWE0Y2QtMTA5NWIzYjBkZDFkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|beyond the star 2023 tayland": {
+  "id": "tt33183893",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDY1MjEzMWEtNTJmYi00NTI0LTllNzUtYTMzNGViZGZkYWY5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|tell me that you love me 2023 kore": {
+  "id": "tt29569080",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2RjMzUwMjUtOGJiMS00YWNmLWI0ZWMtM2UxYmYxMWI1M2FlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|spice and spell 2023 tayland": {
+  "id": "tt30182943",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTQ1MWM5MTAtZGFhZS00MTI2LTk3MzItY2RlNDZiYjk0YjdjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|perfect crown": {
+  "id": "tt39333617",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzFmZjkxNjMtOTA1Yi00ZjhlLTk4OGUtMWNjNDE5OTk3NzQzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|spooky in love": {
+  "id": "tt40247521",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTU5MDE2ZjgtMWIxZi00NjFhLWJjNDMtZmRjMDUwNzAwNTgyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|reborn rookie": {
+  "id": "tt42206645",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWQxNGNmMDItMGJjNi00ZjcyLThmNmMtMjBkOWZkMzYwZjQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|dream to you": {
+  "id": "tt39028251",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGU5ZTE1ZDEtMWI5Ny00ZDgxLTkyN2UtZjg0OWIzNmMwOWE0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2025|surely tomorrow": {
+  "id": "tt38221085",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDNkNDI1NzktYjJmOC00ZDUzLWE5NWEtNGI4NWRlMGQ3MzJiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|azure spring": {
+  "id": "tt42338645",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzI1ZjlkYWYtODQ2Ny00MmJiLWIwNWMtZDkwNDQ4ZGQ5ZjMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2025|love take two": {
+  "id": "tt37536325",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjBlYmYwMTUtZjhhNy00MmMyLTk3NDItMmViMTRjZDE3YjU0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2025|our unwritten seoul": {
+  "id": "tt36724865",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDQ2ODhjNGEtOWE3Ny00NDgzLTg0NWYtZDM0YTk3ODk0ZGRjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2025|dear hongrang": {
+  "id": "tt27554348",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjBlZDVlZDgtMGZlNC00OGU4LWFjZjYtZDhhY2Y1YjczMTRmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2023|our blooming youth": {
+  "id": "tt25900250",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjM2MDFhOTktNTg4Yi00ZjFmLWEyMDQtYmUzZjRlOGQ3MjNmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a journey to love 2023 cin": {
+  "id": "tt28182389",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjNkZTI4NWEtM2Q0NS00YTNlLTkyODQtZDUwYjg0NjNlNDg3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2023|heavenly idol": {
+  "id": "tt26228426",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjk3ODM2M2EtYTM0NC00MTQ0LTgxYzktZjhiNjQ2NmQ3ZjA2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|trap": {
+  "id": "tt36470958",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzYzYzEzMTYtNTgwOC00ODg3LWE0NzItMWVjMTVmMmY4OTdlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2023|kokdu season of deity": {
+  "id": "tt25699926",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmNjMWExOWMtN2I1Yy00MDhkLWEzYTUtMTlkZThlNjk2MDFlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|love in disguise": {
+  "id": "tt45246384",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWY3ZjliZTUtYjc5Yy00YTEzLWE2NDQtMWUxNGU1NDgyMjRiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|the silent storm": {
+  "id": "tt34959964",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWM2ODJmMWEtOTE2MC00YjljLWJlYTQtMTEyMDkyNjIwYjY1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2021|mouse": {
+  "id": "tt13634792",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjJkNzA2N2EtMjAxOC00MTY3LTkxZTEtODQxMTI4YjAyZTk2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|river of no return": {
+  "id": "tt38734657",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGYyM2Q5ZjctZTE2Zi00YjdmLTg0ZjktMzZmODRhOWVmODJlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2020|true beauty": {
+  "id": "tt13274038",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTNjYTQ0ODEtY2E0OS00MGU2LWJjNzUtOGJlYjViMDdlMWQ1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|the remarried empress": {
+  "id": "tt39325975",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODNlYWMxNjktZWQ2MS00ZmYyLWJjNTEtZjJiNDhjNmUyMTQzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|miracles of the er": {
+  "id": "tt39494650",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzk2ZTNkMWYtMDAwNC00OGRiLWFhYTgtYTkzYjcxYTY2ZTk2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2022|the fabulous": {
+  "id": "tt22373732",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjYzMmJlMzktYWFmZC00OGJhLTg1MjQtNDhjZDhkZGNmYjk1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2023|my demon": {
+  "id": "tt29569035",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2MwMDllYTItZWNkYS00MjgyLTg1NGMtYzk0ZWZkNTZkMGQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2022|weak hero class 1": {
+  "id": "tt20234568",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjJmZjU5MDYtMTljMy00YmRkLWJlMWMtZDQ2NjYxNzIyYzYzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2022|all of us are dead": {
+  "id": "tt14169960",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDY4ZmZhNzMtNjdkMC00NTE3LWFjYzQtOGE4OTllOGY1NTk5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|100 days of deception": {
+  "id": "tt39201866",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzk0OWQxMjQtZWI1Ny00MjdjLTgzYTUtYmM4N2EyNGE0ZDg1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2019|extraordinary you": {
+  "id": "tt10826102",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2UwMGFkMTctMzZkNy00ZGZmLThjMTctM2U4MWNhN2UxNDc3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2021|squid game": {
+  "id": "tt10919420",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDcxYjg1OTctYmUxZi00ZjhjLWIwNTMtNmI2M2Y4OTU1YWU2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2022|love in contract": {
+  "id": "tt22189294",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2RkOGMzMWQtODU2Ni00Y2E0LThjMDEtZGFjN2YzNTFkMjVjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kim milyoner olmak ister": {
+  "id": "tt7663950",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjliYjU0NDAtMzM0MC00OWIyLTkxMmUtN2Q2NWYwYWE4MWI5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hamal": {
+  "id": "tt45373818",
+  "poster": ""
+ },
+ "series|var misin yok musun": {
+  "id": "tt1160479",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2Q4N2VmMzAtMzkzMC00MmZkLWI2ZDQtNWU1ZWEyZmM5N2I3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|when i meet the moon": {
+  "id": "tt36983579",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDE1MTIxYmYtZWI5Yy00YjM4LTg2OGYtYjI1OWI5NDdiZDZmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2022|island": {
+  "id": "tt14166656",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmI4OWNhNWQtYmUxOC00NjJkLTg4YTQtMmU1Yzg5YzI4ZjYzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|sunshine through the rain": {
+  "id": "tt36982492",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGM5NWE3YzEtNzBjYy00M2RmLTk4N2EtNjI1MTJlNjVkMTU5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|the perfect lie": {
+  "id": "tt37439410",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzZkNzcyODktZTE5Yy00ZGEzLWE1OWUtNzVkZjI5NzNlODgzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2018|my strange hero": {
+  "id": "tt9165992",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGE2NGJhMGUtM2Y0NS00NzIyLTkyZDYtYTQzNjkyMzYwNGNhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2024|the silent service": {
+  "id": "tt5846790",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDVmZjAyOTAtM2FmOS00ZDQ1LWFmYjctNzgzZTI1NzBjNTcxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2025|my lovely journey": {
+  "id": "tt37578145",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/580/1452335.jpg"
+ },
+ "series|2022|if you wish upon me": {
+  "id": "tt20600078",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDM4OGE0Y2ItNzQ4OS00YzUxLTgxYjEtZDQyOTQ1MTU5MDQzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2015|splash splash love": {
+  "id": "tt5290026",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzA2OTM1YzQtZmE5NS00NDZmLTg0YjQtNDRiMTViNDk0NGYzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2020|was it love": {
+  "id": "tt12525622",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTdhYTczNDctNjNmNi00Zjc0LTk1M2YtZWJiMTg2ZmY0MWFjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|lost10": {
+  "id": "tt49276654",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjc3ZDhkMmMtYWIwOS00M2Y0LTg2OGQtMmZmOTBkNGIxNjBkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|oh my guard": {
+  "id": "tt49931644",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDE2MGZmNzUtNjliYi00OTAyLWFmNzktMzM5MGQ1ZWZmM2Y5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2021|not found love": {
+  "id": "tt18377404",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2Q0MmQ2NzktYWQyZS00OWU5LThmNDMtNWQzMjI4MmViOWZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2024|the judge from hell 2024": {
+  "id": "tt33255143",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWRkNmJiZTgtYTRkOC00YmY5LWI0MGItNzBlZDFjMmVlNGNjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2024|my military valentine 2024": {
+  "id": "tt32579775",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2I1MTM1OTctYjc1Ny00OWI2LWIxNDQtZDE2NjFiYWQ2Y2QyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2015|exo next door 2015": {
+  "id": "tt4775200",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYWJiNDg4ZWQtYzliYi00MjJjLWJhYTMtNWM0MTk4Mjc5MjI2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|balaraw blood island": {
+  "id": "tt39751377",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDBlOWE4ODItNzJlZC00ZDI1LWFmOTMtY2FiYzcyZjEyYWI5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2024|wonderful world 2024": {
+  "id": "tt31187621",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2FlNzE3MmQtYTFhOS00YzJmLWFmZTYtZTJiZWE1Njk3MTllXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2016|goblin": {
+  "id": "tt5994364",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWIyNTA3MmItNzY5ZS00NmZhLThjMWYtZjIxYzllZWU5YWIzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2022|semantic error": {
+  "id": "tt17080956",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzhmMDMwNmQtZWFjYy00YWQ3LTk3ZTUtNmVmMDA0ZmU0MWY5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2025|dear enemy": {
+  "id": "tt31173513",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODBlMWM0NDEtNmEwNS00ZDk2LWI1MTctNzM4NjU3OWY2ZTg5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|gift": {
+  "id": "tt45854934",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmQ2NDVlYjEtODQ5ZS00YmZkLTg1NmUtOGZmYjQ3ZjU0NGYyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2022|reacher": {
+  "id": "tt9288030",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmE0YTA3MTItMjhiNC00MGQ3LTllZDktNGNiZWY1OWFmNmM1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2011|shameless": {
+  "id": "tt1586680",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWUwZjJmYjctYTY3MC00ZTVlLWI1ZGEtNWQzMTFlMTcwMTY2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2012|arrow": {
+  "id": "tt2193021",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjRlNjNlY2YtYzQxNS00ZTUzLTkwMTQtMjM0YjZlOWQwZmFkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2014|the flash": {
+  "id": "tt3107288",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjU0ZjZhNDQtMDhkYi00OWQyLWE3NGYtNzBlY2VmM2I4ZDg5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|lanterns": {
+  "id": "tt26545992",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTRiYzEwNWYtNTIxMi00OWZiLWI3ZjItYzI3ODYzNzc4MGIzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2023|lioness": {
+  "id": "tt13111078",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWE4OTM3NjgtM2ZlYS00NzllLTlkYmQtMjhiM2FjYzNiOTBiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2012|chicago fire": {
+  "id": "tt2261391",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODhhMWM4YzUtNTdmOS00OWM1LTlmYjUtNDg2YzA1YWVhN2ZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2013|the blacklist": {
+  "id": "tt2741602",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDk4MGU4NTItNDMyMC00NjQ0LWFlMWUtYzJlMTM1M2M2ZTU3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|atv ana haber": {
+  "id": "tt9184876",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGM1MDRmNDItMTViYi00ZjIxLWEyN2QtNWJjMzI4YzhjN2E3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|karadayi": {
+  "id": "tt2339608",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjMwMzY1NDgxN15BMl5BanBnXkFtZTcwMzA0OTgxOQ@@._V1_.jpg"
+ },
+ "series|esra erol da": {
+  "id": "tt8176072",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTliZmE3YmUtMjU5ZS00ZmRjLTkyN2QtN2Q0ODJmOGE0YjVhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sen anlat karadeniz": {
+  "id": "tt7932896",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmQxOTQ2ZDgtYzg0Yi00YzU5LTgyNjUtNmIwYTc3ZDJkODA3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ippon again": {
+  "id": "tt25816576",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGRmZDBjZDEtY2E5MC00MTM0LThiYjYtMDA0YzgzNjNmZjk5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|tis time for torture princess": {
+  "id": "tt30643998",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTU3NWY5YmMtOWVmMi00NTVmLWE4OTUtNWUzZjJkOTNkMzAyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|i m looking for a zombie": {
+  "id": "tt43691424",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODE4NTdiNjQtYjFjMC00NDUwLTkxZDYtOTI1Zjk3NGViNzZiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|deji meets girl": {
+  "id": "tt15202838",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzIwZGU1ZjMtMmE1NC00ZmM4LTgxNDctYTQ3NjVjZTkxMTg1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2022|grown ups": {
+  "id": "tt17500936",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjQzNTBiYWEtMjI0Zi00ZmZlLTlhYTYtMDRkMTQ2Mjc0ZGI1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2019|he won t kill she won t die": {
+  "id": "tt39578915",
+  "poster": ""
+ },
+ "series|eskiya dunyaya hukumdar olmaz": {
+  "id": "tt5175270",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/40/101001.jpg"
+ },
+ "series|2021|my heroic husband": {
+  "id": "tt12477660",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmUwYmYyMmEtMTZlNS00N2NlLWI0MjQtMTFhYWE3ZTk4MDUyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2022|furies": {
+  "id": "tt11384300",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGQ5NTg0ZDMtMDdjNC00ZTM3LThkNjQtYjZkMjFlNzcyYTJlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2021|karsi komsu": {
+  "id": "tt11080676",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGU0NGEyNmEtZmFlMC00NWY4LWFjMDYtNzhlM2I5MjcwODRmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|mavi iz": {
+  "id": "tt35340614",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjk1OWIzNzMtY2VlYy00NTc0LTk2NjQtMWFiOTdmYTNhYjg1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|intikam operasyonu": {
+  "id": "tt6001846",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2U3OGI5OTQtOWZmZS00YTJmLTkwMzYtZjVmNGNkN2QzMzI4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|fisilti adam": {
+  "id": "tt11561116",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTI1YmY3YTQtYTg2Zi00OTZkLTk3NzQtNjcxNzIzMjk2ODZlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|kaptan sabertooth kayip hazinenin pesinde": {
+  "id": "tt33540970",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGMyY2EwMDQtZTQyNC00N2YyLWI4OTAtNjg1OWM0YmM0ZGMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|100 sleeping princes and the kingdom of dreams": {
+  "id": "tt13293368",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmYzMzNmNjMtZjQ2NS00ZGJmLWI3MjAtZTVhNjEzNWNiY2MxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kurulus osman": {
+  "id": "tt11093718",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmJhY2RmYzQtYWFkNi00YzU4LTk2NzEtMzM1OGRhM2MyYzc1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kirgin cicekler": {
+  "id": "tt5224200",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjdjNGI3NjYtM2JhYi00N2E1LTg2MGEtYjI2MmQ3YzZhNDg4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kara para ask": {
+  "id": "tt3565486",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjY0YmMzZWItNTg4NS00ODgyLTk5NzUtYWFmNDkzNDY3NWYxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kertenkele": {
+  "id": "tt5843858",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDEwODFhOGEtOGU4My00NDUxLTk3ZDQtZTgzYTM4MGE3ZTM3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|tis time for torture princess season 2": {
+  "id": "tt30643998",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTU3NWY5YmMtOWVmMi00NTVmLWE4OTUtNWUzZjJkOTNkMzAyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|22 7": {
+  "id": "tt12024510",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2MwNDJkMjUtNDQ2ZS00MTc4LWFmODItOTY1MzUwMzJkYWE4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|avrupa yakasi": {
+  "id": "tt0421291",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGI0MWViMTktYjIwMy00YjRlLTk0ZmQtYzNlNzZlZTNmYjQwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2200 nen neko no kuni nippon": {
+  "id": "tt39277933",
+  "poster": ""
+ },
+ "series|7seeds": {
+  "id": "tt9348718",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjdlOWNlNDktOGM5NS00MjYzLTg4Y2ItZjlkZTdhODY1Mzg2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|7th time loop the villainess enjoys a carefree life married to her worst enemy": {
+  "id": "tt28685624",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTMyZGJhNDktMzdkNi00MGY1LWFiMDgtMjhhMzQ2MTQyYWIxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|cesur kirpi": {
+  "id": "tt6930962",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTAxYjQxNTYtYjQ4OC00M2JjLWFiNDEtMGEwNTJjMTNlZWNjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|gizemli kadin": {
+  "id": "tt37275992",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGNiZGJjMTktZTEzYi00NzY3LWE2NDQtOWJmOGM0ODBhM2E0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|8 man after": {
+  "id": "tt0124971",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDQxZDcxYTMtNjhkMi00YTE4LTk0NmEtZmQyMWE2MjI2ZGJlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|91 days": {
+  "id": "tt5839706",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDhmZmRmYTctMTBhOS00ZWMwLTk5ZTMtNTMxYWFkZGVjMGViXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|asil prenses": {
+  "id": "tt10996076",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzBhMTA3OGItYzNkMS00ODljLWEyYTMtODVhYWRiZGIxZGY1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|son rituel": {
+  "id": "tt32194932",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjc5ZTA4ZjUtOTY2ZS00MjA0LTkxNGUtNDc1ZDVlOTU2ZGQ2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|my dress up darling": {
+  "id": "tt15765670",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmJhYjgzYTQtMzMxYi00NTkyLWI2MWItNTgxNjk1NzU0YmQzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|my happy marriage": {
+  "id": "tt19869172",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzFkNDE4MmYtYTI4ZS00NTM1LWJlMTEtNWE2ZGNiZTE5YTVjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the misfit of demon king academy": {
+  "id": "tt12432936",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2MzZGVhZTgtNWZlYi00NGI5LTk5N2QtYTkzMzNkMWM0NjBhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|u s palmese": {
+  "id": "tt27614382",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjhlZWY1N2QtMDVmNi00YTNlLWEwMWUtZGU3MzkxOTc0OWM1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|my unique skill makes me op even at level 1": {
+  "id": "tt27990591",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTM4YWQzNGEtZTBiZi00NGIyLWE2NDQtMjcyYzM4NWFmN2Q2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2022|fantasy world": {
+  "id": "tt43649973",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzhiZTE2MDctMGQ5NC00Y2JmLTliM2YtNTI0OThmZGMyNzlkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|son gun dogumu": {
+  "id": "tt37654096",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjZlMjQxN2MtYjAyOS00YjliLWE3NjEtNDZjOWI5NTAxNTY2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|drakula": {
+  "id": "tt31434030",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2IyZTVkOWMtOTJjZS00NzM2LWFmYTgtM2NlMjhkY2E5NWZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a bridge to the starry skies": {
+  "id": "tt1908018",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmExNzQ1ZWItYTM2MS00ODFiLTg4ODYtYTBjNGEwNWMyMDE4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|ruzgar konus benimle": {
+  "id": "tt30327772",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWRiYmZjNTAtOTNmYi00YjI3LTk0MGItNTMzNGJmNjZjMjZiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a centaur s life": {
+  "id": "tt7858928",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjFkNjljYWUtNTcwZC00NzA5LTg4YzMtMTZlNDk2YzY1MjM2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|eller yukari": {
+  "id": "tt28026215",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGEwODczODYtMGE3MC00MDE2LWJmZWYtNjY4MzlkYzgwNjgwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a certain dark item": {
+  "id": "tt41295083",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODFmYTU4OWYtZjkwNS00MGY5LThlNjUtMDlmMTMyZWViMWZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2016|lucifer": {
+  "id": "tt4052886",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzMwNzI3MWItZTIzYi00YjkxLThhOWQtYmUwYjg4NWM0ZWI1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a certain magical index": {
+  "id": "tt1308089",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjdiNTFjYmEtODAwOS00MWVkLTg5NjgtMTA4OWZkNjk1ZGQ0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the epoch of miyu": {
+  "id": "tt35288198",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGQxYmJhYTYtOGI2Yy00MjI4LWIwNmUtMWI0MDk2MjlhY2RlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|perfect crown": {
+  "id": "tt39333617",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzFmZjkxNjMtOTA1Yi00ZjhlLTk4OGUtMWNjNDE5OTk3NzQzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|soda master": {
+  "id": "tt39371929",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTEzODc0OWUtNWNhNS00NjE2LWE5M2ItNWU1ZjE2YWQzZGI2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|generation to generation": {
+  "id": "tt34117673",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDI0ZjYzYmYtYTQ0NS00YzVlLWJiOWItYzNiYjc4MDg3OGUzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|100 meters": {
+  "id": "tt45718985",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjk3YTRkMzItYzQ5MS00NDZlLThiNmEtOWY2NzU0YWMwOWY3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a certain scientific accelerator": {
+  "id": "tt10256918",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWNiN2E4YjctOWNlYi00OTZkLWE3ODUtY2Y0ZTExMTI3YTlhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|kutup kopekleri 3": {
+  "id": "tt30146664",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjk0NDliNmUtZGY5My00ZDM2LTk5ZjctZjJjMTg5OTk2NWNmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the wonderfools": {
+  "id": "tt34440854",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTVmZjJlYjQtZDI1My00MzIxLTliYTMtMGE5MjY0YjE5YzUzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2022|remember": {
+  "id": "tt15344082",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/342/857290.jpg"
+ },
+ "series|boyfriend on demand": {
+  "id": "tt35848827",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzI5NzAxMWEtNWMxMy00YmUzLTljYTUtZWUyYWFmNGRjMTY1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hell university": {
+  "id": "tt39501026",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYWYxZWFlMTYtZWIzYy00MWJhLWIzMmItM2M3NzIyZTI0NGJlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a certain scientific railgun": {
+  "id": "tt1515996",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWVhNzA2YmYtMjdkYi00MzZjLWJhOTgtYTY0NGRmMmU3MjE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|siren s kiss": {
+  "id": "tt39303992",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDUwMjNmMmYtOWNjMS00MDAxLTg5MTktMmJhODM4NDU0MjMwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the practical guide to love": {
+  "id": "tt38629393",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGYxYzMwN2EtNjc3Ni00MmQzLThjMWEtZTY1MTM1MTkxZjlkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|love phobia": {
+  "id": "tt40002799",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2VlZWJjNGMtNDg3OS00NDQ0LWIyM2QtNjVmODQ2ZDRkOGExXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|unveil jadewind": {
+  "id": "tt34452086",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjdlOGU0MzAtM2JmYy00YjZjLWI5NTQtNmNlZDY4NDQ2NmExXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|our universe": {
+  "id": "tt39453765",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGZkZmQwZGQtMTI2YS00ZjMwLTk5ZTItZDgzZjRmNjZkZjgyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|in your radiant season": {
+  "id": "tt39369595",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTJiMzVjZjEtZmNjYS00YzVhLWFjNWQtNTE4MGUyZDM3ZWVhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|can this love be translated": {
+  "id": "tt30293074",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDBhMDhmMzMtYTRjZS00NTZhLTllNjAtNDkxODVkYTdmY2Q2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|cashero": {
+  "id": "tt30413044",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmJkZjZlOTEtMDZjMC00YWNhLTg2MjItMzMzNzE0MTEyODM2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|made in korea": {
+  "id": "tt33298903",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTI2MTEwOTctN2E1YS00ZWU0LThmNDAtNTFhODA1NmYxMWQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|spring fever": {
+  "id": "tt39137681",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTM2NDM2ZGItYjYxNC00ZWU4LWI1NTYtNDAyZDU2ZTIwNjVjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the judge returns": {
+  "id": "tt38973594",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjM2OGIxMzYtMmRmOC00NjJlLWFjNWEtZjAzZDlmMzQ3NGQxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|undercover miss hong": {
+  "id": "tt39219419",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTkwZTc1MzQtNWJhNi00MTE2LTgxOWYtYTBkNGQ4MjFhYzQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|odyssey": {
+  "id": "tt33764258",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTcyNmJlZmQtNDUwYy00NDBjLTg1NGQtYTY2Y2UxMWM3NmI1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|supergirl": {
+  "id": "tt8814476",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWQzNjU2MDMtNzgxOS00YzcxLWE2YjYtMzY3OTAyOGJlMmQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|backrooms": {
+  "id": "tt26657236",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzQyYjZmMjctMzIyZi00MDI0LWJhNGQtMzQ3MTFlNDgwNGM5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|11eyes": {
+  "id": "tt1515976",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/63/157689.jpg"
+ },
+ "movie|rage of stars": {
+  "id": "tt29512655",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGE5MDc5NzAtNWRjYS00M2ZjLTg2YWItMDc1MDAzNjUzNjIyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2021|aristocrats": {
+  "id": "tt17423864",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTNkNjg0YjUtMDQwYS00MzJmLThlYzAtOTkxOTJmYmMwNjNjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|golge akademisi": {
+  "id": "tt36064406",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzAzYmQ0MTktMzBmNi00OWMyLTkzNzEtYjRkYTM2NGMzYWIxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sounds of winter": {
+  "id": "tt39328073",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDE0NjYzMjQtNWU0Ny00ODkwLTkyMDAtYjQ1OTJiOGMyNTYyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|glass no yubiwa to bansoko": {
+  "id": "tt45831796",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjRlOGJhNTMtYmMyMy00NTczLWE5NWUtZTc1Y2I1ZDBmOGFhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|my hero academia you re next": {
+  "id": "tt5626028",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2QzODA5OTQtYWJlNi00ZjIzLThhNTItMDMwODhlYzYzMjA2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|my hero academia heroes rising": {
+  "id": "tt5626028",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2QzODA5OTQtYWJlNi00ZjIzLThhNTItMDMwODhlYzYzMjA2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a certain scientific railgun specials": {
+  "id": "tt1515996",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWVhNzA2YmYtMjdkYi00MzZjLWJhOTgtYTY0NGRmMmU3MjE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2 43 seiin high school boys volleyball team": {
+  "id": "tt13286958",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDg5MTMxOTgtMDA5Yi00NGQyLTg0NWQtMTAyNGI4MDg2ZWJjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|my hero academia two heroes": {
+  "id": "tt5626028",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2QzODA5OTQtYWJlNi00ZjIzLThhNTItMDMwODhlYzYzMjA2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a certain magical index iii": {
+  "id": "tt1308089",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjdiNTFjYmEtODAwOS00MWVkLTg5NjgtMTA4OWZkNjk1ZGQ0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|grand theft auto vi an extended look": {
+  "id": "tt43749709",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjg0ZTExNWMtNjk4Ni00YmYxLWE0YjItODdjY2ZjNWM5ZDkzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a certain scientific railgun t": {
+  "id": "tt1515996",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWVhNzA2YmYtMjdkYi00MzZjLWJhOTgtYTY0NGRmMmU3MjE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|batman knightfall part 1 knightfall": {
+  "id": "tt32333324",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTY3YWIzYzYtZDk2My00YjFjLWE2OTctNWVhOTU3ZDQ2YTU0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|too young to love": {
+  "id": "tt37147217",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTE5MzdmZTctODEyNy00MDY5LWEyOGMtMGYwODhiNWM1MDVmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|soulm8te": {
+  "id": "tt32654916",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmY1NmU5NjMtYjU2YS00YjI5LWExNDItNDA3N2M5YWJiZDhiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|star wars mandalorian ve grogu": {
+  "id": "tt30825738",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjRkYzAzNjktZmRhMy00NjRiLWE0OTMtYmRmMTE5NDkzY2NlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|mortal kombat ii": {
+  "id": "tt17490712",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjFiMmI1NDctNzcyMi00ZGU5LWI4MzAtZjRjYzU2MWFmY2ViXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2024|gassal": {
+  "id": "tt35082593",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDU3MjIzZDctOTVlMC00MjI1LTllZjAtZmY3ZmY2NjcyZmQ2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2025|jasmine": {
+  "id": "tt36584543",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTdlM2ZkNTctODM5NC00YjVkLWJkZDctOGMwNmRlNTI0OGFlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2020|sokagin cocuklari": {
+  "id": "tt10476258",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzU5N2YxMTEtYzlhZS00NTcwLThiMzEtN2VjMjU1YTVkNzM5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sexy beasts": {
+  "id": "tt14916746",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzdmNDFiOGItMTlhZi00ZjVjLWE2ZWMtMDVjMjE3ZmY3NDk0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the journalist": {
+  "id": "tt15101670",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjRkOTU5NjQtMGE4Yy00YTE2LWFmMDQtYmYxZjQ3MzVhMzkyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|selling the oc": {
+  "id": "tt15907000",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTk3OTgxODYtOWJiOS00MTZkLThmNTUtMzUwNTA4MDBhZDQwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|beyond paradise": {
+  "id": "tt21161156",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzQzNmM5NTItZTlkYy00MDA0LThkZTgtNDczZDE3Yjk0NTJmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|mourinho": {
+  "id": "tt43673968",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzU3NDFmNjMtYmVkMi00YzRmLWJlNTYtYzI5MzU4N2U4ODM4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|black knight": {
+  "id": "tt17013106",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjRhMDYyZjItYWJkZC00ZWI0LWE5NzMtYmM4MDQ0MTE3MDZlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|bad vegan fame fraud fugitives": {
+  "id": "tt18260538",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDk3MDZhOWQtZGIzYS00MThlLWI2YzYtM2EzNzgyM2Q3YmJkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a tale dark grimm": {
+  "id": "tt2386826",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWFhNjc2OTctZDJkZS00MjIwLThkNDMtYmEwMDUxNjRhM2Y5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2022|tulsa king": {
+  "id": "tt16358384",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWQ2ZmFjM2UtZDI3My00ZWJiLWFlZTQtOWI4OGFiMmMzNWZiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|the substitute": {
+  "id": "tt50164002",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmE1ZjRiOWUtNzg2Zi00YWM2LWFiMDItOTVjZmRkNGNkMTAzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2015|mask": {
+  "id": "tt4714786",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTdiZTc3NWYtM2I0OS00ZWQ4LWIzZDQtYzM0YTRlMjViMDg0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|taming the husband": {
+  "id": "tt41400834",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTFjZjExM2MtMjNlYy00OThiLWI4NWEtZGYyMDhiYmJjYzI2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2021|the veil": {
+  "id": "tt14482296",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTEyODQ2ZGQtMGE5OC00OGU5LWE3YzUtNzM0MTNiNDM3YjRiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2012|the chaser": {
+  "id": "tt3032596",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDU1OTBjYTUtMDkyOC00ZTAxLTgzOTktZDg2NTgxMWE3YzRiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2012|the great doctor": {
+  "id": "tt2373094",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGZlMzY0NTgtNjVhOS00NGVjLTlkOWEtOWY0ZDRhOTExOWE0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2014|angel eyes": {
+  "id": "tt3681890",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGM5MzkwODktMDU0YS00OTY4LTg1NTAtOTA1NTcyZDE0OTRmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2022|cekic ve gul bir behzat c hikayesi": {
+  "id": "tt21095396",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODQwZTEyN2UtOTM5ZS00ZTZjLWIwNzYtM2ZhNDA2YjIyNGUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2019|touch your heart": {
+  "id": "tt9466990",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODJhMWYwNWEtZDU3Mi00NTJmLWE1YTUtOWQxNjZlMWMyZjc3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2007|the big bang theory": {
+  "id": "tt0898266",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjgzY2QyNzItNDhhYi00ZWIwLWFjN2UtZDJkN2MxYWNjMmJjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|sword silence": {
+  "id": "tt42152429",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMThjYWEyZmMtZGY1Ny00NmU1LTgxZGUtNmZiMzdkZjJkOTZlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2018|my mister": {
+  "id": "tt7923710",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmI5MWJiOGQtZDk0Yy00ZDg1LWE3MjQtNGVmNzAxYmEzNmExXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2016|the k2": {
+  "id": "tt5966882",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODc4NDA2MTYtMzk1Ni00OTM1LWFhOTItMDA2OWM4NTZkYzVmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2017|defendant": {
+  "id": "tt6256692",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTQzNjNkNDQtZDA4NS00ZWYxLWJhNzctODQ2NGVlZjc2ZjNkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2021|our beloved summer": {
+  "id": "tt15026724",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTAwZTQ0ZGYtOGFhNi00YWQ2LTliOTQtZTNhZDJjNzMxZDdmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2025|dying for sex": {
+  "id": "tt30252752",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjRiMGI5MWItYTQ4Zi00NTNiLWJlMWEtNWQzMzA3YTYwN2FhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2015|angry mom": {
+  "id": "tt4535826",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmI1OGFmYWEtMDEzNS00Y2UxLTg3ZjgtMWFlZjNlNWFjYzQ4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|mr kurosaki s pure love never stops": {
+  "id": "tt39371948",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjhmODFjNzItZWM3Ni00YzM5LWIyMTMtMjc5MmIwYzBhYzlkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2020|tale of the nine tailed": {
+  "id": "tt12879418",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjQ5NzE5ZjUtZDVlYi00NjNlLWE0OTAtZTllNWYxZDMzNjFkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2020|hospital playlist": {
+  "id": "tt11769304",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmZlMWY5MjktNDljMC00YmE1LTg0M2EtNDdhMjk0NGFiMDhhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2017|because this is my first life": {
+  "id": "tt7278588",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTU4OTk4MjQtMzdmYi00ZDYyLWEzZWMtOTEzNDI3Y2JkNDVkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2005|supernatural": {
+  "id": "tt0460681",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDFmMGZmMGItNGRjNC00NjVjLWI5ODEtNzhjMTE5MmJhN2FkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2023|magarsus": {
+  "id": "tt23032590",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjY0MTViN2EtY2Y0YS00Yjg2LWI3MzYtYWJhYmFhYWEwM2MyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|spider noir": {
+  "id": "tt30460310",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjU3NjEwNTItMzc1Mi00Y2QyLTljNDItOTQ4YjU4NjZjN2EyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|peacemaker": {
+  "id": "tt13146488",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDIyMGU2NTktOTM3YS00OTRjLWJiMmItNDEyNjVhZTZiZGUxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2009|modern family": {
+  "id": "tt1442437",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzFlOWFjNzQtODViNC00NzgzLThhZmItZTc1N2VlZDgwODUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a knight of the seven kingdoms": {
+  "id": "tt27497448",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzg4M2U3YWMtMWY4MS00MzFkLTk2ZWQtOThiOGYxZDEyMGQ2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|task": {
+  "id": "tt28013708",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmM4ZDUxNDctNjg0ZS00NWM4LTk4YzctYzAzZDJhMzRiYzE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|happy anding": {
+  "id": "tt50901064",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDZiZjVjY2ItNGNkZS00YmNhLWExZmYtZjRmNDU1YTc2ZTI0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|blossom in darkness": {
+  "id": "tt37148648",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTg4YWRkY2QtMDY2Yy00ZmJhLTg3NmUtZDZlN2Y0OTUwYjYzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|kauriburir mandir": {
+  "id": "tt49791829",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTA0ZDlhYjAtMWQzMC00ODIxLWJjNDYtYTdlOTgzNzQ2MjVmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|rock paper landmine": {
+  "id": "tt44914557",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzA3ZWMwOTEtOTQzZi00NmM2LTkzN2MtMDM0NDE4OWY5NzZlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|good partner": {
+  "id": "tt32840498",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWIzNjQ0MjAtNTY2ZS00ZTQwLWJjYzItODNkMzY5ZTkzNTU3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2024|karsilasmalar": {
+  "id": "tt33998293",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDczMjA3MDUtMTBlOS00MDliLTkxY2YtNjVlZjJhNWQ0NmY4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2018|succession": {
+  "id": "tt7660850",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTY4YTVkY2QtMjRmOS00YzliLWIxOWQtMTdkOTVkN2UzODNmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the inheritance": {
+  "id": "tt26440778",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTdmMjIzZDItZGI5NC00ZDk3LWI5NmUtMzIxZGNiMGIzODAxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|what a boss wants": {
+  "id": "tt50828583",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjcyZWNjYzgtMmUyNC00ZTBkLTg4NzYtODg1NmFiZTg3M2ZhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2005|how i met your mother": {
+  "id": "tt0460649",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjg1MDQ5MjQ2N15BMl5BanBnXkFtZTYwNjI5NjA3._V1_.jpg"
+ },
+ "series|betty la fea la historia contin a": {
+  "id": "tt32321928",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/528/1320142.jpg"
+ },
+ "series|2021|ayak isleri": {
+  "id": "tt14344266",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/322/805814.jpg"
+ },
+ "series|2026|faces reborn": {
+  "id": "tt38011908",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDk4YWQ0ZDItY2MzYS00NDIzLWFhZTktNTNmNzYwZDQ3ZmY2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|tuzlu kahve": {
+  "id": "tt43644041",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/638/1596047.jpg"
+ },
+ "series|2026|campus drivers": {
+  "id": "tt39943756",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTJmZmM1MjctNDE0Mi00Y2I3LWFmNGEtZDJlNWM0MjQ2YjVjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|yaga": {
+  "id": "tt39980704",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTc1M2VmM2UtNGY3Yy00YmQ2LTljY2YtMjkxMGY2ZDNiMmYyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|bize bi sey olmaz": {
+  "id": "tt38048350",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/619/1548275.jpg"
+ },
+ "series|2023|prens": {
+  "id": "tt14533970",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/566/1415938.jpg"
+ },
+ "series|2023|sahte profil": {
+  "id": "tt14494938",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTJlMjJlOTgtZDMxOC00MzAxLWI1MWYtNzc4ODgzYTQyMTU0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|gazap": {
+  "id": "tt43492801",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTI1YWY5YmEtMTZmOC00OGY0LTgzZjItMTU0ZTMwODNhZDg5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hulk hogan real american": {
+  "id": "tt41508977",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDhlOTdhMjAtOTJhOS00YTY4LTgwYmMtOTU3NTYzYzY0MDQyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|infaz listesi kara kurt": {
+  "id": "tt26576161",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGVlNmU2YmItOTE1Mi00NjhlLWE0ODMtNDVjMjY0OTUyOWY2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the good ship murder": {
+  "id": "tt26346233",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2Y1NzI4M2MtOWFlNy00OGE2LWFjYmItYmVjY2JjOWMwZmUyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|your love so invincible": {
+  "id": "tt44022690",
+  "poster": ""
+ },
+ "series|a knight in the making": {
+  "id": "tt39402244",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODBjNjBjYTEtYjlhNS00N2E1LTkyNWYtZjdlZDJkMjBjNjYwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|franklin": {
+  "id": "tt18351584",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGExNGMwZmMtYjgyZC00ZGY3LTg1YWYtOWZlZjExZTUwNWUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2025|where the sun always shines": {
+  "id": "tt36220283",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjMyZGVjOGYtNTY3NS00NzhhLTllYTMtNzBjNzQ1MDFlNWUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2024|hein": {
+  "id": "tt33471826",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGY1ZGExYWEtYzYwMy00ODZhLWI4NjYtNWIzMzY0ZmZiNDg5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|oobah scams for a better tomorrow": {
+  "id": "tt50688819",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTU4ZTMzNjgtN2JlNy00MDcwLWE2YTAtYmI3OTMyNjEyZDE2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|the trials of karen read": {
+  "id": "tt33004920",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDIzNTc1OWItNTFmZS00ZWY2LWE5MDgtMjBlMzY2NWQxZTgwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|dig": {
+  "id": "tt36843594",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2ZjNWY3MzAtOGYzOS00NzNkLThiM2UtYmE2ZTZhYThhZmEwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2008|the emperor of taste": {
+  "id": "tt1010360",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGE5YzNjZGUtMmNiMC00OTJkLWIyNzUtOGZhNzVkMzcxZDY4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|infamia": {
+  "id": "tt40225961",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzcxNjI5M2QtYjJlNi00NjU1LWE1MDEtMjE0ODhiYzdmYmM0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|tour de france zincirleri kirmak": {
+  "id": "tt3848798",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjhhYjcwYTItMjI4Mi00NWQ3LTk3ZTAtYzQ5YjZkZjA1Y2JhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|nofilter": {
+  "id": "tt26368084",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYThhZmRjOWEtMmY3Mi00NDM5LWJjYWYtMDkzNDM0MDMyZTA0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|vigilante": {
+  "id": "tt27458539",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmJiOGU4ZDQtNjRlMC00NGExLTkyMDQtNTkyZmRhNjFiNGYzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sadistic love": {
+  "id": "tt36624366",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODZhMjVlMzctZGUxOS00YjYyLTg4NjQtZjg5NWViMzRmOWQ0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the killing vote": {
+  "id": "tt26471649",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjRlNDRlMzYtM2M4NC00ZDRiLTk3MGItMWU4ZDhhODE3YmY5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|unforgettable love": {
+  "id": "tt15037012",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzhhYWQyM2UtOTYzOS00ZDgzLWI1NTctZmZkOTIwNTBkMzQ0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|evilive": {
+  "id": "tt29198867",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjAzMjkwNGEtNzdiZS00ZDI3LWIwYTUtZDRjMDJlZjY4MjNiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|f4 thailand boys over flowers": {
+  "id": "tt13660288",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGE1ZmUwZGYtODczZC00Mjg1LWFlYWEtYTMyYzAxZGJlN2MwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|castaway diva": {
+  "id": "tt28348835",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjBmYjQyOGYtZjY3MC00MmMyLWJlNWYtYmMwNWE1YjdiOWFjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|organize isler karun hazinesi": {
+  "id": "tt38732131",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/644/1612066.jpg"
+ },
+ "series|1994|siki dostlar": {
+  "id": "tt0108778",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTU2YmM5ZjctOGVlMC00YTczLTljM2MtYjhlNGI5YWMyZjFkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kardesler takimi": {
+  "id": "tt0185906",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjdlNGJlYjQtMDU2Mi00ZjA1LWEwYzgtYzlmNDM5MmE1ZGUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|dig": {
+  "id": "tt36843594",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2ZjNWY3MzAtOGYzOS00NzNkLThiM2UtYmE2ZTZhYThhZmEwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the trials of karen read": {
+  "id": "tt33004920",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDIzNTc1OWItNTFmZS00ZWY2LWE5MDgtMjBlMzY2NWQxZTgwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|where the sun always shines": {
+  "id": "tt36220283",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjMyZGVjOGYtNTY3NS00NzhhLTllYTMtNzBjNzQ1MDFlNWUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the emperor of taste": {
+  "id": "tt1010360",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGE5YzNjZGUtMmNiMC00OTJkLWIyNzUtOGZhNzVkMzcxZDY4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hein": {
+  "id": "tt33471826",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGY1ZGExYWEtYzYwMy00ODZhLWI4NjYtNWIzMzY0ZmZiNDg5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|oobah scams for a better tomorrow": {
+  "id": "tt50688819",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTU4ZTMzNjgtN2JlNy00MDcwLWE2YTAtYmI3OTMyNjEyZDE2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|infamia": {
+  "id": "tt40225961",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzcxNjI5M2QtYjJlNi00NjU1LWE1MDEtMjE0ODhiYzdmYmM0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|screw": {
+  "id": "tt14708510",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDYzZDY4MTgtZDE4My00Y2NiLThjNmItOGE0ZDY4ZmExMGU2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|love in the moonlight": {
+  "id": "tt5575678",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjMxN2M2YTUtMmM0MS00MzVlLTgzODQtMjE5M2VkYjJjMTg0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|running point": {
+  "id": "tt14879018",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzcyMjZlNjEtYjI5Yi00ZWI4LTg1ZjYtZWI2Zjc5ZjhmMmZkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|tyson": {
+  "id": "tt35051210",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjk2OTZmOTgtY2E0NC00MDViLTg3NWYtNGQwMjZhNDJhNTNiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the trap": {
+  "id": "tt36470958",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzYzYzEzMTYtNTgwOC00ODg3LWE0NzItMWVjMTVmMmY4OTdlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sense8": {
+  "id": "tt2431438",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjA4MTEyMzcwMl5BMl5BanBnXkFtZTgwMTIwODczNTM@._V1_.jpg"
+ },
+ "series|star city": {
+  "id": "tt32140872",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTA0ZmE5ODQtNDYyZS00NTIzLWEzZTEtZDAwYjEzZmJkYjI2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|oasis": {
+  "id": "tt38734636",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDZkODgzNTktMDNjMC00ZjkxLWFhNDItMjkyZjMxNDA0MDI4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|viral hit": {
+  "id": "tt39400589",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTgyMzMzM2QtMTY2Mi00ZWE4LThlMzUtOTViNGZmZGM4ZDU5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|mr robot": {
+  "id": "tt4158110",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTg4NTBiZDAtZTc0YS00NzZlLTg4Y2ItNGQ3M2ZlMDM5MWQzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|batman caped crusader": {
+  "id": "tt14681596",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjI1Y2NmNDgtZDVmMy00MjcwLTgwNmItMTFmMjcxMWRlYzQwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|my life with the walter boys": {
+  "id": "tt8323628",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjdmN2FmMWUtZmYxOC00OGY5LTk5NjgtYjViNjYyZDc1YWU3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|quite the girl": {
+  "id": "tt51286186",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjAzNTA4MjEtNzYzYy00ZmY0LWI4OGEtMTQ1YTQ2ZTA1ZGU0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|rising justice": {
+  "id": "tt37265860",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzQyZjE2NWEtZDEzNC00ZTY2LTkwYWUtYmZhMDEzNGVjY2Q0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the great long march": {
+  "id": "tt37781201",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTU4Y2UyMDktNDBmMy00NTdmLTkxNmUtMDQ3YjA1MDQzMDg5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|reacher": {
+  "id": "tt9288030",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmE0YTA3MTItMjhiNC00MGQ3LTllZDktNGNiZWY1OWFmNmM1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|jasmine": {
+  "id": "tt36584543",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTdlM2ZkNTctODM5NC00YjVkLWJkZDctOGMwNmRlNTI0OGFlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|succession": {
+  "id": "tt7660850",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTY4YTVkY2QtMjRmOS00YzliLWIxOWQtMTdkOTVkN2UzODNmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sokagin cocuklari": {
+  "id": "tt10476258",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzU5N2YxMTEtYzlhZS00NTcwLThiMzEtN2VjMjU1YTVkNzM5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|setting the tempo": {
+  "id": "tt43586435",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2Q1NzJiMzctMWEyZi00YjBhLWEyYjUtNzU5ZDJhMGNiYzdmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|murder mindfully": {
+  "id": "tt30217222",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzgwOGIxMjgtZGRhZS00ZjUxLThiYmYtYzdiOGYxZjM4YmQwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|marvel super hero adventures": {
+  "id": "tt7726152",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjNmZjkxZDMtZWI0Ny00ZThlLTk3M2UtNjA3YThlNjk4MmZlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|survival of the thickest": {
+  "id": "tt17361756",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTdjNWMzM2YtMGY4Zi00ODc2LWE1NjctNmQyMWZmNzM1NTIwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|shogun": {
+  "id": "tt0080274",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzQ1MTVkMDItZDJmNS00YzVmLWJjYzYtNGE4NjFjNjZkYzY2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ricky gervais alley cats": {
+  "id": "tt38264832",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTNlZTkzY2ItYzgwMy00MjI2LWJmYWItMGQyZDE5YzVlMjcyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ayak isleri": {
+  "id": "tt14344266",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTlmZDkwNzYtYjdlYy00YzM0LWFiZmYtMDRjYmFkY2ZlYWJhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|prens": {
+  "id": "tt14533970",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODU0YzIwMWItYmI3Ni00NWMyLTg2NTItODBkZDBkNDZkNDljXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|gun shot": {
+  "id": "tt39029588",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmIwNTUyYmUtNDlkYS00N2JhLWJlNjUtZWYyYjMzMDNhN2E5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the countess of monte cristo": {
+  "id": "tt38688809",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2MwMmRlYTYtMjY2My00NmFhLTg0ZjctNWExOTM4YjRlMzBlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|river of no return": {
+  "id": "tt38734657",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGYyM2Q5ZjctZTE2Zi00YjdmLTg0ZjktMzZmODRhOWVmODJlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|still a family": {
+  "id": "tt37479351",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDdlZTRlNWEtYmMzNC00MWMzLTgzN2QtZDVjMzExZGM2Yjg4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|let s go": {
+  "id": "tt7661056",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTZiMTBmMGQtOTJmOC00ODA0LWJjMzItZTFlNzRlYWRhYzkwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|marshals": {
+  "id": "tt36849871",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTk4NThjNzgtMjVjNi00MjdjLWE1NDctMzRhNTI1Y2RiN2NkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|maigret": {
+  "id": "tt33359676",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTFhYjA0MTgtYTMxMy00MWUyLThkOTYtODhhNTk3ZjBhNzI1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|melania the series": {
+  "id": "tt50666033",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmEzM2UxZmMtNTcwNS00OTdhLTllZjgtMjdmMDNiYjZjYzVhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|bill s included": {
+  "id": "tt39276740",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2JjM2JmYzQtYTAwMi00ODRkLWJkZGYtMGY2M2FiNjBkNWRiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|plein": {
+  "id": "tt49013050",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjdiZjY0NDAtYWMyZS00ZmY5LWJhMzQtYmYxOWQ0NjRhNDI1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|g nesi": {
+  "id": "tt38483587",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjhiN2YyN2ItNmE4Yi00ZGIyLWFiNGUtMGYxN2JhZjkzZmZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|extra geography": {
+  "id": "tt34798706",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGFlYjFjOGEtYjAwZi00M2RlLWJiZWMtZjI2YTZjZDUyZmI0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|don t move": {
+  "id": "tt29630464",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDg4NTdjYmYtN2ZiNi00YWUwLWE4MzItMWU3ZTM3NTNiZTY5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|manglik": {
+  "id": "tt18969270",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTJlNzZiNTctMWFlOC00MzkyLTljOTQtYWJiMTVjOTVmYWI0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|best pancakes in the county": {
+  "id": "tt38258118",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODc1MThkNDctOTVkOS00ZGNlLThmYzgtMmMzZTg4MDcyYzgxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|rewarding": {
+  "id": "tt43658386",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTcyOTIyZTYtNzljZS00NjdjLTkyMmQtZTNjYzA4M2YxNzg4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2024|phoenix": {
+  "id": "tt38821672",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/613/1533935.jpg"
+ },
+ "movie|goddess of love": {
+  "id": "tt3432552",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODQxMDUyMDY3Nl5BMl5BanBnXkFtZTgwODMzNjIzNzE@._V1_.jpg"
+ },
+ "movie|1987|roxanne": {
+  "id": "tt0093886",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDkyMzFhYjktYWE5My00YTVhLWE1NjEtZWMyNzliMDMzYzJhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|1991|only the lonely": {
+  "id": "tt0102598",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzY4ZmYyMDUtOTRiMS00MmJjLWJhMGItNWZiYjY5ZGYxNzZlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|fjord": {
+  "id": "tt35410859",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGQwZTQ0YzgtZjk5Mi00NTg1LTg0MmMtZmNjNGUwYjhjNWJhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2022|luck": {
+  "id": "tt7214954",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWUxZTJhY2EtNTBiNy00MjlkLTgxMDctYmEzODQ3N2IzYTQ1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2023|fool s paradise": {
+  "id": "tt9013340",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTU2ZDY0MGEtMDY2OS00OGMyLTg0YmEtYTU4ODI3YTA4MDkyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|relationship goals": {
+  "id": "tt35718349",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTk3NzhjODktZjljMC00MTlhLWEwNDUtNjBkNjM1NTQ3NzU4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|dolores the truth about the wanninkhof case": {
+  "id": "tt14961752",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDYxNGQ5ODAtYWYzMy00NjBkLWI2ODYtYThkMWMyMTE1YThkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|final table son masa": {
+  "id": "tt49692512",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzMzNzE5ZWUtZDJmNC00MWJlLWE4ZTAtYWFjZWFmYTk5NGJjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|ideal koca": {
+  "id": "tt29611136",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODliMTEzMTUtOGFlZS00NTgxLThjODEtMzcwNTE1OWE5Mzg2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2018|yeralti canavari 6": {
+  "id": "tt6086082",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjczN2IxNmMtYzc3ZC00Y2EzLWIzYjYtM2RiZDVhY2YyNjg3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|1995|sakincali dusunceler": {
+  "id": "tt0112792",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODc5ZDI2ZDYtYjZiMy00MzZjLWEwNWUtNTljNDEwYWQ3YjQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2020|seized": {
+  "id": "tt7221772",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTYyZWZjMDUtZjlhMi00YWZlLTk2ODktYzIyZDhjN2E5ZDkwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|1931|m bir sehir katilini ariyor": {
+  "id": "tt0022100",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYWE0NDIxZTktMDg2Yi00NjA5LTlhMzMtZjViOTNkODhjNjZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2007|sihirli oyuncakci": {
+  "id": "tt0457419",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDYxYTI5M2MtMjk1MC00MTE4LTgyM2QtNWUzM2UwNGJhYzE1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2018|the mule": {
+  "id": "tt7959026",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTc1OTc5NzA4OF5BMl5BanBnXkFtZTgwOTAzMzE2NjM@._V1_.jpg"
+ },
+ "movie|2005|kiralik sevgili": {
+  "id": "tt0372532",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzZjNWY4NmMtMjU5Ni00YzQ2LWIwNjYtMDU5ZGM0ZDIyNGUzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the maid s room": {
+  "id": "tt2263814",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzRlZTg0OGUtM2Y3ZS00NWUwLWI5MzYtM2ViNjU0ODBkNzU3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the empire of corpses": {
+  "id": "tt4235644",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2MyM2IyZmYtOWZiNy00YjkyLWFkYmQtYTFkZDM0YzBmZDViXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|kehanet": {
+  "id": "tt43539948",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDNjOTA3MDgtY2E0ZS00ZTJkLWIyMTktZDgwNjU3ZWQ2OGM4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|winter battleground": {
+  "id": "tt39602576",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTQ3YTdlMjctMWIyMS00ZDg1LTg1M2EtNDQ5MDA5ODc4YTY5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|vibe": {
+  "id": "tt40856286",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTBkNDNmM2MtZDU0My00NWZmLWIwYjktNTZmZWVlMTEwYTkyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2018|2036 origin unknown": {
+  "id": "tt4575328",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTBlYmFlMWMtNDgxOC00OGNiLWFkOWItZWFjMGRkOGFlNGRlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|attack of the kraken": {
+  "id": "tt39216132",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzg3NTFkNjItYWJjOS00ZTQ4LWIwMWItNjQwMTlhZTA0ZDU1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|iyilik kazansin": {
+  "id": "tt5113010",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzFhMDY4ZjMtM2I4MS00ODE1LWJhNDMtMzg0Njc1M2ZjZGMyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|cult": {
+  "id": "tt36915004",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWEyNTQ5MGItNzQ0Yy00ZDdiLTgzNTEtMmZkNDJhYzIyYjhmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|double trouble": {
+  "id": "tt35995947",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWYyMjk0Y2MtNWE1My00MGJkLTg1ODMtZDc3MmU2MDVmN2IyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|black creek": {
+  "id": "tt27078378",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmJhOTQxMWUtYjUzOC00NzY0LWIwMTktOTUwNDU1ODQxODY2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2023|hermosa justicia": {
+  "id": "tt21435580",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDE0YmQzZjMtN2FiMy00NTdlLWJkNjEtOGQ2ODRiYjI0ZDYwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|1920|dr caligari nin muayenehanesi": {
+  "id": "tt0010323",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTY1NzIxOTcxM15BMl5BanBnXkFtZTgwMjY0ODgwNzE@._V1_.jpg"
+ },
+ "movie|2024|weekend in taipei": {
+  "id": "tt28142896",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2JiNDJiN2EtNGRlNC00ODE2LTgwNmQtOGFiZTk0NjZlMmFhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2005|ocean s 12": {
+  "id": "tt0349903",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjgxNjY3ODEtMTZhOC00NjgyLTg4YTAtZjA4ZDI2MDQ4OGJmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|misdirection": {
+  "id": "tt6374142",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjU1OGE4NTEtOWMzYS00MGI4LTgzZmMtMDRkNzUyZDEzYWIwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|the isolate thief": {
+  "id": "tt35051162",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzViNmFhZmItNGFhMi00MTZjLWJmN2QtZjkxZjFkYzQzM2IxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|lucky strike": {
+  "id": "tt19035928",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODBhMTU2MzEtNjgwZS00YzA5LWE3MjctNTljZmZjYjNjYzhhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|desprotexida el crimen de pazos": {
+  "id": "tt48500521",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjc0YjZlNzgtNTkzZi00YjE4LWE0OGItZDM4ZWI1MmEzMDc0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|mafia": {
+  "id": "tt32840267",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/577/1442735.jpg"
+ },
+ "series|diabolical the epstein files": {
+  "id": "tt37622023",
+  "poster": ""
+ },
+ "series|a marvel television special presentation the punisher one last kill": {
+  "id": "tt36042156",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGJlZWJhYmYtNjcwOS00OGMxLWJhODMtMGQ5ODQ5MDE0OTFmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|kefaret": {
+  "id": "tt36789083",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGQ2NzNlNWEtNmMxZC00NGFlLTgyZGMtNzllZjg0ZWYwNTE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2022|yarinin savascilari": {
+  "id": "tt7375466",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2ZlNjk2NTAtMmI1NC00MjVkLWI0M2ItOGVmN2NjNmYxYzY0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2001|shaolin futbolu": {
+  "id": "tt0286112",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2JhYTkzYmUtYjY1Mi00OWNjLTk4N2ItNDRkZTIyMzgyMjMyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2008|zohan a bulasma": {
+  "id": "tt0960144",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzE2MzEzNDc5M15BMl5BanBnXkFtZTcwMzYxOTA3MQ@@._V1_.jpg"
+ },
+ "movie|2026|the vvaan": {
+  "id": "tt34498564",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGQ3YWZlMjUtNDI1Zi00YjRjLTg2YzctMGU1MTkxMWU5M2U5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2017|eglenceli annelerin aksam yemegi": {
+  "id": "tt5829040",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGE5YTc0ZDEtZmY0Yy00ZmY5LWI5NTQtMmIyOWU0ZTNlOTEzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2015|hayaletin intikami": {
+  "id": "tt3733778",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzY3MTc3NzQ1Nl5BMl5BanBnXkFtZTgwNjk2MDE3NjE@._V1_.jpg"
+ },
+ "series|phoenix": {
+  "id": "tt38821672",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/613/1533935.jpg"
+ },
+ "movie|2015|sindirella": {
+  "id": "tt1661199",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjMxODYyODEzN15BMl5BanBnXkFtZTgwMDk4OTU0MzE@._V1_.jpg"
+ },
+ "movie|2010|a takimi": {
+  "id": "tt0429493",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTc4ODc4NTQ1N15BMl5BanBnXkFtZTcwNDUxODUyMw@@._V1_.jpg"
+ },
+ "movie|2004|olulerin safagi": {
+  "id": "tt0363547",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2ZiYjNlMWYtNTc2My00ZTM4LWJhMjQtM2FlOWM0ZmE0Yjg1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|kutsal damacana 5 zombi": {
+  "id": "tt33362137",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzE5ZDk5OGItODM1Mi00NmRhLWE5NGYtNWMxZGVlZDU3NTFmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|nemlizade": {
+  "id": "tt34339057",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjRlNzFmYWUtOWE4NS00NDFjLWEzZGMtOTNhNzlhMzU2OTdjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|tur rehberi": {
+  "id": "tt34895052",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjg0OGJjMGQtM2Q3OS00N2I3LTkzNWMtNTg4MTUxM2VhMDlmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|my fault london": {
+  "id": "tt32434379",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2MzOTJiOTItODBjOS00MjVhLWFiOWQtOTVjOTAyM2NkODM2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2022|grand jet": {
+  "id": "tt13887082",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmU3ZTM3ZDYtMDk5MC00ZDY0LWE0OWMtMmQ4YmY2NTdjMThmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|yangin yeri 2": {
+  "id": "tt15768018",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODAyYTZlOTUtZWY3Zi00OGM0LTk2Y2QtNDJhZTZkOGU1NTY2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2020|becky": {
+  "id": "tt10314450",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjllZWQyMGEtYTA2YS00ZTRkLTk5ZDMtYjU3YjI2OWM4ZmU2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|genis aile 4 cevahir ulvi": {
+  "id": "tt32901945",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTM0ZTAxNDEtMmNlOS00NTFmLTkyNzEtMzE0YWM0ZDU0OGY1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|dunya varmis": {
+  "id": "tt33298051",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWJmZTZkMmItMWZlOC00YzE3LTlkYWYtODUyN2JkNjdiYmE2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|dhoom 2": {
+  "id": "tt0441048",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjgxNjUzZDctYWJmOS00MDI4LTkzNTctMDdmOGYzN2M5ZmY3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2010|harry potter 7 olum yadigarlari bolum 1": {
+  "id": "tt0926084",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTQ2OTE1Mjk0N15BMl5BanBnXkFtZTcwODE3MDAwNA@@._V1_.jpg"
+ },
+ "movie|2005|harry potter 4 ates kadehi": {
+  "id": "tt0330373",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTIzNzUzOTk2NV5BMl5BanBnXkFtZTYwNTI4MDg2._V1_.jpg"
+ },
+ "movie|2025|karantina": {
+  "id": "tt32810861",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTdlMjIyOTMtYmMyYS00ZTUyLWExYTYtMGQ0YzllMGZmM2FmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2024|rafadan tayfa 5 kapadokya": {
+  "id": "tt35156304",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGU1MDE4NjYtODdlOC00N2YxLTg1ZTItOWY2Yzc4MDg1MDFkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|street fighter": {
+  "id": "tt27419420",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjhlN2EyNGUtY2U4YS00ZTQ3LTg0NTgtNGIxZmVhMDlmMjIyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2023|konus benimle": {
+  "id": "tt10638522",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2I2NzJmY2YtYTM3Ni00ZGJhLThkZTItODFhMzhlZjZkMDQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|agatha all along": {
+  "id": "tt15571732",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDcyZTNjOTEtNzc5Yy00Y2UzLThkMWYtNTY4YmM4OWI5OTMzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|fringe": {
+  "id": "tt1119644",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWVlMmE1MmEtNjhjMC00MDdmLWIzZGMtNjc1YTZmNDc2MWExXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kaos": {
+  "id": "tt8550732",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjczMDQ5MTEtYzY1Ni00M2FlLWI2NGMtYTYyZjM1ZGNkNGQyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|star trek starfleet academy": {
+  "id": "tt8622160",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGFkNWNjMWQtMDI4Ny00M2FhLTk2NjMtMDg3MGI2NzM5ZjVhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|blue mountain state": {
+  "id": "tt1344204",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjQxOTI0MjcxM15BMl5BanBnXkFtZTcwOTY1MDk5NA@@._V1_.jpg"
+ },
+ "series|lucifer": {
+  "id": "tt4052886",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzMwNzI3MWItZTIzYi00YjkxLThhOWQtYmUwYjg4NWM0ZWI1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|ali g ben kimim": {
+  "id": "tt3627398",
+  "poster": ""
+ },
+ "movie|verity gercegin diger kiyisi": {
+  "id": "tt32261958",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmE0OWRiNzktY2MwMy00YzQ5LWFkMzctNjI1ZWQ1NTRiZGM3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|matlock": {
+  "id": "tt26591147",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjJjYTM0ZTgtOWNlOS00MDE4LWE5NTQtNmExZDY2ZjY5N2ZkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sandokan": {
+  "id": "tt13924304",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzFhMjBmMmYtM2I2ZS00MjZkLTg5Y2QtMGM3YTFlODM1MjcyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|orumcek adam yepyeni bir gun": {
+  "id": "tt22084616",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWNjYWM3NWItOGE0ZS00MWRjLThiZWEtYjc4ZmNmMmU5ZTVmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|blue emanuelle": {
+  "id": "tt39287838",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTBlYWQ0ODgtYzQzMC00NWI1LTg2NTctZDkyZGE3YmY5MjQzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|westworld": {
+  "id": "tt0475784",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjM2MTA5NjIwNV5BMl5BanBnXkFtZTgwNjI2OTMxNTM@._V1_.jpg"
+ },
+ "movie|unbearable christmas": {
+  "id": "tt36303063",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTBkODg5ZGItY2YxMy00NTBlLTgyMzItMzAyZWUxMTNlZDJjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|moana": {
+  "id": "tt27419466",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTQ1OTQ2Y2UtMzllNS00ODFiLWFkNGItNGRjOWRlMjIwNTRlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|gercege cagri": {
+  "id": "tt0100802",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjRlMzBkOGMtMTA1Ny00ZWI4LTkzMDItOGVkNWJkN2E4ZTkwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|mindhunter": {
+  "id": "tt5290382",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTk4NDA4MGMtNjliOC00MjExLWI1YzctOTc4NWIxM2I1YjM5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kalp gozu": {
+  "id": "tt7491712",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTBhYjgyMmQtOWQ4MC00Y2ExLTkxNWEtMzQ2OThhMzkzMTM0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hayat dedigin": {
+  "id": "tt4769046",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzUzNTQwYmItYzZjOC00MTE3LTg2NWQtOWU4OWFjNDhkODE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|dumanli yol": {
+  "id": "tt0448281",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTdmODI3ZTgtODAwYS00MTQzLWJhYWEtNzkxZDU5MTRiNGI2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kezban yenge": {
+  "id": "tt5373564",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODZjNGFiZTEtZDY4Zi00NzkzLWE1YzEtMDI0NmE1NjJiZWIzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|mihrali": {
+  "id": "tt0430843",
+  "poster": ""
+ },
+ "series|yemin": {
+  "id": "tt1163168",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTY3NDIzNzQ4N15BMl5BanBnXkFtZTcwODI5MTYzNw@@._V1_.jpg"
+ },
+ "series|keloglan": {
+  "id": "tt0446843",
+  "poster": ""
+ },
+ "series|emanet": {
+  "id": "tt12562262",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjVhYzNlOTYtM2NmNy00NTM0LWI5MzctNDVlNzhkMWRmNzFjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|iyi aile robotu": {
+  "id": "tt0446841",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDdlMzIxN2MtZjE5Ny00OTYzLTgwNzYtYWM0YWQ0MzFmMDU2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|elif": {
+  "id": "tt4745726",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTU3ZGQ4MzQtZTYwZS00YWM3LTk1MGItOWVhZTg4ZjIyZjA1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|esir kalpler": {
+  "id": "tt0808871",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmFhZjMzYzYtY2M3Ny00M2Q1LTlmNDktMTkyMmJhZWRmYzYxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|esaret": {
+  "id": "tt22693974",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWRiZTc1MDUtYjBmMC00MGNkLWFjZWItZGMwNzQ2MDI2ODY0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kan cicekleri": {
+  "id": "tt23791028",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzQ5NDE0ZDYtZDVkZS00YjkxLWE1N2QtOWNlYTJiZjhjZTU5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|valentines lake": {
+  "id": "tt21917736",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDllYjE3NjItZjk4ZC00YmQwLTk0NDctZDRiYzk3NDRhZGUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|fedakar": {
+  "id": "tt27123253",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGQ2ZjBhNTgtZjgxMS00YTY2LTk4N2YtZTI2YTc0Y2YzMmU4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|candan ote": {
+  "id": "tt0876981",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjdiZGE5NGMtY2VjYS00ZGNmLWIzYzctNzJiMzk1ZGRmMTZiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|kopis": {
+  "id": "tt37065072",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzg3YTNhZjgtMTkyYS00NGU3LWFkOWItYjcwNTc4ZGU0MGNlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ruzgarli tepe": {
+  "id": "tt30690005",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDczNmM4N2ItNjhiNC00ZTMyLWJhMTktZjNkNzRmNjFkMzgzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|zombiecon vol 1": {
+  "id": "tt33481705",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjQxYTJiMTItZTAwZS00MWM0LTk3ZTgtMzkzNzJhZTYxZDE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|ask guzel sey 2022": {
+  "id": "tt0940659",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjc4YWVkN2YtYWE2OC00ZTdlLTkyYzctZmRlNzY3OWJmNzcyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|kehanet": {
+  "id": "tt12664152",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDkxZGJhODYtZDhmMy00MzE0LWE2MjktOWE4YjRkOWYzZDY1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|gelin": {
+  "id": "tt31042239",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzBhMDY5ZGMtYzQ1MS00Y2ZlLTk0YzYtZjNkOTllZTViZGVhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|lottie dottie chicken the movie": {
+  "id": "tt8531740",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2E3Zjk3ZTctMzMwNy00OGFkLTg1ZGEtYWIzMTdkMjU1N2QxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|her sey ortada": {
+  "id": "tt45368240",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDkwNGRiNjYtZTQ4MC00MWFhLWI3MjYtNzk1MDY2ZTNiY2Q4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|k pops": {
+  "id": "tt19896510",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGJmMjE3YTUtYzJmZC00Zjc5LWE2MWEtMjI0ZjkzYTI1YTRmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|eenie meanie": {
+  "id": "tt15514498",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDJiMDM4YzYtOWY3Zi00ODEwLTgxNjAtOTdiMDc2ZDI1MjczXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|ballerina": {
+  "id": "tt7181546",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzdhZmY2OTQtYWI4OC00ZThkLTlhZjAtNzE2YzRjM2Q5YjJlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|surus yalancilar": {
+  "id": "tt0780504",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTFmNTFlOTAtNzEyNi00MWU2LTg3MGEtYjA2NWY3MDliNjlkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|seksenler": {
+  "id": "tt2361816",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjhlZWE3OTYtNDZiYy00YzViLTkxZmQtYmM1ZjFlMDJlY2Q3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|zerhun": {
+  "id": "tt38972955",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzg2YTg0MGQtNmZmNS00OTRiLTg0MzAtMDViMWU4ZGIwMDdjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|dunyanin en guzel kizi izle": {
+  "id": "tt4988692",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTYwOTRhNzEtYzU5NC00MzM3LWE1OWQtZTYwYjdjOTJhMzBmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hz yusuf": {
+  "id": "tt3084150",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTlmMzViYjUtOTJhMy00Y2FlLTk3ZGQtNWM3NDhkYjM3MmJlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2011|eve gidelim mi": {
+  "id": "tt0810922",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjc2OTg5NTM1NV5BMl5BanBnXkFtZTcwODM3MTMyNA@@._V1_.jpg"
+ },
+ "series|kanal d ana haber": {
+  "id": "tt9184876",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGM1MDRmNDItMTViYi00ZjIxLWEyN2QtNWJjMzI4YzhjN2E3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|susuz yaz": {
+  "id": "tt45737169",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWM5ZmRkYWYtYmY2MS00YWU0LTgyNTYtOTc4NTRkN2VhOTQ0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|gelinim mutfakta": {
+  "id": "tt8264358",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTFmMWE1OWMtMmJlZS00YjQ3LWEwYTYtMGNhZWIwZmMzM2FkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|karakuyu": {
+  "id": "tt47492588",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYWI1MzQzN2QtNTYwOC00OGRmLTgzN2QtMWZiMDlmY2E0NmMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|love and leashes izle": {
+  "id": "tt15553956",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmQ1MjMyZWYtNzMyYy00OTA0LWFlZmUtNzIxNDkxMzQxNWMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|beyaz la joker": {
+  "id": "tt39292295",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWZlMDYxZjMtNWMyZS00Y2Y4LTljNDQtMGU3NDAyMDQ1NDZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|neler oluyor hayatta": {
+  "id": "tt11062608",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGVmYjIyMjAtNTM4YS00ZjlmLWJlZjktOWYwM2QyMDU2NTUyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2011|eyyvah eyvah 2": {
+  "id": "tt1801051",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTY3MTA0NjMzMV5BMl5BanBnXkFtZTcwNjcyODY5Ng@@._V1_.jpg"
+ },
+ "series|kucuk aga": {
+  "id": "tt3776084",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODFkNDdjMjItNzMwOS00N2NkLTg4YmUtNDg1YTJhNDgwNmI2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|1995|buyuk hesaplasma": {
+  "id": "tt0113277",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTkxYjU1OTMtYWViZC00ZjAzLWI3MDktZGQ2N2VmMjVjNDRlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2008|sert sutlar": {
+  "id": "tt1091751",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjA5NDMwODQ3MF5BMl5BanBnXkFtZTcwNTA1NDc4MQ@@._V1_.jpg"
+ },
+ "series|yaprak dokumu": {
+  "id": "tt0307859",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODcxYjY3MGUtYTc3Mi00YjM0LWE0ZmEtNzkwOTVkYTA4YTE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2023|gran turismo": {
+  "id": "tt4495098",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjA0N2YyNmYtZDk4Ny00ODE2LThmZWQtNGJiMDk0YzhiNzE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2022|werewolf by night": {
+  "id": "tt15318872",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODUzMGFkYzgtYzhjNC00ZmFjLTg3ZTYtYWJkMWRjMzJmYTQ2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2018|sulla mia pelle": {
+  "id": "tt7121252",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTEwZjI5NDMtYjlkOS00YmRlLTk1NjgtZmZhMDMxZjA5Nzk3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|son mohikan": {
+  "id": "tt0104691",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODAxNTAxMDItMzkwZS00ZTEyLWJlZmMtYTc0MGI1NDdkNWZkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|zeynep": {
+  "id": "tt13680536",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/420/1052305.jpg"
+ },
+ "movie|2016|orman": {
+  "id": "tt3758172",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDE4OTk4MTk0M15BMl5BanBnXkFtZTgwODQ4MTg0MzI@._V1_.jpg"
+ },
+ "movie|2026|olaganustu akilli yaratiklar": {
+  "id": "tt33100314",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzM3OTRlZDktYTk0OS00OTlmLWFhMjctMTZiODU4N2RiYzhhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2022|kahramanin donusu": {
+  "id": "tt5500218",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzYwODI2MTYtZDJjZi00ZDdjLWJiYTktZmQyNGJiMmJmMWIxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2021|medyum": {
+  "id": "tt13446168",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzliMjVhZmYtOTdhMC00NjEwLWI4MGQtNjA0MjQxN2FmNjEwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|barbaroslar akdeniz in kilici": {
+  "id": "tt14473896",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/355/887503.jpg"
+ },
+ "series|kuma": {
+  "id": "tt12415504",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/275/688171.jpg"
+ },
+ "movie|2025|personhood": {
+  "id": "tt36610602",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjE0N2VlYzItOTc1Yy00NGQ3LTkyYTQtMTUyZGMzYjNmODQ3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kanal d haber hafta sonu": {
+  "id": "tt9184876",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGM1MDRmNDItMTViYi00ZjIxLWEyN2QtNWJjMzI4YzhjN2E3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|arda nin mutfagi": {
+  "id": "tt22227986",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjIzMzlkODItZDU4MS00NTNhLWE1MDktNTA5NDFiNDJmNjQyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|yilin gelini": {
+  "id": "tt42192201",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGY2ZDIzOTUtOTQ3Ni00NjExLTkyODAtZjkzYmM0MTJkYTkxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|prey": {
+  "id": "tt11866324",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWVjYTBlYjktODhjZS00OTUyLTg4MzctODI4MTkyNDE5YzY0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|upgrade": {
+  "id": "tt6499752",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjI0NzcyMjM5Ml5BMl5BanBnXkFtZTgwMzk2NzAyNTM@._V1_.jpg"
+ },
+ "movie|star wars episode i the phantom menace": {
+  "id": "tt0120915",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODVhNGIxOGItYWNlMi00YTA0LWI3NTctZmQxZGUwZDEyZWI4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|ben hur": {
+  "id": "tt0052618",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjg2M2E1YzYtOThmMC00NjAyLWI5MzgtMDEwOGFiODdlOGUzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|airlift": {
+  "id": "tt4387040",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjNjMGEzNTUtOTJmMC00OGJkLThhOWYtZmUzYTk3ZWY4MmVmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the last temptation of becky": {
+  "id": "tt40210362",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDk0YWVhNzItNDE3Zi00NTlhLWI4ZjYtZTAyYjdjNTlhZTZkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|cabin fever": {
+  "id": "tt0303816",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTEwNTU3NzM2NDJeQTJeQWpwZ15BbWU2MDY2ODcyNw@@._V1_.jpg"
+ },
+ "movie|shadow land": {
+  "id": "tt31956123",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWUxOWI1MmMtM2RjMi00YTFlLWIxYzUtZjY2ODdmZTkwZjZhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2022|kayip sehir": {
+  "id": "tt13320622",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjA4YmZjMWItZGNkNS00ODFkLWEwNjUtNGNhMzViZDRmMzgxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|han solo bir star wars hikayesi": {
+  "id": "tt3778644",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTM2NTI3NTc3Nl5BMl5BanBnXkFtZTgwNzM1OTQyNTM@._V1_.jpg"
+ },
+ "movie|2026|isimsiz kadin": {
+  "id": "tt32129938",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmVkYmE0YTktNGQxZS00MjQ1LTgzZjUtNmQyNWU3ZDY1MmFlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|rogue one bir star wars hikayesi": {
+  "id": "tt22176242",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmFjMGMwZTMtNmRlYi00MjJlLTk2NmItYjU4ZTA0MGJmOTE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|ofis aski": {
+  "id": "tt33397980",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmM0MDlhOTMtNjYxYy00MGI4LWEwODQtZTEyOTFhZTUyMTllXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|uc kiz kardes": {
+  "id": "tt16259122",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/392/981574.jpg"
+ },
+ "movie|last night in soho dun gece soho da": {
+  "id": "tt9639470",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODdhZjBmZTEtZmQyMy00NWY5LWJiMWQtODhjODFkZWZlMjMyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|andrei rublev": {
+  "id": "tt0060107",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2I4YzZjZDgtNWQzNC00MDdhLWFiZTItZTAwODY2ZmQzMDQwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|death on the nile nil de olum": {
+  "id": "tt7657566",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjBkMTRkMmUtNGQ5Ni00YjkwLThhMmMtZjI1M2U2NzRhNjkwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|cok ozel bir koruma": {
+  "id": "tt37877083",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjdlOGI1ODQtMDlkMC00MTZiLWI4NWUtNzE1NDdjYzgzOTViXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|slumdog millionaire milyoner": {
+  "id": "tt1010048",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTE5ZTRkYWEtZmU5MC00NDJjLTk3NmUtZGJlYTM2MmQ3NTJkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|doctor sleep doktor uyku": {
+  "id": "tt5606664",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGUyNTg0NWItODdkZS00YWY0LTljNjItMDYwMTI1ZmZkMjExXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|moonlight ay isigi": {
+  "id": "tt4975722",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzQxNTIyODAxMV5BMl5BanBnXkFtZTgwNzQyMDA3OTE@._V1_.jpg"
+ },
+ "movie|the fighter dovuscu": {
+  "id": "tt0964517",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTM0ODk3MjM1MV5BMl5BanBnXkFtZTcwNzc1MDIwNA@@._V1_.jpg"
+ },
+ "movie|the tragedy of man": {
+  "id": "tt0176694",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDE1OGRmY2ItMGZhYy00YjY1LWI0N2EtZGIzYzI0NzIwYjZiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the fallout": {
+  "id": "tt11847410",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzRmN2Q2NmYtODAxMi00OGZmLWIyODAtMjU0ZDVmNGNiY2EyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|escape from alcatraz alcatraz dan kacis": {
+  "id": "tt0079116",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWQyMzEwYzctMzYzZC00ZGM0LWIyZDQtZmJjYWE3OTYxNDA5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|bir garip ask": {
+  "id": "tt2300165",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzg1YjhkZDEtNTc1Ni00N2NiLWE1MDgtOTAxYjNmODEyM2UwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2010|eyyvah eyvah": {
+  "id": "tt1594918",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjA3MDM3OTAxNF5BMl5BanBnXkFtZTcwNTcyODY5Ng@@._V1_.jpg"
+ },
+ "movie|i lost my body bedenimi kaybettim": {
+  "id": "tt9806192",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDY0YThlZGEtNmFjNi00ZDQ0LWE0OWMtZmI5MGQ5MjgyNGU0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|silence sessizlik": {
+  "id": "tt0490215",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjY3OTk0NjA2NV5BMl5BanBnXkFtZTgwNTg3Mjc2MDI@._V1_.jpg"
+ },
+ "series|akinci": {
+  "id": "tt12858840",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2U3ZDU0OWItMWMwYy00ZGQ3LTljMGQtM2I4MzhjZTBmMDU3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sahtekarlar": {
+  "id": "tt38689878",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGI5NzgyMzctYTk2NS00NGNkLWJlNmUtNjc1MjE0ZjUxNDc1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ben leman": {
+  "id": "tt37854790",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzI2NzFhNDctODcwNy00NDU2LWI4MDItOTczZGYyNDZhNWUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ben onun annesiyim": {
+  "id": "tt38801678",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGRiMjM2ZmQtNTY1ZC00OGUxLTgxY2QtMzAwMWNiMGM0MzA5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|doktor baska hayatta": {
+  "id": "tt40568799",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzE0YTUxY2QtYmU0ZS00YTBlLTk3MjMtYTA1YzgzNjMzYzc5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sakincali": {
+  "id": "tt38985800",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDAzNjNhNDEtNjQyNC00ZGY3LWFlZTctNzc0YmU2NmJhY2JhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|lady bird ugur bocegi": {
+  "id": "tt4925292",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjk5MzcyOWQtNzE1Mi00NzdmLTlkM2QtOTdjZThhMDc2Y2NjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|marsupilami": {
+  "id": "tt0179592",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjYwZTFiYzAtYWZmOS00ZmQyLWFlNWEtMTMzZjY5Mzg4NDRmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2023|the christmas classic": {
+  "id": "tt27804299",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2YzMzQyYWMtOThkOS00YjIxLTlmZDQtNDllOGE4Y2NlZmYwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|cold fish soguk balik": {
+  "id": "tt1632547",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTQ2NjY3NzU1NV5BMl5BanBnXkFtZTcwODA5MjgxNg@@._V1_.jpg"
+ },
+ "movie|closer daha yaklas": {
+  "id": "tt0376541",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDIxYWIyZGMtNTAxZC00NDQxLThkOGQtZTUxNmZiMjFhYTEzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|a hidden life gizli bir yasam": {
+  "id": "tt5827916",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGJmYWMwZDgtNzZmNC00YmVlLTlmZjgtMDRmZDFmYTgyMjI2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|maceraci yuzgecler": {
+  "id": "tt32315986",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjI5MzNlZGItOTI4NC00MzM2LThjZWYtYWNiZGMxNmI5NTVhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|you can see everything": {
+  "id": "tt45368240",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDkwNGRiNjYtZTQ4MC00MWFhLWI3MjYtNzk1MDY2ZTNiY2Q4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|oggy oggy": {
+  "id": "tt43613342",
+  "poster": ""
+ },
+ "series|robocar poli": {
+  "id": "tt4763642",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmMzMmYzNjktNmQxNS00NTlmLTgxZjctNTcxODg1NTgxMTA2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|tomorrow and i": {
+  "id": "tt31158590",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODY1ZGM0MGItZmM3Ny00OTQ1LTkwNGYtZGQyNTU5MWFkMzRlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|irreplaceable": {
+  "id": "tt37819415",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjk0Y2M1YzgtZDRmMi00ZTNhLTlhMjEtMTEyMjA2NTA5OTY4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|maddie triggs": {
+  "id": "tt38235853",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzFmNGRiZGYtYmQ5OC00NWFjLWE0NzYtMTZjZDhjOWYwMzM3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|black island prison": {
+  "id": "tt30488644",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjcyZjA0ZjUtOGMwYy00MzY4LTg1MjctZmI4YTYxYzdiMjhlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|political lupin": {
+  "id": "tt49795345",
+  "poster": ""
+ },
+ "movie|2026|practical magic 2": {
+  "id": "tt32588798",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWUyY2UyNjgtYTg5MC00MDZmLWE1MzEtZmU2YWE2ZTMzMjUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|jaws vs mega croc": {
+  "id": "tt38113512",
+  "poster": ""
+ },
+ "series|puffin rock": {
+  "id": "tt3590338",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjVlNWM4ZjQtMTAyZS00NzM1LThlZjYtN2JmZDJhMDU2ZWUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|wicker": {
+  "id": "tt29611136",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODliMTEzMTUtOGFlZS00NTgxLThjODEtMzcwNTE1OWE5Mzg2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|rob lowe the outsider": {
+  "id": "tt47597255",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjI4ZWVkZWQtNjIxNC00ZjAxLThjY2EtM2UxZDhlZDIxOWZkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2011|archipelago": {
+  "id": "tt1527835",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmE2YmI5MWUtM2MxYi00Njk0LWI5ZTAtNWE4ZmFiOThhMmNmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|nate bargatze good for nathan": {
+  "id": "tt50828463",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGQ0MzM4NTMtOTNkOC00NDkwLTkyMTUtZmI5ZTlkYmVmYmFjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the early spring": {
+  "id": "tt37884717",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjIxNmQ4MDctODQ4Zi00NmYwLTkzNWMtNzEwMmI0ZGFjYmUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2023|mr k": {
+  "id": "tt7972570",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmE4ZWY3MDAtNmFmYS00YmRkLWJmNjQtMmQ5MDk0ZmIyOGY5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|the social reckoning": {
+  "id": "tt37510326",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjdlZTgzZDUtMmVjYy00M2EyLWFlNGMtNjVhYjM2ODNmZjEzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|minions monsters": {
+  "id": "tt32890033",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzBjMDg4YjctYzg3ZS00ZDFmLWI1YjctM2RkZGVjZWEyYWQ0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2004|eulogy": {
+  "id": "tt0349416",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTczMDA1MjEzOF5BMl5BanBnXkFtZTcwNjIwMDEwNQ@@._V1_.jpg"
+ },
+ "series|blossom through the cloud": {
+  "id": "tt36982718",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjFkNjA0MzQtYWMxZS00NWVhLTk5OGItM2Q1MDkyNTg0ZWE3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|tinpo": {
+  "id": "tt9383750",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODUzMTkwM2ItZmUyYy00YWQyLTliN2QtN2RiZmEyYmNhODUzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|overdo": {
+  "id": "tt37443650",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDlhYTY1YmEtYzZhZC00OWNhLWI5YTgtNjNkMjJmYWU5NDllXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|the pursuit f1 academy": {
+  "id": "tt49813814",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmJkMTVhZmQtMGIwOS00ZTViLTlhODgtNTM3NTk3NDcwZGNiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|remnants of gold": {
+  "id": "tt37437772",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTAwYTlhZGEtMjU3Zi00MjkzLTk0ZGMtZWFkZGI0YjVjOTFmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|chiara ferragni front facing": {
+  "id": "tt51547822",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2Q2YjI5ZTQtYzEyMi00MzFlLTk5ODYtZGUyN2I3NzIwY2ZiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2016|pinhan": {
+  "id": "tt9043244",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmYwYjVmZTEtM2E1My00NjRjLThiYmMtOTVhZGU5M2QzM2JkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|the symphony of dance": {
+  "id": "tt34902686",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmE2Y2JmZDAtMWNkNS00MDQxLTkwNzktNGNmMjdlMGE4MTU4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sword silence": {
+  "id": "tt42152429",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMThjYWEyZmMtZGY1Ny00NmU1LTgxZGUtNmZiMzdkZjJkOTZlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hudutsuz sevda": {
+  "id": "tt29258720",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGM2ZDk5MmYtYTYyNC00NDg5LTkwYWYtY2Y0NzI1Y2QzYjVkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|deadly tag": {
+  "id": "tt47742728",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTEyMGFjMzYtZGYxZS00NDcwLWJiNDMtNTNjZGE3NTJkZjdkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sakir pasa ailesi mucizeler ve skandallar": {
+  "id": "tt34678524",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmJiZTRjZWUtZDgzOS00NWQ4LWEyYzAtMzRiMzJiODIxZWMwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kiskanmak": {
+  "id": "tt38235386",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWRhOWFmNWItMzg5My00MzE5LThkNDAtYmE5ZWJjOWYyYWQ3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|four hands two sonatas": {
+  "id": "tt39368345",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2Q3NDc0NTItM2I1ZS00NDg3LWFiYTctOGZjNTUxNjg3ZGNkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|bana sans dileme": {
+  "id": "tt36590417",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2RiYWI1M2QtZmMzMy00MGNlLWFmNDItMWE0M2RiMDAyNjc0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|en yakin arkadasim sevgilisi ve ben": {
+  "id": "tt38662472",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjliM2QzMTYtYWY1ZS00YThjLTkxYmQtMTI4MTc0MzVmYWM5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|spooky in love": {
+  "id": "tt40247521",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTU5MDE2ZjgtMWIxZi00NjFhLWJjNDMtZmRjMDUwNzAwNTgyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|g nesi": {
+  "id": "tt38483587",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjhiN2YyN2ItNmE4Yi00ZGIyLWFiNGUtMGYxN2JhZjkzZmZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|melania the series": {
+  "id": "tt50666033",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmEzM2UxZmMtNTcwNS00OTdhLTllZjgtMjdmMDNiYjZjYzVhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|rewarding": {
+  "id": "tt43658386",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTcyOTIyZTYtNzljZS00NjdjLTkyMmQtZTNjYzA4M2YxNzg4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|rock kampi 3": {
+  "id": "tt6743524",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDE4Y2NiOTktOGY4ZC00YWQzLWIzY2MtODgzMTcyODY2NWJkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|win the mall": {
+  "id": "tt38885478",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjgwNTEyN2ItYzY2MS00MTAxLThiOGUtYmFmNzU2YWFjOTEzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|bill s included": {
+  "id": "tt39276740",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2JjM2JmYzQtYTAwMi00ODRkLWJkZGYtMGY2M2FiNjBkNWRiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|vinland saga": {
+  "id": "tt10233448",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDA3MGNmZTEtMzFiMy00ZmViLThhNmQtMjQ4ZDc5MDEyN2U1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|the countess of monte cristo": {
+  "id": "tt38688809",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2MwMmRlYTYtMjY2My00NmFhLTg0ZjctNWExOTM4YjRlMzBlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|delicious in dungeon": {
+  "id": "tt21621494",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmU3ZGFhMmYtNzczYy00NTE0LThkYjgtNWFiYTY2NzRkM2QzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|between steps": {
+  "id": "tt39087958",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTNiMzAwMTEtN2Q5ZS00ODBkLWFhYjYtMjQ4NzYxYzNmOTAzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|onimusha": {
+  "id": "tt22301234",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjJjZDM1NjktNDZhNi00OWZmLWI3NzEtOTMzMmZhMjc4MjQ3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|pluto": {
+  "id": "tt26737616",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTI1YTYxMzgtMzM5MS00YWQzLTk1YTAtNWE2NTJhODVhNTZlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2024|the promised land": {
+  "id": "tt21444192",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2QyMWI5MWYtOWY4NC00MmZjLTg1NWMtYmVmMGI4YjllMjI3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|castlevania nocturne": {
+  "id": "tt14833612",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODJhZDcxMWItNmI3MC00NGZhLWI2YmMtYjc2ZDFkYjRiYTQ0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|doctor x mafia in white": {
+  "id": "tt39328047",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTE2ODI5NzctZDNiMC00YWM4LTkzMDItMmEzYjcxYTM2MTgyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|captain laserhawk a blood dragon remix": {
+  "id": "tt14837566",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjk3Mjc2YjctNzU4Mi00OTJhLTkzMzUtZjMxOGYyOTI2NDNjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|junji ito maniac japanese tales of the macabre": {
+  "id": "tt21856734",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTZhMDZhNmItZTQwNS00NDZlLTgzYTEtNTkxY2EzZDIzZDg3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|blue eye samurai": {
+  "id": "tt13309742",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2E4ZGIwZWYtMGRiMS00NGI2LTgwYzAtZGY5NGVhNzY3Yjk0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|uncle from another world": {
+  "id": "tt15219320",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjY4MmVhOTItOTU4Mi00N2UxLWFhMGYtNmJkNmIzYzFhYzkxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|molang": {
+  "id": "tt6046238",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmVjOGZhNzMtMzMwMS00MmIzLWE2NWEtZDU0MGY2MzYzMzE4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|pocoyo": {
+  "id": "tt0487849",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTUxNzQ3MTI5Ml5BMl5BanBnXkFtZTcwNzcyNTE0MQ@@._V1_.jpg"
+ },
+ "series|jonny jetboy": {
+  "id": "tt17374846",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWEzZjRhZWQtYTcyNy00NjNkLWEzM2QtMDU1N2M3MDFhMDE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|the law of beasts": {
+  "id": "tt44079238",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTI1NzRkOTAtNzFhMi00NmE4LWFjNTYtZGNiZmMzYzNjZDU4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|nado": {
+  "id": "tt43744909",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmI0N2QzYzAtMTFmMS00ODljLWIzOTItZmQxZjZlZGJkZDIzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|manglik": {
+  "id": "tt50526708",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGI5MmZjMDEtNzM2My00ZmMwLTkwYzUtODY1YzkwZTQxZWZmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2025|bluey fancy restaurant": {
+  "id": "tt37678086",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjAyOGI0YTItOWY2YS00MzA0LWFiZWYtYWFmYTcxOWFmNmIxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|uclarda yasamak": {
+  "id": "tt36454145",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTBlZWI5MWItNTA5OC00MGU4LTk3OTQtNjAxNzc0YzhkOTk3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2021|dolores the truth about the wanninkhof case": {
+  "id": "tt14961752",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDYxNGQ5ODAtYWYzMy00NjBkLWI2ODYtYThkMWMyMTE1YThkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|deep water": {
+  "id": "tt29516222",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2RjZWRiMDgtOTZiMy00M2MxLWI2M2MtMDU4ODc3MGNhM2E0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|the punisher one last kill": {
+  "id": "tt36042156",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGJlZWJhYmYtNjcwOS00OGMxLWJhODMtMGQ5ODQ5MDE0OTFmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hizli ayaklar": {
+  "id": "tt21310508",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzFjM2VjMjQtZTE4Yy00ODA3LWJmYzgtYmI0OWI3YmZmOWZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|team dronix": {
+  "id": "tt11122274",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmZhYjQ0NTItNjQ2Ni00NDhjLWFlYTktNWRkMzllYmRkN2I1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|cift kisilik oda": {
+  "id": "tt36824311",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/567/1419116.jpg"
+ },
+ "series|2026|valentina and the 12 signs": {
+  "id": "tt39161219",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYWQwMzVmMzAtNWFkMi00MWM4LWIwN2MtOTEyYzk1MmQyNDg1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|bir varmis bir yokmus objeler": {
+  "id": "tt34677627",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjQ3YTJiYjEtNTYxMS00MzEwLTljY2YtZDZlN2U2ZWNmZDAxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2025|mafia": {
+  "id": "tt32840267",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/577/1442735.jpg"
+ },
+ "movie|the symphony of dance": {
+  "id": "tt34902686",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmE2Y2JmZDAtMWNkNS00MDQxLTkwNzktNGNmMjdlMGE4MTU4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|student of the year after dark": {
+  "id": "tt28450216",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTVmNWYzMzMtYzY2Yi00MzIwLWFmZjItYWEyZDFhNzUwZDRhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|mechamato": {
+  "id": "tt24215446",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTgxNGIxYWItODU2ZC00YzA1LWJmNmMtMDA2YzhiZGEzMzk1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|super dino": {
+  "id": "tt46361946",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTQ3YjFjNmMtNTAwMy00NmU5LWJjODEtNzZlNjliZTc1NDI4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2025|fildisi kral": {
+  "id": "tt25147850",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzYxMTZkYzItNjAxYi00ZDUzLWI5N2YtNWQ1MzI5YTg4N2UwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|rocky iv": {
+  "id": "tt0089927",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjJiYzRiYWMtZTgyZC00YjliLWIwZWMtZTJlYjkyYzc2MDMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|rocky iii": {
+  "id": "tt0084602",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDYzNDQ3Y2MtODc1Zi00ZTBkLWIzZWUtOGY0NGZmYWZhMWQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|cizmeli kedi": {
+  "id": "tt26733945",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGFmYWU3NGMtM2I3Zi00Nzg3LTg5OWEtZmFkNzRkMzU1ZDAzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|canavar": {
+  "id": "tt45162718",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTM5NmFjMmQtY2Y4YS00YTY4LTgzODktZDMxYzE1ZGEzYzJjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|rocky": {
+  "id": "tt0075148",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDEyY2M2MGMtYjg5OC00ZWFjLWFkZDQtNmQzZTdiYmYzZTBkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|rocky ii": {
+  "id": "tt0079817",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDUxMWExZDctZTk4Zi00ZDFiLTgwYWUtNjEyYzA0NWQyYTJlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|extra geography": {
+  "id": "tt34798706",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGFlYjFjOGEtYjAwZi00M2RlLWJiZWMtZjI2YTZjZDUyZmI0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the daily life of the immortal king": {
+  "id": "tt11755260",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTU2NGRmNTQtYTcyZi00OTNlLTgxMzEtZjRiZjUyNGRhYTM5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|angel beats": {
+  "id": "tt1639109",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2NlOWI5OTMtODRhZi00NjY3LTljZTUtYTQwZTMxOTBjNzE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|amaim warrior at the borderline": {
+  "id": "tt15128210",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDFlODUyNDYtNzMwYy00ZWMzLWFjMWMtN2I4MGI4NTA4MDk2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sweet reincarnation": {
+  "id": "tt27990718",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTM0MTdiYzEtOGExNS00YmE1LTk1YWItZWYxMmY2MGFiNjYwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|style of hiroshi nohara s lunch": {
+  "id": "tt38691315",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjIwM2ViMTktYjhiMC00OTA1LWJmYzMtNjNkMjhkMzM5MmY0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hell teacher jigoku sensei nube": {
+  "id": "tt34754751",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmI2YzMyMGQtODZiMS00ODljLWE5MjItYjkxMDgyZWYyYjY1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|danganronpa the animation": {
+  "id": "tt2902582",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTViOWU0NzctYmIzMC00Yzc5LWI0ZGQtNmM2ZTM3Mjg1OWViXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|shadows house": {
+  "id": "tt13362302",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTQzNDVkNWYtZDViYy00NTYzLTg5NjUtYzI5OWM1OTcwOWI3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|blue drop": {
+  "id": "tt1139447",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTJiMTQ4MGItNDIxNi00NjkwLTg4ZDItMTcyYzI5ZjhkNzU0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|embracing love a cicada in winter": {
+  "id": "tt14330332",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODhiMWFkYTgtOWYxZi00ODc3LWEzZjctMzNjOGM1NWI5NWIxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|onihei": {
+  "id": "tt6494518",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmMzZjhjNjUtMjM0Ny00MDEwLWEwYzgtYzMwYjk0ZDlhOTdkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|locodol": {
+  "id": "tt3590246",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTIwMDUyODctOGU1ZC00MTcyLWJmNDgtZThlYTBjNGY3MzgzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the warrior princess and the barbaric king": {
+  "id": "tt36593277",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmZhMTU0MzQtNjk5YS00NmRkLTk0ZDctY2FhZGI3YjRjMGFmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|hind rajab in sesi": {
+  "id": "tt36943034",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWVlM2RjYTctODU4Mi00NTQzLWEzMDktZGVmYTQ2NTEwOWFiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|yano kun s ordinary days": {
+  "id": "tt36132068",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWI2ZDJmOGMtNTkwMC00NDhiLWE2Y2EtNDBiNjM2ODE5ZjE2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|lovely complex": {
+  "id": "tt1587394",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGVhZGExOTktMzU0OC00N2IzLThlZmQtZGIxZWI3ZTUzZThlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|petronix": {
+  "id": "tt28093013",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/466/1166038.jpg"
+ },
+ "series|onmyoji": {
+  "id": "tt22264252",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzFlMzdhNmQtNWM4OS00OWNjLTg2NDYtYmE5NWQ3NDJlN2M5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|touring after the apocalypse": {
+  "id": "tt35955429",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmYwNmU0ZTktMGI3MS00ZDQ4LWE4ZjAtNTZlYTk3YmQ1ZjI3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the camphorwood custodian": {
+  "id": "tt36461929",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGQxMWYzMTUtYThmNC00MGM4LTgyNWMtODBhMWYyODljMDMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|robots": {
+  "id": "tt0358082",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDYyNjY1NjY1M15BMl5BanBnXkFtZTcwNjk5MDczMw@@._V1_.jpg"
+ },
+ "movie|influencer": {
+  "id": "tt13309170",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWE4M2FiMjctZmM3Ni00NTJlLTgxOTMtMDI2ZjhjMDRiZTQ2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|last sentinel": {
+  "id": "tt5153956",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjgwNDA0YWUtYWE5Ny00MzRhLTk4YWUtZjgzMGU2NzhmZmMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|malum": {
+  "id": "tt9472334",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWE0NzVhOTktOTViZi00NmQzLWJmMzQtN2FlNzE4NDZlYWE3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|black box": {
+  "id": "tt32315584",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmFiZTE1YzAtZjUwOC00NTFhLWFkZDgtMWY4NTRmNjNjODhiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|sirat": {
+  "id": "tt32298285",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzA1OTkyN2MtMGZjYy00NTcxLTg4Y2ItZjc4NjM2NmQzMzdjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|akasya duragi": {
+  "id": "tt1286883",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTgxYThkMmYtNTkwYS00MDMzLWJmOGQtMjkzMTBhMTBjNmY4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|genis aile": {
+  "id": "tt1478022",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDdiYWJhYTctNzRiMi00NDQ0LTk5MGItNjVlZDY0ZWIzYjcwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kanit": {
+  "id": "tt2151208",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWUyMDczNTUtYWY1ZS00MTdlLWE0ZWYtODU4MDM3M2Y0YjI0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kinali kar": {
+  "id": "tt0426735",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzMyMmM0MGItNGI5Mi00MDZhLWJkMzYtOTE3ZjA2M2U0MGFiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hanimin ciftligi": {
+  "id": "tt5787228",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2Q2Yjc5ZjctNGYyZC00MTg1LWExZjctNWM3YTNjMTFhYjFhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|cocuklar duymasin": {
+  "id": "tt0413623",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDQ2YWVmZjQtYWY2Zi00ZmQ1LWE5ZDctNWJmMTNmOWYwNmJlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|vefa sultan": {
+  "id": "tt35853665",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTFhMWIxOWItYTg5Yi00ZmNlLWIzNzYtZWZmNWNiOTNjNGQ1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|siyah bere": {
+  "id": "tt36966597",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmZlM2RmOWQtZGM2Ny00YzM2LWFjMjMtZmQ4YTJjMTA5MjY4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the laid off cheat granting mage enjoys a second lease on life": {
+  "id": "tt43691412",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDc0YzExZmEtZmU4NC00MmNlLWIxOTgtYzRlNDFmMzBjYmYyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|dragon ball super beerus": {
+  "id": "tt39395275",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGZlN2Q4ODgtYjZiNC00MTU4LWFkMmUtNmFhOTdjMjQ3YTQwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the vermilion mask": {
+  "id": "tt41153966",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzE3NTM4ZjgtYWY4Zi00YTA4LTkyYjAtYWY3MDQzNzJhMGUxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|firefly wedding": {
+  "id": "tt39394153",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzQ0ODJjYTQtZGY0Mi00MGQ5LTljZDQtZDQxZmFmMzdmNjY1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|adini sen koy": {
+  "id": "tt6091552",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmI4NWE5MzgtOTljNi00YTdkLWFhYjMtMTFhYzliMTkxNTcyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|cennetin cocuklari": {
+  "id": "tt1586787",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTBiOGExNzMtZmU2Yi00MDU0LWJkYTctZGJhZjQwZjFhYWExXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|even though i m a super timid noble girl i accepted the bet from my cunning fianc": {
+  "id": "tt43691418",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjk4YTA0YjQtMjU1Yi00NjMzLWE1N2YtODEyNmQ2NmUwMzg0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|frieren beyond journey s end": {
+  "id": "tt22248376",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTI4ZGMxN2UtODlkYS00MTBjLWE1YzctYzc3NDViMGI0ZmJmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|i want to love you till your dying day": {
+  "id": "tt36056731",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGZjMGI4NTUtOTNjMi00YjgzLWE0ZmYtMGFiZmNjNjNjZjAyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|smoking behind the supermarket with you": {
+  "id": "tt37614297",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmQyMTI2NGYtMmQzMi00YTU3LWJmZmEtYjdlMjdjODMyMTlmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|love unseen beneath the clear night sky": {
+  "id": "tt39304754",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzIwNmYxMmUtMzA0Zi00NmE4LTk4NDEtMWFkOGM0MzJiYjczXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|witch hat atelier": {
+  "id": "tt32550889",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzkyMWRhYzQtY2VjYS00M2NkLTg4ZmUtODY4ZmY5NGY0MTljXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|nippon sangoku the three nations of the crimson sun": {
+  "id": "tt40548519",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWQ3MzEzMDctZGM2My00MWY0LTgyNzctMDVkMzcxMzAyMjU2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the apothecary diaries": {
+  "id": "tt26743760",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjAxMmFjZjgtYjM1ZS00NzdmLTliZDktZmIyMzU5YTBlNDBmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hur": {
+  "id": "tt21095400",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGE1ZjU2YzUtNDU0ZS00MTEwLWIxNzgtZTcwMThkNzU2MmI1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|your lie in april": {
+  "id": "tt3895150",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjRhOGVhOGEtNzYyNy00YjVlLWI3MDQtZjkxZmYzZTBkODdjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|solo leveling": {
+  "id": "tt21209876",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2M4YzdkMTEtMjUyYy00ZWY0LWI5ODQtNGRkZWQ1MzU5MWM2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|you and i are polar opposites": {
+  "id": "tt36034547",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmY0YjhhMDYtMDdlMS00MjhjLWJlMWYtMzE2MTI4YjVlYTE0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|chainsaw man": {
+  "id": "tt13616990",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGY2ZTM2MWMtNzA2OS00ZjJlLWIwZTMtMDBhN2EwYjZjZjEyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|dr stone": {
+  "id": "tt9679542",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzZkYjM1MWMtNTY3Mi00MTMzLTlhNmQtN2ExZjFkYzdjZmFjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|violet evergarden": {
+  "id": "tt7078180",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWUwNDFiNjQtYjQ0MC00MTcxLWE0MGQtNTdkYTlhZGU2NDFmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|cyberpunk edgerunners": {
+  "id": "tt12590266",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjUwY2RlMjctYTA4My00NzNjLTlmYzQtMTg0NzM0ZDU5ZGY0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the ramparts of ice": {
+  "id": "tt39123061",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2U2NWI3ZTctMjVhZS00NmYzLWI1OWMtYTFmMDlhYTI5ZjczXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|amansiz": {
+  "id": "tt0200428",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWNjN2Q1NmItOTU4My00OTdjLTk3MjUtODU3ZjIxMWFmZTdhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kasaba doktoru": {
+  "id": "tt18247270",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTQyM2M4NjYtZjQzNi00NjQyLTk5NTctYWYwZWRlMDI1ZGVlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|bodrum masali": {
+  "id": "tt5994796",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDcyMTVjZWItODEwNi00NjEzLTkxNWYtMTIyMDlmOTk0MDMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hangimiz sevmedik": {
+  "id": "tt6263656",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGI5ODlmNWQtMzY1Zi00Njc4LWI5NTktYWRmNmFmMzJiNmY2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ya istiklal ya olum": {
+  "id": "tt11628176",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTkzNzA2ODUtZjU1OS00NTQxLWFmNDctZDkzOTJlNjdkZGM3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|canim annem": {
+  "id": "tt16539540",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjU0YThmNjAtN2ZmOS00MDcxLWE0Y2EtYmY0NDE0ZmNlYmMwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ask i roman": {
+  "id": "tt33888217",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjI4YWVkOGItMGZhOS00YmE1LWFiMjktYTgxYTBhZjg1MzEwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|boxun yildizlari": {
+  "id": "tt8098348",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjVlNzNjNmQtZjQyMy00Y2VmLTgwMWYtYThhYWVkODk1YTRhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|arka sokaklar": {
+  "id": "tt0845088",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzRkODI2ZTMtYTMyMy00MGZkLWFiOGItMTEzMWFjYTllOTcxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|carkifelek": {
+  "id": "tt5610466",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTgwMjc4Y2ItMjdkZS00YjUwLTg5OWYtNmQwMTg5MjNmMzUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|8 de bugun": {
+  "id": "tt10747352",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjk2ZDc1NTktZjgxYS00OWViLTkyZDktNjJmNzY1N2Q4ZTQ4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|boku dake ga inai machi": {
+  "id": "tt7573686",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzgxZGM2NTEtNzFjZS00OTdkLWFmYzgtYjk3YjJiY2RiMGM1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|aile saadeti": {
+  "id": "tt37200664",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2I1OGU5N2UtOWM5NS00ZGVkLThiZWMtZTdlZTZlNDViNWY0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|asirlik gece": {
+  "id": "tt43658562",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/635/1589774.jpg"
+ },
+ "movie|2026|sultana": {
+  "id": "tt41228546",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWYxNzhkY2UtYzA0Mi00YjlmLTlkZDEtZGU4OGQ1MTEwNjg4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the cat and the dragon": {
+  "id": "tt41278620",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/648/1620786.jpg"
+ },
+ "movie|1969|it was a short summer charlie brown": {
+  "id": "tt0064501",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjVhNjY4OGUtNTYxMi00Y2JjLTg0YTUtNzAyY2FmYmQ5MTU3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|1971|bananas": {
+  "id": "tt0066808",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTIyYmU1NmQtYjI3Ni00N2IwLTg4MmItMzNhOWRiMjk5NjY4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2006|v for vendetta": {
+  "id": "tt0434409",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDEwOTRjNjgtOGY0MC00NGYxLWFmYmQtNjc1ZjVhMTc0OWUxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2016|transpecos": {
+  "id": "tt4687464",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODc0NTI0NDE5OV5BMl5BanBnXkFtZTgwNDQxMjU1OTE@._V1_.jpg"
+ },
+ "series|aska dusman": {
+  "id": "tt29621957",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/483/1208395.jpg"
+ },
+ "series|demon slayer": {
+  "id": "tt9335498",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/456/1140750.jpg"
+ },
+ "series|ah nerede": {
+  "id": "tt19768226",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTIzMWZiOWUtZWRmMi00MDc0LTgwYWItZWIyZWQ5M2UxNWVkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2001|pearl harbor": {
+  "id": "tt0213149",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTQ3MDc0MDc1NF5BMl5BanBnXkFtZTYwODI1ODY2._V1_.jpg"
+ },
+ "movie|2005|rosario tijeras": {
+  "id": "tt0382271",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjVjNmIwMDAtZjNlNC00NjE0LTgxZWQtZDQwZDA2NTM5MmFlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kaguya sama wa kokurasetai tensai tachi no renai zunousen": {
+  "id": "tt9522300",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTM1ZWViNWMtZWY2ZC00YmYyLTk1ZGEtMzRjOWI2YTM1OTI3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|eser yenenler show": {
+  "id": "tt9257324",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDM2YjYyYmYtNWJmNS00NmU0LTljYTQtYTJmNTE3YWU3MmFiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|1990|ernest goes to jail": {
+  "id": "tt0099512",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDNiZGYzODItYmM4ZS00Mzg5LWJlZWEtMjQyZjcyM2NlMmQ0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|genclik basimda duman": {
+  "id": "tt6071460",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjVjZTVmYzUtMjY2Zi00ZjgzLWJkOWYtNDU1NjE2NmUwZmUxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|chainsaw man the movie reze arc": {
+  "id": "tt13616990",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGY2ZTM2MWMtNzA2OS00ZjJlLWIwZTMtMDBhN2EwYjZjZjEyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|vahsinin kalbi heart of the beast 2026": {
+  "id": "tt7526136",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDVlMTRhMjgtMjdmZi00NjJhLWExMmYtODExNWJkZGZjNjdhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|alev alev": {
+  "id": "tt23986392",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTcxMWMyNmQtMTQyYy00YTFhLWE2MTEtOTBmZjdkZjYyNWFkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ada masali": {
+  "id": "tt14411808",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDRlOTVmZDYtMWRhOC00MjBiLWI5YzMtYzlmMTJmMWZjYmU3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|annem ankara": {
+  "id": "tt34573460",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTQxNzk0ZGMtYWU3MC00NTgwLWIwMGYtNzhhNDc4ZmFkMTdhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|house of the dragon 3 sezon": {
+  "id": "tt45369770",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjhjYzdkNTAtM2I5OS00YWYxLWIxNTgtM2IzZTFjODUwMjIzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|annemizi saklarken": {
+  "id": "tt15793068",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjkzZjkyNTktMjM2Yy00ZDJmLWExMWYtNzVhNjJiMmUxMWZmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ariza": {
+  "id": "tt12735946",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2VlMTRkYWEtODEyMC00ZTk5LWExZjEtOTc2NmZiMmY1MDZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|catli 2": {
+  "id": "tt49514466",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDkxZWJmNmQtOGVlMy00NDk2LWI5NTctOGI1NWVlOGM1ZTI0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|fall 2 olumcul tirmanis fall 2 deadpoint": {
+  "id": "tt31192372",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTI4MjNjNDgtOWY2ZC00YTdjLThhMGItZjZiYjRhNmVhY2JhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|al sancak": {
+  "id": "tt22806544",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGY1YWMxMTItNzZkZi00YTA1LWJiMDgtZjg5MDk2ZWI1ZDRjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|iste benim stilim": {
+  "id": "tt29115970",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDU4ODFlZTUtMmYxZC00ZmU1LTkyYTEtMjgxMmM4ODdmNDcxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|adim farah": {
+  "id": "tt21874046",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzA3ZjJlOGEtYjA1NS00ODlmLTgzYmEtZjY1ZjE4NWZjZDI4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|1993|bay jones": {
+  "id": "tt0107611",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTUyYmZiNWMtMTNlYS00MTMzLTlmZTMtMzhiMDU4YmZlZWM0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2017|prenses cyd": {
+  "id": "tt6053440",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGE2ZGNjYjQtZmUyOC00MTUwLTk3YjQtZDdkMTQ2YjMzNjdlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2019|bay link kayip efsane": {
+  "id": "tt6348138",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTBiMzZiM2MtYTMxMS00M2Q3LTkwYTItOWMzMDkyMTdlOGU2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|drive the pretenders surus yalancilar 2026": {
+  "id": "tt37180686",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDgzNGNhMjktZjA0MC00NGQ2LWJlNWMtM2NiMDQ3OWI2MzRmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ask evlilik bosanma": {
+  "id": "tt34622925",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzcxYmQ3ZmQtYjRiZS00MDgyLTkzMDAtNjc0OWMxNGYyNjY5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|1991|gelinin babasi": {
+  "id": "tt0101862",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGRiZjliMTktMzhjMi00MjUyLWE0OTQtYjUzYzZmNzg2NjQ3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|aile": {
+  "id": "tt21764804",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/443/1109251.jpg"
+ },
+ "movie|2004|sunger bob kare pantolon": {
+  "id": "tt0345950",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTRhZDUzMjktOTJhMC00YjNlLTk5YjAtNTdiYTVmMzc1YTQ1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|akrep": {
+  "id": "tt13318074",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/288/721197.jpg"
+ },
+ "movie|2026|robu 404 2026": {
+  "id": "tt48325392",
+  "poster": ""
+ },
+ "movie|2026|michael 2026": {
+  "id": "tt11378946",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzllNmRlN2EtMDQyOC00ODJjLTg4OWQtZDNmNGU3YzlkNjc1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|zor baba 4 focker in law": {
+  "id": "tt34966140",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGI0NjhmMmEtNDAxZC00MDFjLThlNzUtYTUwMDkzMjMxNGIzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|phi phong kan iblisi phi phong the blood demon 2026": {
+  "id": "tt40790250",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWExNzY3YTgtYWU5Ni00ODJhLWI2NDgtMGE5YmU1MDcxMWUwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|artakalan what remains": {
+  "id": "tt38624847",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2U3NDRkMjQtNmM1NC00OGZkLTg3ODItY2M5NWRkNjdiZmQ0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ask ve taht": {
+  "id": "tt45351792",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGI0MWQzMjQtZWVhMy00NzQ0LWJhOWQtZWQ4YTU4MzVlMGFhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|askin tarifi": {
+  "id": "tt14183324",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzUwYjUzMzEtYTA3NS00MzljLWE5YjAtNGQyY2Y1MWRjNGNmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2023|joy ride": {
+  "id": "tt15268244",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODhlNjFkNWEtNDMzNi00YjE1LWI3N2QtNzBmZjIyNTlkZjA2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the story untold": {
+  "id": "tt16296870",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDBkZjhhYWEtZTgwZS00OWY3LWJkNzYtNTkxNWY1MDhjMDk2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|family the unbreakable bond": {
+  "id": "tt26693752",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2RiNjFkYWQtYjMwOS00YTAxLTlhY2UtZDBiOWJkNDg4NTdiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ayazin sonu gunes": {
+  "id": "tt32904322",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzFkMDkzZTYtMGZkNS00ZDM5LWE2OGItNzdlMTQyYTdlMDkxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|alan": {
+  "id": "tt2926588",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/393/984412.jpg"
+ },
+ "movie|2010|ip man efsane doguyor": {
+  "id": "tt1641638",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjA2ODgyMjE1MF5BMl5BanBnXkFtZTcwMzE3MDU3Ng@@._V1_.jpg"
+ },
+ "series|ayni yagmur altinda": {
+  "id": "tt39514069",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTQyMmUxN2QtOGEwYi00M2Q1LWFmNTktMjJkZDNkYTdjNGVlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|aziz": {
+  "id": "tt14872600",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTA0NTA5MGItYzAxYi00OGU3LWI4ZWMtOTljYTA1NTUxZmZmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ask 101": {
+  "id": "tt10516352",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/361/904956.jpg"
+ },
+ "series|bahar": {
+  "id": "tt31012986",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmQyNDE3MmUtM2E4ZS00ZjRiLThiMjgtMTZjMWIxYjU2OGZmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|miyazma kampinda ergenlik arzulari ve olum": {
+  "id": "tt35298123",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTRlMWM2ZmQtNTljZC00MTg0LTlhNzQtZDg2N2FiMmU1NWY1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|baba": {
+  "id": "tt16428772",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDg2NmU3ZDctYmQyYi00NGRjLTk3NjYtZTIwZjdkOTBhMTVjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|portekiz aski 2026": {
+  "id": "tt39070180",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDdmNzNhMDUtYjc4Ny00NDNjLTk5YjQtZTEyODQ1MGM4YTc3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|crime 101 suc 101": {
+  "id": "tt32430579",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZThlN2M4ZTUtYTU3Mi00MDE5LWFhYWUtNjkxMWEwNjUwNDVhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|hayalet asker ghost soldier": {
+  "id": "tt38686316",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDM4MzMxZGUtZjE3Yi00YzE3LTlkNDktNWQ1MmEwMmZiZDEyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ask ve gozyasi": {
+  "id": "tt37898478",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/597/1493721.jpg"
+ },
+ "series|ask mantik intikam": {
+  "id": "tt14814006",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/500/1251886.jpg"
+ },
+ "series|baraj": {
+  "id": "tt11598800",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTdhYTRkY2QtNGYwYy00ODI0LTg5ZDUtODYyN2FhOWVkNzI0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|last shot": {
+  "id": "tt15426712",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWY5OTI0ODUtNjA5ZS00N2U0LWJmNzAtNjZiZTkzZGFjZThhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|my son s sugar mama": {
+  "id": "tt49735612",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDE4YjNhNzMtYWY3NC00ODYyLWI2MjItYTM3ZmQ3OTZiZDE2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|clayface": {
+  "id": "tt34890576",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjNlMjM4NTAtYjE5YS00ZGYyLWEyMTYtNjFlMmIxZDEzYjhhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|askin yolculugu haci bayrami veli": {
+  "id": "tt14368830",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjFkNTcyMzYtNjI3Ny00NjExLTg2MjEtYzc0ZjUyNjU2MTBmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|var misin yok musun cem yilmaz": {
+  "id": "tt1160479",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2Q4N2VmMzAtMzkzMC00MmZkLWI2ZDQtNWU1ZWEyZmM5N2I3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|annenin sirridir cocuk": {
+  "id": "tt17678840",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmZlZmMzZmMtYjczZC00NzNjLWExYjktZDNhNzI5MjZkMDgxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|1992|evde tek basina 2": {
+  "id": "tt0104431",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGEyYzRmNzYtYzJjZi00ZjhlLWJiNDktYzZhNTgxMzc1NThlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|o ses turkiye": {
+  "id": "tt8960548",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDk5NTFjOTItY2Q4NC00OGIzLWJiNGMtMjgxMGJiNDEwZGUxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|gel konusalim": {
+  "id": "tt10590430",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTY5MzAyZWItZDYwYy00NDUzLTk5M2QtN2ZiZDBjZTA2MTllXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2003|bir zamanlar meksika da": {
+  "id": "tt0285823",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTU5MDg5OTcwOV5BMl5BanBnXkFtZTcwMjI1MTIzMw@@._V1_.jpg"
+ },
+ "series|yazgi": {
+  "id": "tt21766660",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmRjODdlZTAtMTM0OS00NWY0LWFhYzctYjY4OTZkZmFjN2FkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|aynadaki yabanci": {
+  "id": "tt38351252",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWU2ZTFhNjgtNzNjYi00YWE4LWFkM2QtZmI5MTIzOGFhOTkxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|avlu": {
+  "id": "tt7923832",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzlmYjdiYmYtOGRiZC00ODQyLTk5Y2QtZjFiMzBiYTgyYjMwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|house of the dragon 3 sezon 2026": {
+  "id": "tt45369770",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjhjYzdkNTAtM2I5OS00YWYxLWIxNTgtM2IzZTFjODUwMjIzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|fall 2 olumcul tirmanis fall 2 deadpoint 2026": {
+  "id": "tt31192372",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTI4MjNjNDgtOWY2ZC00YTdjLThhMGItZjZiYjRhNmVhY2JhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|av mahsun karaca sana inaniyorum": {
+  "id": "tt45162733",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDg2OTQyNjYtYWYxMC00MjliLWI3MTctMTVhZGNlMzI4YjE1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|sultana 2026": {
+  "id": "tt41228546",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWYxNzhkY2UtYzA0Mi00YjlmLTlkZDEtZGU4OGQ1MTEwNjg4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|kusursuz yalancilar perfectos mentirosos perfect liars": {
+  "id": "tt18351090",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTM4ZWUwODYtMDVlNC00Njc3LThkZDAtZDA4NTU5YzliYWZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|odyssey 2026": {
+  "id": "tt37896763",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGE3YjU2YzAtOTU5OS00MzVkLWJjY2QtYWY3YTcwOGI2NTUzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|baht oyunu": {
+  "id": "tt14411816",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjY3OGIxY2ItY2NhNS00YjhkLTg4NmItNmUzODViZTUzYWZmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|bambaska biri": {
+  "id": "tt22727518",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2U2ZDUxNDAtZjkyNC00YzM2LWFmNzQtNjg5N2FjMzIxZWM5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|cliff booth un basina gelen diger talihsizlikler": {
+  "id": "tt36408401",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDgzOWExNGMtOWVhNy00ZGVlLTg1MDQtODA4NWFjOTM5MzE1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|balkan ninnisi hd": {
+  "id": "tt20248548",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDM2NThjMTQtYjgxZC00NTFlLTliYmUtZTk2NGM1ZjE4OTNlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|barbaros hayreddin sultanin fermani hd": {
+  "id": "tt26428591",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzg0MDM4N2ItOTA3Ny00OTQxLThiNjEtNzQzNzEzOTIzOGQ0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|yetenek sizsiniz": {
+  "id": "tt9089698",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2RlNDE1OTgtMTY3ZS00OTZkLTg5ZjktYjc1Yzg5ZDE2ZWIzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|dogdugun ev kaderindir": {
+  "id": "tt11100380",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGY4Y2Q5MjUtZmNjYi00NDM4LWIyZjktOGE1NjI3OGYwMDAyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|son yemek 2026": {
+  "id": "tt50016818",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzMzZGNkYmMtZjAxMi00MjQ3LThkMGMtOWY3NTlhMzQ0NmJiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|tuzak": {
+  "id": "tt21741266",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzFjZGY4ODMtMjZmNi00YWM4LWJkODAtN2EyYTM5YmVhNWNmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|best pancakes in the county 2026": {
+  "id": "tt38258118",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODc1MThkNDctOTVkOS00ZGNlLThmYzgtMmMzZTg4MDcyYzgxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|dayanilmaz cekim drawn together marfil": {
+  "id": "tt36073210",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjdkMTRlZGItNDdkMS00NDIwLTkyYzktNDNiYjYwNjdkMzEyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|orumcek adam yepyeni bir gun spider man brand new day 2026": {
+  "id": "tt22084616",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWNjYWM3NWItOGE0ZS00MWRjLThiZWEtYjc4ZmNmMmU5ZTVmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|nanny for the ruthless mafia boss": {
+  "id": "tt42405767",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODQwOTdiNjEtODY4My00MmQ5LWIyMTMtM2FlMTM3MjI0ZDhhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the slumdog s harem in another world": {
+  "id": "tt13628870",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2QzMWM2NDctN2EyNi00NTAxLWEzYWItMWM2NjNmNWQ5YzEwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|hayalet asker ghost soldier 2026": {
+  "id": "tt38686316",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDM4MzMxZGUtZjE3Yi00YzE3LTlkNDktNWQ1MmEwMmZiZDEyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|kardes kardes steps 2026": {
+  "id": "tt14413964",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTQyNjk2NmUtZWZlYi00ZDY4LWExYzgtNDY1ZGY3YTA2NDhlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|mafia s good girl": {
+  "id": "tt32893019",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWJiOWU0ZDctODcwYy00ODdhLTk0YWItYTI4NGFhOWI2M2JhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|deadly kiss for my stepfather": {
+  "id": "tt37986882",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzU5MmU2NGItZGI5Ny00YzNkLTkzZjgtNGQyZDIyMWQ3ZjkwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|isyan mutiny 2026": {
+  "id": "tt32338669",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2FhN2NlNWMtZDM3OC00MjQzLWEwYzYtMmJhNTY1YmRjZTNmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|dayanilmaz cekim drawn together marfil 2026": {
+  "id": "tt36073210",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjdkMTRlZGItNDdkMS00NDIwLTkyYzktNDNiYjYwNjdkMzEyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|a life without him": {
+  "id": "tt2292537",
+  "poster": ""
+ },
+ "movie|2026|kusursuz yalancilar perfectos mentirosos perfect liars 2026": {
+  "id": "tt18351090",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTM4ZWUwODYtMDVlNC00Njc3LThkZDAtZDA4NTU5YzliYWZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|xian ni": {
+  "id": "tt27432264",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/478/1197358.jpg"
+ },
+ "series|mushen ji": {
+  "id": "tt33501934",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/541/1354305.jpg"
+ },
+ "series|the road to splendor": {
+  "id": "tt31886947",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTUwYzc4NmMtNGRjZS00MGJkLTlmNTEtNDFmYmQ3MGQ4YzFmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|caillou": {
+  "id": "tt0262153",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjgyM2MzYmYtMjYxNy00NTAyLWEwMGItYzViZGZlOGU0YzQwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|canim kardesim": {
+  "id": "tt32222906",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGVjNmIwMWEtMmI1Ny00MjE5LWE3NjktNzA5M2YzZDMwNWE3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ege ile gaga": {
+  "id": "tt35284987",
+  "poster": ""
+ },
+ "series|kikoriki": {
+  "id": "tt0853174",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODcyMzFiY2EtZGQ5MS00ODgyLTk5YWYtY2I1OTU2YzUyZTgwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|heidi": {
+  "id": "tt0070968",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/150/375655.jpg"
+ },
+ "series|kral sakir": {
+  "id": "tt7639726",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/296/741889.jpg"
+ },
+ "series|niloya": {
+  "id": "tt3673316",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTRlOTI1OTItMGY3My00YTUxLTgxNTMtMTNmNTNhZGU1ODAzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|pepee": {
+  "id": "tt6764378",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGUxZWJhNmMtZDc0Yy00Y2FmLWIxMDEtMDdlMjdiMTY4OGNjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|piril": {
+  "id": "tt33255162",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzU2YTU4N2ItYWZiNy00NWVlLWE0ZWQtM2ZhNDhmYmEyNThmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|olly": {
+  "id": "tt3620116",
+  "poster": ""
+ },
+ "series|pingu": {
+  "id": "tt0100366",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTgxMGZkZDktZTA3NS00Mjc1LTg3NDgtM2U4ZWU5NWEzNjE3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|rafadan tayfa": {
+  "id": "tt8309422",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWRlYTg0MzYtYzYxMy00NTQxLWFjODYtYTVhMGY1ZGEyZWMwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|laff a lympics": {
+  "id": "tt0181941",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/31/77599.jpg"
+ },
+ "series|rgg ayas": {
+  "id": "tt4179978",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDM5MTBmNTAtOTk3ZS00OTgzLWJiMzQtNTA2NWI4NmYzYWJhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|korkunc bir film": {
+  "id": "tt0175142",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGRmMGRhOWMtOTk3Ni00OTRjLTkyYTAtYzA1M2IzMGE3NGRkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|saplanti": {
+  "id": "tt7153766",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTYzMDYzMzA1MV5BMl5BanBnXkFtZTgwODUzODg2NDM@._V1_.jpg"
+ },
+ "movie|kainatin hakimleri": {
+  "id": "tt0427340",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTJjYTFkM2EtZjBmNy00OTk2LTg0NTAtNzYxYzlmNjhkMzQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|orumcek adam eve donus yok": {
+  "id": "tt10872600",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmFiZGZjMmEtMTA0Ni00MzA2LTljMTYtZGI2MGJmZWYzZTQ2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sunny bunnies": {
+  "id": "tt7264084",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDg4YWE0NzQtOThkMS00YjgzLTkxMDktNmFiNTVhODkyMGE3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|oyuncak hikayesi 5": {
+  "id": "tt29355505",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTI1YTBiNmEtYWUxZi00YzFkLWIzNjMtMmZjMmY2NzM0ZWMzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|seytan marka giyer 2": {
+  "id": "tt33612209",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmM3ZDU3ODItZmY5Yi00OTQ2LWE5OTctZTA5NDBhMWJkOGY3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|ifsa gunu": {
+  "id": "tt15047880",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDVkYjkxMzMtZjEzYS00N2ZmLTg1YzQtN2NiNmQwYTkxNzhiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|orumcek adam eve donus": {
+  "id": "tt2250912",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODY2MTAzOTQ4M15BMl5BanBnXkFtZTgwNzg5MTE0MjI@._V1_.jpg"
+ },
+ "movie|kurtulus projesi": {
+  "id": "tt12042730",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTkwNzJiYTctNzI3NC00NjE1LTlhYjktY2Q5MTdmMWFmNzcxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|young woman and the sea": {
+  "id": "tt5177114",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjYxOThhYzMtMjVlOS00MjkzLTlkZmQtZTJiN2JhNDg5OGJkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|swiped": {
+  "id": "tt31909270",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzBhZTFhZDItZDU3Ni00MjQwLWJhN2UtZjYzYmJhZTBkODIyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|sophie and the baron": {
+  "id": "tt13084870",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTAyZDc3ZmUtYTZlOC00ZjVmLWEwYzgtZWJlM2Q2YTE3MDQzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|predator killer of killers": {
+  "id": "tt36463894",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjM2MjA4YzQtYjBkNS00YmU3LTllOTgtMDQzMjkzM2Q4MmM5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|a hero s journey the making of percy jackson and the olympians": {
+  "id": "tt31037863",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjBmZDFhMjUtMTdhNC00MmFkLWE1NmMtZTZjMmI0MjQxNzI0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|control freak": {
+  "id": "tt30789086",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTAwMjg5NWQtMzdhYy00MTI3LTlhYzAtZDRkYjVmZDBkZmYwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|people and places camp alec": {
+  "id": "tt2066940",
+  "poster": ""
+ },
+ "series|the great": {
+  "id": "tt2235759",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTMzYTNiODktNmMyOC00NGVjLWE0ZmYtMzJjN2JhODI1MjYzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|vasco rossi living it": {
+  "id": "tt28081900",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzg2ZTZhMWYtYWJmMi00NDkzLWJkYTgtMGU5MGM5NTc5ODE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|evil influencer the jodi hildebrandt story": {
+  "id": "tt39049795",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2U4OThhNGYtZjdkMS00NDM2LWJlMjYtNTVjMzk0YzM3YTIzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|percy jackson canavarlar denizi": {
+  "id": "tt1854564",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGMyZTI2MjUtODEzMi00M2JlLWEwZGEtYWE5MmY5OWNkYTRjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|full circle": {
+  "id": "tt15303234",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjEyNTA1OWMtZjQ4Zi00ODE0LWFmN2ItMmMyNzgwY2YwYjRmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|eternals": {
+  "id": "tt9032400",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTBiZjI2M2UtZTNiNy00NmU4LWJiMjYtZjk4MDIzMzhlMjFlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|captain america the winter soldier": {
+  "id": "tt1843866",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWY1NjFmNDItZDhmOC00NjI1LWE0ZDItMTM0MjBjZThiOTQ2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|captain america the first avenger": {
+  "id": "tt0458339",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzUyM2YyY2MtNzNlMS00MWU5LTgxNjAtNzZlNmI2NjU2NDZlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|captain america civil war": {
+  "id": "tt3498820",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjQ0MTgyNjAxMV5BMl5BanBnXkFtZTgwNjUzMDkyODE@._V1_.jpg"
+ },
+ "movie|percy jackson olimposlular simsek hirsizi": {
+  "id": "tt0814255",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDE4M2ZiYzEtODJiZC00NmI1LWFlNTgtOGJlNTY3NmExYWNjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hamlet": {
+  "id": "tt14032126",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/335/839932.jpg"
+ },
+ "movie|joker": {
+  "id": "tt7286456",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzY3OWQ5NDktNWQ2OC00ZjdlLThkMmItMDhhNDk3NTFiZGU4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|cehennem melekleri 2": {
+  "id": "tt1764651",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDMyOWU1N2EtNWU5ZC00MTdmLTgxNDItYjFhMmFlMmQyNzc4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|asiklar sehri": {
+  "id": "tt3783958",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDllYjliOTUtMDJjZC00ODIzLWJmNGMtOWI2NzQxMjA2NzdlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|cehennem melekleri 3": {
+  "id": "tt2333784",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODU5ODMyMzg2MV5BMl5BanBnXkFtZTgwMTA2MTcxMjE@._V1_.jpg"
+ },
+ "movie|cehennem melekleri 4": {
+  "id": "tt3291150",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjgyMmRmM2EtYWY5ZC00ZTllLWJhM2QtMGRlNGEzMWEzYzllXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|temel icgudu": {
+  "id": "tt0103772",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjlhMGM2ZWItN2ZhZi00YzU0LTg1MTQtNzczZmY3OGJlOGM4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|ghajini": {
+  "id": "tt1166100",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjk3ZmQyYjAtZTgwZS00YjliLTljZmEtMDU1Nzk1Y2NhYmRlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|thelma ve louise": {
+  "id": "tt0103074",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjIxNDgzMDE2MF5BMl5BanBnXkFtZTcwNzY5NTk1NA@@._V1_.jpg"
+ },
+ "movie|milyarder": {
+  "id": "tt0263743",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTliNWU3YjctOTcxNS00ZDAwLWE3MDctMGEzMDBkOTA4OTZiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|tasiyici 3": {
+  "id": "tt1129442",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTkxNzg1OTU4M15BMl5BanBnXkFtZTcwMjcyMjI5MQ@@._V1_.jpg"
+ },
+ "movie|her cocuk ozeldir": {
+  "id": "tt0986264",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTI0ZGRiMDEtNGNjMS00MGU4LWI3OTktNzcxMDZmZTk3MTljXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|365 gun daha": {
+  "id": "tt21106646",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODRlZGMyZDQtZmM1OC00MzUxLWEyMWMtMzhlNTU4NzkxZDMxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|elysium yeni cennet": {
+  "id": "tt1535108",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDc2NjU0MTcwNV5BMl5BanBnXkFtZTcwMjg4MDg2OQ@@._V1_.jpg"
+ },
+ "movie|zombi ekspresi": {
+  "id": "tt5700672",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODA3OTM4NWQtMjU1OS00NzA2LTlhZDAtYjU2YjM5MWUxNTdiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|haydutlar": {
+  "id": "tt0219965",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTkyMzA3OTI3NV5BMl5BanBnXkFtZTYwMjU0ODM3._V1_.jpg"
+ },
+ "movie|zugurt aga": {
+  "id": "tt0201368",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYWNkNzUxYTYtMDg0ZC00YjdmLWIwYmYtMjZlNTUyZDM2ZWYwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|pro bono": {
+  "id": "tt39012462",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWZlNWJkMTktZmVlMi00YTM0LTlmNjAtNTdkMmFhZWE1MzhmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|villains": {
+  "id": "tt39068271",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTM1Yzg1MGUtMTQ4Yy00ZjYxLThiOGQtYTkwNzdmNjA5NjVmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|the price of confession": {
+  "id": "tt37218592",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2E5YTBkODgtNmNkZC00YjY0LTg5MDgtOGI4NDhiNDNhZWI5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|will you be my manager": {
+  "id": "tt39325379",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWE3MTJiZTgtZDAwZS00NDdhLWJkMTUtNTllOWM4YjJjZTdhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|surely tomorrow": {
+  "id": "tt38221085",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDNkNDI1NzktYjJmOC00ZDUzLWE5NWEtNGI4NWRlMGQ3MzJiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|koloni": {
+  "id": "tt6506264",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDExOWIwMDUtODkzYS00Yjg0LThkOTEtMjdjMzQ0NWNjMWU4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|asiklar": {
+  "id": "tt0052556",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTEzNDU2OGItYTlkYy00NGQ5LWI2M2MtYWQzNjQ1YmNmNzk4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|leyla hayat ask adalet": {
+  "id": "tt33264855",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODRkYzI2ZDctNjdkYy00YjczLTliOTMtZjZmMTZhNTJjNDBkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|menekse": {
+  "id": "tt51088429",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTY1MmE1ZGQtZWEzNy00ZmQ3LTk2NjItMTY2MGM1ODU5ZjlhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|veliaht": {
+  "id": "tt37137373",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDA5NTRhMjEtNjFiOS00YzNhLThkOWYtZjc3MjZlZDgwMjc4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|cevher": {
+  "id": "tt49559461",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmE4ZWE1OWQtYmFkZS00ZDNlLWJmOGYtZjM4MjU1MTRkYmY3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|delikanli": {
+  "id": "tt39334604",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/619/1548828.jpg"
+ },
+ "movie|2026|primetime": {
+  "id": "tt34206385",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTcyZGI2NWQtOTU3NS00NTEyLTliNDItNTQyNmFkMGZmZGQzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|siyah kalp": {
+  "id": "tt32880925",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/562/1405281.jpg"
+ },
+ "series|deha": {
+  "id": "tt31869878",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWU2MDdlYjQtYTFmOS00OGI5LTliNGUtMDNlOGE0N2RiZmRjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|cukur": {
+  "id": "tt7431994",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTM1ZWQ5MzgtOTM3My00OWE0LWExOWQtZWQwMmZmY2EzNWU2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2010|son neandertal": {
+  "id": "tt1526578",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTAzZTMyMDYtZTExYi00ZWQzLWJmMzMtZjM5NTVkNGNmNzQ1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|diger anne": {
+  "id": "tt36586020",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGUyODYyYTctMmY0Mi00ZWIwLThjYWItZDJmODY4NGU1YjY1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2016|kara gun": {
+  "id": "tt4572514",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODYxMDc0NTg2Nl5BMl5BanBnXkFtZTgwNjY0NDYzOTE@._V1_.jpg"
+ },
+ "movie|2026|infirmary": {
+  "id": "tt35682658",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjZlZTY2NjMtNTEwZi00NDYxLTk5NTEtOTIxNmU3ZTA3OGNiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|wasteman": {
+  "id": "tt29028515",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzg2ZjlkNTgtMWE4Mi00YzAwLWE1NTMtMzQzYjcwOTVhMmUyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|zavallilar": {
+  "id": "tt5546742",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjZkOGNhYWMtOWFkYS00NDhlLThiYTItMGUxZWU1YWMxNjIzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|rocky 5": {
+  "id": "tt0100507",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTM2Mzc4MTYxM15BMl5BanBnXkFtZTcwODY5NTk1NA@@._V1_.jpg"
+ },
+ "movie|2017|sadakat yolunda": {
+  "id": "tt4899370",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTUxOTk2NTkxNF5BMl5BanBnXkFtZTgwOTUyOTM3MTI@._V1_.jpg"
+ },
+ "movie|bat mitzvah ima kesinlikle davetli degilsin": {
+  "id": "tt21276878",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmU0NjhkYzctZDBhNi00NzFjLWFkMjAtZGY0MmM3YzU3ZTgyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|watari kun s is about to collapse": {
+  "id": "tt32535912",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzQ2ZGZiNDEtYTE4Zi00MGUxLTg2NWYtYmFjYWMyMmZmZjg0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|rerided derrida who leaps through time": {
+  "id": "tt10662504",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjcwZmE1MWItOGM1MC00M2MyLTk4OGEtYjQ0ZmFkMWRlNDBkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|nekopara": {
+  "id": "tt11405370",
+  "poster": "https://m.media-amazon.com/images/M/MV5BM2M3OWY2OWItNGI5OS00ZjI3LWE2ZWMtM2NlYWJkZTJmZGJhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|problem children are coming from another world aren t they": {
+  "id": "tt2575690",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTZjODk4NzUtNjk3Yy00MjBkLWIwMmYtYjE3NDhiMWQyYmRlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|haibane renmei": {
+  "id": "tt0380113",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjRlOTZiY2MtZTJiMy00Y2E0LTlhZDAtNTI0ZTRmZWQ2YjdmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|tiger 3": {
+  "id": "tt18411490",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGQ1MzkzZDYtMzg1YS00ODE0LTgyYTYtNDdkOWNjMDFhMmZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|lord el melloi ii s case files rail zeppelin grace note": {
+  "id": "tt9573854",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTZmMDBiYzQtMzk3Zi00ODRiLWE5MTEtNzU4YmYzNmZjMGVjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|twin star exorcists": {
+  "id": "tt5637108",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGIxOTEwNTgtNzNlYi00YjQwLWExY2ItZjI4NWNhMjI4MjYxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|record of ragnarok": {
+  "id": "tt13676344",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDI0ZjAwZmQtNDViYy00ZGU3LTliZWQtMjdmYmM5ZTJmZDNkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hetalia axis powers": {
+  "id": "tt1356878",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzBhMzQwZDItNzc0Zi00MGUwLTg2MmYtMjdlZDA2NWFjMTIwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|urusei yatsura": {
+  "id": "tt16764368",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTY5NjY1MTItNGM3NC00ODk5LWFlODEtMmRhNjhkMDNmZDEzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|bottoms": {
+  "id": "tt17527468",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzEyNTNlNDAtNTMxOC00YzMzLWFkM2QtZmRiNGE5ZTQyMWFmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|doganin kanunu": {
+  "id": "tt43405601",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmRjMzI2MDItZDE3Ny00MjQzLTg5ZjMtNDVlOWFmZmJhOGZmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|my new boss is goofy": {
+  "id": "tt28919932",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2M0YmZlMTItNjM0NS00ZGMwLTg2ZjgtYTU2YzE3OTRlMmY3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|white album": {
+  "id": "tt1356884",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzY1NTg5MTctNjA2NS00NWUyLWIxYmMtNjE0MDcyYzBlZjkxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|goblin slayer": {
+  "id": "tt8690728",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTk1MGM5ZDQtMWFkZS00YTUyLWIzYWYtZTQwYWYzNzQ3MTMyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sahipsizler": {
+  "id": "tt33349183",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGMzNzZiN2UtZTkzNS00ZjdmLWE0ZTItNmVhZmFjNDFjZWIyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kral kaybederse": {
+  "id": "tt14899630",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDVhZWE2OWYtMjNlMC00Y2QyLTk4NjktMjQwNTM1OWUwMjE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|omer": {
+  "id": "tt22719788",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzlmNDM5ZTgtOGIxNy00YWNkLWJiNWQtYzVlYzNlNmI4OGRjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|by the grace of the gods": {
+  "id": "tt12642654",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDJlYzAwNTYtNzhiNC00ZTcxLThjYWYtMzVkOGY5ZWJhODYwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|indiana jones ve kader kadrani": {
+  "id": "tt1462764",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYWJlOWE2ZjEtZGRhOC00M2YzLWFkZGEtYzIzZWI2Zjg3NWYxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kenichi the mightiest disciple ova": {
+  "id": "tt1424037",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2RkYmMyYjktMjgwOC00NmE2LTlkN2ItZTNiNzhiM2E3NWE3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|they are my noble masters": {
+  "id": "tt1161671",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/124/310561.jpg"
+ },
+ "series|yali capkini": {
+  "id": "tt21105088",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/562/1405288.jpg"
+ },
+ "series|sabikui bisco": {
+  "id": "tt14187728",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/382/956564.jpg"
+ },
+ "series|tokyo revengers": {
+  "id": "tt13196080",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGU3YzdhMWEtMGRkMC00MzY2LThkOGEtMDFmZDE0NGQxYzFjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|beyblade x": {
+  "id": "tt27865962",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmM0OGU2NjgtYmE5ZS00MGU3LWFkYmQtODZkMThhMDA4ZTdmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|digimon adventure": {
+  "id": "tt0210418",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZmZjN2I2OGEtMzJkMS00Y2I2LWI0ZGQtMjExNzY0Mzk1YjEwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hotaru no yomeiri": {
+  "id": "tt48506682",
+  "poster": ""
+ },
+ "series|overgeared": {
+  "id": "tt43691353",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjQ3YWEzMDUtZTgyZS00YjUzLWJjNTktZThjZDM4OWQ1MWY1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|gecenin ucunda": {
+  "id": "tt19246582",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTM1MzVkYzQtYzY4Ny00ZGJjLWE3YjAtMDcxNjZhYjBiNDEyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|mao": {
+  "id": "tt37577523",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjVmMWY2N2YtYWM0MS00N2M3LThkYTgtOGI0YTNlNjMyOWZlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|horimiya": {
+  "id": "tt13103134",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGUzYmZkZjItNjI5Yi00NjllLThiMjUtYTY0MDI4M2Y0MmZlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|haikyuu": {
+  "id": "tt3398540",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjYxMWFlYTAtYTk0YS00NTMxLWJjNTQtM2E0NjdhYTRhNzE4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kaderimin oyunu": {
+  "id": "tt15471722",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTg5MDk4YzUtYzM5Yy00MTliLTljOTgtNDRmNTZiYjNlMTgxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|benim hayatim": {
+  "id": "tt15471776",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTkyYzQzYjktOWQ4OC00ZDQ5LWI0NDctNDcxMzMyNDcwMTZhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sana soz": {
+  "id": "tt15471788",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmViNTVjZGEtMWYzYy00MTQ5LWEyZDctYzQ3MmQ3NTY5NWExXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kazara ask": {
+  "id": "tt14395722",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTNlMzE2MzctNTIxYS00MGJmLTllZTgtZjk1MzAyMzIyZjg2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|cop adam": {
+  "id": "tt22467674",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTYwMjQ3MTgtZDQ1Yy00MGFlLWI2Y2MtZTIzNjNlZTg5NTU0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kagit ev": {
+  "id": "tt14265894",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTVmMjFlM2UtNzY3My00MDAyLWFiZDMtYzVkMzY2NjE0YjY1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|yuz yillik mucize": {
+  "id": "tt22467658",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGI2NmE2MDYtNTVmYS00MGEyLTgxYzgtOTk5YzYwYWQ4YmQ0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|duy beni": {
+  "id": "tt20248478",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWFhN2VlMGUtZmFjOC00NTY3LWFkNGEtMjA3OTZiNzdhMjAxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|iyi gunde kotu gunde": {
+  "id": "tt12872494",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZWY3NmYxZjgtNjYxYy00MzdmLWI0NzItMmMyMmI4MjM5NDk1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|halka": {
+  "id": "tt9471962",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTgyYmExNGItMGI1Mi00ZDY3LWFhNGUtM2RhZmZkNzI1ZGJlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|seni cok bekledim": {
+  "id": "tt12694080",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODBiMzNiYTAtMzc5Yi00YjE2LWJlOWEtYjA1ZDliMjVlMjdlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|tek yurek": {
+  "id": "tt9525880",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzlmZTI1ODItNjRkMi00ZmZjLWEyMDItNzUwOGFmMjdkNjg3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|toprak ile fidan": {
+  "id": "tt22044970",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/462/1155159.jpg"
+ },
+ "series|guvercin": {
+  "id": "tt11149738",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjIwNzg5NzUtOGMxMy00MGY2LTkzODQtYmQ1NzE1NmRmZTYwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sevgili gecmis": {
+  "id": "tt11006992",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjFlMThkODQtMmI1NS00MWE0LWFjZmYtODY0MmJlMDY5M2QyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sevdim seni bir kere": {
+  "id": "tt10855046",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNjY3MWM3NzMtNzgzNy00NzE3LWFmNmEtMmY0MmViOTdmNWY2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|healin good precure": {
+  "id": "tt11708996",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTM3NzJmZjctMzc2YS00MWQxLTg2YzEtYTY1YjYyNmYwOTFlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|yedi numara": {
+  "id": "tt0992966",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWU5YTE2YjctZWYzMy00NGY0LTlkYTYtNDcyZTE5YjNkZjI2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ai no utagoe wo kikasete": {
+  "id": "tt1024164",
+  "poster": ""
+ },
+ "series|mutlu ol": {
+  "id": "tt4574508",
+  "poster": "https://m.media-amazon.com/images/M/MV5BN2FkZjBjNjAtOTE5Zi00YTJkLWIwZDUtZjgxYmI4ZTQ3N2I4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|leyla ile mecnun": {
+  "id": "tt1831164",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzQ4ZTMxM2UtYTY2MS00NjlmLTlmNmYtYWFmMjMyMzZmZjZkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sefirin kizi": {
+  "id": "tt11256614",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDRmZGUwYTAtOTE4NC00ZmIzLWExNzMtYWRkZDZhMjZjN2I2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|bozkir arslani celaleddin": {
+  "id": "tt14045562",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMGViYjgyMjQtMTgxYS00MzkyLThjNjctMDA0ZTE4NjA3ZGJkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|benim tatli yalanim": {
+  "id": "tt10374050",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTBjN2UzMmMtZTU1ZS00YjM1LWFiNDAtNWU2NDQ0MGQ2MGQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|babil": {
+  "id": "tt11138216",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTNmYTMwMzUtZTg3MC00MzAxLTlkM2UtNzBlMjBhN2U0OTE5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|sol yanim": {
+  "id": "tt12687768",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmQ5ZmFhMTYtZmI2OS00MzljLTkyZmItMTdmMzMxMTcyNTYxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|spy family": {
+  "id": "tt13706018",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/590/1477119.jpg"
+ },
+ "series|girly air force": {
+  "id": "tt9575040",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzhiOTFmM2QtMjc1ZS00MjJkLWI1MzItYzU4Zjg4OGYzNTY0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ah my goddess flights of fancy": {
+  "id": "tt0872300",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOWQ2NjdkOTUtNDAzOC00OTUxLTk2MDUtNmIzODAxNDRiMmQ5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|cocuk": {
+  "id": "tt10850402",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjI3M2YzMmEtYTEyYS00NDIyLWJmNGItMDViMDZjNDhhYzNhXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|carnival phantasm": {
+  "id": "tt2076817",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDdkOWRkNDQtMjY2Ny00MmEwLTgxYjktZDVjNjBhOTBlZDk0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|muge anli": {
+  "id": "tt8176062",
+  "poster": ""
+ },
+ "series|tatli hayat": {
+  "id": "tt0302199",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZGZkYWJlYjUtNmI1NC00MWIyLWJmMjEtN2UzNDI1ZGNiN2ZjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hana yori dango": {
+  "id": "tt0885981",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzU4OThiY2ItODMzNi00NTBkLWJmNTctYjY2ODQ1ODkwMGUyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|visual prison": {
+  "id": "tt15024322",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMWRjNmQ3YTQtZjZjZi00YjdmLTllNzgtYzFlNGFkZjY2YzU0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|erkenci kus": {
+  "id": "tt8478162",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZThlNzU4NDAtM2ZlYS00MjM5LTljZTYtNzdiZmQ0NWEwYzUyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|reborn as a space mercenary i woke up piloting the strongest starship": {
+  "id": "tt41298100",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGUzMzM3N2UtMDY1NC00MTkwLThhNjItNzcyYWQzNjQyZGM4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kuzgun": {
+  "id": "tt9529500",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTAxZDViNjAtMWQ5MC00YWQxLTljYjgtNTBjYTU4NmY5MWU3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ezel": {
+  "id": "tt1534360",
+  "poster": "https://m.media-amazon.com/images/M/MV5BY2VhYTA5YjMtNDBjZS00NTU3LTk1YWEtZGI0NDcxMTEyYjIyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|tutunamayanlar": {
+  "id": "tt11519740",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTZjOTBkY2YtMzU1Zi00NzNiLTk0Y2UtOTM2MmZlYmVlOGY4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kardes payi": {
+  "id": "tt3671754",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODhjMmE0ZjMtNzU0Yi00YzFmLTg1OGItMDM2M2I1OGMxMjBiXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|isler gucler": {
+  "id": "tt2311418",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODkzYjIzMTMtODlhMi00ZTY2LWFhOTYtY2UzYzlhYTc3MWViXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|carpisma": {
+  "id": "tt9114372",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmJlMGNhM2YtMzQzOS00NWRlLThmMjctMGE2ZDE4MTljMTYyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|final fantasy xv episode ardyn prologue": {
+  "id": "tt5595178",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmZmYTA3ZmQtYmE5Yy00MjlkLWE1MmEtZTViYmZmOWNlZGU5XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kardes cocuklari": {
+  "id": "tt9529618",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/180/452382.jpg"
+ },
+ "series|the cold sato san is only sweet to me": {
+  "id": "tt43691365",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDdjZGU0ZmQtNTc4NS00OGM2LWI1ODItYTE5N2VjZDljNmEyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|nia liston the merciless maiden": {
+  "id": "tt41296544",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMmM0ZTUzNzEtYzkwYy00YWJjLWEzMWEtZDBjOWUzMmU3ZDkxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|behzat c": {
+  "id": "tt1795096",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/298/745348.jpg"
+ },
+ "series|ogretmen": {
+  "id": "tt11789868",
+  "poster": "https://static.tvmaze.com/uploads/images/original_untouched/244/610827.jpg"
+ },
+ "series|dengi dengine": {
+  "id": "tt10376348",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzc2ZTg5NjctMzk2Zi00ZDYzLWI3NDktMTEyZmVjOTI0YzBmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kizim": {
+  "id": "tt8961058",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZDFlNWM3Y2UtMDlkMy00YWE0LTkyYTAtM2Q4MGNkMTIzY2E3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hatirla sevgili": {
+  "id": "tt0878797",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzE1MDBhMzQtYTI0YS00YWRhLTg0MGQtMDE3NTk4MWI0OTgwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|yalanci yarim": {
+  "id": "tt0834039",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYjdmMzlhYmItMzRkNC00MjcwLWE0NGYtOWYwYTI3ZmQ2YWJkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|atiye": {
+  "id": "tt10075318",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjJhMjZmNmQtNTc2MS00NGEwLTg3Y2MtMDFkOGU4ZjNjMjdmXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|hercai": {
+  "id": "tt9721776",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzQzNjNiNGYtMjM0Ny00ZjYxLWEyNzktOGI1YTE1YjBiMGExXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|bir aile hikayesi": {
+  "id": "tt9808672",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTM1ZmVkNjgtMDM2ZC00Y2VkLTkxYWYtODFjZWY1N2UzNzZkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|kadin": {
+  "id": "tt7661932",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYmVmZjA1MmItYzc0Ny00N2UzLTkwNzgtZmQ0ODVkMzI1OTJjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|deli yurek": {
+  "id": "tt0426672",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMzY0ZmViMTEtOTU5YS00NDVhLWFhMDYtNTg0NTU1Y2Y5OWY2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|vuslat hd": {
+  "id": "tt9520396",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMDYxOTA4YzEtNzc3Zi00MDE1LWEzZWMtMTliMzhmY2VmN2EzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|ask bir ruya": {
+  "id": "tt8620634",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjA2OTQ5ZGYtZGY2MC00ODZkLThkZjEtOTdkNjgwZmM3NjgzXkEyXkFqcGc@._V1_.jpg"
  }
 }

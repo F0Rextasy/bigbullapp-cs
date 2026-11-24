@@ -1,0 +1,11 @@
+{
+  "id": "asyadizileriizle",
+  "name": "Asyadizileriizle",
+  "type": "series",
+  "url": "https://asyadizileriizle.com/dizi-arsivi/",
+  "item": "<div class=\"movie-box\">[\\s\\S]*?<div class=\"category\">",
+  "title": "<a[^>]+title=\"([^\"]+)\"",
+  "poster": "<img[^>]+src=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

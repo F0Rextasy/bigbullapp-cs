@@ -1,0 +1,11 @@
+{
+  "id": "trt1",
+  "name": "TRT1",
+  "type": "series",
+  "url": "https://www.trt1.com.tr/diziler?archive=true",
+  "item": "\\{\"id\":\\d+,\"title\":\"[^\"]+\",\"titleElement\":\"h3\"[\\s\\S]*?\"type\":\"series\"",
+  "title": "\"title\":\"([^\"]+)\"",
+  "poster": "\"horizontalImage\":\"([^\"]+)\"",
+  "href": "\"path\":\"([^\"]+)\"",
+  "limit": 40
+}

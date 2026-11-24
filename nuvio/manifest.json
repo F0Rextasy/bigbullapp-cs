@@ -1,9 +1,29 @@
 {
   "name": "BB Nuvio",
-  "version": "1.7.44",
+  "version": "1.8.0",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
+    {
+      "id": "aniarsiv",
+      "name": "AniArsiv",
+      "description": "AniArsiv Turkce altyazili ve dublajli anime arsivi (CDN MP4, tau-video, anizmplayer).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/aniarsiv.js",
+      "enabled": true,
+      "formats": [
+        "mp4",
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=aniarsiv.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
     {
       "id": "animecix",
       "name": "AnimeciX",
@@ -19,6 +39,46 @@
         "mp4"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=animecix.tv&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "animeler",
+      "name": "Animeler",
+      "description": "Animeler Turkce altyazili anime arsivi (makisekurisu HLS, ok.ru, mail.ru, vidmoly).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/animeler.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=animeler.live&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "animetr",
+      "name": "AnimeTR",
+      "description": "AnimeTR anime ve donghua arsivi (FirePlayer, Google Drive, OkRu, Vidmoly, VK).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/animetr.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=animetr.co&sz=128",
       "contentLanguage": [
         "tr"
       ]
@@ -43,6 +103,26 @@
       ]
     },
     {
+      "id": "anizm",
+      "name": "Anizm",
+      "description": "Anizm (turkanime.info) Turkce altyazili anime arsivi (AnizmPlayer, PuffyTR, OkRu, Vidmoly).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/anizm.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=turkanime.info&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "asyaanimeleri",
       "name": "AsyaAnimeleri",
       "description": "AsyaAnimeleri anime kaynaklari (rumble, vidmoly HLS).",
@@ -57,6 +137,129 @@
         "m3u8"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=asyaanimeleri.top&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "asyadizi",
+      "name": "AsyaDizi",
+      "description": "AsyaDizi Kore ve Asya dizileri ve filmleri (Vidmoly + OkRu).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/asyadizi.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=asyadizi.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "asyadizileriizle",
+      "name": "Asyadizileriizle",
+      "description": "Asyadizileriizle Kore ve Asya dizileri/filmleri (Vidmoly + OkRu).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/asyadizileriizle.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=asyadizileriizle.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "asyafanatikleri",
+      "name": "AsyaFanatikleri",
+      "description": "AsyaFanatikleri Kore/Cin/Japon/Tayland dizileri ve filmleri.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/asyafanatikleri.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=asyafanatikleri.vip&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "asyamax",
+      "name": "AsyaMax",
+      "description": "AsyaMax Kore/Cin/Japon/Tayland dizileri ve filmleri (Vidmoly + VK + OkRu).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/asyamax.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=asyamax.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "asyawatch",
+      "name": "AsyaWatch",
+      "description": "AsyaWatch - Kore, Cin ve Japon dizi/filmleri (pichive HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/asyawatch.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=asyawatch.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "atv",
+      "name": "ATV",
+      "description": "ATV dizi ve klasik dizi arşivi; doğrudan MP4/HLS akışları.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/atv.js",
+      "enabled": true,
+      "formats": [
+        "mp4",
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=atv.com.tr&sz=128",
       "contentLanguage": [
         "tr"
       ]
@@ -81,21 +284,100 @@
       ]
     },
     {
-      "id": "cizgivedizi",
-      "name": "CizgiVeDizi",
-      "description": "CizgiVeDizi Turkce cizgi dizi, anime, dizi ve film arsivi (sunucu 2 MB Range + 60 sn cerez siniri nedeniyle Nuvio'da varsayilan kapali).",
-      "version": "1.0.5",
+      "id": "bicaps",
+      "name": "BiCaps",
+      "description": "BiCaps - Turkce dublaj ve altyazili film arsivi (vidmoly + popcornvakti HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/bicaps.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=bicaps.live&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "birasyadizi",
+      "name": "BirAsyaDizi",
+      "description": "BirAsyaDizi Asya dizileri ve filmleri (OkRu + Vidmoly).",
+      "version": "1.0.0",
       "author": "bigbull",
       "supportedTypes": [
         "tv",
         "movie"
       ],
-      "filename": "providers/cizgivedizi.js",
-      "enabled": false,
+      "filename": "providers/birasyadizi.js",
+      "enabled": true,
       "formats": [
+        "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=cizgivedizi.net&sz=128",
+      "logo": "https://www.google.com/s2/favicons?domain=www.birasyadizi.cx&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "canlidizi",
+      "name": "CanliDizi",
+      "description": "CanliDizi yabanci dizi arsivi (Pilavyer HLS + altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/canlidizi.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=canlidizi.sbs&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "cizgimax",
+      "name": "Cizgimax",
+      "description": "Cizgimax cizgi film, anime ve dizi arsivi (tau-video, ok.ru, vidmoly, mail.ru).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/cizgimax.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=cizgimax.online&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "cizgisite",
+      "name": "CizgiSite",
+      "description": "CizgiSite Turkce dublajli cizgi film arsivi (VK Video MP4/HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/cizgisite.js",
+      "enabled": true,
+      "formats": [
+        "mp4",
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=www.cizgi.site&sz=128",
       "contentLanguage": [
         "tr"
       ]
@@ -141,6 +423,85 @@
       ]
     },
     {
+      "id": "deokwave",
+      "name": "Deokwave",
+      "description": "Deokwave Turkce altyazili anime arsivi (token MP4 + embedler).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/deokwave.js",
+      "enabled": true,
+      "formats": [
+        "mp4",
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=deokwave.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "diziabi",
+      "name": "DiziAbi",
+      "description": "DiziAbi yabanci ve yerli dizi arsivi (Pilavyer HLS + altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/diziabi.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=www.diziabi.net&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "diziasia",
+      "name": "Diziasia",
+      "description": "DiziAsia Asya dizileri ve filmleri (OkRu + VK + Vidmoly).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/diziasia.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=diziasia.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "dizibaba",
+      "name": "Dizibaba",
+      "description": "Dizibaba - Turkce dublaj/altyazili film arsivi (pilavyerplay HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/dizibaba.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dizibaba.icu&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "dizibal",
       "name": "DiziBal",
       "description": "DiziBal altyazili yabanci dizi/film arsivi; pilavyer HLS akisi ve altyazilar.",
@@ -156,6 +517,26 @@
         "m3u8"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=dizibal.org&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "dizibol",
+      "name": "DiziBol",
+      "description": "DiziBol altyazili yabanci dizi ve film arsivi (Pilavyer HLS + altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/dizibol.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dizibol.org&sz=128",
       "contentLanguage": [
         "tr"
       ]
@@ -180,6 +561,165 @@
       ]
     },
     {
+      "id": "diziboxizle",
+      "name": "DiziboxIzle",
+      "description": "DiziboxIzle yabanci ve Asya dizileri (OkRu + Vidmoly).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/diziboxizle.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=diziboxizle.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "diziboxtv",
+      "name": "DiziBoxTv",
+      "description": "DiziBoxTv dizi ve film arsivi (AES player + HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/diziboxtv.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=diziboxtv.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "dizican",
+      "name": "DiziCaN",
+      "description": "DiziCaN Asya dizileri (Vidmoly + OkRu + HintDizi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/dizican.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dizican.cc&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "dizifilmizle",
+      "name": "DiziFilmIzle",
+      "description": "DiziFilmIzle yabanci dizi ve film arsivi (Vidmixi/bePlayer + BEpeak HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/dizifilmizle.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dizifilmizle.to&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "dizifon",
+      "name": "Dizifon",
+      "description": "Dizifon Kore ve Asya dizileri (OkRu + Vixolity + Vidmoly).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/dizifon.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=www.dizifon.cc&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "dizigecesi",
+      "name": "Dizigecesi",
+      "description": "Dizigecesi - film arsivi (Filemoon Byse HLS + Vidmoly).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/dizigecesi.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dizigecesi.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "dizigom",
+      "name": "Dizigom",
+      "description": "Dizigom dizi ve film arsivi (Pilavyer HLS + altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/dizigom.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=www.dizigom.news&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "diziizle",
+      "name": "Diziizle",
+      "description": "Diziizle yabanci dizi arsivi (Pilavyer HLS + TR/EN altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/diziizle.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=diziizle2.icu&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "dizikorea3",
       "name": "Dizikorea3",
       "description": "Dizikorea3 Kore dizileri arsivi (HLS + Turkce altyazi).",
@@ -199,6 +739,65 @@
       ]
     },
     {
+      "id": "dizikutusu",
+      "name": "DiziKutusu",
+      "description": "DiziKutusu yabanci ve Kore dizileri (VK + OkRu + Vidmoly).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/dizikutusu.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dizikutusu.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "dizilab",
+      "name": "Dizilab",
+      "description": "Dizilab yabanci ve Asya dizileri (dzembed HLS + altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/dizilab.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dizilab.cc&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "dizilife",
+      "name": "DiziLife",
+      "description": "DiziLife yabanci dizi ve film arsivi (AES player HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/dizilife.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dizi87.life&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "dizilla",
       "name": "Dizilla",
       "description": "Dizilla yabanci dizi arsivi (HLS + Turkce altyazi).",
@@ -213,6 +812,26 @@
         "m3u8"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=dizilla.la&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "dizimanya",
+      "name": "Dizimanya",
+      "description": "Dizimanya Turkce altyazili yabanci dizi arsivi (dzembed HLS + altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/dizimanya.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dizimanya.com&sz=128",
       "contentLanguage": [
         "tr"
       ]
@@ -276,6 +895,65 @@
       ]
     },
     {
+      "id": "dizirella",
+      "name": "Dizirella",
+      "description": "Dizirella yabanci dizi arsivi (dzembed HLS + altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/dizirella.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dizirella.one&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "dizisol",
+      "name": "DiziSol",
+      "description": "DiziSol - JSON API + viewer-proof imzali HLS film ve dizi arsivi.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
+      "filename": "providers/dizisol.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dizisol.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "dizist",
+      "name": "Dizist",
+      "description": "Dizist - yabanci dizi, anime ve asya dizileri (pichive HLS + altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/dizist.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dizist.live&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "diziyou",
       "name": "DiziYou",
       "description": "DiziYou dizi/film kaynaklari (HLS + altyazi).",
@@ -315,6 +993,128 @@
       ]
     },
     {
+      "id": "dramadizilerim",
+      "name": "DramaDizilerim",
+      "description": "DramaDizilerim dikey mini diziler ve kisa dramalar (HLS/MP4).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/dramadizilerim.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=dramadizilerim1.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "filmdozu",
+      "name": "FilmDozu",
+      "description": "FilmDozu HD film arsivi (Vidmoly + OkRu).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/filmdozu.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=filmdozu.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "filmekseni",
+      "name": "FilmEkseni",
+      "description": "FilmEkseni - Turkce dublaj ve altyazili film arsivi (eksenload + vidmoly).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/filmekseni.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=filmekseni.pro&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "filmgecesi",
+      "name": "Filmgecesi",
+      "description": "Filmgecesi - Turkce dublajli film arsivi ve film serileri (blurays.me HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
+      "filename": "providers/filmgecesi.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=filmgecesi.vip&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "filmizyon",
+      "name": "Filmizyon",
+      "description": "Filmizyon - Turkce dublaj ve altyazili film arsivi (vixolity + embed).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
+      "filename": "providers/filmizyon.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=filmizyon.net&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "filmkovasi",
+      "name": "FilmKovasi",
+      "description": "FilmKovasi - Turkce dublaj ve altyazili film arsivi (vidmoly, ok.ru, mail.ru).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/filmkovasi.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=filmkovasi.co&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "filmmakinesi",
       "name": "FilmMakinesi",
       "description": "FilmMakinesi film kaynaklari (oynatloload secure-hls, vidmoly).",
@@ -349,6 +1149,26 @@
         "m3u8"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=filmmodu.icu&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "fullhdfilm",
+      "name": "FullHDFilm",
+      "description": "FullHDFilm - Turkce dublaj ve altyazili film arsivi (hdload + vidmoly).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/fullhdfilm.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=fullhdfilmizlebox.vip&sz=128",
       "contentLanguage": [
         "tr"
       ]
@@ -412,6 +1232,129 @@
       ]
     },
     {
+      "id": "hdfilmdelisi",
+      "name": "HDFilmDelisi",
+      "description": "HDFilmDelisi - Turkce dublaj ve altyazili film arsivi (vixolity HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
+      "filename": "providers/hdfilmdelisi.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=hdfilmdelisi1.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "hdfilmdiziizle",
+      "name": "HDFilmDiziIzle",
+      "description": "HDFilmDiziIzle film ve dizi arsivi (AES AJAX + Vidrame/Vidmoly/OkRu).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
+      "filename": "providers/hdfilmdiziizle.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=www.hdfilmdiziizle.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "hdfilmizle",
+      "name": "HDFilmizle",
+      "description": "HDFilmizle - Full HD film ve yabanci dizi arsivi (SetPlay / fastplay HLS + altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
+      "filename": "providers/hdfilmizle.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=hdfilmizle.ink&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "hdfilmizlebest",
+      "name": "HDFilmizleBest",
+      "description": "HDFilmizleBest - Turkce dublaj ve altyazili film arsivi (/ajax/videosrc + vixolity).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
+      "filename": "providers/hdfilmizlebest.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=hdfilmizle.best&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "izle7",
+      "name": "Izle7",
+      "description": "Kanal 7 resmi dizi ve TV filmi arşivi (izle7.com); Dailymotion HLS akışları.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/izle7.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=izle7.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "izlefilm",
+      "name": "IzleFilm",
+      "description": "IzleFilm Turkce dublaj ve altyazili filmler (OkRu).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/izlefilm.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=izlefilm.net&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "jetfilmizle",
       "name": "JetFilmizle",
       "description": "JetFilmizle Türkçe dublaj/altyazılı film arşivi (godrive + videopark).",
@@ -427,6 +1370,222 @@
         "mp4"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=jetfilmizle.app&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "kanald",
+      "name": "KanalD",
+      "description": "Kanal D dizi ve program arşivi; duhnet.tv HLS akışları.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/kanald.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=kanald.com.tr&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "koreanturk",
+      "name": "KoreanTurk",
+      "description": "KoreanTurk Kore dizileri arsivi (HLS + Turkce altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/koreanturk.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=koreanturk.tv&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "kultfilmler",
+      "name": "Kultfilmler",
+      "description": "Kultfilmler - Turkce dublaj ve altyazili kult film arsivi (vidpapi HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/kultfilmler.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=kultfilmler.net&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "lovefilm",
+      "name": "LoveFilm",
+      "description": "LoveFilm - Turkce dublaj ve altyazili film arsivi (bemoly + vidmoly HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/lovefilm.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=lovefilmizle.net&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "minikacocuk",
+      "name": "MinikaCocuk",
+      "description": "Minika Çocuk çizgi film ve program arşivi; doğrudan MP4 akışları.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/minikacocuk.js",
+      "enabled": true,
+      "formats": [
+        "mp4",
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=minikacocuk.com.tr&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "minikago",
+      "name": "MinikaGO",
+      "description": "MinikaGO çocuk VOD arşivi; doğrudan MP4 akışları.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/minikago.js",
+      "enabled": true,
+      "formats": [
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=minikago.com.tr&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "netfilmizle",
+      "name": "NetFilmizle",
+      "description": "NetFilmizle - Turkce dublaj/altyazili film arsivi (vidmixi bePlayer AES HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/netfilmizle.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=netfilmizle.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "nowtv",
+      "name": "NowTV",
+      "description": "NowTV resmi dizi, program ve film arşivi; erbvr HLS akışları.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/nowtv.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=nowtv.com.tr&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "onepacetr",
+      "name": "Onepacetr",
+      "description": "One Pace TR (onepacetr.net) Turkce altyazili One Piece fan-edit arsivi (Google Drive, Vidmoly, OkRu).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/onepacetr.js",
+      "enabled": true,
+      "formats": [
+        "mp4",
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=onepacetr.net&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "onlinedizi",
+      "name": "OnlineDizi",
+      "description": "OnlineDizi yabanci dizi ve anime arsivi (OkRu + Vidmoly).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/onlinedizi.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=onlinedizi.sbs&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "p720pizle",
+      "name": "P720pizle",
+      "description": "P720pizle - HD ve 4K film arsivi (pichive NP_CONFIG / openPlayer HLS + altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/p720pizle.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=720pizle.my&sz=128",
       "contentLanguage": [
         "tr"
       ]
@@ -467,6 +1626,26 @@
         "m3u8"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=a.psrectv80.xyz&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "roketdizi",
+      "name": "RoketDizi",
+      "description": "RoketDizi - Turkce dublaj ve altyazili yabanci dizi ve filmler (pichive HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
+      "filename": "providers/roketdizi.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=roketdizi.life&sz=128",
       "contentLanguage": [
         "tr"
       ]
@@ -531,6 +1710,65 @@
       ]
     },
     {
+      "id": "showtv",
+      "name": "ShowTV",
+      "description": "Show TV dizi ve program arşivi; Ciner HLS/MP4 akışları.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/showtv.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=showtv.com.tr&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "sinemacx",
+      "name": "SinemaCX",
+      "description": "SinemaCX - Turkce dublaj ve altyazili film arsivi (FirePlayer HLS + altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/sinemacx.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=sinemacc.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "sinemakolik",
+      "name": "Sinemakolik",
+      "description": "Sinemakolik - Turkce dublaj/altyazili film arsivi (vidmixi bePlayer AES HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/sinemakolik.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=sinemakolik.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "sinemetrik",
       "name": "Sinemetrik",
       "description": "Sinemetrik film/dizi kaynaklari (kendi player'i, TR altyazi).",
@@ -551,6 +1789,64 @@
       ]
     },
     {
+      "id": "sinezy",
+      "name": "Sinezy",
+      "description": "Sinezy - Turkce dublaj/altyazili film arsivi (FirePlayer HLS + altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/sinezy.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=sinezy.si&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "sonanime",
+      "name": "SonAnime",
+      "description": "SonAnime Turkce altyazili anime dizi ve film arsivi (1080p/720p/480p MP4).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/sonanime.js",
+      "enabled": true,
+      "formats": [
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=sonanime.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "startv",
+      "name": "StarTV",
+      "description": "Star TV dizi ve program arşivi; DYG HLS akışları.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/startv.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=startv.com.tr&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "tlctr",
       "name": "TLC Türkiye",
       "description": "TLC Türkiye program arşivi; bölümler DYG imzalı HLS olarak açılır.",
@@ -565,6 +1861,85 @@
         "m3u8"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=tlctv.com.tr&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "toruko",
+      "name": "Toruko",
+      "description": "Toruko (turkceanime.com) Turkce altyazili ve dublajli anime arsivi (HLS + tau-video).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/toruko.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=turkceanime.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "trdiziizle",
+      "name": "TrDiziIzle",
+      "description": "TrDiziIzle yerli ve tarihi diziler (Yandex MP4 + HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/trdiziizle.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=www.trdiziizle.tv&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "trt1",
+      "name": "TRT1",
+      "description": "TRT 1 resmi dizi arşivi; __NEXT_DATA__ asset HLS akışları.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/trt1.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=trt1.com.tr&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "turkanimetv",
+      "name": "TurkAnimeTV",
+      "description": "TurkAnimeTV (turkanime.live) Turkce altyazili anime arsivi (HLS + altyazi).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/turkanimetv.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=turkanime.live&sz=128",
       "contentLanguage": [
         "tr"
       ]
@@ -591,6 +1966,103 @@
       ]
     },
     {
+      "id": "tv2",
+      "name": "TV2",
+      "description": "TV2 resmi dizi ve film arşivi; teve2vod HLS akışları.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/tv2.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=tv2.com.tr&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "tv8",
+      "name": "TV8",
+      "description": "TV8 resmi dizi, program ve yarışma arşivi; video-cdn HLS akışları.",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/tv8.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=tv8.com.tr&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "tvdiziler",
+      "name": "TvDiziler",
+      "description": "TvDiziler yerli dizi arsivi (Streambox HLS + MP4).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv"
+      ],
+      "filename": "providers/tvdiziler.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=tvdiziler.tv&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "ultrafilmizle",
+      "name": "UltraFilmizle",
+      "description": "UltraFilmizle - Turkce dublaj/altyazili film arsivi (BEpeak AES HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/ultrafilmizle.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=ultraiz.net&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "venusfilmizle",
+      "name": "VenusFilmizle",
+      "description": "VenusFilmizle - Turkce dublaj & altyazili film arsivi (hd.player.rest + vidmoly HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/venusfilmizle.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=venusfilmizle.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "webdramaturkey2",
       "name": "WebdramaTurkey2",
       "description": "WebdramaTurkey2 Kore/Cin/Japon dizileri, filmleri ve animeleri (Turkce altyazili).",
@@ -611,6 +2083,46 @@
       ]
     },
     {
+      "id": "webfilmizle",
+      "name": "WebFilmizle",
+      "description": "WebFilmizle - Turkce dublaj/altyazili film arsivi (BEpeak AES HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie"
+      ],
+      "filename": "providers/webfilmizle.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=webfilmizle.com&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "weboo",
+      "name": "Weboo",
+      "description": "Weboo Asya kisa dizileri (DramaWave proxy HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "tv",
+        "movie"
+      ],
+      "filename": "providers/weboo.js",
+      "enabled": true,
+      "formats": [
+        "m3u8",
+        "mp4"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=weboo.com.tr&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
       "id": "webteizle",
       "name": "WebteIzle",
       "description": "WebteIzle film/dizi kaynaklari (vidmoly, streamruby HLS; ok.ru/pixel yedek).",
@@ -626,6 +2138,26 @@
         "m3u8"
       ],
       "logo": "https://www.google.com/s2/favicons?domain=webteizle.info&sz=128",
+      "contentLanguage": [
+        "tr"
+      ]
+    },
+    {
+      "id": "yabancidizi",
+      "name": "Yabancidizi",
+      "description": "Yabancidizi - Turkce dublaj ve altyazili yabanci dizi ve filmler (pichive HLS).",
+      "version": "1.0.0",
+      "author": "bigbull",
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
+      "filename": "providers/yabancidizi.js",
+      "enabled": true,
+      "formats": [
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=ybncidizi.com&sz=128",
       "contentLanguage": [
         "tr"
       ]

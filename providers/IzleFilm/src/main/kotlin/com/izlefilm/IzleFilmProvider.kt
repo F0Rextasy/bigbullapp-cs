@@ -69,7 +69,7 @@ class IzleFilmProvider : MainAPI() {
         }
     }
 
-    /** Ana sayfadaki "Editörün Önerileri" vitrini (`article.editor-slide`, 4 film). */
+    /** Ana sayfadaki "Editörün Önerileri" vitrini (`.editor-slide`, 4 film). */
     private fun Element.toEditorCard(): SearchResponse? {
         val href = fixUrlNull(selectFirst("a.editor-cta[href]")?.attr("href") ?: return null) ?: return null
         val title = selectFirst("h3")?.text()?.trim()?.takeIf { it.isNotEmpty() } ?: return null
@@ -82,7 +82,7 @@ class IzleFilmProvider : MainAPI() {
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data.replace(PAGE, page.toString()), headers = uaHeaders).document
         if (!request.data.contains(PAGE)) {
-            return newHomePageResponse(request.name, doc.select("article.editor-slide").mapNotNull { it.toEditorCard() }, false)
+            return newHomePageResponse(request.name, doc.select(".editor-slide").mapNotNull { it.toEditorCard() }, false)
         }
         return newHomePageResponse(request.name, doc.cards(), hasNext = doc.selectFirst("a[rel=next]") != null)
     }

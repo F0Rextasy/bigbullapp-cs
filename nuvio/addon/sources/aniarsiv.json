@@ -1,0 +1,11 @@
+{
+  "id": "aniarsiv",
+  "name": "AniArsiv",
+  "type": "series",
+  "url": "https://aniarsiv.com/api/trending",
+  "item": "\"slug\":\"[^\"]+\"[^\\{\\}]+\"baslik\":\"[^\"]+\"[^\\{\\}]*",
+  "title": "\"baslik\":\"([^\"]+)\"",
+  "title2": "\"ingilizce\":\"([^\"]+)\"",
+  "poster": "\"cover_image\":\"([^\"]+)\"",
+  "headers": { "Referer": "https://aniarsiv.com/" }
+}

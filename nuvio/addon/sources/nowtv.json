@@ -1,0 +1,11 @@
+{
+  "id": "nowtv",
+  "name": "NowTV",
+  "type": "series",
+  "url": "https://www.nowtv.com.tr/dizi-arsivi",
+  "item": "<div class=\"list-item\">[\\s\\S]*?class=\"program-name\"[\\s\\S]*?</strong>",
+  "title": "<strong>([^<]+)</strong>",
+  "href": "href=\"([^\"]+)\"",
+  "poster": "src=\"([^\"]+)\"",
+  "limit": 40
+}

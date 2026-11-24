@@ -1,0 +1,12 @@
+{
+  "id": "dizirella",
+  "name": "Dizirella",
+  "type": "series",
+  "url": "https://dizirella.one/tur/dram/",
+  "item": "<a class=\"r-card\" href=\"https://dizirella\\.one/(?:dizi|film)/[^\"]+\">[\\s\\S]*?</a>",
+  "title": "alt=\"([^\"]+)\"",
+  "strip": "\\s+izle$",
+  "poster": "src=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

@@ -1,0 +1,12 @@
+{
+  "id": "venusfilmizle",
+  "name": "VenusFilmizle",
+  "type": "movie",
+  "url": "https://venusfilmizle.com/filmler?siralama=yeni&sayfa=1",
+  "item": "data-film=\"[^\"]+\"[\\s\\S]*?</figure>",
+  "title": "data-film=\"([^\"]+)\"",
+  "poster": "<img[^>]+src=\"(https?://[^\"]+)\"",
+  "year": "data-year=\"(\\d{4})\"",
+  "group": ["latest-movie"],
+  "limit": 40
+}

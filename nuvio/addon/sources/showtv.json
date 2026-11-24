@@ -1,0 +1,10 @@
+{
+  "id": "showtv",
+  "name": "ShowTV",
+  "type": "series",
+  "url": "https://www.showtv.com.tr/diziler",
+  "item": "<a[^>]*href=\"/dizi/tanitim/[^\"]+\"[^>]*title=\"(?!Detaylar\")[^\"]+\"[\\s\\S]*?</a>",
+  "title": "title=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

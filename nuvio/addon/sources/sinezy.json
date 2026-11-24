@@ -1,0 +1,12 @@
+{
+  "id": "sinezy",
+  "name": "Sinezy",
+  "type": "movie",
+  "url": "https://sinezy.si/izle/en-yeni-filmler/",
+  "item": "class=\"movie_box[^\"]*\"[\\s\\S]*?<h2>[^<]+</h2>",
+  "title": "<h2>([^<]+)</h2>",
+  "strip": "\\s+[İi]zle$",
+  "poster": "data-src=\"(https?://[^\"]+)\"",
+  "group": ["latest-movie"],
+  "limit": 40
+}

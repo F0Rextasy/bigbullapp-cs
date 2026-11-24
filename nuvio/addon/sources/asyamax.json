@@ -1,0 +1,13 @@
+{
+  "id": "asyamax",
+  "name": "AsyaMax",
+  "type": "series",
+  "url": "https://asyamax.com/category/kore-dizileri-2/",
+  "item": "<div class=\"post-container\">[\\s\\S]*?<div class=\"summary\">",
+  "title": "<div class=\"title\">[\\s\\S]*?<a[^>]+>\\s*([^<]+?)\\s*</a>",
+  "strip": "\\s+(?:19|20)\\d{2}$",
+  "year": "\\b((?:19|20)\\d{2})\\b",
+  "poster": "data-src=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

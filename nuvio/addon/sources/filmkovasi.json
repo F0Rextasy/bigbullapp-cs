@@ -1,0 +1,13 @@
+{
+  "id": "filmkovasi",
+  "name": "FilmKovasi",
+  "type": "movie",
+  "url": "https://filmkovasi.co/",
+  "item": "<div class=\"movie-box\">[\\s\\S]*?<div class=\"film-ismi\">[\\s\\S]*?</div>",
+  "title": "<div class=\"film-ismi\">\\s*<a[^>]*>([^<]+)</a>",
+  "strip": "\\s*\\(\\d{4}\\)|\\s+[İi]zle$",
+  "poster": "<img[^>]+src=\"(https?://[^\"]+)\"",
+  "year": "<div class=\"film-yil\">[\\s\\S]*?((?:19|20)\\d{2})",
+  "group": ["latest-movie"],
+  "limit": 40
+}

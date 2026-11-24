@@ -1,0 +1,12 @@
+{
+  "id": "netfilmizle",
+  "name": "NetFilmizle",
+  "type": "movie",
+  "url": "https://netfilmizle.com/turkce-dublaj-filmler/",
+  "item": "<a class=\"image\" href=\"https://netfilmizle\\.com/[^\"/]+/?\"[\\s\\S]*?</a>",
+  "title": "alt=\"([^\"]+)\"",
+  "poster": "data-src=\"(https?://[^\"]+)\"",
+  "year": "<span class=\"box year\">(\\d{4})</span>",
+  "group": ["latest-movie"],
+  "limit": 40
+}

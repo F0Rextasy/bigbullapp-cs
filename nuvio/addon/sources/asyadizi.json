@@ -1,0 +1,12 @@
+{
+  "id": "asyadizi",
+  "name": "AsyaDizi",
+  "type": "series",
+  "url": "https://asyadizi.com/",
+  "item": "<div class=\"episode-box\">[\\s\\S]*?<div class=\"episode-name\">[\\s\\S]*?</div>",
+  "title": "<img[^>]+title=\"([^\"]+)\"",
+  "poster": "<img[^>]+src=\"([^\"]+)\"",
+  "year": "<div class=\"episode-name\">\\s*(\\d{4})",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

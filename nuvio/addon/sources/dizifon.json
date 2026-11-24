@@ -1,0 +1,13 @@
+{
+  "id": "dizifon",
+  "name": "Dizifon",
+  "type": "series",
+  "url": "https://www.dizifon.cc/tum-diziler/",
+  "item": "<a class=\"resim\" href=\"https://www\\.dizifon\\.cc/dizi/[^\"]+\"[\\s\\S]*?</a>",
+  "title": "title=\"([^\"]+)\"",
+  "strip": "\\s+(?:\\d+\\.\\s*Sezon\\s+)?(?:19|20)\\d{2}(?:\\s+(?:Kore|Çin|Japon|Tayland|Tayvan|Hint|Asya))?.*$",
+  "year": "\\b((?:19|20)\\d{2})\\b",
+  "poster": "data-src=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

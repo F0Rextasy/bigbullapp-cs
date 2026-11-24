@@ -1,0 +1,12 @@
+{
+  "id": "dizimanya",
+  "name": "Dizimanya",
+  "type": "series",
+  "url": "https://dizimanya.com/diziler/",
+  "item": "<a class=\"r-card\" href=\"https://dizimanya\\.com/dizi/[^\"]+\">[\\s\\S]*?</a>",
+  "title": "alt=\"([^\"]+)\"",
+  "strip": "\\s+izle$",
+  "poster": "src=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

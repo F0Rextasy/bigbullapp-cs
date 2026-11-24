@@ -1,0 +1,10 @@
+{
+  "id": "startv",
+  "name": "StarTV",
+  "type": "series",
+  "url": "https://www.startv.com.tr/dizi",
+  "item": "<a[^>]*href=\"/dizi/[^\"/]+\"[^>]*>[\\s\\S]*?</a>",
+  "title": "alt=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

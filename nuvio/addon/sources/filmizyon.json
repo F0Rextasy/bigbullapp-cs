@@ -1,0 +1,12 @@
+{
+  "id": "filmizyon",
+  "name": "Filmizyon",
+  "type": "movie",
+  "url": "https://www.filmizyon.net/tur/aksiyon-filmleri-izle/",
+  "item": "<a class=\"fz-poster-card__link\"[\\s\\S]*?</a>",
+  "title": "alt=\"([^\"]+)\"",
+  "poster": "src=\"(https?://[^\"]+)\"",
+  "year": "aria-label=\"[^\"]*?\\b((?:19|20)\\d{2})\\b",
+  "group": ["latest-movie"],
+  "limit": 40
+}

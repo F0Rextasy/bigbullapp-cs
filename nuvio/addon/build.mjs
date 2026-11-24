@@ -76,7 +76,7 @@ async function get(url, headers) {
   const hdrs = { ...DEFAULT_HEADERS, ...(headers || {}) };
   let status = 0;
   try {
-    const r = await fetchWithDpi(url, { headers: hdrs }, AbortSignal.timeout(15000));
+    const r = await fetchWithDpi(url, { headers: hdrs }, AbortSignal.timeout(25000));
     if (r.ok) return r.text();
     status = r.status;
   } catch {
@@ -328,85 +328,88 @@ export async function main(argv = process.argv.slice(2)) {
     .filter((r) => !only.length || only.includes(r.id));
   cache = existsSync(CACHE) ? JSON.parse(readFileSync(CACHE, "utf8")) : {};
 
+  const slotResults = await mapLimit(recipes, 3, async (rc) => {
+    let items;
+    try {
+      let html = await get(rc.url, rc.headers);
+      // Next.js gövdeleri JSON'u \" kaçışıyla gömer; düz regex için açar.
+      if (rc.unescape) html = html.replace(/\\"/g, '"');
+      const blocks = html.match(new RegExp(rc.item, "gi")) || [];
+      const titleRe = new RegExp(rc.title, "i");
+      const stripRe = rc.strip ? new RegExp(rc.strip, "i") : null;
+      const posterRe = rc.poster ? new RegExp(rc.poster, "i") : null;
+      const yearRe = rc.year ? new RegExp(rc.year, "i") : null;
+      const imdbRe = rc.imdb ? new RegExp(rc.imdb, "i") : null;
+      const title2Re = rc.title2 ? new RegExp(rc.title2, "i") : null;
+      const hrefRe = rc.href ? new RegExp(rc.href, "i") : null;
+      const seen = new Set();
+      items = [];
+      for (const b of blocks) {
+        const m = titleRe.exec(b);
+        let title = m ? stripTags(m[1]) : "";
+        if (stripRe) title = title.replace(stripRe, "").trim();
+        if (title.length < 2) continue;
+        const k = norm(title);
+        if (seen.has(k)) continue;
+        seen.add(k);
+        let poster = resolvePosterUrl(posterRe ? (posterRe.exec(b) || [])[1] : undefined, rc.url);
+        const yearStr = yearRe ? (yearRe.exec(b) || [])[1] : undefined;
+        const year = yearStr && /^(19|20)\d{2}$/.test(yearStr) ? Number(yearStr) : 0;
+        const imdb = imdbRe ? (imdbRe.exec(b) || [])[1] : undefined;
+        const slug = title2Re ? (title2Re.exec(b) || [])[1] : undefined;
+        items.push({
+          title,
+          title2: slug ? slug.replace(/-/g, " ") : undefined,
+          poster,
+          year,
+          imdb,
+          href: hrefRe ? (hrefRe.exec(b) || [])[1] : undefined,
+        });
+        if (items.length >= (rc.limit || MAX_ITEMS)) break;
+      }
+    } catch (e) {
+      console.error(`! ${rc.id}: ${e.message}`);
+      return { failed: rc };
+    }
+    if (items.length < 8) {
+      console.error(`! ${rc.id}: yalnız ${items.length} kart (en az 8 gerekli)`);
+      return { failed: rc };
+    }
+    // Çözümler ağ isteği; sıralı çalıştırmak CI'da dakikalar alıyor.
+    const resolved = await mapLimit(items, 5, async (it) => ({
+      it,
+      hit: it.imdb
+        ? { id: it.imdb, poster: it.poster || "" }
+        : (await resolve(rc.type, it.title, it.year)) || (it.title2 ? await resolve(rc.type, it.title2, it.year) : null),
+    }));
+    const metas = [];
+    for (const { it, hit } of resolved) {
+      if (!hit) continue;
+      if (metas.some((m) => m.id === hit.id)) continue;
+      metas.push({ id: hit.id, type: rc.type, name: it.title, poster: it.poster || hit.poster || "" });
+    }
+    if (metas.length < 5) {
+      console.error(`! ${rc.id}: ${items.length} kart, ${metas.length} IMDb eşleşmesi (en az 5 gerekli)`);
+      return { failed: rc };
+    }
+    if (check) {
+      console.log(`ok ${rc.id} (${rc.type}) ${metas.length}/${items.length}`);
+      return {};
+    }
+    const dir = join(OUT, rc.type);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, rc.id + ".json"), JSON.stringify({ metas }) + "\n");
+    console.log(`ok ${rc.id} (${rc.type}) ${metas.length}/${items.length}`);
+    return {
+      written: { id: rc.id, type: rc.type, name: rc.name, hidden: !!rc.hidden, group: rc.group || [], count: metas.length },
+    };
+  });
   const written = [];
   const failed = [];
-  for (const rc of recipes) {
-  let items;
-  try {
-    let html = await get(rc.url, rc.headers);
-    // Next.js gövdeleri JSON'u \" kaçışıyla gömer; düz regex için açar.
-    if (rc.unescape) html = html.replace(/\\"/g, '"');
-    const blocks = html.match(new RegExp(rc.item, "gi")) || [];
-    const titleRe = new RegExp(rc.title, "i");
-    const stripRe = rc.strip ? new RegExp(rc.strip, "i") : null;
-    const posterRe = rc.poster ? new RegExp(rc.poster, "i") : null;
-    const yearRe = rc.year ? new RegExp(rc.year, "i") : null;
-    const imdbRe = rc.imdb ? new RegExp(rc.imdb, "i") : null;
-    const title2Re = rc.title2 ? new RegExp(rc.title2, "i") : null;
-    const hrefRe = rc.href ? new RegExp(rc.href, "i") : null;
-    const seen = new Set();
-    items = [];
-    for (const b of blocks) {
-      const m = titleRe.exec(b);
-      let title = m ? stripTags(m[1]) : "";
-      if (stripRe) title = title.replace(stripRe, "").trim();
-      if (title.length < 2) continue;
-      const k = norm(title);
-      if (seen.has(k)) continue;
-      seen.add(k);
-      let poster = resolvePosterUrl(posterRe ? (posterRe.exec(b) || [])[1] : undefined, rc.url);
-      const yearStr = yearRe ? (yearRe.exec(b) || [])[1] : undefined;
-      const year = yearStr && /^(19|20)\d{2}$/.test(yearStr) ? Number(yearStr) : 0;
-      const imdb = imdbRe ? (imdbRe.exec(b) || [])[1] : undefined;
-      const slug = title2Re ? (title2Re.exec(b) || [])[1] : undefined;
-      items.push({
-        title,
-        title2: slug ? slug.replace(/-/g, " ") : undefined,
-        poster,
-        year,
-        imdb,
-        href: hrefRe ? (hrefRe.exec(b) || [])[1] : undefined,
-      });
-      if (items.length >= (rc.limit || MAX_ITEMS)) break;
-    }
-  } catch (e) {
-    console.error(`! ${rc.id}: ${e.message}`);
-    failed.push(rc);
-    continue;
+  for (const res of slotResults) {
+    if (res && res.written) written.push(res.written);
+    else if (res && res.failed) failed.push(res.failed);
   }
-  if (items.length < 8) {
-    console.error(`! ${rc.id}: yalnız ${items.length} kart (en az 8 gerekli)`);
-    failed.push(rc);
-    continue;
-  }
-  // Çözümler ağ isteği; sıralı çalıştırmak CI'da dakikalar alıyor.
-  const resolved = await mapLimit(items, 8, async (it) => ({
-    it,
-    hit: it.imdb
-      ? { id: it.imdb, poster: it.poster || "" }
-      : (await resolve(rc.type, it.title, it.year)) || (it.title2 ? await resolve(rc.type, it.title2, it.year) : null),
-  }));
-  const metas = [];
-  for (const { it, hit } of resolved) {
-    if (!hit) continue;
-    if (metas.some((m) => m.id === hit.id)) continue;
-    metas.push({ id: hit.id, type: rc.type, name: it.title, poster: it.poster || hit.poster || "" });
-  }
-  if (metas.length < 5) {
-    console.error(`! ${rc.id}: ${items.length} kart, ${metas.length} IMDb eşleşmesi (en az 5 gerekli)`);
-    failed.push(rc);
-    continue;
-  }
-  if (check) {
-    console.log(`ok ${rc.id} (${rc.type}) ${metas.length}/${items.length}`);
-    continue;
-  }
-  const dir = join(OUT, rc.type);
-  mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, rc.id + ".json"), JSON.stringify({ metas }) + "\n");
-  written.push({ id: rc.id, type: rc.type, name: rc.name, hidden: !!rc.hidden, group: rc.group || [], count: metas.length });
-  console.log(`ok ${rc.id} (${rc.type}) ${metas.length}/${items.length}`);
-}
 
 // Tekli güncellemede (`only.length > 0`) diğer katalog dosyaları, grup satırları ve manifest korunur.
 if (!check) {

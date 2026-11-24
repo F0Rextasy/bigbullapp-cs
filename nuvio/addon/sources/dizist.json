@@ -1,0 +1,10 @@
+{
+  "id": "dizist",
+  "name": "Dizist",
+  "type": "series",
+  "url": "https://dizist.live/yabanci-diziler",
+  "item": "<div class=\"poster-mb-bx[\\s\\S]*?</a>",
+  "title": "title=\"([^\"]+)\"",
+  "poster": "<img[^>]+src=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\""
+}

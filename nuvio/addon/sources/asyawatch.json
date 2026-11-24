@@ -1,0 +1,11 @@
+{
+  "id": "asyawatch",
+  "name": "AsyaWatch",
+  "type": "series",
+  "url": "https://asyawatch.com/dizi-izle",
+  "item": "<a[^>]*class=\"[^\"]*pcard[^\"]*\"[^>]*>[\\s\\S]*?</a>",
+  "title": "<b>([^<]+)</b>",
+  "poster": "<img[^>]+src=\"([^\"]+)\"",
+  "year": "\\b(19\\d{2}|20\\d{2})\\b",
+  "href": "href=\"([^\"]+)\""
+}

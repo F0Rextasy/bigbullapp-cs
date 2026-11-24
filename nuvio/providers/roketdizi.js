@@ -1,0 +1,745 @@
+// @provider {"id":"roketdizi","name":"RoketDizi","types":["movie","tv"],"domain":"roketdizi.life","formats":["m3u8"],"sample":"tt0903747:tv:1:1","description":"RoketDizi - Turkce dublaj ve altyazili yabanci dizi ve filmler (pichive HLS).","verified":true,"version":"1.0.0"}
+/**
+ * roketdizi — Nuvio provider (bb-nuvio).
+ * Flow: Cinemeta title -> /arama-yap?s= -> /dizi/<slug> or /film/<slug> ->
+ *       RSC enc (PBKDF2-HMAC-SHA512(999) + AES-256-CBC) -> pichive NP_CONFIG + pichiveSign -> HLS master + VTT.
+ */
+
+var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
+var BASE = "https://roketdizi.life";
+var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+var K512HEX =
+  "428a2f98d728ae22 7137449123ef65cd b5c0fbcfec4d3b2f e9b5dba58189dbbc 3956c25bf348b538 59f111f1b605d019 923f82a4af194f9b ab1c5ed5da6d8118 " +
+  "d807aa98a3030242 12835b0145706fbe 243185be4ee4b28c 550c7dc3d5ffb4e2 72be5d74f27b896f 80deb1fe3b1696b1 9bdc06a725c71235 c19bf174cf692694 " +
+  "e49b69c19ef14ad2 efbe4786384f25e3 0fc19dc68b8cd5b5 240ca1cc77ac9c65 2de92c6f592b0275 4a7484aa6ea6e483 5cb0a9dcbd41fbd4 76f988da831153b5 " +
+  "983e5152ee66dfab a831c66d2db43210 b00327c898fb213f bf597fc7beef0ee4 c6e00bf33da88fc2 d5a79147930aa725 06ca6351e003826f 142929670a0e6e70 " +
+  "27b70a8546d22ffc 2e1b21385c26c926 4d2c6dfc5ac42aed 53380d139d95b3df 650a73548baf63de 766a0abb3c77b2a8 81c2c92e47edaee6 92722c851482353b " +
+  "a2bfe8a14cf10364 a81a664bbc423001 c24b8b70d0f89791 c76c51a30654be30 d192e819d6ef5218 d69906245565a910 f40e35855771202a 106aa07032bbd1b8 " +
+  "19a4c116b8d2d0c8 1e376c085141ab53 2748774cdf8eeb99 34b0bcb5e19b48a8 391c0cb3c5c95a63 4ed8aa4ae3418acb 5b9cca4f7763e373 682e6ff3d6b2b8a3 " +
+  "748f82ee5defb2fc 78a5636f43172f60 84c87814a1f0ab72 8cc702081a6439ec 90befffa23631e28 a4506cebde82bde9 bef9a3f7b2c67915 c67178f2e372532b " +
+  "ca273eceea26619c d186b8c721c0c207 eada7dd6cde0eb1e f57d4f7fee6ed178 06f067aa72176fba 0a637dc5a2c898a6 113f9804bef90dae 1b710b35131c471b " +
+  "28db77f523047d84 32caab7b40c72493 3c9ebe0a15c9bebc 431d67c49c100d4c 4cc5d4becb3e42b6 597f299cfc657e2a 5fcb6fab3ad6faec 6c44198c4a475817";
+var IV512HEX =
+  "6a09e667f3bcc908 bb67ae8584caa73b 3c6ef372fe94f82b a54ff53a5f1d36f1 510e527fade682d1 9b05688c2b3e6c1f 1f83d9abfb41bd6b 5be0cd19137e2179";
+
+function text(url, opts) {
+  var o = opts || {};
+  var headers = { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" };
+  if (o.referer) headers.Referer = o.referer;
+  if (o.headers) for (var k in o.headers) headers[k] = o.headers[k];
+  return fetch(url, { method: o.method || "GET", headers: headers, body: o.body }).then(function (r) {
+    if (!r.ok) throw new Error("HTTP " + r.status + " " + url);
+    return r.text();
+  });
+}
+
+function first(pattern, body) {
+  var m = pattern.exec(String(body || ""));
+  return m ? m[1] : null;
+}
+
+function origin(url) {
+  var m = /^(https?:\/\/[^/]+)/.exec(String(url || ""));
+  return m ? m[1] : null;
+}
+
+function abs(base, href) {
+  if (!href) return null;
+  href = String(href).replace(/&amp;/g, "&").trim();
+  if (/^https?:/i.test(href)) return href;
+  if (href.slice(0, 2) === "//") return "https:" + href;
+  var root = origin(base);
+  if (href.charAt(0) === "/") return root ? root + href : href;
+  return String(base || BASE).replace(/[^/]*$/, "") + href;
+}
+
+function hlsNoDownload(url) {
+  var u = String(url || "");
+  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
+  return u + "#.m3u8";
+}
+
+function bytes(value) {
+  var s = String(value || "").replace(/[^A-Za-z0-9+/=]/g, "");
+  var out = [];
+  var i, a, b, c, d;
+  for (i = 0; i < s.length; i += 4) {
+    a = B64.indexOf(s.charAt(i));
+    b = B64.indexOf(s.charAt(i + 1));
+    c = B64.indexOf(s.charAt(i + 2));
+    d = B64.indexOf(s.charAt(i + 3));
+    if (a < 0 || b < 0) break;
+    out.push((a << 2) | (b >> 4));
+    if (c > -1 && c !== 64) out.push(((b & 15) << 4) | (c >> 2));
+    if (d > -1 && d !== 64) out.push(((c & 3) << 6) | d);
+  }
+  return out;
+}
+
+function hexBytes(value) {
+  var s = String(value || "");
+  var out = [];
+  for (var i = 0; i + 1 < s.length; i += 2) out.push(parseInt(s.substr(i, 2), 16));
+  return out;
+}
+
+function utf8(list) {
+  var out = "";
+  var i = 0;
+  while (i < list.length) {
+    var c = list[i++];
+    if (c < 128) out += String.fromCharCode(c);
+    else if (c > 191 && c < 224) out += String.fromCharCode(((c & 31) << 6) | (list[i++] & 63));
+    else if (c > 223 && c < 240) out += String.fromCharCode(((c & 15) << 12) | ((list[i++] & 63) << 6) | (list[i++] & 63));
+    else {
+      var cp = ((c & 7) << 18) | ((list[i++] & 63) << 12) | ((list[i++] & 63) << 6) | (list[i++] & 63);
+      cp -= 0x10000;
+      out += String.fromCharCode(0xd800 + (cp >> 10), 0xdc00 + (cp & 1023));
+    }
+  }
+  return out;
+}
+
+function chars(value) {
+  var out = [];
+  for (var i = 0; i < value.length; i++) out.push(value.charCodeAt(i) & 0xff);
+  return out;
+}
+
+function pairs(hex) {
+  var out = [], parts = hex.split(" ");
+  for (var i = 0; i < parts.length; i++) {
+    out.push([parseInt(parts[i].slice(0, 8), 16), parseInt(parts[i].slice(8), 16)]);
+  }
+  return out;
+}
+
+var K512 = pairs(K512HEX);
+var IV512 = pairs(IV512HEX);
+
+function add(a, b) {
+  var lo = a[1] + b[1];
+  var carry = (lo - (lo % 4294967296)) / 4294967296;
+  lo = lo % 4294967296;
+  var hi = (a[0] + b[0] + carry) % 4294967296;
+  return [hi, lo];
+}
+
+function xor(a, b) { return [(a[0] ^ b[0]) >>> 0, (a[1] ^ b[1]) >>> 0]; }
+function rotr(a, n) {
+  var hi = a[0], lo = a[1];
+  if (n === 32) return [lo, hi];
+  if (n < 32) return [((hi >>> n) | (lo << (32 - n))) >>> 0, ((lo >>> n) | (hi << (32 - n))) >>> 0];
+  var m = n - 32;
+  return [((lo >>> m) | (hi << (32 - m))) >>> 0, ((hi >>> m) | (lo << (32 - m))) >>> 0];
+}
+function shr(a, n) {
+  var hi = a[0], lo = a[1];
+  if (n >= 64) return [0, 0];
+  if (n === 32) return [0, hi];
+  if (n < 32) return [hi >>> n, ((lo >>> n) | (hi << (32 - n))) >>> 0];
+  return [0, hi >>> (n - 32)];
+}
+function sigma0(x) { return xor(xor(rotr(x, 1), rotr(x, 8)), shr(x, 7)); }
+function sigma1(x) { return xor(xor(rotr(x, 19), rotr(x, 61)), shr(x, 6)); }
+function bigSigma0(x) { return xor(xor(rotr(x, 28), rotr(x, 34)), rotr(x, 39)); }
+function bigSigma1(x) { return xor(xor(rotr(x, 14), rotr(x, 18)), rotr(x, 41)); }
+
+function sha512(list) {
+  var msg = list.slice();
+  var bitLenHi = Math.floor((msg.length * 8) / 4294967296);
+  var bitLenLo = (msg.length * 8) % 4294967296;
+  msg.push(0x80);
+  while (msg.length % 128 !== 112) msg.push(0);
+  msg.push(
+    0, 0, 0, 0, 0, 0, 0, 0,
+    (bitLenHi >>> 24) & 255, (bitLenHi >>> 16) & 255, (bitLenHi >>> 8) & 255, bitLenHi & 255,
+    (bitLenLo >>> 24) & 255, (bitLenLo >>> 16) & 255, (bitLenLo >>> 8) & 255, bitLenLo & 255
+  );
+  var h = IV512.slice(), w = [];
+  for (var off = 0; off < msg.length; off += 128) {
+    var t;
+    for (t = 0; t < 16; t++) {
+      var p = off + t * 8;
+      w[t] = [
+        ((msg[p] << 24) | (msg[p + 1] << 16) | (msg[p + 2] << 8) | msg[p + 3]) >>> 0,
+        ((msg[p + 4] << 24) | (msg[p + 5] << 16) | (msg[p + 6] << 8) | msg[p + 7]) >>> 0
+      ];
+    }
+    for (t = 16; t < 80; t++) w[t] = add(add(sigma1(w[t - 2]), w[t - 7]), add(sigma0(w[t - 15]), w[t - 16]));
+    var a = h[0], b = h[1], c = h[2], d = h[3], e = h[4], f = h[5], g = h[6], hh = h[7];
+    for (t = 0; t < 80; t++) {
+      var ch = xor([e[0] & f[0], e[1] & f[1]], [~e[0] & g[0], ~e[1] & g[1]]);
+      var maj = xor(xor([a[0] & b[0], a[1] & b[1]], [a[0] & c[0], a[1] & c[1]]), [b[0] & c[0], b[1] & c[1]]);
+      var t1 = add(add(add(hh, bigSigma1(e)), add(ch, K512[t])), w[t]);
+      var t2 = add(bigSigma0(a), maj);
+      hh = g; g = f; f = e; e = add(d, t1); d = c; c = b; b = a; a = add(t1, t2);
+    }
+    h = [add(h[0], a), add(h[1], b), add(h[2], c), add(h[3], d), add(h[4], e), add(h[5], f), add(h[6], g), add(h[7], hh)];
+  }
+  var out = [];
+  for (var i = 0; i < 8; i++) {
+    out.push((h[i][0] >>> 24) & 255, (h[i][0] >>> 16) & 255, (h[i][0] >>> 8) & 255, h[i][0] & 255);
+    out.push((h[i][1] >>> 24) & 255, (h[i][1] >>> 16) & 255, (h[i][1] >>> 8) & 255, h[i][1] & 255);
+  }
+  return out;
+}
+
+function hmac512(key, message) {
+  var block = key.length > 128 ? sha512(key) : key;
+  var pad = block.slice();
+  while (pad.length < 128) pad.push(0);
+  var inner = [], outer = [];
+  for (var i = 0; i < 128; i++) {
+    inner.push(pad[i] ^ 0x36);
+    outer.push(pad[i] ^ 0x5c);
+  }
+  return sha512(outer.concat(sha512(inner.concat(message))));
+}
+
+function pbkdf2(password, salt, rounds, size) {
+  var seed = salt.slice();
+  seed.push(0, 0, 0, 1);
+  var u = hmac512(password, seed);
+  var out = u.slice();
+  for (var i = 1; i < rounds; i++) {
+    u = hmac512(password, u);
+    for (var j = 0; j < size; j++) out[j] ^= u[j];
+  }
+  return out.slice(0, size);
+}
+
+function mul(a, b) {
+  var p = 0;
+  for (var i = 0; i < 8; i++) {
+    if (b & 1) p ^= a;
+    var hi = a & 0x80;
+    a = (a << 1) & 0xff;
+    if (hi) a ^= 0x1b;
+    b >>= 1;
+  }
+  return p;
+}
+
+function rotl(b, n) { return ((b << n) | (b >> (8 - n))) & 0xff; }
+
+var SBOX = [], ISBOX = [];
+(function () {
+  for (var x = 0; x < 256; x++) {
+    var inv = 0;
+    if (x !== 0) { inv = 1; for (var e = 0; e < 254; e++) inv = mul(inv, x); }
+    var s = inv ^ rotl(inv, 1) ^ rotl(inv, 2) ^ rotl(inv, 3) ^ rotl(inv, 4) ^ 0x63;
+    SBOX[x] = s;
+    ISBOX[s] = x;
+  }
+})();
+
+function expandKey(key) {
+  var w = [], i;
+  for (i = 0; i < 8; i++) w[i] = [key[4 * i], key[4 * i + 1], key[4 * i + 2], key[4 * i + 3]];
+  var rcon = 1;
+  for (i = 8; i < 60; i++) {
+    var t = w[i - 1].slice();
+    if (i % 8 === 0) {
+      t = [SBOX[t[1]] ^ rcon, SBOX[t[2]], SBOX[t[3]], SBOX[t[0]]];
+      rcon = mul(rcon, 2);
+    } else if (i % 8 === 4) {
+      t = [SBOX[t[0]], SBOX[t[1]], SBOX[t[2]], SBOX[t[3]]];
+    }
+    w[i] = [w[i - 8][0] ^ t[0], w[i - 8][1] ^ t[1], w[i - 8][2] ^ t[2], w[i - 8][3] ^ t[3]];
+  }
+  var rk = [];
+  for (i = 0; i < 60; i++) rk = rk.concat(w[i]);
+  return rk;
+}
+
+function decryptBlock(rk, block) {
+  var s = [], i, r, c;
+  for (i = 0; i < 16; i++) s[i] = block[i] ^ rk[224 + i];
+  for (var round = 13; round >= 0; round--) {
+    var t = s.slice();
+    for (r = 0; r < 4; r++) for (c = 0; c < 4; c++) s[r + 4 * c] = t[r + 4 * ((c - r + 4) % 4)];
+    for (i = 0; i < 16; i++) s[i] = ISBOX[s[i]];
+    for (i = 0; i < 16; i++) s[i] ^= rk[round * 16 + i];
+    if (!round) break;
+    for (c = 0; c < 4; c++) {
+      var a0 = s[4 * c], a1 = s[4 * c + 1], a2 = s[4 * c + 2], a3 = s[4 * c + 3];
+      s[4 * c] = mul(a0, 14) ^ mul(a1, 11) ^ mul(a2, 13) ^ mul(a3, 9);
+      s[4 * c + 1] = mul(a0, 9) ^ mul(a1, 14) ^ mul(a2, 11) ^ mul(a3, 13);
+      s[4 * c + 2] = mul(a0, 13) ^ mul(a1, 9) ^ mul(a2, 14) ^ mul(a3, 11);
+      s[4 * c + 3] = mul(a0, 11) ^ mul(a1, 13) ^ mul(a2, 9) ^ mul(a3, 14);
+    }
+  }
+  return s;
+}
+
+function decryptCbc(key, iv, data) {
+  var rk = expandKey(key);
+  var out = [], prev = iv, i;
+  for (var off = 0; off + 16 <= data.length; off += 16) {
+    var block = data.slice(off, off + 16);
+    var plain = decryptBlock(rk, block);
+    for (i = 0; i < 16; i++) out.push(plain[i] ^ prev[i]);
+    prev = block;
+  }
+  var pad = out[out.length - 1];
+  if (pad > 0 && pad <= 16) out = out.slice(0, out.length - pad);
+  return out;
+}
+
+var K256 = [
+  0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+  0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+  0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+  0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+  0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+  0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+  0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+  0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+];
+function sha256Words(str) {
+  var msg = [];
+  for (var i = 0; i < str.length; i++) msg.push(str.charCodeAt(i) & 0xff);
+  var len = msg.length;
+  msg.push(0x80);
+  while (msg.length % 64 !== 56) msg.push(0);
+  var bits = len * 8;
+  msg.push(0, 0, 0, 0, (bits >>> 24) & 0xff, (bits >>> 16) & 0xff, (bits >>> 8) & 0xff, bits & 0xff);
+  var h0 = 0x6a09e667, h1 = 0xbb67ae85, h2 = 0x3c6ef372, h3 = 0xa54ff53a;
+  var h4 = 0x510e527f, h5 = 0x9b05688c, h6 = 0x1f83d9ab, h7 = 0x5be0cd19;
+  var w = [];
+  for (var off = 0; off < msg.length; off += 64) {
+    for (var j = 0; j < 16; j++) w[j] = (msg[off + 4 * j] << 24) | (msg[off + 4 * j + 1] << 16) | (msg[off + 4 * j + 2] << 8) | msg[off + 4 * j + 3];
+    for (var t = 16; t < 64; t++) {
+      var x = w[t - 15], y = w[t - 2];
+      var s0 = ((x >>> 7) | (x << 25)) ^ ((x >>> 18) | (x << 14)) ^ (x >>> 3);
+      var s1 = ((y >>> 17) | (y << 15)) ^ ((y >>> 19) | (y << 13)) ^ (y >>> 10);
+      w[t] = (w[t - 16] + s0 + w[t - 7] + s1) | 0;
+    }
+    var a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
+    for (var r = 0; r < 64; r++) {
+      var S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+      var ch = (e & f) ^ (~e & g);
+      var t1 = (h + S1 + ch + K256[r] + w[r]) | 0;
+      var S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+      var maj = (a & b) ^ (a & c) ^ (b & c);
+      var t2 = (S0 + maj) | 0;
+      h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+    }
+    h0 = (h0 + a) | 0; h1 = (h1 + b) | 0; h2 = (h2 + c) | 0; h3 = (h3 + d) | 0;
+    h4 = (h4 + e) | 0; h5 = (h5 + f) | 0; h6 = (h6 + g) | 0; h7 = (h7 + h) | 0;
+  }
+  return [h0 >>> 0, h1 >>> 0, h2 >>> 0, h3 >>> 0, h4 >>> 0, h5 >>> 0, h6 >>> 0, h7 >>> 0];
+}
+
+function pichiveSign(html, url) {
+  var u = String(url || "");
+  if ((u.indexOf("/nm.php") === -1 && u.indexOf("/nsub.php") === -1) || u.indexOf("&p=") !== -1 || u.indexOf("?p=") !== -1) return u;
+  var gm = /"gate"\s*:\s*\{\s*"n"\s*:\s*"([^"]+)"(?:\s*,\s*"b"\s*:\s*(\d+))?/.exec(String(html || ""));
+  if (!gm) return u;
+  var n = gm[1], bits = parseInt(gm[2], 10) || 12;
+  var sep = u.indexOf("?") !== -1 ? "&p=" : "?p=";
+  var fn = /window\.NP_GATE\s*=\s*function\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*\{([\s\S]*?)\};/.exec(String(html || ""));
+  if (!fn) {
+    for (var i = 0; i < 5000000; i++) if ((sha256Words(n + ":" + i)[0] >>> (32 - bits)) === 0) return u + sep + i;
+    return u;
+  }
+  var nVar = fn[1], body = fn[3];
+  var cm = /var\s+(\w+)\s*=\s*String\.fromCharCode\(([\d,\s]+)\)/.exec(body);
+  var nm = /var\s+(\w+)\s*=\s*(?:\w+\.toString\((\d*)\)|String\(\w+\))/.exec(body);
+  var im = /\(\s*\w+\(([^)]+)\)\[(\d+)\]\s*(>>>|&)\s*(\d+)\s*\)\s*===?\s*0/.exec(body);
+  if (!cm || !nm || !im) return u;
+  var saltVar = cm[1], salt = cm[2].split(",").map(function (x) { return String.fromCharCode(parseInt(x.trim(), 10)); }).join("");
+  var nonceVar = nm[1], radix = parseInt(nm[2], 10) || 10, parts = im[1].split("+").map(function (s) { return s.trim(); });
+  var wordIdx = parseInt(im[2], 10) || 0, op = im[3], rhs = parseInt(im[4], 10) >>> 0;
+  for (var k = 0; k < 5000000; k++) {
+    var nonce = k.toString(radix), msg = "";
+    for (var p = 0; p < parts.length; p++) {
+      var tok = parts[p];
+      if (tok === nVar) msg += n;
+      else if (tok === saltVar) msg += salt;
+      else if (tok === nonceVar) msg += nonce;
+      else msg += tok.replace(/^["']|["']$/g, "");
+    }
+    var w = sha256Words(msg)[wordIdx] >>> 0;
+    if ((op === ">>>" ? (w >>> rhs) : ((w & rhs) >>> 0)) === 0) return u + sep + nonce;
+  }
+  return u;
+}
+
+function titleOf(id, mediaType) {
+  if (/^__alt__:/.test(String(id))) return Promise.resolve(decodeURIComponent(String(id).slice(8)));
+  var kind = mediaType === "movie" ? "movie" : "series";
+  return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
+    .then(function (body) {
+      var meta = JSON.parse(body).meta || {};
+      return String(meta.name || "").trim();
+    })
+    .catch(function () {
+      return "";
+    });
+}
+
+function norm(value) {
+  return String(value || "")
+    .replace(/[\u0131\u0130I]/g, "i").replace(/[\u015f\u015e]/g, "s").replace(/[\u011f\u011e]/g, "g")
+    .replace(/[\u00fc\u00dc]/g, "u").replace(/[\u00f6\u00d6]/g, "o").replace(/[\u00e7\u00c7]/g, "c")
+    .toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function searchCards(html, isTv) {
+  var out = [];
+  var re = /<a\b[^>]*class="[^"]*(?:tc|rk-mv|rk-rank-item|rk-ep)[^"]*"[^>]*>([\s\S]*?)<\/a>/g;
+  var m;
+  while ((m = re.exec(String(html || ""))) !== null) {
+    var tag = m[0];
+    var href = first(/href="([^"]+)"/, tag);
+    if (!href) continue;
+    href = href.split("?")[0].replace(/\/sezon-\d+\/bolum-\d+.*$/, "");
+    var isMovie = href.indexOf("/film/") !== -1;
+    if (!isMovie && (href.indexOf("/dizi/") === -1 || href.indexOf("/dizi/tur/") !== -1)) continue;
+    if (isTv === isMovie) continue;
+    var tt = first(/<span class="(?:tt|rk-card-t)"[^>]*>([^<]+)<\/span>/, m[1]);
+    var aria = first(/aria-label="([^"]+)"/, tag) || "";
+    var title = tt || aria.replace(/^\d+\.\s*sırada,\s*/, "").split(",")[0];
+    if (!title) continue;
+    out.push({ url: abs(BASE, href), title: title.trim() });
+  }
+  return out;
+}
+
+function pickCard(cards, wantTitle) {
+  var want = norm(wantTitle);
+  if (!want) return null;
+  var best = null;
+  for (var i = 0; i < cards.length; i++) {
+    var have = norm(cards[i].title);
+    if (have === want) return cards[i];
+    if (!best && have.indexOf(want + " ") === 0) best = cards[i];
+  }
+  return best;
+}
+
+function episodeUrl(html, want, wantEp) {
+  var clean = String(html || "").replace(/\\"/g, '"');
+  var re = new RegExp('"(?:href|url)"\\s*:\\s*"([^"]*/sezon-' + want + '/bolum-' + wantEp + '(?:[^"]*))"', "i");
+  var hit = first(re, clean);
+  if (hit) return abs(BASE, hit.replace(/[?#].*$/, ""));
+  var re2 = new RegExp('href="([^"]*/sezon-' + want + '/bolum-' + wantEp + '(?:[^"]*))"', "i");
+  hit = first(re2, clean);
+  return hit ? abs(BASE, hit.replace(/[?#].*$/, "")) : null;
+}
+
+function encFields(html) {
+  var clean = String(html || "").replace(/\\"/g, '"');
+  var encAt = clean.indexOf('"enc":{');
+  if (encAt < 0) return null;
+  var sub = clean.slice(encAt, encAt + 1800);
+  var ciphertext = first(/"ciphertext":"([^"]+)"/, sub);
+  var iv = first(/"iv":"([^"]+)"/, sub);
+  var salt = first(/"salt":"([^"]+)"/, sub);
+  var pass = null;
+  var kre = /"k":"([^"]+)"/g;
+  var km;
+  while ((km = kre.exec(sub)) !== null) {
+    if (km[1].indexOf("/") === -1) {
+      pass = km[1];
+      break;
+    }
+  }
+  if (!ciphertext || !iv || !salt || !pass) return null;
+  return { ciphertext: ciphertext, iv: iv, salt: salt, pass: pass };
+}
+
+function decryptEmbed(html) {
+  var f = encFields(html);
+  if (!f) return null;
+  var key = pbkdf2(chars(f.pass), hexBytes(f.salt), 999, 32);
+  var clear = utf8(decryptCbc(key, hexBytes(f.iv), bytes(f.ciphertext)));
+  var url = clear.replace(/^[\t\r\n \u000f]+|[\t\r\n \u000f]+$/g, "");
+  if (url.slice(0, 2) === "//") return "https:" + url;
+  if (/^http:\/\//i.test(url)) return url.replace(/^http/i, "https");
+  return /^https?:\/\//i.test(url) ? url : null;
+}
+
+function objectAt(html, from) {
+  var depth = 0, inString = false, escaped = false;
+  for (var i = from; i < html.length; i++) {
+    var ch = html.charAt(i);
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (ch === "\\") escaped = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+    if (ch === '"') inString = true;
+    else if (ch === "{") depth++;
+    else if (ch === "}") {
+      depth--;
+      if (!depth) return html.slice(from, i + 1);
+    }
+  }
+  return null;
+}
+
+var LANGS = { "türkçe": "tr", "turkce": "tr", "ingilizce": "en", "english": "en" };
+function subLang(label) {
+  var k = String(label || "").toLowerCase().trim();
+  if (LANGS[k]) return LANGS[k];
+  return k.indexOf("ing") !== -1 || k.indexOf("eng") !== -1 ? "en" : "tr";
+}
+
+function getStreams(tmdbId, mediaType, season, episode) {
+  var isTv = mediaType === "tv" || mediaType === "series";
+  var want = parseInt(season, 10) || 1;
+  var wantEp = parseInt(episode, 10) || 1;
+  var playerUrl = null;
+  var pageQuality = "auto";
+
+  return titleOf(tmdbId, mediaType)
+    .then(function (title) {
+      if (!title) return null;
+      return text(BASE + "/arama-yap?s=" + encodeURIComponent(title)).then(function (html) {
+        return pickCard(searchCards(html, isTv), title);
+      });
+    })
+    .then(function (card) {
+      if (!card) return null;
+      return text(card.url, { referer: BASE + "/" });
+    })
+    .then(function (html) {
+      if (!html) return null;
+      if (!isTv) return html;
+      var ep = episodeUrl(html, want, wantEp);
+      if (!ep) return null;
+      return text(ep, { referer: BASE + "/" });
+    })
+    .then(function (html) {
+      if (!html) return null;
+      var clean = String(html).replace(/\\"/g, '"');
+      var qm = /"quality"\s*:\s*"(\d{3,4})[pP]?/.exec(clean);
+      if (qm) pageQuality = qm[1] + "p";
+      playerUrl = decryptEmbed(clean);
+      if (!playerUrl) return null;
+      return text(playerUrl, { referer: BASE + "/" });
+    })
+    .then(function (pHtml) {
+      if (!pHtml) return [];
+      var at = pHtml.indexOf("NP_CONFIG");
+      var open = at >= 0 ? pHtml.indexOf("{", at) : -1;
+      var rawCfg = open >= 0 ? objectAt(pHtml, open) : null;
+      if (!rawCfg) return [];
+      var cfg;
+      try { cfg = JSON.parse(rawCfg); } catch (e) { return []; }
+      var playerOrg = origin(playerUrl) || "";
+      var subs = [];
+      var tracks = cfg.subtitles || [];
+      for (var j = 0; j < tracks.length; j++) {
+        var tr = tracks[j] || {};
+        var rawSub = /^https?:/i.test(tr.url || "") ? tr.url : (tr.tok ? playerOrg + "/nsub.php?v=" + tr.tok : "");
+        if (!rawSub) continue;
+        subs.push({
+          url: pichiveSign(pHtml, rawSub),
+          language: subLang(tr.lang || tr.label),
+          name: String(tr.label || tr.lang || "Türkçe").trim() + " [RoketDizi]"
+        });
+      }
+      var out = [], seen = {};
+      var sources = cfg.sources || [];
+      for (var i = 0; i < sources.length; i++) {
+        var src = sources[i] || {};
+        if (!/^https?:/i.test(src.master || "")) continue;
+        var signed = pichiveSign(pHtml, src.master);
+        if (seen[signed]) continue;
+        seen[signed] = 1;
+        var lbl = String(src.title || "").trim();
+        out.push({
+          name: "RoketDizi",
+          title: "RoketDizi" + (lbl ? " - " + lbl : "") + " [HLS]",
+          url: hlsNoDownload(signed),
+          quality: pageQuality,
+          headers: { Referer: playerUrl, "User-Agent": UA },
+          subtitles: subs.slice(0, 6)
+        });
+      }
+      return out;
+    })
+    .catch(function (e) {
+      console.log("[bb-nuvio][roketdizi] " + (e && e.message));
+      return [];
+    });
+}
+
+module.exports = { getStreams };
+
+/* NuvioMobile always calls getStreams with args.tmdbId (JsBindings.kt); the
+   value is a numeric TMDB id after TmdbService.ensureTmdbId. Resolve it to
+   IMDb so the existing Cinemeta/title flow keeps working. */
+var __origGetStreams = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  var raw = String(id || "");
+  var mt = mediaType === "series" ? "tv" : mediaType;
+  if (!/^\d+$/.test(raw)) {
+    try {
+      return Promise.resolve(__origGetStreams(raw, mt, season, episode)).catch(function () { return []; });
+    } catch (e) {
+      return Promise.resolve([]);
+    }
+  }
+  var tv = mt !== "movie";
+  var headers = { "User-Agent": "BigBullNuvio/1.0 (https://github.com/F0Rextasy/bigbullapp-cs)", "Accept": "application/json" };
+  var key = typeof TMDB_API_KEY !== "undefined" ? TMDB_API_KEY : "";
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  var prop = tv ? "P4983" : "P4947";
+  function fromTmdb() {
+    if (!key) return Promise.resolve("");
+    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "/external_ids?api_key=" + encodeURIComponent(key), { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) { return String((json && json.imdb_id) || ""); })
+      .catch(function () { return ""; });
+  }
+  function fromWikidata() {
+    return fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + prop + "=" + raw), { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        var hits = (json && json.query && json.query.search) || [];
+        if (!hits.length) return "";
+        return fetch(api + "&action=wbgetentities&props=claims&ids=" + hits[0].title, { headers: headers });
+      })
+      .then(function (r) { return r && r.ok ? r.json() : null; })
+      .then(function (json) {
+        var entities = (json && json.entities) || {};
+        for (var entity in entities) {
+          var rows = ((entities[entity] || {}).claims || {}).P345 || [];
+          for (var i = 0; i < rows.length; i++) {
+            var value = rows[i] && rows[i].mainsnak && rows[i].mainsnak.datavalue && rows[i].mainsnak.datavalue.value;
+            if (/^tt\d+$/.test(String(value || ""))) return value;
+          }
+        }
+        return "";
+      })
+      .catch(function () { return ""; });
+  }
+  function fromTmdbTitle() {
+    if (!key) return Promise.resolve("");
+    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "?api_key=" + encodeURIComponent(key) + "&language=tr-TR", { headers: headers })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        var t = (json && (json.original_name || json.name || json.original_title || json.title)) || "";
+        return t ? "__alt__:" + encodeURIComponent(t) : "";
+      })
+      .catch(function () { return ""; });
+  }
+  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) { return imdb || fromTmdbTitle(); }).then(function (imdb) {
+    try {
+      return Promise.resolve(__origGetStreams(imdb || raw, mt, season, episode)).catch(function () { return []; });
+    } catch (e) {
+      return [];
+    }
+  }).catch(function () { return []; });
+};
+
+/* Cinemeta basligi yerellestirir ("Gibi" -> "As If"); sonuc bossa Wikidata TR/EN basliklariyla yeniden dene. */
+function __altTitles(raw, mediaType) {
+  var wdHeaders = { "User-Agent": "BigBullNuvio/1.0 (https://github.com/F0Rextasy/bigbullapp-cs)", "Accept": "application/json" };
+  var h = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
+  var api = "https://www.wikidata.org/w/api.php?format=json";
+  var stmt = /^tt\d+$/.test(raw) ? "P345=" + raw : (mediaType === "movie" ? "P4947=" : "P4983=") + raw;
+  var wd = fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + stmt), { headers: wdHeaders })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) {
+      var hits = (j && j.query && j.query.search) || [];
+      if (!hits.length) return null;
+      return fetch(api + "&action=wbgetentities&props=labels|aliases&languages=tr|en&ids=" + hits[0].title, { headers: wdHeaders }).then(function (r) { return r.ok ? r.json() : null; });
+    })
+    .then(function (j) {
+      var res = [], ents = (j && j.entities) || {}, k, l, a, i;
+      for (k in ents) {
+        l = ents[k].labels || {}; a = ents[k].aliases || {};
+        if (l.tr && l.tr.value) res.push(l.tr.value);
+        if (l.en && l.en.value) res.push(l.en.value);
+        for (i = 0; i < (a.tr || []).length && i < 2; i++) res.push(a.tr[i].value);
+      }
+      return res;
+    }).catch(function () { return []; });
+  var imdb = /^tt\d+$/.test(raw)
+    ? fetch("https://v3.sg.media-imdb.com/suggestion/t/" + raw + ".json", { headers: h })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { return (j && j.d && j.d[0] && j.d[0].l) ? [j.d[0].l] : []; })
+        .catch(function () { return []; })
+    : Promise.resolve([]);
+  var tvm = /^tt\d+$/.test(raw) && mediaType !== "movie"
+    ? fetch("https://api.tvmaze.com/lookup/shows?imdb=" + raw, { headers: h })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { return (j && j.name) ? [j.name] : []; })
+        .catch(function () { return []; })
+    : Promise.resolve([]);
+  return Promise.all([wd, imdb, tvm]).then(function (lists) {
+    var out = [], seen = {};
+    for (var i = 0; i < lists.length; i++) {
+      for (var j = 0; j < lists[i].length; j++) {
+        var v = String(lists[i][j] || "").replace(/\s*\([^)]*\)\s*$/, "").trim();
+        if (v && !seen[v.toLowerCase()]) { seen[v.toLowerCase()] = 1; out.push(v); }
+      }
+    }
+    return out;
+  });
+}
+var __cinemetaGetStreams = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  var raw = String(id || "");
+  try {
+    if (/^__alt__:/.test(raw)) return Promise.resolve(__cinemetaGetStreams(raw, mediaType, season, episode)).catch(function () { return []; });
+    function tryPrimary() {
+      if (!/^tt\d+$/.test(raw)) return Promise.resolve(__cinemetaGetStreams(raw, mediaType, season, episode)).catch(function () { return []; });
+      var h = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
+      return fetch("https://v3.sg.media-imdb.com/suggestion/t/" + raw + ".json", { headers: h })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          var t = j && j.d && j.d[0] && j.d[0].l ? String(j.d[0].l).replace(/\s*\([^)]*\)\s*$/, "").trim() : "";
+          return t ? __cinemetaGetStreams("__alt__:" + encodeURIComponent(t), mediaType, season, episode) : [];
+        })
+        .catch(function () { return []; })
+        .then(function (streams) {
+          return (streams && streams.length) ? streams : __cinemetaGetStreams(raw, mediaType, season, episode);
+        });
+    }
+    return tryPrimary().then(function (streams) {
+      if (streams && streams.length) return streams;
+      return __altTitles(raw, mediaType).then(function (titles) {
+        var chain = Promise.resolve([]);
+        titles.forEach(function (t) {
+          chain = chain.then(function (out) {
+            return out.length ? out : __cinemetaGetStreams("__alt__:" + encodeURIComponent(t), mediaType, season, episode);
+          });
+        });
+        return chain;
+      });
+    }).catch(function () { return []; });
+  } catch (e) {
+    return Promise.resolve([]);
+  }
+};
+
+/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir. */
+var __subOnly = false;
+var __langLabeled = module.exports.getStreams;
+module.exports.getStreams = function (id, mediaType, season, episode) {
+  try {
+    return Promise.resolve(__langLabeled.apply(this, arguments)).then(function (streams) {
+      return (streams || []).map(function (s) {
+        if (!s) return s;
+        var hay = String(s.title || "") + " " + String(s.name || "");
+        var tags = [];
+        if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
+        if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
+        if (!tags.length) return s;
+        var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
+        s.quality = q + " \u2022 " + tags.join(" \u2022 ");
+        return s;
+      });
+    }).catch(function () { return []; });
+  } catch (e) {
+    return Promise.resolve([]);
+  }
+};
