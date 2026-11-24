@@ -7,7 +7,7 @@ Cloudstream için `.cs3` eklentileri, Nuvio için plugin deposu + iki katalog ad
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Cloudstream](https://img.shields.io/badge/Cloudstream-pre--release-1E88E5)](https://github.com/recloudstream/cloudstream)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green)](LICENSE)
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-114-blue)](providers)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-113-blue)](providers)
 [![X](https://img.shields.io/badge/X-@BIGBULLapp-000000?logo=x&logoColor=white)](https://x.com/BIGBULLapp)
 [![Telegram](https://img.shields.io/badge/Telegram-BigBull__App-26A5E4?logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 [![Kreosus](https://img.shields.io/badge/Kreosus-Destek%20Ol-E91E63)](https://kreosus.com/f0rextasy)
@@ -136,12 +136,9 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Anizm` | turkanime.info | Anime | ✓ | — | ✓ | — | — | ✓ |
 | `Anizium` | anizium.co | Anime | ✓ | ✓ | — | — | ✓ | ✓ |
 | `AsyaAnimeleri` | asyaanimeleri.top | Anime | ✓ | ✓ | — | — | ✓ | ✓ |
-| `AsyaBox` **pasif** | asyabox.com | Dizi | — | — | — | — | — | — |
 | `AsyaDizi` | asyadizi.com | Dizi | ✓ | — | — | — | — | ✓ |
 | `Asyadizileriizle` | asyadizileriizle.com | Dizi | ✓ | — | — | — | — | ✓ |
 | `AsyaFanatikleri` | asyafanatikleri.vip | Asya dizi/film | ✓ | ✓ | ✓ | — | ✓ | ✓ |
-| `AsyaLog` **pasif** | asyalog.com | Asya dizi/film | ✓ | ✓ | — | — | ✓ | ✓ |
-| `AsyaLuna` **pasif** | asyaluna.com | Dizi | — | — | — | — | — | — |
 | `AsyaMax` | asyamax.com | Asya dizi/film | ✓ | — | — | — | — | — |
 | `AsyaWatch` | asyawatch.com | Asya dizi/film | ✓ | ✓ | — | — | — | ✓ |
 | `ATV` | atv.com.tr | Dizi | ✓ | — | — | — | — | — |
@@ -171,7 +168,6 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `Dizilab` | dizilab.cc | Dizi | — | — | — | — | — | — |
 | `DiziLife` | dizi87.life | Dizi/Film | ✓ | ✓ | — | — | film | ✓ |
 | `Dizimanya` | dizimanya.com | Dizi | ✓ | — | — | — | — | ✓ |
-| `DiziModu` **pasif** | dizimodu.com | Dizi | ✓ | — | — | ✓ | — | ✓ |
 | `Dizirella` | dizirella.one | Dizi | ✓ | — | — | — | — | ✓ |
 | `DiziSol` | dizisol.com | Film/Dizi | — | — | — | — | — | ✓ |
 | `Dizist` | dizist.live | Dizi | ✓ | — | — | ✓ | — | ✓ |
@@ -243,17 +239,14 @@ Her Cloudstream eklentisinin kendi ayar ekranı vardır (**Ayarlar → Extension
 | `WebFilmizle` | webfilmizle.com | Film | ✓ | — | — | — | — | ✓ |
 | `Weboo` | weboo.com.tr | Dizi | ✓ | — | — | — | — | ✓ |
 | `WebteIzle` | webteizle.info | Film | ✓ | — | ✓ | — | ✓ | — |
-| `WFilmIzle` | wfilmizle.click | Film | ✓ | — | — | ✓ | — | — |
 | `Yabancidizi` | ybncidizi.com | Dizi/Film | ✓ | ✓ | — | — | film | ✓ |
 | `YerliDiziler` | yerlidiziler.com.tr | Yerli Dizi | ✓ | — | — | — | — | — |
 | `YesilCamTv` | yesilcamtv.com.tr | Film | ✓ | — | — | — | — | ✓ |
 
-**VPN notu:** `FilmModu` ve `DiziModu` WARP/VPN veya HTTP proxy ile çalışır. `AsyaBox`/`AsyaLog` `.com` adresine taşınmış; ancak site şu an yanıt vermiyor (WARP/proxy de timeout). `AsyaLuna` alan adı çözülmüyor.
+**VPN notu:** `FilmModu` WARP/VPN veya HTTP proxy ile çalışır.
 
-**Kapsam notu:** Depoda doğrulanmış **114 modül** (`status = 1`) ve deneysel **1 modül**
-(`status = 3`: `WFilmIzle`; WARP/VPN gerekir, içerik çoğunlukla fragman) var.
-`status = 0` ile pasif **3 modül**: `AsyaBox`, `AsyaLog`, `AsyaLuna`.
-İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle kaldırıldı; düzeldiğinde tekrar eklenir.
+**Kapsam notu:** Depoda doğrulanmış **113 modül** (`status = 1`) var.
+`AsyaBox`, `AsyaLog`, `AsyaLuna`, `DiziModu`, `WFilmIzle`, İnatTV/İnatBox ve SineWix upstream sorunları nedeniyle kaldırıldı; düzeldiğinde tekrar eklenir.
 Bu tablo ve özellik matrisi her sağlayıcı değişikliğinde güncellenir.
 
 ## Nuvio sağlayıcıları (34)

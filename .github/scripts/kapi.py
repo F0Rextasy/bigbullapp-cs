@@ -349,8 +349,8 @@ def test():
     assert kt_surum("cloudstream { version = 3 }") is None  # satır başı değil
     assert js_surum('// @provider {"id":"a", "version":"1.0.12"}\ncode') == "1.0.12"
     assert js_surum("// @provider {}\n") is None
-    assert "AsyaLuna" in devre_disi() and "Dizibox" not in devre_disi()
-    assert "Dizibox" in aktif_moduller() and "AsyaLuna" not in aktif_moduller()
+    assert "Dizibox" not in devre_disi()
+    assert "Dizibox" in aktif_moduller()
     ra, rp = readme_satirlari("| `Dizibox` | x |\n| `AsyaLuna` **pasif** | y |\n")
     assert ra == {"Dizibox"} and rp == {"AsyaLuna"}
     common_syms = bump_common.extract_public_symbols("providers/Common/src/main/kotlin/com/bigbull/common/Common.kt")
