@@ -254,6 +254,7 @@ class DiziboxProvider : MainAPI() {
             newExtractorLink(name, name, stream, ExtractorLinkType.M3U8) {
                 this.referer = fixUrl(inner)
                 this.quality = Qualities.Unknown.value
+                this.headers = uaHeaders
             }
         )
         return true
