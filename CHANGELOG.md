@@ -5,6 +5,20 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.8.1] - 2026-11-25
+
+### Değişti
+
+- **Nuvio depo adı:** Eklenti deposu adı (`BB Nuvio`) `BigBullApp` olarak güncellendi ([manifest.json](nuvio/manifest.json)).
+
+### Eklendi
+
+- **BigBull TR Katalog:** Mevcut Nuvio sağlayıcıları için 7 yeni katalog kaynağı eklendi (`ddizimag`, `dizipod`, `filmmakinesi`, `fullhdfilmizlesene`, `puhutv`, `sinemetrik`, `turkcedizi`); JSON başlıklardaki `\uXXXX` kaçış dizileri katalog oluşturucuda çözümlenebilir hale getirildi.
+
+### Düzeltildi
+
+- **Katalog posterleri:** `diziyou`, `onlinedizi`, `yesilcamtv` ve `belgeselx` katalog tariflerine doğrudan kart posteri seçicileri eklendi.
+
 ## [1.8.0] - 2026-11-24
 
 ### Eklendi

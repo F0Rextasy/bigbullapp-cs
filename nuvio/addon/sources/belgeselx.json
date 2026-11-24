@@ -5,6 +5,7 @@
   "url": "https://belgeselx.com/belgeselkanali/trt-belgesel",
   "item": "<a class=\"px-card\"[\\s\\S]*?</a>",
   "title": "alt=\"([^\"]+)\"",
+  "poster": "class=\"px-card-img\"[\\s\\S]*?src=\"([^\"]+)\"",
   "href": "href=\"([^\"]+)\"",
   "limit": 40
 }

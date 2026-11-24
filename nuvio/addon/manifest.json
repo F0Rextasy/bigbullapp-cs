@@ -1,6 +1,6 @@
 {
   "id": "org.bigbull.trcatalog",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "name": "BigBull TR Katalog",
   "description": "Cloudstream sağlayıcılarının film ve dizi listeleri; öne çıkan toplu satırlar. Katalog verir; meta Nuvio'nun yerleşik TMDB zenginleştirmesi ve kurulu metadata addon'larından, akış BigBull Nuvio eklentilerinden gelir; canlı TV ayrı addon'dadır.",
   "resources": [
@@ -120,6 +120,11 @@
       "type": "series",
       "id": "ddizi",
       "name": "Ddizi"
+    },
+    {
+      "type": "series",
+      "id": "ddizimag",
+      "name": "DDizimag"
     },
     {
       "type": "series",
@@ -243,6 +248,11 @@
     },
     {
       "type": "series",
+      "id": "dizipod",
+      "name": "DiziPod"
+    },
+    {
+      "type": "series",
       "id": "dizirella",
       "name": "Dizirella"
     },
@@ -288,6 +298,11 @@
     },
     {
       "type": "movie",
+      "id": "filmmakinesi",
+      "name": "FilmMakinesi"
+    },
+    {
+      "type": "movie",
       "id": "filmmodu",
       "name": "FilmModu"
     },
@@ -295,6 +310,11 @@
       "type": "movie",
       "id": "fullhdfilm",
       "name": "FullHDFilm"
+    },
+    {
+      "type": "movie",
+      "id": "fullhdfilmizlesene",
+      "name": "FullHDFilmizlesene"
     },
     {
       "type": "movie",
@@ -398,6 +418,11 @@
     },
     {
       "type": "series",
+      "id": "puhutv",
+      "name": "PuhuTV"
+    },
+    {
+      "type": "series",
       "id": "roketdizi",
       "name": "RoketDizi"
     },
@@ -437,6 +462,11 @@
       "name": "Sinemakolik"
     },
     {
+      "type": "series",
+      "id": "sinemetrik",
+      "name": "Sinemetrik"
+    },
+    {
       "type": "movie",
       "id": "sinezy",
       "name": "Sinezy"
@@ -470,6 +500,11 @@
       "type": "series",
       "id": "turkanimetv",
       "name": "TurkAnimeTV"
+    },
+    {
+      "type": "series",
+      "id": "turkcedizi",
+      "name": "TurkceDizi"
     },
     {
       "type": "series",

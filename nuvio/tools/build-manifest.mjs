@@ -46,7 +46,7 @@ const changelogVer = changelogVersions();
 
 const current = fs.existsSync(manifestPath)
   ? JSON.parse(fs.readFileSync(manifestPath, "utf8"))
-  : { name: "BB Nuvio", version: "1.0.0", description: "Bigbull Turkish streaming providers for Nuvio, running on-device.", author: "bigbull", scrapers: [] };
+  : { name: "BigBullApp", version: "1.0.0", description: "Bigbull Turkish streaming providers for Nuvio, running on-device.", author: "bigbull", scrapers: [] };
 
 const previous = new Map((current.scrapers || []).map((s) => [s.id, s]));
 const scrapers = [];
@@ -97,6 +97,6 @@ if (problems.length) {
 }
 
 scrapers.sort((a, b) => a.id.localeCompare(b.id));
-const next = { ...current, version: repoVersion(), scrapers };
+const next = { ...current, name: "BigBullApp", version: repoVersion(), scrapers };
 fs.writeFileSync(manifestPath, JSON.stringify(next, null, 2) + "\n");
 console.log(`manifest.json: ${scrapers.length} provider(s)`);

@@ -1,0 +1,13 @@
+{
+  "id": "ddizimag",
+  "name": "DDizimag",
+  "type": "series",
+  "url": "https://ddizimag2.icu/",
+  "item": "<a[^>]+href=\"https://ddizimag2\\.icu/dizi/[^\"]+\"[^>]*>[\\s\\S]*?</a>",
+  "title": "alt=\"([^\"]+)\"",
+  "strip": "\\s+(?:\\d+\\.\\s*Sezon.*|Dizi\\s+[İi]zle)$",
+  "poster": "<img[^>]+src=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "group": ["latest-series"],
+  "limit": 40
+}

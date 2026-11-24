@@ -1,0 +1,12 @@
+{
+  "id": "filmmakinesi",
+  "name": "FilmMakinesi",
+  "type": "movie",
+  "url": "https://filmmakinesi.co/",
+  "item": "<a href=\"https://filmmakinesi\\.co/[^\"]+\"[^>]*class=\"poster\"[\\s\\S]*?</a>",
+  "title": "<strong class=\"poster-title\">([^<]+)</strong>",
+  "poster": "<img[^>]+src=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "group": ["latest-movie"],
+  "limit": 40
+}

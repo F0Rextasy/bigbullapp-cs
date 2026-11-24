@@ -126,6 +126,7 @@ const ENTITIES = {
 function stripTags(html) {
   return String(html)
     .replace(/<[^>]*>/g, " ")
+    .replace(/\\u([0-9a-f]{4})/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
     .replace(/&([a-zA-Z]{2,8});/g, (m, k) => ENTITIES[k] ?? m)
     .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
     .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(+d))

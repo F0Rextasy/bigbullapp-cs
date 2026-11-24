@@ -1,0 +1,15 @@
+{
+  "id": "sinemetrik",
+  "name": "Sinemetrik",
+  "type": "series",
+  "url": "https://www.sinemetrik.com/",
+  "headers": {
+    "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+  },
+  "item": "<a href=\"/dizi/[^\"]+\" class=\"ctw-card[^\"]*\"[\\s\\S]*?</a>",
+  "title": "title=\"([^\"]+)\"",
+  "year": "<div class=\"ctw-year\">(\\d{4})</div>",
+  "poster": "<img[^>]+src=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}

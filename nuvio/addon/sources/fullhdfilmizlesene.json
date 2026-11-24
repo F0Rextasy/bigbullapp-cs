@@ -1,0 +1,14 @@
+{
+  "id": "fullhdfilmizlesene",
+  "name": "FullHDFilmizlesene",
+  "type": "movie",
+  "url": "https://www.fullhdfilmizlesene.now/",
+  "item": "<li class=\"film\">[\\s\\S]*?</li>",
+  "title": "<span class=\"film-title\">([^<]+)</span>",
+  "title2": "<span class=\"kt\">([^<]+)</span>",
+  "year": "<span class=\"film-yil\">(\\d{4})</span>",
+  "poster": "data-src=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "group": ["latest-movie"],
+  "limit": 40
+}

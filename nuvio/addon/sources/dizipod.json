@@ -1,0 +1,12 @@
+{
+  "id": "dizipod",
+  "name": "DiziPod",
+  "type": "series",
+  "url": "https://dizipod.com/tum-bolumler/",
+  "item": "<a href=\"https://dizipod\\.com/[^\"]+\">\\s*<div class=\"item\" data-item-id=\"[^\"]+\">[\\s\\S]*?</a>",
+  "title": "<div class=\"title[^\"]*\">([^<]+)</div>",
+  "strip": "\\s+\\d+\\.\\s*Bölüm.*$",
+  "poster": "<img[^>]+src=\"([^\"]+)\"",
+  "href": "href=\"([^\"]+)\"",
+  "limit": 40
+}
