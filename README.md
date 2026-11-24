@@ -36,7 +36,7 @@ Cloudstream için `.cs3` eklentileri, Nuvio için **111 sağlayıcılı plugin d
 |---|---|---|
 | **Plugin Deposu** | Nuvio için 111 film, dizi, anime ve TV sağlayıcısı | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json` |
 | **BigBull TR Katalog** | Ana sayfa film ve dizi satırları | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json` |
-| **BigBull Canlı TV** | Canlı TV (8 satır, 153 kanal) | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json` |
+| **BigBull Canlı TV** | Canlı TV (8 satır, 152 kanal) | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json` |
 
 ### Nuvio'da Hangi Parça Ne Yapar?
 
@@ -183,7 +183,7 @@ Bu tablo, platform desteği ve özellik matrisi her sağlayıcı değişikliğin
 ## Canlı TV
 
 - **Cloudstream:** Tek sağlayıcı `CanliTV` (seçilmiş HLS + iptv-org TR). *"Doğrulanmış"* yalnızca HTTP 200 HLS yanıtını ifade eder; bölgesel kısıtlı yayınlar açılmayabilir.
-- **Nuvio:** `BigBull Canlı TV` addon'u — 8 satır, 153 kanal, doğrudan HLS (`isLive` akışı nedeniyle ayrı addon olarak sunulur).
+- **Nuvio:** `BigBull Canlı TV` addon'u — 8 satır, 152 kanal, doğrudan HLS (`isLive` akışı nedeniyle ayrı addon olarak sunulur).
 
 ---
 
