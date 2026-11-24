@@ -5,6 +5,12 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.40] - 2026-11-24
+
+### Düzeltildi
+- **FilmDozu**: Mükerrer "Türkçe Altyazılı" satırı kaldırıldı; ok.ru akışları HLS ve tarayıcı `User-Agent` ile güncellendi.
+- **DiziModu**: Site Mart 2024'ten beri güncellenmediği ve tüm video kaynakları (vidmoly/ddplayer/ddsplayer/short.ink) ölü olduğu için pasife alındı.
+
 ## [1.7.39] - 2026-11-24
 
 ### Düzeltildi

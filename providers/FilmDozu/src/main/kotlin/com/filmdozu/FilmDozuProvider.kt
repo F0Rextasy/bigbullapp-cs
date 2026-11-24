@@ -47,7 +47,6 @@ class FilmDozuProvider : MainAPI() {
             "Son Eklenenler" -> "/kesfet?page=SAYFA"
             "IMDb Puanı" -> "/kesfet?sort=rating&page=SAYFA"
             "Türkçe Dublaj" -> "/dublaj/?page=SAYFA"
-            "Türkçe Altyazılı" -> "/altyazili/?page=SAYFA"
             else -> "/kategori/${GENRE_SLUGS[row]}/sayfa/SAYFA/"
         }
         MainPageData(row, "$mainUrl$path")
@@ -143,11 +142,22 @@ class FilmDozuProvider : MainAPI() {
         return true
     }
 
-    /** ok.ru embed kabuğu; aynı kimliğe `/dk?cmd=videoPlayerMetadata` aynı `videos` dizisini verir. */
+    /** ok.ru embed kabuğu; HLS master + MP4 yedekleri. */
     private suspend fun loadOkRu(embed: String, label: String, callback: (ExtractorLink) -> Unit): Boolean {
-        val videos = com.bigbull.common.fetchOkRuMetadata(embed, userAgent = ANDROID_UA)
-            ?.optJSONArray("videos") ?: return false
+        val ua = browserHeaders.getValue("user-agent")
+        val meta = com.bigbull.common.fetchOkRuMetadata(embed, userAgent = ua) ?: return false
         var found = false
+        com.bigbull.common.okRuHlsUrl(meta)?.let { hls ->
+            callback.invoke(
+                newExtractorLink(name, "$label • Ok.Ru HLS", hls, ExtractorLinkType.M3U8) {
+                    this.referer = "https://ok.ru/"
+                    this.headers = mapOf("User-Agent" to ua)
+                    this.quality = Qualities.Unknown.value
+                }
+            )
+            found = true
+        }
+        val videos = meta.optJSONArray("videos") ?: return found
         for (i in 0 until videos.length()) {
             val item = videos.optJSONObject(i) ?: continue
             val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
@@ -163,6 +173,7 @@ class FilmDozuProvider : MainAPI() {
             callback.invoke(
                 newExtractorLink(name, "$label • Ok.Ru", stream, ExtractorLinkType.VIDEO) {
                     this.referer = "https://ok.ru/"
+                    this.headers = mapOf("User-Agent" to ua)
                     this.quality = quality
                 }
             )
@@ -195,10 +206,9 @@ class FilmDozuProvider : MainAPI() {
             "Spor" to "spor",
         )
         val ROWS: List<String> =
-            listOf("Son Eklenenler", "IMDb Puanı", "Türkçe Dublaj", "Türkçe Altyazılı") + GENRE_SLUGS.keys
+            listOf("Son Eklenenler", "IMDb Puanı", "Türkçe Dublaj") + GENRE_SLUGS.keys
 
         private const val CARD = "article.card"
-        private const val ANDROID_UA = "Mozilla/5.0 (Linux; Android 13)"
         private const val REPORT_HINT =
             "Sorun sürüyorsa bildir: https://github.com/F0Rextasy/bigbullapp-cs/issues"
         private val YEAR = Regex("""\b(19|20)\d{2}\b""")
