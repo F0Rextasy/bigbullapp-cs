@@ -5,6 +5,11 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.37] - 2026-11-24
+
+### Düzeltildi
+- **Oynatma ve kaynak seçimi**: AnimeTR, BiCaps, Cizgimax, DiziAbi, DiziKutusu, Diziasia, DramaDizilerim, FilmKovasi, FullHDFilm, HDFilmDiziIzle, IzleFilm, OnlineDizi ve WebteIzle sağlayıcılarında bozuk veya düşük öncelikli kaynakların elenmesi ve ortak oynatıcı desteği iyileştirildi.
+
 ## [1.7.36] - 2026-11-23
 
 ### Düzeltildi
