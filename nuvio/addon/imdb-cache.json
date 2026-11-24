@@ -7298,5 +7298,101 @@
  "series|ask bir ruya": {
   "id": "tt8620634",
   "poster": "https://m.media-amazon.com/images/M/MV5BMjA2OTQ5ZGYtZGY2MC00ODZkLThkZjEtOTdkNjgwZmM3NjgzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|the mongoose": {
+  "id": "tt13611778",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNDBmN2E2YTQtMWE2Ni00ZjMxLWE4NGItODk2ZDZjZDU0MjdlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2026|never surrender": {
+  "id": "tt39370926",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWJhZDdmZDEtNDRlYi00NjFjLThhZDEtMDc4ZjJiMzMyM2FlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|tom clancy s jack ryan ghost war": {
+  "id": "tt34378301",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYzQ1M2IwMmEtNTg4MS00YWNhLWJmNWItMTM0YjQ2ZDlmMTkyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2008|body of lies": {
+  "id": "tt0758774",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTgzOTY3MTM0OV5BMl5BanBnXkFtZTcwNjc5MTI5MQ@@._V1_.jpg"
+ },
+ "movie|1995|heat": {
+  "id": "tt0113277",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTkxYjU1OTMtYWViZC00ZjAzLWI3MDktZGQ2N2VmMjVjNDRlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2022|samaritan": {
+  "id": "tt5500218",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzYwODI2MTYtZDJjZi00ZDdjLWJiYTktZmQyNGJiMmJmMWIxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|the last of the mohicans": {
+  "id": "tt0104691",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODAxNTAxMDItMzkwZS00ZTEyLWJlZmMtYTc0MGI1NDdkNWZkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|apocalypse z the beginning of the end": {
+  "id": "tt27599851",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjBiMDZjMzMtYzRjYS00ODc0LTlmNDEtYjQxYjJkYjdhODdkXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2022|the lost city": {
+  "id": "tt13320622",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZjA4YmZjMWItZGNkNS00ODFkLWEwNjUtNGNhMzViZDRmMzgxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|solo a star wars story": {
+  "id": "tt3778644",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTM2NTI3NTc3Nl5BMl5BanBnXkFtZTgwNzM1OTQyNTM@._V1_.jpg"
+ },
+ "movie|apocalypse z 2 new world": {
+  "id": "tt37522541",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGI4ODQ1NGQtMTVmZS00NzcwLThmNWUtMTI4MDhkNDAyZDI0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|rogue one a star wars story": {
+  "id": "tt3748528",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjEwMzMxODIzOV5BMl5BanBnXkFtZTgwNzg3OTAzMDI@._V1_.jpg"
+ },
+ "movie|rebel moon part 2 the scargiver": {
+  "id": "tt23137904",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGYzMDQ1ZWItNjMyYi00ZjM4LWE5YTctYTJhNTYxZDI4OTU0XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|rebel moon part 1 a child of fire": {
+  "id": "tt14998742",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTRmOTk2ZDYtY2Q3Mi00MGYwLWFjNDQtYTliODc3NzM1ZjBlXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|star wars episode 9 the rise of skywalker": {
+  "id": "tt2527338",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODg5ZTNmMTUtYThlNy00NjljLWE0MGUtYmQ1NDg4NWU5MjQ1XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|star wars episode 7 the force awakens": {
+  "id": "tt2488496",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOTAzODEzNDAzMl5BMl5BanBnXkFtZTgwMDU1MTgzNzE@._V1_.jpg"
+ },
+ "movie|star wars episode 8 the last jedi": {
+  "id": "tt2527336",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjQ1MzcxNjg4N15BMl5BanBnXkFtZTgwNzgwMjY4MzI@._V1_.jpg"
+ },
+ "movie|star wars episode 6 return of the jedi": {
+  "id": "tt0086190",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNWEwOTI0MmUtMGNmNy00ODViLTlkZDQtZTg1YmQ3MDgyNTUzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|star wars episode 5 the empire strikes back": {
+  "id": "tt0080684",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMTkxNGFlNDktZmJkNC00MDdhLTg0MTEtZjZiYWI3MGE5NWIwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|star wars episode 4 a new hope": {
+  "id": "tt0076759",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGUwMDk0Y2MtNjBlNi00NmRiLTk2MWYtMGMyMDlhYmI4ZDBjXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|star wars episode 2 attack of the clones": {
+  "id": "tt0121765",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTgxMjY2YzUtZmVmNC00YjAwLWJlODMtNDBhNzllNzIzMjgxXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|star wars episode 1 the phantom menace": {
+  "id": "tt0120915",
+  "poster": "https://m.media-amazon.com/images/M/MV5BODVhNGIxOGItYWNlMi00YTA0LWI3NTctZmQxZGUwZDEyZWI4XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|star wars episode 3 revenge of the sith": {
+  "id": "tt0121766",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNTc4MTc3NTQ5OF5BMl5BanBnXkFtZTcwOTg0NjI4NA@@._V1_.jpg"
+ },
+ "movie|transformers 7 rise of the beasts": {
+  "id": "tt5090568",
+  "poster": "https://m.media-amazon.com/images/M/MV5BZTVkZWY5MmItYjY3OS00OWY3LTg2NWEtOWE1NmQ4NGMwZGNlXkEyXkFqcGc@._V1_.jpg"
  }
 }
