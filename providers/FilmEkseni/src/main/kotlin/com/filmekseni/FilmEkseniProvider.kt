@@ -48,7 +48,7 @@ import java.net.URLEncoder
  */
 
 class FilmEkseniProvider : MainAPI() {
-    override var mainUrl = "https://filmekseni.vip"
+    override var mainUrl = "https://filmekseni.pro"
     override var name = "FilmEkseni"
     override var lang = "tr"
     override val hasMainPage = true

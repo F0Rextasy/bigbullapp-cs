@@ -5,6 +5,22 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.7.38] - 2026-11-24
+
+### Düzeltildi
+- **FilmKovasi / HDFilmDiziIzle**: ok.ru akışları HLS ve yedek CDN üzerinden başlatılıyor.
+- **HDFilmDiziIzle**: VidMoly kaynağı öne alındı; doğrudan oynatma düzeldi.
+- **ok.ru ortak akışı**: AnimeTR, AsyaAnimeleri, Cizgimax, Diziasia, WebteIzle ve diğer ok.ru sağlayıcıları HLS/yedek CDN davranışını alıyor.
+- **Sinemetrik**: ana sayfa kapısız API'lerden yükleniyor; yeni oynatıcı akışı düzeltildi.
+- **FilmEkseni**: filmekseni.pro adresine taşındı ve yeniden etkinleştirildi.
+- **FilmModu**: WARP/VPN veya HTTP proxy arkasında yeniden etkinleştirildi (alan adı BTK/SNI bloğunda).
+- **DiziModu**: WARP/VPN veya HTTP proxy arkasında yeniden etkinleştirildi.
+- **AsyaBox / AsyaLog**: `.co` parkı yerine güncel `.com` adresine taşındı; site yanıt vermediği için pasif kaldı.
+- **AsyaLuna**: alan adı ölü (DNS yok); pasif kaldı.
+
+### Eklendi
+- **WFilmIzle**: deneysel eklenti (WARP/VPN gerekir; içerik çoğunlukla fragman).
+
 ## [1.7.37] - 2026-11-24
 
 ### Düzeltildi

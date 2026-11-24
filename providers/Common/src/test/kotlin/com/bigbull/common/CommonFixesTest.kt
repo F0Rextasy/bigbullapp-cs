@@ -5,6 +5,7 @@ import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.utils.Qualities
 import java.lang.reflect.Proxy
 import java.util.Base64
+import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -178,5 +179,16 @@ class CommonFixesTest {
 
         val doodHtml = """$.get('/pass_md5/12345-hash/xyz', function(data){ return data + '?token=tok99&expiry='; });"""
         assertEquals("/pass_md5/12345-hash/xyz" to "tok99", extractDoodPassMd5Path(doodHtml))
+    }
+
+    @Test
+    fun okRuHlsUrlPrefersFailoverHostAndFallsBackToRaw() {
+        val withFailover = JSONObject("""{"hlsManifestUrl":"https://cdn1.okcdn.ru/hls/master.m3u8?k=1","failoverHosts":["cdn2.okcdn.ru"]}""")
+        assertEquals("https://cdn2.okcdn.ru/hls/master.m3u8?k=1", okRuHlsUrl(withFailover))
+
+        val withoutFailover = JSONObject("""{"hlsManifestUrl":"https://cdn1.okcdn.ru/hls/master.m3u8?k=1","failoverHosts":[]}""")
+        assertEquals("https://cdn1.okcdn.ru/hls/master.m3u8?k=1", okRuHlsUrl(withoutFailover))
+
+        assertNull(okRuHlsUrl(JSONObject("""{"failoverHosts":["cdn2.okcdn.ru"]}""")))
     }
 }

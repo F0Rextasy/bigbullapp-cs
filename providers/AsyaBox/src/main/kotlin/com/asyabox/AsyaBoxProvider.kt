@@ -44,7 +44,7 @@ private fun cleanTitle(raw: String?): String = (raw ?: "")
 class AsyaBoxProvider : MainAPI() {
     private val uaHeaders get() = browserHeaders
 
-    override var mainUrl = "https://asyabox.co"
+    override var mainUrl = "https://asyabox.com"
     override var name = "AsyaBox"
     override var lang = "tr"
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries)
@@ -53,20 +53,20 @@ class AsyaBoxProvider : MainAPI() {
     override val mainPage get() = ROWS.mapNotNull { rowName ->
         if (!Settings.rowEnabled(rowName)) return@mapNotNull null
         MainPageData(rowName, when (rowName) {
-            "Diziler" -> "https://asyabox.co/tum-diziler/"
-            "Çin" -> "https://asyabox.co/diziler/cin-dizileri-izle/"
-            "Güney Kore" -> "https://asyabox.co/diziler/guney-kore-dizileri-izle/"
-            "Japon" -> "https://asyabox.co/diziler/japon-dizileri-izle/"
-            "Tayland" -> "https://asyabox.co/diziler/tayland-dizileri-izle/"
-            "Tayvan" -> "https://asyabox.co/diziler/tayvan-dizileri-izle/"
-            "Dram" -> "https://asyabox.co/diziler/dram-dizileri-izle/"
-            "Fantastik" -> "https://asyabox.co/diziler/fantastik-dizileri-izle/"
-            "Gençlik" -> "https://asyabox.co/diziler/genclik-dizileri-izle/"
-            "Komedi" -> "https://asyabox.co/diziler/komedi-dizileri-izle/"
-            "Romantik" -> "https://asyabox.co/diziler/romantik-dizileri-izle/"
-            "Tarihi" -> "https://asyabox.co/diziler/tarihi-dizileri-izle/"
-            "BL Dizileri" -> "https://asyabox.co/diziler/bl-dizileri-izle/"
-            "Asya Dizileri" -> "https://asyabox.co/"
+            "Diziler" -> "https://asyabox.com/tum-diziler/"
+            "Çin" -> "https://asyabox.com/diziler/cin-dizileri-izle/"
+            "Güney Kore" -> "https://asyabox.com/diziler/guney-kore-dizileri-izle/"
+            "Japon" -> "https://asyabox.com/diziler/japon-dizileri-izle/"
+            "Tayland" -> "https://asyabox.com/diziler/tayland-dizileri-izle/"
+            "Tayvan" -> "https://asyabox.com/diziler/tayvan-dizileri-izle/"
+            "Dram" -> "https://asyabox.com/diziler/dram-dizileri-izle/"
+            "Fantastik" -> "https://asyabox.com/diziler/fantastik-dizileri-izle/"
+            "Gençlik" -> "https://asyabox.com/diziler/genclik-dizileri-izle/"
+            "Komedi" -> "https://asyabox.com/diziler/komedi-dizileri-izle/"
+            "Romantik" -> "https://asyabox.com/diziler/romantik-dizileri-izle/"
+            "Tarihi" -> "https://asyabox.com/diziler/tarihi-dizileri-izle/"
+            "BL Dizileri" -> "https://asyabox.com/diziler/bl-dizileri-izle/"
+            "Asya Dizileri" -> "https://asyabox.com/"
             else -> mainUrl
         })
     }
@@ -85,7 +85,7 @@ class AsyaBoxProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val url = "https://asyabox.co/?s=" + java.net.URLEncoder.encode(query, "UTF-8")
+        val url = "https://asyabox.com/?s=" + java.net.URLEncoder.encode(query, "UTF-8")
         return cards(app.get(url, headers = uaHeaders).document, query)
     }
 

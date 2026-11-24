@@ -528,6 +528,10 @@ suspend fun loadCommonEmbedWithHints(
     }
 
     if (u.contains("ok.ru", ignoreCase = true) || u.contains("odnoklassniki.ru", ignoreCase = true)) {
+        val okUa = reqHeaders["User-Agent"] ?: EMBED_UA.getValue("User-Agent")
+        if (emitOkRuVideos(u, labelPrefix = "$sourceName [Ok.ru]", userAgent = okUa, headers = reqHeaders, callback = callback)) {
+            return true
+        }
         val okHtml = runCatching { app.get(u, referer = ref, headers = reqHeaders).text }.getOrNull().orEmpty()
             .replace("&quot;", "\"")
             .replace("\\/", "/")
@@ -542,10 +546,6 @@ suspend fun loadCommonEmbedWithHints(
                     this.headers = reqHeaders
                 },
             )
-            return true
-        }
-        val okUa = reqHeaders["User-Agent"] ?: EMBED_UA.getValue("User-Agent")
-        if (emitOkRuVideos(u, labelPrefix = "$sourceName [Ok.ru]", userAgent = okUa, headers = reqHeaders, callback = callback)) {
             return true
         }
     }

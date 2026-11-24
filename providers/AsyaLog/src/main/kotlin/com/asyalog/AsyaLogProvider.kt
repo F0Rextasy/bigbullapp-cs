@@ -33,10 +33,10 @@ import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.jsoup.nodes.Element
 
-/** AsyaLog — asyalog.co (Asya dizileri/filmleri, Odnoklassniki player) */
+/** AsyaLog — asyalog.com (Asya dizileri/filmleri, Odnoklassniki player) */
 class AsyaLogProvider : MainAPI() {
     private val uaHeaders get() = browserHeaders
-    override var mainUrl = "https://asyalog.co"
+    override var mainUrl = "https://asyalog.com"
     override var name = "AsyaLog"
     override var lang = "tr"
     override val hasMainPage = true

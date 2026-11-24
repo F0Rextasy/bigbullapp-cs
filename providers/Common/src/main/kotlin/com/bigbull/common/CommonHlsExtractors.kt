@@ -33,6 +33,16 @@ suspend fun fetchOkRuMetadata(
     return runCatching { JSONObject(body) }.getOrNull()
 }
 
+/** ok.ru metadata'sındaki HLS master'ı döndürür; failover host varsa onu kullanır. */
+fun okRuHlsUrl(meta: JSONObject): String? {
+    val raw = meta.optString("hlsManifestUrl").trim().takeIf { it.startsWith("http") } ?: return null
+    val host = meta.optJSONArray("failoverHosts")?.optString(0)?.trim().orEmpty()
+    if (host.isEmpty()) return raw
+    return runCatching {
+        val uri = java.net.URI(raw)
+        java.net.URI(uri.scheme, uri.userInfo, host, uri.port, uri.path, uri.query, uri.fragment).toString()
+    }.getOrDefault(raw)
+}
 suspend fun emitOkRuVideos(
     embed: String,
     seen: MutableSet<String>? = null,
@@ -43,8 +53,21 @@ suspend fun emitOkRuVideos(
     callback: (ExtractorLink) -> Unit,
 ): Boolean {
     val meta = fetchOkRuMetadata(embed, userAgent = userAgent) ?: return false
-    val videos = meta.optJSONArray("videos") ?: return false
     var found = false
+    val ua = headers?.entries?.firstOrNull { it.key.equals("User-Agent", true) }?.value ?: userAgent
+    val linkHeaders = (headers ?: emptyMap()).filterKeys { !it.equals("User-Agent", true) } + ("User-Agent" to ua)
+    val hls = okRuHlsUrl(meta)
+    if (hls != null && (seen == null || seen.add(hls))) {
+        callback(
+            newExtractorLink(labelPrefix.ifBlank { "OkRu" }, "$labelPrefix HLS", hls, ExtractorLinkType.M3U8) {
+                this.referer = "https://ok.ru/"
+                this.quality = Qualities.Unknown.value
+                this.headers = linkHeaders
+            },
+        )
+        found = true
+    }
+    val videos = meta.optJSONArray("videos") ?: return found
     for (i in 0 until videos.length()) {
         val item = videos.optJSONObject(i) ?: continue
         val stream = item.optString("url").takeIf { it.startsWith("http") } ?: continue
@@ -64,7 +87,7 @@ suspend fun emitOkRuVideos(
             newExtractorLink(labelPrefix.ifBlank { "OkRu" }, linkName, stream, ExtractorLinkType.VIDEO) {
                 this.referer = "https://ok.ru/"
                 this.quality = q
-                headers?.let { this.headers = it }
+                this.headers = linkHeaders
             },
         )
         found = true

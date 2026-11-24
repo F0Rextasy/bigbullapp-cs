@@ -242,6 +242,16 @@ class HDFilmDiziIzleProvider : MainAPI() {
                     val label = btn.text().trim().ifBlank { src.removeSuffix("_url") }
                     src to label
                 }
+                .sortedBy {
+                    when (it.first) {
+                        "web_vidmoly_url" -> 0
+                        "web_vidmoly_altyazili_url" -> 1
+                        "web_okru_url" -> 2
+                        "web_okru_altyazili_url" -> 3
+                        "ufilm_url" -> 4
+                        else -> 5
+                    }
+                }
                 .distinctBy { it.first }
             for ((source, btnLabel) in sources) {
                 val encrypted = runCatching {

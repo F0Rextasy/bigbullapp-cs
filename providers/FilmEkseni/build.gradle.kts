@@ -1,13 +1,13 @@
-version = 6
+version = 7
 
 
 cloudstream {
-    description = "FilmEkseni — Türkçe dublaj film arşivi (filmekseni.vip)"
+    description = "FilmEkseni — Türkçe dublaj film arşivi (filmekseni.pro)"
     authors = listOf("F0Rextasy")
-    status = 0
+    status = 1
     tvTypes = listOf("Movie")
     language = "tr"
-    iconUrl = "https://www.google.com/s2/favicons?domain=filmekseni.vip&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=filmekseni.pro&sz=%size%"
 }
 
 android {

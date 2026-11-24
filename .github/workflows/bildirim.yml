@@ -31,13 +31,14 @@ jobs:
       - name: Telegram'a gönder
         env:
           TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          KREOSUS_API_KEY: ${{ secrets.KREOSUS_API_KEY }}
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           CUR_RUN_ID: ${{ github.event.workflow_run.id || '' }}
           FORCE: ${{ github.event.inputs.force || 'false' }}
         run: |
-          if [ -z "$TOKEN" ]; then
-            echo "TELEGRAM_BOT_TOKEN yok; bildirim atlandı."
+          if [ -z "$TOKEN" ] && [ -z "$KREOSUS_API_KEY" ]; then
+            echo "TELEGRAM_BOT_TOKEN ve KREOSUS_API_KEY yok; bildirim atlandı."
             exit 0
           fi
           CHAT="${TELEGRAM_CHAT_ID:-@BigBull_App}"
@@ -110,46 +111,119 @@ jobs:
           LINK="https://github.com/F0Rextasy/bigbullapp-cs/blob/master/CHANGELOG.md"
           [ -n "$ANCHOR" ] && LINK="${LINK}#${ANCHOR}"
           # Telegram tek mesajda 4096 karakter alır; not kırpılmadan parçalara bölünüp tam gönderilir.
-          DETAILS="$DETAILS" VERSION_LABEL="$VERSION_LABEL" LINK="$LINK" \
-            TOKEN="$TOKEN" CHAT="$CHAT" THREAD="$THREAD" python3 - <<'PY'
-          import os, urllib.parse, urllib.request
+          DETAILS="$DETAILS" SECTION="$SECTION" VERSION="$VERSION" VERSION_LABEL="$VERSION_LABEL" \
+            LINK="$LINK" HEAD_SHA="$(git rev-parse HEAD)" TOKEN="$TOKEN" CHAT="$CHAT" THREAD="$THREAD" \
+            KREOSUS_API_KEY="$KREOSUS_API_KEY" python3 - <<'PY'
+          import json, os, re, urllib.error, urllib.parse, urllib.request
 
-          token = os.environ["TOKEN"]; chat = os.environ["CHAT"]; thread = os.environ["THREAD"]
+          token = os.environ.get("TOKEN", "")
+          chat = os.environ["CHAT"]; thread = os.environ["THREAD"]
           label = os.environ["VERSION_LABEL"]; link = os.environ["LINK"]
           details = os.environ["DETAILS"].rstrip("\n")
+          section = os.environ.get("SECTION", "")
+          version = os.environ.get("VERSION", "")
+          head_sha = os.environ.get("HEAD_SHA", "")
+          kreosus_key = os.environ.get("KREOSUS_API_KEY", "")
           limit = 3900  # 4096 sınırına HTML varlıkları için pay
           header = f"<b>🚀 BigBullApp güncellemesi{label}</b>\n\n"
           footer = f"\n<a href=\"{link}\">→ Güncelleme notu</a>"
 
-          parts, cur = [], ""
-          for line in details.split("\n"):
-              while len(line) > limit:
-                  if cur:
-                      parts.append(cur); cur = ""
-                  parts.append(line[:limit]); line = line[limit:]
-              cand = f"{cur}\n{line}" if cur else line
-              if len(cand) > limit:
-                  parts.append(cur); cur = line
+          if token:
+              parts, cur = [], ""
+              for line in details.split("\n"):
+                  while len(line) > limit:
+                      if cur:
+                          parts.append(cur); cur = ""
+                      parts.append(line[:limit]); line = line[limit:]
+                  cand = f"{cur}\n{line}" if cur else line
+                  if len(cand) > limit:
+                      parts.append(cur); cur = line
+                  else:
+                      cur = cand
+              if cur:
+                  parts.append(cur)
+              if not parts:
+                  parts = ["• Depo güncellemesi yapıldı."]
+
+              messages = [(header if i == 0 else "") + part for i, part in enumerate(parts)]
+              if len(messages[-1]) + len(footer) <= 4096:
+                  messages[-1] += footer
               else:
-                  cur = cand
-          if cur:
-              parts.append(cur)
-          if not parts:
-              parts = ["• Depo güncellemesi yapıldı."]
+                  messages.append(footer.strip())
 
-          messages = [(header if i == 0 else "") + part for i, part in enumerate(parts)]
-          if len(messages[-1]) + len(footer) <= 4096:
-              messages[-1] += footer
+              for text in messages:
+                  data = urllib.parse.urlencode({
+                      "chat_id": chat, "message_thread_id": thread, "parse_mode": "HTML",
+                      "disable_web_page_preview": "true", "text": text,
+                  }).encode()
+                  req = urllib.request.Request(f"https://api.telegram.org/bot{token}/sendMessage", data=data)
+                  with urllib.request.urlopen(req, timeout=30) as resp:
+                      resp.read()
+              print(f"Telegram: {len(messages)} mesaj gönderildi")
           else:
-              messages.append(footer.strip())
+              print("Telegram: TELEGRAM_BOT_TOKEN yok; atlandı.")
 
-          for text in messages:
-              data = urllib.parse.urlencode({
-                  "chat_id": chat, "message_thread_id": thread, "parse_mode": "HTML",
-                  "disable_web_page_preview": "true", "text": text,
-              }).encode()
-              req = urllib.request.Request(f"https://api.telegram.org/bot{token}/sendMessage", data=data)
-              with urllib.request.urlopen(req, timeout=30) as resp:
-                  resp.read()
-          print(f"Telegram: {len(messages)} mesaj gönderildi")
+          if kreosus_key:
+              k_lines = []
+              bullet = False
+              for raw_line in section.splitlines():
+                  if raw_line.startswith("### "):
+                      if k_lines:
+                          k_lines.append("")
+                      heading = raw_line[4:].strip()
+                      if heading == "Eklendi":
+                          k_lines.append("✨ Eklendi")
+                      elif heading == "Düzeltildi":
+                          k_lines.append("🛠 Düzeltildi")
+                      elif heading == "Değişti":
+                          k_lines.append("🔄 Değişti")
+                      elif heading == "İyileştirildi":
+                          k_lines.append("⚡ İyileştirildi")
+                      elif heading == "Kaldırıldı":
+                          k_lines.append("🗑 Kaldırıldı")
+                      else:
+                          k_lines.append(f"— {heading}")
+                      bullet = False
+                  elif raw_line.startswith("- "):
+                      k_lines.append("• " + raw_line[2:])
+                      bullet = True
+                  elif raw_line.strip() and bullet and raw_line[0].isspace():
+                      k_lines.append("  " + raw_line.lstrip())
+                  else:
+                      bullet = False
+              k_body = "\n".join(k_lines).strip() or "• Depo güncellemesi yapıldı."
+              k_body = re.sub(r"\*\*([^*]+)\*\*", r"\1", k_body).replace("`", "")
+              k_header = f"🚀 BigBullApp güncellemesi{label}\n\n"
+              k_footer = f"\n\n→ Güncelleme notu: {link}"
+              max_total = 10000
+              max_body = max_total - len(k_header) - len(k_footer)
+              if len(k_body) > max_body:
+                  k_body = k_body[:max(0, max_body - 1)].rstrip() + "…"
+              kreosus_text = f"{k_header}{k_body}{k_footer}"
+              idem_key = f"bigbull-changelog-{version or head_sha}"
+              payload = json.dumps({
+                  "content": kreosus_text,
+                  "visibility": "public",
+              }).encode("utf-8")
+              k_req = urllib.request.Request(
+                  "https://kreosus.com/api/v1/posts",
+                  data=payload,
+                  method="POST",
+                  headers={
+                      "X-API-Key": kreosus_key,
+                      "Content-Type": "application/json",
+                      "User-Agent": "BigBullApp-Bot/1.0",
+                      "Idempotency-Key": idem_key,
+                  },
+              )
+              try:
+                  with urllib.request.urlopen(k_req, timeout=30) as k_resp:
+                      k_data = json.loads(k_resp.read().decode("utf-8", "replace"))
+                  k_post = k_data.get("post") or {}
+                  print(f"Kreosus: gönderi yayınlandı (id={k_post.get('id')}, url={k_post.get('url')})")
+              except urllib.error.HTTPError as e:
+                  err_body = e.read().decode("utf-8", "replace")[:300]
+                  raise SystemExit(f"Kreosus gönderi hatası ({e.code}): {err_body}")
+          else:
+              print("Kreosus: KREOSUS_API_KEY yok; atlandı.")
           PY

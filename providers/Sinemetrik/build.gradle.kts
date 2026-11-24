@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 cloudstream {
     description = "Sinemetrik — sinemetrik.com Türkçe film/dizi platformu (kendi player'ı, TR altyazı)"

@@ -9,7 +9,7 @@
  *
  * Prints a PASS/FAIL table; exit code 1 if any provider returns no stream.
  */
-import { execFile } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import dns from "node:dns/promises";
 import fs from "node:fs";
 import net from "node:net";
@@ -241,7 +241,65 @@ async function curlFallback(url, options = {}) {
       };
     }
   }
+  const chrome = await curlCffiFallback(url, options);
+  if (chrome) return chrome;
   return await solverFetchFallback(url, options);
+}
+
+/** Chrome-TLS fallback: Node/undici gets 403 on Cloudflare paths that curl_cffi (Android-like) passes. */
+async function curlCffiFallback(url, options = {}) {
+  const cf = cfState(new URL(String(url)).hostname);
+  const headers = { ...(options.headers || {}) };
+  if (cf) {
+    if (cf.ua) headers["User-Agent"] = cf.ua;
+    headers.Cookie = headers.Cookie ? `${headers.Cookie}; ${cf.cookie}` : cf.cookie;
+  }
+  const payload = JSON.stringify({
+    url: String(url),
+    method: options.method || "GET",
+    headers,
+    body: options.body != null ? String(options.body) : undefined,
+  });
+  const script = path.join(root, "tools", "curl_cffi_fetch.py");
+  if (!fs.existsSync(script)) return null;
+  const python = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
+  const raw = await new Promise((resolve) => {
+    let out = "";
+    let settled = false;
+    const child = spawn(python, [script], { windowsHide: true, stdio: ["pipe", "pipe", "pipe"] });
+    const done = (value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(value);
+    };
+    const timer = setTimeout(() => {
+      try { child.kill(); } catch {}
+      done("");
+    }, 30000);
+    child.stdout.on("data", (chunk) => { out += chunk; });
+    child.on("error", () => done(""));
+    child.on("close", () => done(out));
+    child.stdin.end(payload);
+  });
+  let data;
+  try {
+    data = JSON.parse(String(raw || "").trim());
+  } catch {
+    return null;
+  }
+  const status = Number(data.status) || 0;
+  if (status < 200 || status >= 400) return null;
+  const rawHeaders = Object.entries(data.headers || {}).map(([k, v]) => `${k}: ${v}`).join("\n");
+  const body = String(data.body || "");
+  return {
+    ok: status >= 200 && status < 300,
+    status,
+    url: String(data.url || url),
+    headers: makeHeaders(rawHeaders),
+    text: async () => body,
+    json: async () => JSON.parse(body),
+  };
 }
 
 const dpiHosts = new Set();

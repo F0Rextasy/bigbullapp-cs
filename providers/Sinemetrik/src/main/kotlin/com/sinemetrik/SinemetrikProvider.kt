@@ -1,5 +1,6 @@
 package com.sinemetrik
 
+import com.bigbull.common.http11Get
 import com.bigbull.common.browserHeaders
 import com.bigbull.common.jsonLdDescription
 import com.bigbull.common.posterSrcLazy
@@ -32,8 +33,10 @@ import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
 import java.net.URLEncoder
+import java.net.URLDecoder
 import org.json.JSONArray
 import org.json.JSONObject
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -66,11 +69,20 @@ class SinemetrikProvider : MainAPI() {
         .map { MainPageData(it.first, "$mainUrl/${it.second}") }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val doc = app.get(request.data.replace(PAGE, page.toString()), headers = botHeaders).document
-        if (!request.data.contains(PAGE)) {
-            val cards = doc.select("section.home-platform-hub a.ctw-card").mapNotNull { it.toCard() }
+        val url = request.data.replace(PAGE, page.toString())
+        val body = runCatching { http11Get(url, botHeaders) }.getOrNull()
+            ?: throw ErrorLoadingException("$name: ana sayfa yüklenemedi. $REPORT_HINT")
+        if (url.contains("/api/home/platforms")) {
+            val html = runCatching { JSONObject(body).optString("html") }.getOrDefault("")
+            val cards = Jsoup.parse(html).select("a.ctw-card").mapNotNull { it.toCard() }
             return newHomePageResponse(request.name, cards, false)
         }
+        if (url.contains("/api/home/episodes")) {
+            val html = runCatching { JSONObject(body).optString("html") }.getOrDefault("")
+            val cards = Jsoup.parse(html).select("a.hep-card").mapNotNull { it.toEpisodeCard() }
+            return newHomePageResponse(request.name, cards, false)
+        }
+        val doc = Jsoup.parse(body)
         val cards = doc.select("a.movie-card").mapNotNull { it.toCard() }
         val hasNext = doc.select("div.pagination a").any { it.text().contains("Sonraki") }
         return newHomePageResponse(request.name, cards, hasNext)
@@ -100,13 +112,27 @@ class SinemetrikProvider : MainAPI() {
         }
     }
 
+    /** Bölüm kartı: `/dizi/<slug>/sezon/<s>/bolum/<b>`; dizi URL'sine indirgenir. */
+    private fun Element.toEpisodeCard(): SearchResponse? {
+        val href = fixUrlNull(attr("href")) ?: return null
+        val seriesUrl = href.substringBefore("/sezon/").takeIf { it != href } ?: return null
+        val title = attr("title").substringBefore(" — ").trim()
+            .ifBlank { selectFirst(".hep-title")?.text()?.trim().orEmpty() }
+            .takeIf { it.isNotEmpty() } ?: return null
+        return newTvSeriesSearchResponse(title, seriesUrl, TvType.TvSeries) {
+            this.posterUrl = fixUrlNull(selectFirst("img")?.posterSrcLazy())
+        }
+    }
+
     override suspend fun search(query: String): List<SearchResponse> = search(query, 1)?.items ?: emptyList()
 
     /** Site araması 10 sonuçla sınırlı; sayfa parametresi yok. */
     override suspend fun search(query: String, page: Int): SearchResponseList? {
         val term = query.trim()
         if (term.isEmpty() || page > 1) return newSearchResponseList(emptyList(), false)
-        val body = app.get("$mainUrl/api/search?q=${URLEncoder.encode(term, "UTF-8")}", headers = botHeaders).text
+        val body = runCatching {
+            http11Get("$mainUrl/api/search?q=${URLEncoder.encode(term, "UTF-8")}", botHeaders)
+        }.getOrNull() ?: return newSearchResponseList(emptyList(), false)
         val results = runCatching { JSONObject(body).optJSONArray("results") }.getOrNull() ?: JSONArray()
         val items = (0 until results.length()).mapNotNull { index ->
             val item = results.optJSONObject(index) ?: return@mapNotNull null
@@ -137,7 +163,7 @@ class SinemetrikProvider : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse? {
         val pageUrl = fixUrl(url)
-        val doc = app.get(pageUrl, headers = botHeaders).document
+        val doc = Jsoup.parse(http11Get(pageUrl, botHeaders))
         val ld = doc.jsonLd()
         val title = ld?.optString("name")?.takeIf { it.isNotBlank() }
             ?: doc.selectFirst("meta[property=og:title]")?.attr("content")?.substringBefore(" (")?.trim()
@@ -170,7 +196,7 @@ class SinemetrikProvider : MainAPI() {
                 .distinct().sorted()
             val episodes = seasons.flatMap { season ->
                 val body = runCatching {
-                    app.get("$mainUrl/api/dizi/$seriesId/sezon/$season/bolumler", headers = botHeaders).text
+                    http11Get("$mainUrl/api/dizi/$seriesId/sezon/$season/bolumler", botHeaders)
                 }.getOrNull() ?: return@flatMap emptyList()
                 val array = runCatching { JSONObject(body).optJSONArray("episodes") }.getOrNull() ?: JSONArray()
                 (0 until array.length()).mapNotNull { index ->
@@ -179,8 +205,11 @@ class SinemetrikProvider : MainAPI() {
                     // Bölümün oynatıcı uçları: sunucu 1 (pv), ULTRA (dp), ULTRA hash (s2), VIP embed.
                     // `id` her bölümü benzersiz tutar (ipucu olmayan bölümler de listelenir).
                     val hints = JSONObject().put("id", episode.optString("id"))
-                    PV.find(episode.optString("server1_player_url"))?.groupValues?.get(1)
-                        ?.let { hints.put("pv", it) }
+                    val s1Raw = episode.optString("server1_player_url").trim()
+                    if (s1Raw.isNotEmpty()) {
+                        hints.put("s1", s1Raw)
+                        PV.find(s1Raw)?.groupValues?.get(1)?.let { hints.put("pv", it) }
+                    }
                     episode.optString("server1_dp_id").takeIf { it.isNotBlank() }?.let { hints.put("dp", it) }
                     episode.optString("server2_ultra_hash").takeIf { it.isNotBlank() && it != "None" }?.let {
                         hints.put("s2", it)
@@ -230,8 +259,10 @@ class SinemetrikProvider : MainAPI() {
         val hints = runCatching { JSONObject(data.trim()) }.getOrNull()
         if (hints != null) {
             // Bölüm: sırayla ana kaynak, ULTRA, ULTRA hash, VIP embed.
-            hints.optString("pv").takeIf { it.isNotBlank() }?.let { pv ->
-                found = resolveMain(pv, "Sinemetrik", subtitleCallback, callback)
+            val s1 = hints.optString("s1").takeIf { it.isNotBlank() }
+                ?: hints.optString("pv").takeIf { it.isNotBlank() }
+            if (s1 != null) {
+                found = resolveMain(s1, "Sinemetrik", subtitleCallback, callback)
             }
             if (!found) hints.optString("dp").takeIf { it.isNotBlank() }?.let { dp ->
                 found = resolveUltra(dp, subtitleCallback, callback)
@@ -256,25 +287,35 @@ class SinemetrikProvider : MainAPI() {
                 }.getOrDefault(false)
             }
         } else {
-            // Film: detay sayfasındaki server 1 (pv) ve ULTRA (dp) bağlantıları.
-            val html = app.get(fixUrl(data), headers = botHeaders).text
-            val pv = PV.find(S1_URL.find(html)?.groupValues?.get(1).orEmpty())?.groupValues?.get(1)
+            // Film: detay sayfasındaki server 1 (`rv=` veya eski `pv=`) ve ULTRA (dp).
+            val html = http11Get(fixUrl(data), botHeaders)
+            val s1 = S1_URL.find(html)?.groupValues?.get(1).orEmpty()
             val dp = DP.find(S1_DP.find(html)?.groupValues?.get(1).orEmpty())?.groupValues?.get(1)
-            // ULTRA (dp) düz medya listesi; ana kaynak (pv) ayrı ses izli master. Oynatıcı
-            // uyumu için ULTRA önce verilir, ana kaynak yedek olarak kalır.
+            // ULTRA (dp) düz medya listesi; ana kaynak ayrı ses izli master. Önce ULTRA.
             if (dp != null) found = resolveUltra(dp, subtitleCallback, callback) || found
-            if (pv != null) found = resolveMain(pv, "Sinemetrik", subtitleCallback, callback) || found
+            if (s1.isNotBlank()) found = resolveMain(s1, "Sinemetrik", subtitleCallback, callback) || found
         }
         if (!found) throw ErrorLoadingException("$name: oynatılabilir kaynak bulunamadı. $REPORT_HINT")
         return true
     }
 
     private suspend fun resolveMain(
-        pv: String,
+        s1Ref: String,
         label: String,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
-    ): Boolean = resolve("$mainUrl/s1.php?t=main&id=$pv", label, subtitleCallback, callback)
+    ): Boolean {
+        val rv = RV.find(s1Ref)?.groupValues?.get(1)
+        if (rv != null) {
+            val decoded = runCatching { URLDecoder.decode(rv, "UTF-8") }.getOrDefault(rv)
+            val s3 = "$mainUrl/s3.php?t=main&url=${URLEncoder.encode(decoded, "UTF-8")}"
+            if (resolve(s3, label, subtitleCallback, callback)) return true
+        }
+        val pv = PV.find(s1Ref)?.groupValues?.get(1)
+            ?: s1Ref.takeIf { !it.contains("?") && !it.contains("/") }
+            ?: return false
+        return resolve("$mainUrl/s1.php?t=main&id=$pv", label, subtitleCallback, callback)
+    }
 
     private suspend fun resolveUltra(
         dp: String,
@@ -282,19 +323,32 @@ class SinemetrikProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit,
     ): Boolean = resolve("$mainUrl/s1.php?t=ultra&id=$dp&k=jw", "Sinemetrik ULTRA", subtitleCallback, callback)
 
-    /** `s1.php` yanıtı: `{success, stream(m3u8), subtitles:[{lang,label,url}]}`; Referer zorunlu. */
+    /** `s1.php`/`s3.php` yanıtı: `{success, stream, subtitles[]}`. */
     private suspend fun resolve(
         endpoint: String,
         label: String,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ): Boolean {
-        val body = runCatching {
-            app.get(endpoint, headers = botHeaders, referer = "$mainUrl/test-player.php?embed=1").text
-        }.getOrNull() ?: return false
+        val referer = "$mainUrl/test-player.php?embed=1"
+        val body = runCatching { http11Get(endpoint, browserHeaders, referer = referer) }.getOrNull()
+            ?: runCatching { http11Get(endpoint, botHeaders, referer = referer) }.getOrNull()
+            ?: return false
         val json = runCatching { JSONObject(body) }.getOrNull() ?: return false
         if (!json.optBoolean("success")) return false
         val stream = json.optString("stream").takeIf { it.startsWith("http") } ?: return false
+
+        val relay = RELAY.find(stream)?.groupValues?.get(1)
+        val candidates = ArrayList<Pair<String, String>>()
+        if (relay != null) candidates.add("$mainUrl/media-relay.php?$relay" to "$label relay")
+        candidates.add(stream to label)
+        for ((url, linkLabel) in candidates) {
+            callback.invoke(newExtractorLink(name, linkLabel, url, ExtractorLinkType.M3U8) {
+                this.referer = "$mainUrl/"
+                this.headers = browserHeaders
+                this.quality = Qualities.Unknown.value
+            })
+        }
 
         json.optJSONArray("subtitles")?.let { subs ->
             for (index in 0 until subs.length()) {
@@ -302,15 +356,13 @@ class SinemetrikProvider : MainAPI() {
                 val subUrl = sub.optString("url").takeIf { it.startsWith("http") } ?: continue
                 val language = sub.optString("lang").ifBlank { "tr" }
                 if (!Settings.subtitleAllowed(language)) continue
-                subtitleCallback.invoke(newSubtitleFile(language, subUrl) {
+                val subRelay = RELAY.find(subUrl)?.groupValues?.get(1)
+                val target = if (subRelay != null) "$mainUrl/media-relay.php?$subRelay" else subUrl
+                subtitleCallback.invoke(newSubtitleFile(language, target) {
                     this.headers = browserHeaders
                 })
             }
         }
-        callback.invoke(newExtractorLink(name, label, stream, ExtractorLinkType.M3U8) {
-            this.headers = browserHeaders
-            this.quality = Qualities.Unknown.value
-        })
         return true
     }
 
@@ -319,7 +371,13 @@ class SinemetrikProvider : MainAPI() {
 
         /** Ana sayfa satırları; ayarlardan kapatılabilir. */
         private val ROW_PATHS = listOf(
-            "Popüler" to "",
+            "Netflix" to "api/home/platforms?platform=netflix-8",
+            "Disney+" to "api/home/platforms?platform=disney-plus-337",
+            "Exxen" to "api/home/platforms?platform=exxen-1791",
+            "Tabii" to "api/home/platforms?platform=tabii-2235",
+            "Amazon Prime" to "api/home/platforms?platform=amazon-prime-video-119",
+            "Mubi" to "api/home/platforms?platform=mubi-11",
+            "Yeni Bölümler" to "api/home/episodes?tab=latest",
             "Filmler" to "filmler?page=$PAGE",
             "Diziler" to "diziler?page=$PAGE",
         )
@@ -327,6 +385,8 @@ class SinemetrikProvider : MainAPI() {
 
         private const val BOT_UA = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
         private val VIDEO_TYPES = listOf("Movie", "TVSeries")
+        private val RV = Regex("""[?&]rv=([^&"]+)""")
+        private val RELAY = Regex("""media-relay\.php\?(.+)$""")
         private val PV = Regex("""pv=([A-Za-z0-9_-]+)""")
         private val DP = Regex("""[?&]dp=(\d+)""")
         private val S1_URL = Regex("""_s1url\s*=\s*"([^"]*)"""")

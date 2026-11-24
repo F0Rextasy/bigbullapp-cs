@@ -168,11 +168,22 @@ class FilmKovasiProvider : MainAPI() {
         return true
     }
 
-    /** ok.ru/odnoklassniki gömme kabuğu; aynı kimliğe videoPlayerMetadata `videos` dizisini verir. */
+    /** ok.ru/odnoklassniki gömme kabuğu; HLS master + MP4 yedekleri. */
     private suspend fun loadOkRu(embed: String, callback: (ExtractorLink) -> Unit): Boolean {
         val ua = browserHeaders.getValue("user-agent")
-        val videos = com.bigbull.common.fetchOkRuMetadata(embed, userAgent = ua)
-            ?.optJSONArray("videos") ?: return false
+        val meta = com.bigbull.common.fetchOkRuMetadata(embed, userAgent = ua) ?: return false
+        var found = false
+        com.bigbull.common.okRuHlsUrl(meta)?.let { hls ->
+            callback.invoke(
+                newExtractorLink(name, "$name • Ok.Ru HLS", hls, ExtractorLinkType.M3U8) {
+                    this.referer = "https://ok.ru/"
+                    this.headers = mapOf("User-Agent" to ua)
+                    this.quality = Qualities.Unknown.value
+                }
+            )
+            found = true
+        }
+        val videos = meta.optJSONArray("videos") ?: return found
 
         val parsed = (0 until videos.length()).mapNotNull { i ->
             val item = videos.optJSONObject(i) ?: return@mapNotNull null
@@ -200,7 +211,7 @@ class FilmKovasiProvider : MainAPI() {
                 }
             )
         }
-        return parsed.isNotEmpty()
+        return found || parsed.isNotEmpty()
     }
 
     /** my.mail.ru gömme kabuğu: `/+/video/meta/<id>` `videos[]` mp4 URL'lerini verir. */

@@ -1,6 +1,7 @@
 package com.filmmodu
 
 import com.bigbull.common.browserHeaders
+import com.bigbull.common.http11Get
 import com.bigbull.common.posterSrcLazy
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.HomePageResponse
@@ -28,6 +29,7 @@ import java.net.URLEncoder
 import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.nodes.Document
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
 /**
@@ -69,7 +71,9 @@ class FilmModuProvider : MainAPI() {
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val doc = app.get(request.data.replace("SAYFA", page.toString()), headers = uaHeaders).document
+        val doc = Jsoup.parse(
+            http11Get(request.data.replace("SAYFA", page.toString()), uaHeaders),
+        )
         return newHomePageResponse(
             request.name,
             doc.select(CARD).mapNotNull { it.toSearchResult() }.distinctBy { it.url },
@@ -79,7 +83,7 @@ class FilmModuProvider : MainAPI() {
 
     override suspend fun search(query: String): List<SearchResponse> {
         val encoded = URLEncoder.encode(query, "UTF-8")
-        val doc = app.get("$mainUrl/ara?q=$encoded", headers = uaHeaders).document
+        val doc = Jsoup.parse(http11Get("$mainUrl/ara?q=$encoded", uaHeaders))
         return doc.select(CARD).mapNotNull { it.toSearchResult() }.distinctBy { it.url }
     }
 
@@ -94,7 +98,7 @@ class FilmModuProvider : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val doc = runCatching { app.get(url, headers = uaHeaders).document }
+        val doc = runCatching { Jsoup.parse(http11Get(url, uaHeaders)) }
             .getOrNull() ?: throw ErrorLoadingException("$name: içerik yüklenemedi. $REPORT_HINT")
         val schema = movieSchema(doc)
         val title = doc.selectFirst("main h1")?.text()?.trim()?.takeIf { it.isNotBlank() }
@@ -126,7 +130,7 @@ class FilmModuProvider : MainAPI() {
     ): Boolean {
         val linkCallback: (ExtractorLink) -> Unit = { if (Settings.qualityAllowed(it.quality)) callback(it) }
         val subtitleFilter: (SubtitleFile) -> Unit = { if (Settings.subtitleAllowed(it.lang)) subtitleCallback(it) }
-        val doc = runCatching { app.get(data, headers = uaHeaders).document }
+        val doc = runCatching { Jsoup.parse(http11Get(data, uaHeaders)) }
             .getOrNull() ?: throw ErrorLoadingException("$name: kaynak bulunamadı. $REPORT_HINT")
         val playerBase = doc.selectFirst("script[src*='/assets/js/core.js']")?.attr("src")
             ?.substringBefore("/assets/js/core.js")?.takeIf { it.startsWith("http") }
