@@ -1,7 +1,7 @@
 # BigBullApp — Cloudstream + Nuvio
 
 Türkçe film, dizi, anime, çizgi film ve canlı TV kaynakları.
-Cloudstream için `.cs3` eklentileri, Nuvio için **111 sağlayıcılı plugin deposu** + **BigBull TR Katalog** + **BigBull Canlı TV** addon'u.
+Cloudstream için `.cs3` eklentileri, Nuvio için **111 sağlayıcılı plugin deposu** + **BigBullApp Katalog** + **BigBull Canlı TV** addon'u.
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.3-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org)
 [![Android](https://img.shields.io/badge/Android-SDK%2035-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
@@ -35,8 +35,8 @@ Cloudstream için `.cs3` eklentileri, Nuvio için **111 sağlayıcılı plugin d
 | Bileşen | Ne sağlar? | Adres |
 |---|---|---|
 | **Plugin Deposu** | Nuvio için 111 film, dizi, anime ve TV sağlayıcısı | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json` |
-| **BigBull TR Katalog** | Ana sayfa film ve dizi satırları | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json` |
-| **BigBull Canlı TV** | Canlı TV (8 satır, 152 kanal) | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json` |
+| **BigBullApp Katalog** | Ana sayfa film ve dizi satırları | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json` |
+| **BigBull Canlı TV** | Canlı TV (8 satır, 151 kanal) | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json` |
 
 ### Nuvio'da Hangi Parça Ne Yapar?
 
@@ -44,7 +44,7 @@ Cloudstream için `.cs3` eklentileri, Nuvio için **111 sağlayıcılı plugin d
 |---|---|
 | Film/dizi arama ve oynatma | Plugin deposu (111 sağlayıcı; 111 aktif) |
 | Özet, kadro, afiş ve bölüm listesi | **Zorunlu metadata addon'u**: Cinemeta (`https://v3-cinemeta.strem.io/manifest.json`) veya AIOMetadata/TMDB |
-| Ana sayfada film/dizi satırları | **BigBull TR Katalog** addon'u |
+| Ana sayfada film/dizi satırları | **BigBullApp Katalog** addon'u |
 | Canlı TV satırları ve akışları | **BigBull Canlı TV** addon'u |
 
 > **Meta kaynağı zorunludur:** Katalog addon'u yalnızca başlık, poster ve IMDb kimliği verir; detay sayfası, üst afiş ve oynatma eşleşmesi için en az bir metadata addon'u (Cinemeta / AIOMetadata) kurulu olmalıdır. Yerleşik TMDB zenginleştirmesi tek başına yeterli değildir; kurulmazsa Nuvio *"No addon provides meta for this content"* hatası verir. Canlı TV addon'u kendi meta verisini taşır.
@@ -183,7 +183,7 @@ Bu tablo, platform desteği ve özellik matrisi her sağlayıcı değişikliğin
 ## Canlı TV
 
 - **Cloudstream:** Tek sağlayıcı `CanliTV` (seçilmiş HLS + iptv-org TR). *"Doğrulanmış"* yalnızca HTTP 200 HLS yanıtını ifade eder; bölgesel kısıtlı yayınlar açılmayabilir.
-- **Nuvio:** `BigBull Canlı TV` addon'u — 8 satır, 152 kanal, doğrudan HLS (`isLive` akışı nedeniyle ayrı addon olarak sunulur).
+- **Nuvio:** `BigBull Canlı TV` addon'u — 8 satır, 151 kanal, doğrudan HLS (`isLive` akışı nedeniyle ayrı addon olarak sunulur).
 
 ---
 
@@ -211,7 +211,7 @@ Bu tablo, platform desteği ve özellik matrisi her sağlayıcı değişikliğin
 <summary><b>Sık karşılaşılan sorunlar ve çözümleri</b></summary>
 
 - **Yayın açılmıyor / arama boş dönüyor:** Kaynak site alan adı veya yapısı değişmiş olabilir; güncellemeyi bekle veya [issue aç](https://github.com/F0Rextasy/bigbullapp-cs/issues). Tek bir sağlayıcı bozuksa diğerleri çalışmaya devam eder.
-- **Nuvio — bir dizide tüm sağlayıcılar çıkıyor / alakasız video açılıyor:** Addons → **BigBull TR Katalog** → kaldır → manifest adresini yeniden ekle → **Refresh**; plugin deposunu da **Refresh** et ve metadata addon'unun kurulu olduğundan emin ol.
+- **Nuvio — bir dizide tüm sağlayıcılar çıkıyor / alakasız video açılıyor:** Addons → **BigBullApp Katalog** → kaldır → manifest adresini yeniden ekle → **Refresh**; plugin deposunu da **Refresh** et ve metadata addon'unun kurulu olduğundan emin ol.
 - **Nuvio — "Bu içerik için meta sağlayan eklenti yok":** Cinemeta (`https://v3-cinemeta.strem.io/manifest.json`) veya AIOMetadata ekle.
 - **Nuvio — satır sırası karışık / toplu satırlar altta:** **Ayarlar → Home / Katalog düzenle** ekranından **Son Eklenen/Popüler** satırlarını yukarı sürükle veya addon'u kaldırıp yeniden ekle.
 - **Nuvio — Plugins bölümü görünmüyor:** Mağaza sürümü yerine **sideload** Nuvio APK kullanmalısın.

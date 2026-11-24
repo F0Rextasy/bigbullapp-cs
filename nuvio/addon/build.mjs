@@ -490,7 +490,7 @@ if (!check) {
     const manifest = {
       id: ADDON_ID,
       version: repoVersion(),
-      name: "BigBull TR Katalog",
+      name: "BigBullApp Katalog",
       description:
         "Cloudstream sağlayıcılarının film ve dizi listeleri; öne çıkan toplu satırlar. Katalog verir; meta Nuvio'nun yerleşik TMDB zenginleştirmesi ve kurulu metadata addon'larından, akış BigBull Nuvio eklentilerinden gelir; canlı TV ayrı addon'dadır.",
       resources: ["catalog"],

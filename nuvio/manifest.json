@@ -1,6 +1,6 @@
 {
   "name": "BigBullApp",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
