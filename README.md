@@ -1,23 +1,20 @@
 <div align="center">
 
 <a href="https://bigbullapp.github.io/">
-  <img src="assets/banner.jpg" alt="BigBullApp" width="640">
+  <img src="assets/banner.jpg" alt="BigBullApp" width="680">
 </a>
 
 # BigBullApp
 
-Cloudstream ve Nuvio için Türkçe film, dizi, anime ve canlı TV eklenti deposu.
+**Cloudstream ve Nuvio için Türkçe film, dizi, anime ve canlı TV eklenti deposu.**
 
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-113-EAB83B?style=flat-square&labelColor=0C0D12)](https://bigbullapp.github.io/#saglayicilar)
-[![Nuvio](https://img.shields.io/badge/Nuvio-111%20plugin-232736?style=flat-square&labelColor=0C0D12)](https://bigbullapp.github.io/#kurulum)
-[![Canlı TV](https://img.shields.io/badge/Canl%C4%B1%20TV-156%20kanal-186A45?style=flat-square&labelColor=0C0D12)](https://bigbullapp.github.io/#saglayicilar)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-113-F59E0B?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
+[![Nuvio](https://img.shields.io/badge/Nuvio-111%20plugin-6366F1?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#kurulum)
+[![Canlı TV](https://img.shields.io/badge/Canl%C4%B1%20TV-156%20kanal-10B981?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
 
-<br>
-
-[![Cloudstream'e Tek Tıkla Ekle](https://img.shields.io/badge/Cloudstream'e_Tek_T%C4%B1kla_Ekle-EAB83B?style=for-the-badge&logoColor=0C0D12)](https://bigbullapp.github.io/?install=cloudstream)
-[![Web Sitesi ve Sağlayıcılar](https://img.shields.io/badge/Web_Sitesi_%26_Sa%C4%9Flay%C4%B1c%C4%B1lar-1E222D?style=for-the-badge&logoColor=white)](https://bigbullapp.github.io/)
-[![bigbullapp.com](https://img.shields.io/badge/bigbullapp.com-13151C?style=for-the-badge&logoColor=white)](https://bigbullapp.com)
-
+[![Cloudstream'e Tek Tıkla Ekle](https://img.shields.io/badge/Cloudstream'e_Tek_T%C4%B1kla_Ekle-F59E0B?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/?install=cloudstream)
+[![Web Sitesi & Sağlayıcılar](https://img.shields.io/badge/Web_Sitesi_%26_Sa%C4%9Flay%C4%B1c%C4%B1lar-4F46E5?style=for-the-badge&logoColor=white)](https://bigbullapp.github.io/)
+[![bigbullapp.com](https://img.shields.io/badge/bigbullapp.com-0EA5E9?style=for-the-badge&logoColor=white)](https://bigbullapp.com)
 [![Telegram](https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/bigbull_app)
 [![Kreosus Destek Ol](https://img.shields.io/badge/Kreosus_Destek_Ol-E91E63?style=for-the-badge&logoColor=white)](https://kreosus.com/f0rextasy)
 
@@ -25,9 +22,18 @@ Cloudstream ve Nuvio için Türkçe film, dizi, anime ve canlı TV eklenti depos
 
 ---
 
+| İstemci / Hizmet | Kapsam |
+| :--- | :--- |
+| **Cloudstream** | **113 modül** |
+| **Nuvio** | **111 plugin** (+ Katalog addon'u) |
+| **Canlı TV** | **156 kanal** (8 kategori · Cloudstream + Nuvio addon) |
+
+> [!TIP]
+> **Cloudstream'e tek tıkla ekleyin (VPN gerekmez):** Yukarıdaki **Cloudstream'e Tek Tıkla Ekle** butonuna dokunun. Kısa kod `bigbullapp` yalnızca VPN açıkken çalışır; doğrudan bağlantı için aşağıdaki depo adresini kopyalayabilirsiniz.
+
 ### Hızlı Kurulum Adresleri
 
-**Cloudstream Depo Adresi (VPN'siz):** *(Kısa kod `bigbullapp` yalnızca VPN ile çalışır)*
+**Cloudstream Depo Adresi (VPN'siz):**
 
 ```text
 https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/repo.json
@@ -50,6 +56,14 @@ https://bigbullapp-katalog-worker.applio.workers.dev/manifest.json
 ```text
 https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json
 ```
+
+<details>
+<summary><b>Kısa Kurulum Rehberi</b></summary>
+
+1. **Cloudstream:** Ayarlar -> Eklentiler -> Depo Ekle ekranından yukarıdaki `repo.json` adresini yapıştırın ya da tek tık kurulum butonunu kullanın.
+2. **Nuvio (Sideload):** Settings -> Content & Discovery -> Plugins / Addons bölümüne yukarıdaki `manifest.json` adreslerini ekleyin.
+
+</details>
 
 <div align="center">
 
