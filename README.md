@@ -35,7 +35,7 @@ Cloudstream için `.cs3` eklentileri, Nuvio için **111 sağlayıcılı plugin d
 | Bileşen | Ne sağlar? | Adres |
 |---|---|---|
 | **Plugin Deposu** | Nuvio için 111 film, dizi, anime ve TV sağlayıcısı | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/manifest.json` |
-| **BigBullApp Katalog** | Ana sayfa film ve dizi satırları | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon/manifest.json` |
+| **BigBullApp Katalog** | Ana sayfa film ve dizi satırları, arama ve Türkçe meta | `https://bigbullapp-katalog-worker.applio.workers.dev/manifest.json` |
 | **BigBull Canlı TV** | Canlı TV (8 satır, 151 kanal) | `https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json` |
 
 ### Nuvio'da Hangi Parça Ne Yapar?
@@ -43,11 +43,8 @@ Cloudstream için `.cs3` eklentileri, Nuvio için **111 sağlayıcılı plugin d
 | İş | Sağlayan |
 |---|---|
 | Film/dizi arama ve oynatma | Plugin deposu (111 sağlayıcı; 111 aktif) |
-| Özet, kadro, afiş ve bölüm listesi | **Zorunlu metadata addon'u**: Cinemeta (`https://v3-cinemeta.strem.io/manifest.json`) veya AIOMetadata/TMDB |
-| Ana sayfada film/dizi satırları | **BigBullApp Katalog** addon'u |
+| Ana sayfa satırları, arama, Türkçe özet ve bölüm listesi | **BigBullApp Katalog** addon'u |
 | Canlı TV satırları ve akışları | **BigBull Canlı TV** addon'u |
-
-> **Meta kaynağı zorunludur:** Katalog addon'u yalnızca başlık, poster ve IMDb kimliği verir; detay sayfası, üst afiş ve oynatma eşleşmesi için en az bir metadata addon'u (Cinemeta / AIOMetadata) kurulu olmalıdır. Yerleşik TMDB zenginleştirmesi tek başına yeterli değildir; kurulmazsa Nuvio *"No addon provides meta for this content"* hatası verir. Canlı TV addon'u kendi meta verisini taşır.
 
 ---
 
@@ -204,15 +201,14 @@ Bu tablo, platform desteği ve özellik matrisi her sağlayıcı değişikliğin
 1. Depo listede görünüyor mu?
 2. Cloudstream'de sağlayıcılar **Extensions** ekranından açık mı?
 3. Nuvio'da **Enable plugin providers globally** açık mı?
-4. İki Nuvio addon'u (**TR Katalog** + **Canlı TV**) ve bir **metadata addon'u** (Cinemeta / AIOMetadata) kurulu mu?
+4. İki Nuvio addon'u (**BigBullApp Katalog** + **BigBull Canlı TV**) kurulu mu?
 5. Ana sayfa satırları görünmüyorsa Nuvio'yu tamamen kapatıp aç ve addon'ları **Refresh** et.
 
 <details>
 <summary><b>Sık karşılaşılan sorunlar ve çözümleri</b></summary>
 
 - **Yayın açılmıyor / arama boş dönüyor:** Kaynak site alan adı veya yapısı değişmiş olabilir; güncellemeyi bekle veya [issue aç](https://github.com/F0Rextasy/bigbullapp-cs/issues). Tek bir sağlayıcı bozuksa diğerleri çalışmaya devam eder.
-- **Nuvio — bir dizide tüm sağlayıcılar çıkıyor / alakasız video açılıyor:** Addons → **BigBullApp Katalog** → kaldır → manifest adresini yeniden ekle → **Refresh**; plugin deposunu da **Refresh** et ve metadata addon'unun kurulu olduğundan emin ol.
-- **Nuvio — "Bu içerik için meta sağlayan eklenti yok":** Cinemeta (`https://v3-cinemeta.strem.io/manifest.json`) veya AIOMetadata ekle.
+- **Nuvio — bir dizide tüm sağlayıcılar çıkıyor / alakasız video açılıyor:** Addons → **BigBullApp Katalog** → kaldır → manifest adresini yeniden ekle → **Refresh**; plugin deposunu da **Refresh** et.
 - **Nuvio — satır sırası karışık / toplu satırlar altta:** **Ayarlar → Home / Katalog düzenle** ekranından **Son Eklenen/Popüler** satırlarını yukarı sürükle veya addon'u kaldırıp yeniden ekle.
 - **Nuvio — Plugins bölümü görünmüyor:** Mağaza sürümü yerine **sideload** Nuvio APK kullanmalısın.
 - **Canlı kanal açılmıyor:** Kanal listesi düzenli taranır; ölü bağlantılar ayıklanır, bölgesel kilitli yayınlar açılmaz.

@@ -5,6 +5,12 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.8.3] - 2026-11-25
+
+### Değişti
+
+- **BigBullApp Katalog:** Cinemeta zorunluluğu kaldırıldı, katalog adresimiz değiştirildi — lütfen katalog adreslerinizi güncelleyin.
+
 ## [1.8.2] - 2026-11-25
 
 ### Değişti
