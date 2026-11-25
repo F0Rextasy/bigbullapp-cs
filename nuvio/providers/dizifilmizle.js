@@ -1,504 +1,91 @@
-// @provider {"id":"dizifilmizle","name":"DiziFilmIzle","types":["tv","movie"],"domain":"dizifilmizle.to","formats":["m3u8","mp4"],"sample":"tt0903747:tv:1:1","description":"DiziFilmIzle yabanci dizi ve film arsivi (Vidmixi/bePlayer + BEpeak HLS).","verified":true,"version":"1.0.0"}
-/**
- * dizifilmizle — Nuvio provider (bb-nuvio).
- * Flow: Cinemeta/alt title -> /api/search?q= -> /dizi/<slug>/sezon-S/bolum-E or /film/<slug>
- *       -> /embed/<id> -> bePlayer (CryptoJS MD5 + AES-256-CBC) or /list/<b64> -> HLS/MP4.
- */
-
-var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
-var BASE = "https://dizifilmizle.to";
-var ID = "DiziFilmIzle";
-var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-function text(url, opts) {
-  var o = opts || {};
-  var headers = { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" };
-  if (o.referer) headers.Referer = o.referer;
-  if (o.headers) for (var k in o.headers) if (o.headers[k]) headers[k] = o.headers[k];
-  return fetch(url, { method: o.method || "GET", headers: headers, body: o.body })
-    .then(function (r) {
-      if (!r.ok) throw new Error("HTTP " + r.status + " " + url);
-      return r.text();
-    });
-}
-
-function first(pattern, body) {
-  var m = pattern.exec(String(body || ""));
-  return m ? m[1] : null;
-}
-
-function abs(base, href) {
-  if (!href) return null;
-  href = String(href).replace(/&amp;/g, "&").trim();
-  if (/^https?:/i.test(href)) return href;
-  var origin = /^(https?:\/\/[^/]+)/.exec(base);
-  if (!origin) return href;
-  if (href.indexOf("//") === 0) return "https:" + href;
-  if (href.charAt(0) === "/") return origin[1] + href;
-  return base.replace(/[^/]*$/, "") + href;
-}
-
-function titleOf(id, mediaType) {
-  if (/^__alt__:/.test(String(id))) return Promise.resolve(decodeURIComponent(String(id).slice(8)));
-  var kind = mediaType === "tv" ? "series" : "movie";
-  return text("https://v3-cinemeta.strem.io/meta/" + kind + "/" + id + ".json")
-    .then(function (body) { return String(((JSON.parse(body).meta) || {}).name || "").trim(); })
-    .catch(function () { return ""; });
-}
-
-function sameTitle(have, want) {
-  function f(v) {
-    return String(v || "").replace(/[\u0131\u0130I]/g, "i").replace(/[\u015f\u015e]/g, "s").replace(/[\u011f\u011e]/g, "g")
-      .replace(/[\u00e7\u00c7]/g, "c").replace(/[\u00f6\u00d6]/g, "o").replace(/[\u00fc\u00dc]/g, "u")
-      .toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-  }
-  have = f(have);
-  want = f(want);
-  return !!want && (have === want || have.indexOf(want + " ") === 0);
-}
-
-function hlsNoDownload(url) {
-  var u = String(url || "");
-  if (/\.m3u8(\?|$)/i.test(u) || u.indexOf("#") !== -1) return u;
-  return u + "#.m3u8";
-}
-
-function b64Bytes(value) {
-  var s = String(value || "").replace(/-/g, "+").replace(/_/g, "/").replace(/[^A-Za-z0-9+/=]/g, "");
-  while (s.length % 4) s += "=";
-  var out = [], i, a, b, c, d;
-  for (i = 0; i < s.length; i += 4) {
-    a = B64.indexOf(s.charAt(i)); b = B64.indexOf(s.charAt(i + 1));
-    c = B64.indexOf(s.charAt(i + 2)); d = B64.indexOf(s.charAt(i + 3));
-    if (a < 0 || b < 0) break;
-    out.push((a << 2) | (b >> 4));
-    if (c > -1 && c !== 64) out.push(((b & 15) << 4) | (c >> 2));
-    if (d > -1 && d !== 64) out.push(((c & 3) << 6) | d);
-  }
-  return out;
-}
-
-function hexBytes(value) {
-  var s = String(value || ""), out = [];
-  for (var i = 0; i + 1 < s.length; i += 2) out.push(parseInt(s.substr(i, 2), 16));
-  return out;
-}
-
-function chars(value) {
-  var out = [];
-  for (var i = 0; i < value.length; i++) out.push(value.charCodeAt(i) & 0xff);
-  return out;
-}
-
-function utf8Str(list) {
-  var out = "";
-  for (var i = 0; i < list.length;) {
-    var c = list[i++];
-    if (c < 128) out += String.fromCharCode(c);
-    else if (c > 191 && c < 224) out += String.fromCharCode(((c & 31) << 6) | (list[i++] & 63));
-    else if (c > 223 && c < 240) out += String.fromCharCode(((c & 15) << 12) | ((list[i++] & 63) << 6) | (list[i++] & 63));
-    else {
-      var cp = (((c & 7) << 18) | ((list[i++] & 63) << 12) | ((list[i++] & 63) << 6) | (list[i++] & 63)) - 0x10000;
-      out += String.fromCharCode(0xd800 + (cp >> 10), 0xdc00 + (cp & 1023));
-    }
-  }
-  return out;
-}
-
-var MD5_S = [7, 12, 17, 22, 5, 9, 14, 20, 4, 11, 16, 23, 6, 10, 15, 21];
-var MD5_K = [];
-for (var _k = 0; _k < 64; _k++) MD5_K[_k] = Math.floor(Math.abs(Math.sin(_k + 1)) * 4294967296) >>> 0;
-
-function md5Bytes(input) {
-  var msg = input.slice(), bitLen = msg.length * 8;
-  msg.push(0x80);
-  while (msg.length % 64 !== 56) msg.push(0);
-  for (var b = 0; b < 8; b++) msg.push((b < 4 ? (bitLen >>> (b * 8)) : Math.floor(bitLen / 4294967296) >>> ((b - 4) * 8)) & 255);
-  var a0 = 0x67452301, b0 = 0xefcdab89, c0 = 0x98badcfe, d0 = 0x10325476;
-  for (var off = 0; off < msg.length; off += 64) {
-    var M = [];
-    for (var j = 0; j < 16; j++) {
-      var p = off + j * 4;
-      M[j] = (msg[p] | (msg[p + 1] << 8) | (msg[p + 2] << 16) | (msg[p + 3] << 24)) >>> 0;
-    }
-    var A = a0, B = b0, C = c0, D = d0;
-    for (var i = 0; i < 64; i++) {
-      var F, g;
-      if (i < 16) { F = (B & C) | (~B & D); g = i; }
-      else if (i < 32) { F = (D & B) | (~D & C); g = (5 * i + 1) % 16; }
-      else if (i < 48) { F = B ^ C ^ D; g = (3 * i + 5) % 16; }
-      else { F = C ^ (B | ~D); g = (7 * i) % 16; }
-      var s = MD5_S[(i >> 4) * 4 + (i % 4)];
-      var sum = (F + A + MD5_K[i] + M[g]) >>> 0;
-      A = D; D = C; C = B;
-      B = (B + ((sum << s) | (sum >>> (32 - s)))) >>> 0;
-    }
-    a0 = (a0 + A) >>> 0; b0 = (b0 + B) >>> 0; c0 = (c0 + C) >>> 0; d0 = (d0 + D) >>> 0;
-  }
-  var out = [], words = [a0, b0, c0, d0];
-  for (var w = 0; w < 4; w++) out.push(words[w] & 255, (words[w] >>> 8) & 255, (words[w] >>> 16) & 255, (words[w] >>> 24) & 255);
-  return out;
-}
-
-function mul(a, b) {
-  var p = 0;
-  for (var i = 0; i < 8; i++) {
-    if (b & 1) p ^= a;
-    var hi = a & 0x80;
-    a = (a << 1) & 0xff;
-    if (hi) a ^= 0x1b;
-    b >>= 1;
-  }
-  return p;
-}
-
-function rotl(b, n) { return ((b << n) | (b >> (8 - n))) & 0xff; }
-
-var SBOX = [], ISBOX = [];
-(function () {
-  for (var x = 0; x < 256; x++) {
-    var inv = 0;
-    if (x !== 0) { inv = 1; for (var e = 0; e < 254; e++) inv = mul(inv, x); }
-    var s = inv ^ rotl(inv, 1) ^ rotl(inv, 2) ^ rotl(inv, 3) ^ rotl(inv, 4) ^ 0x63;
-    SBOX[x] = s; ISBOX[s] = x;
-  }
-})();
-
-function expandKey(key) {
-  var w = [], i;
-  for (i = 0; i < 8; i++) w[i] = [key[4 * i], key[4 * i + 1], key[4 * i + 2], key[4 * i + 3]];
-  var rcon = 1;
-  for (i = 8; i < 60; i++) {
-    var t = w[i - 1].slice();
-    if (i % 8 === 0) { t = [SBOX[t[1]] ^ rcon, SBOX[t[2]], SBOX[t[3]], SBOX[t[0]]]; rcon = mul(rcon, 2); }
-    else if (i % 8 === 4) { t = [SBOX[t[0]], SBOX[t[1]], SBOX[t[2]], SBOX[t[3]]]; }
-    w[i] = [w[i - 8][0] ^ t[0], w[i - 8][1] ^ t[1], w[i - 8][2] ^ t[2], w[i - 8][3] ^ t[3]];
-  }
-  var rk = [];
-  for (i = 0; i < 60; i++) rk = rk.concat(w[i]);
-  return rk;
-}
-
-function decryptBlock(rk, block) {
-  var s = [], i, r, c;
-  for (i = 0; i < 16; i++) s[i] = block[i] ^ rk[224 + i];
-  for (var round = 13; round >= 0; round--) {
-    var t = s.slice();
-    for (r = 0; r < 4; r++) for (c = 0; c < 4; c++) s[r + 4 * c] = t[r + 4 * ((c - r + 4) % 4)];
-    for (i = 0; i < 16; i++) s[i] = ISBOX[s[i]];
-    for (i = 0; i < 16; i++) s[i] ^= rk[round * 16 + i];
-    if (!round) break;
-    for (c = 0; c < 4; c++) {
-      var a0 = s[4 * c], a1 = s[4 * c + 1], a2 = s[4 * c + 2], a3 = s[4 * c + 3];
-      s[4 * c] = mul(a0, 14) ^ mul(a1, 11) ^ mul(a2, 13) ^ mul(a3, 9);
-      s[4 * c + 1] = mul(a0, 9) ^ mul(a1, 14) ^ mul(a2, 11) ^ mul(a3, 13);
-      s[4 * c + 2] = mul(a0, 13) ^ mul(a1, 9) ^ mul(a2, 14) ^ mul(a3, 11);
-      s[4 * c + 3] = mul(a0, 11) ^ mul(a1, 13) ^ mul(a2, 9) ^ mul(a3, 14);
-    }
-  }
-  return s;
-}
-
-function decryptBePlayer(html) {
-  var m = /bePlayer\('([^']+)'\s*,\s*'(\{[\s\S]*?\})'/.exec(html);
-  if (!m) return null;
-  var params;
-  try { params = JSON.parse(m[2].replace(/\\\//g, "/")); } catch (e) { return null; }
-  var passBytes = chars(m[1]), salt = hexBytes(params.s), iv = hexBytes(params.iv), cipher = b64Bytes(params.ct);
-  if (!salt.length || iv.length !== 16 || cipher.length < 16) return null;
-  var first32 = md5Bytes(passBytes.concat(salt));
-  var key = first32.concat(md5Bytes(first32.concat(passBytes).concat(salt))).slice(0, 32);
-  var rk = expandKey(key), out = [], p = iv;
-  for (var off = 0; off + 16 <= cipher.length; off += 16) {
-    var blk = cipher.slice(off, off + 16), pl = decryptBlock(rk, blk);
-    for (var i = 0; i < 16; i++) out.push(pl[i] ^ p[i]);
-    p = blk;
-  }
-  var pad = out[out.length - 1];
-  if (pad > 0 && pad <= 16) out = out.slice(0, out.length - pad);
-  try {
-    var obj = JSON.parse(utf8Str(out));
-    return obj && obj.video_location && /^https?:/i.test(obj.video_location) ? obj.video_location : null;
-  } catch (e) {
-    return null;
-  }
-}
-
-function getStreams(tmdbId, mediaType, season, episode) {
-  var isMovie = mediaType === "movie";
-  var want = parseInt(season, 10) || 1;
-  var wantEp = parseInt(episode, 10) || 1;
-  var wantTitle = "";
-  var playUrl = null;
-
-  return titleOf(tmdbId, mediaType)
-    .then(function (title) {
-      wantTitle = title;
-      if (!title) return null;
-      return text(BASE + "/api/search?q=" + encodeURIComponent(title));
-    })
-    .then(function (raw) {
-      if (!raw) return null;
-      var data;
-      try { data = JSON.parse(raw); } catch (e) { return null; }
-      var results = (data && data.results) || [], best = null, bestScore = 0;
-      for (var i = 0; i < results.length; i++) {
-        var it = results[i];
-        if (!it || !it.slug) continue;
-        var kind = String(it.content_type || "");
-        if (kind === "actor" || kind === "director") continue;
-        if (isMovie && kind === "series") continue;
-        if (!isMovie && kind !== "series") continue;
-        var t1 = String(it.title || "").trim(), t2 = String(it.original_title || "").trim();
-        var match = sameTitle(t1, wantTitle) || sameTitle(t2, wantTitle);
-        if (!match) continue;
-        var exact = t1.toLowerCase() === wantTitle.toLowerCase() || t2.toLowerCase() === wantTitle.toLowerCase();
-        var score = exact ? 100 : 80;
-        if (score > bestScore) { bestScore = score; best = it.slug; }
-        if (bestScore === 100) break;
-      }
-      if (!best) return null;
-      playUrl = isMovie ? BASE + "/film/" + best : BASE + "/dizi/" + best + "/sezon-" + want + "/bolum-" + wantEp;
-      return text(playUrl).catch(function () { return null; });
-    })
-    .then(function (page) {
-      if (!page) return [];
-      var clean = page.replace(/\\\\\//g, "/").replace(/\\\//g, "/").replace(/\\"/g, '"');
-      var allEmbeds = [], seenE = {}, m;
-      var embRe = /https?:\/\/[^"'\s<>\\]+\/embed\/[^"'\s<>\\]+/g;
-      while ((m = embRe.exec(clean)) !== null) {
-        if (m[0] !== playUrl && !seenE[m[0]]) { seenE[m[0]] = 1; allEmbeds.push(m[0]); }
-      }
-      var embeds = (!isMovie && allEmbeds.length >= wantEp) ? [allEmbeds[wantEp - 1]] : allEmbeds.slice(0, 3);
-      var jobs = embeds.map(function (embed) {
-        return text(embed, { referer: playUrl }).then(function (player) {
-          var vloc = decryptBePlayer(player);
-          if (vloc) {
-            return [{
-              name: ID,
-              title: ID + " - Vidmixi [HLS]",
-              url: hlsNoDownload(vloc),
-              quality: "auto",
-              headers: { Referer: embed, "User-Agent": UA },
-              subtitles: []
-            }];
-          }
-          var listPath = first(/["']((?:https?:\/\/[^"']+)?\/list\/[A-Za-z0-9+/=%]{32,})["']/, player);
-          if (listPath) {
-            var listUrl = abs(embed, listPath);
-            return text(listUrl, { referer: embed }).then(function (master) {
-              if (master.indexOf("#EXTM3U") === -1) return [];
-              return [{
-                name: ID,
-                title: ID + " - BEpeak [HLS]",
-                url: hlsNoDownload(listUrl),
-                quality: "auto",
-                headers: { Referer: embed, "User-Agent": UA },
-                subtitles: []
-              }];
-            }).catch(function () { return []; });
-          }
-          var dm = first(/(https?:\/\/[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?)/i, player.replace(/\\\//g, "/"));
-          if (dm) {
-            var isH = dm.indexOf(".m3u8") !== -1;
-            return [{
-              name: ID,
-              title: ID + " - Embed" + (isH ? " [HLS]" : " [MP4]"),
-              url: isH ? hlsNoDownload(dm) : dm,
-              quality: "auto",
-              headers: { Referer: embed, "User-Agent": UA },
-              subtitles: []
-            }];
-          }
-          return [];
-        }).catch(function () { return []; });
-      });
-      return Promise.all(jobs).then(function (lists) {
-        var out = [], seenU = {};
-        for (var i = 0; i < lists.length; i++) {
-          for (var j = 0; j < lists[i].length; j++) {
-            if (!seenU[lists[i][j].url]) { seenU[lists[i][j].url] = 1; out.push(lists[i][j]); }
-          }
-        }
-        return out;
-      });
-    })
-    .catch(function (e) {
-      console.log("[bb-nuvio][dizifilmizle] " + (e && e.message));
-      return [];
-    });
-}
-
-module.exports = { getStreams };
-
-/* NuvioMobile always calls getStreams with args.tmdbId (JsBindings.kt); the
-   value is a numeric TMDB id after TmdbService.ensureTmdbId. Resolve it to
-   IMDb so the existing Cinemeta/title flow keeps working. */
-var __origGetStreams = module.exports.getStreams;
-module.exports.getStreams = function (id, mediaType, season, episode) {
-  var raw = String(id || "");
-  var mt = mediaType === "series" ? "tv" : mediaType;
-  if (!/^\d+$/.test(raw)) {
-    try {
-      return Promise.resolve(__origGetStreams(raw, mt, season, episode)).catch(function () { return []; });
-    } catch (e) {
-      return Promise.resolve([]);
-    }
-  }
-  var tv = mt !== "movie";
-  var headers = { "User-Agent": "BigBullNuvio/1.0 (https://github.com/F0Rextasy/bigbullapp-cs)", "Accept": "application/json" };
-  var key = typeof TMDB_API_KEY !== "undefined" ? TMDB_API_KEY : "";
-  var api = "https://www.wikidata.org/w/api.php?format=json";
-  var prop = tv ? "P4983" : "P4947";
-  function fromTmdb() {
-    if (!key) return Promise.resolve("");
-    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "/external_ids?api_key=" + encodeURIComponent(key), { headers: headers })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (json) { return String((json && json.imdb_id) || ""); })
-      .catch(function () { return ""; });
-  }
-  function fromWikidata() {
-    return fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + prop + "=" + raw), { headers: headers })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (json) {
-        var hits = (json && json.query && json.query.search) || [];
-        if (!hits.length) return "";
-        return fetch(api + "&action=wbgetentities&props=claims&ids=" + hits[0].title, { headers: headers });
-      })
-      .then(function (r) { return r && r.ok ? r.json() : null; })
-      .then(function (json) {
-        var entities = (json && json.entities) || {};
-        for (var entity in entities) {
-          var rows = ((entities[entity] || {}).claims || {}).P345 || [];
-          for (var i = 0; i < rows.length; i++) {
-            var value = rows[i] && rows[i].mainsnak && rows[i].mainsnak.datavalue && rows[i].mainsnak.datavalue.value;
-            if (/^tt\d+$/.test(String(value || ""))) return value;
-          }
-        }
-        return "";
-      })
-      .catch(function () { return ""; });
-  }
-  function fromTmdbTitle() {
-    if (!key) return Promise.resolve("");
-    return fetch("https://api.themoviedb.org/3/" + (tv ? "tv" : "movie") + "/" + raw + "?api_key=" + encodeURIComponent(key) + "&language=tr-TR", { headers: headers })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (json) {
-        var t = (json && (json.original_name || json.name || json.original_title || json.title)) || "";
-        return t ? "__alt__:" + encodeURIComponent(t) : "";
-      })
-      .catch(function () { return ""; });
-  }
-  return fromTmdb().then(function (imdb) { return imdb || fromWikidata(); }).then(function (imdb) { return imdb || fromTmdbTitle(); }).then(function (imdb) {
-    try {
-      return Promise.resolve(__origGetStreams(imdb || raw, mt, season, episode)).catch(function () { return []; });
-    } catch (e) {
-      return [];
-    }
-  }).catch(function () { return []; });
-};
-
-/* Cinemeta basligi yerellestirir ("Gibi" -> "As If"); sonuc bossa Wikidata TR/EN basliklariyla yeniden dene. */
-function __altTitles(raw, mediaType) {
-  var wdHeaders = { "User-Agent": "BigBullNuvio/1.0 (https://github.com/F0Rextasy/bigbullapp-cs)", "Accept": "application/json" };
-  var h = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
-  var api = "https://www.wikidata.org/w/api.php?format=json";
-  var stmt = /^tt\d+$/.test(raw) ? "P345=" + raw : (mediaType === "movie" ? "P4947=" : "P4983=") + raw;
-  var wd = fetch(api + "&action=query&list=search&srlimit=1&srsearch=" + encodeURIComponent("haswbstatement:" + stmt), { headers: wdHeaders })
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .then(function (j) {
-      var hits = (j && j.query && j.query.search) || [];
-      if (!hits.length) return null;
-      return fetch(api + "&action=wbgetentities&props=labels|aliases&languages=tr|en&ids=" + hits[0].title, { headers: wdHeaders }).then(function (r) { return r.ok ? r.json() : null; });
-    })
-    .then(function (j) {
-      var res = [], ents = (j && j.entities) || {}, k, l, a, i;
-      for (k in ents) {
-        l = ents[k].labels || {}; a = ents[k].aliases || {};
-        if (l.tr && l.tr.value) res.push(l.tr.value);
-        if (l.en && l.en.value) res.push(l.en.value);
-        for (i = 0; i < (a.tr || []).length && i < 2; i++) res.push(a.tr[i].value);
-      }
-      return res;
-    }).catch(function () { return []; });
-  var imdb = /^tt\d+$/.test(raw)
-    ? fetch("https://v3.sg.media-imdb.com/suggestion/t/" + raw + ".json", { headers: h })
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (j) { return (j && j.d && j.d[0] && j.d[0].l) ? [j.d[0].l] : []; })
-        .catch(function () { return []; })
-    : Promise.resolve([]);
-  var tvm = /^tt\d+$/.test(raw) && mediaType !== "movie"
-    ? fetch("https://api.tvmaze.com/lookup/shows?imdb=" + raw, { headers: h })
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (j) { return (j && j.name) ? [j.name] : []; })
-        .catch(function () { return []; })
-    : Promise.resolve([]);
-  return Promise.all([wd, imdb, tvm]).then(function (lists) {
-    var out = [], seen = {};
-    for (var i = 0; i < lists.length; i++) {
-      for (var j = 0; j < lists[i].length; j++) {
-        var v = String(lists[i][j] || "").replace(/\s*\([^)]*\)\s*$/, "").trim();
-        if (v && !seen[v.toLowerCase()]) { seen[v.toLowerCase()] = 1; out.push(v); }
-      }
-    }
-    return out;
-  });
-}
-var __cinemetaGetStreams = module.exports.getStreams;
-module.exports.getStreams = function (id, mediaType, season, episode) {
-  var raw = String(id || "");
-  try {
-    if (/^__alt__:/.test(raw)) return Promise.resolve(__cinemetaGetStreams(raw, mediaType, season, episode)).catch(function () { return []; });
-    function tryPrimary() {
-      if (!/^tt\d+$/.test(raw)) return Promise.resolve(__cinemetaGetStreams(raw, mediaType, season, episode)).catch(function () { return []; });
-      var h = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36", "Accept": "application/json" };
-      return fetch("https://v3.sg.media-imdb.com/suggestion/t/" + raw + ".json", { headers: h })
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (j) {
-          var t = j && j.d && j.d[0] && j.d[0].l ? String(j.d[0].l).replace(/\s*\([^)]*\)\s*$/, "").trim() : "";
-          return t ? __cinemetaGetStreams("__alt__:" + encodeURIComponent(t), mediaType, season, episode) : [];
-        })
-        .catch(function () { return []; })
-        .then(function (streams) {
-          return (streams && streams.length) ? streams : __cinemetaGetStreams(raw, mediaType, season, episode);
-        });
-    }
-    return tryPrimary().then(function (streams) {
-      if (streams && streams.length) return streams;
-      return __altTitles(raw, mediaType).then(function (titles) {
-        var chain = Promise.resolve([]);
-        titles.forEach(function (t) {
-          chain = chain.then(function (out) {
-            return out.length ? out : __cinemetaGetStreams("__alt__:" + encodeURIComponent(t), mediaType, season, episode);
-          });
-        });
-        return chain;
-      });
-    }).catch(function () { return []; });
-  } catch (e) {
-    return Promise.resolve([]);
-  }
-};
-
-/* Dil etiketi (AGENTS.md): Nuvio karti "quality \u2022 ..." satirini gosterir; dil etiketi kalitenin yanina yazilir. */
-var __subOnly = false;
-var __langLabeled = module.exports.getStreams;
-module.exports.getStreams = function (id, mediaType, season, episode) {
-  try {
-    return Promise.resolve(__langLabeled.apply(this, arguments)).then(function (streams) {
-      return (streams || []).map(function (s) {
-        if (!s) return s;
-        var hay = String(s.title || "") + " " + String(s.name || "");
-        var tags = [];
-        if (/dublaj/i.test(hay)) tags.push("TR Dublaj");
-        if (/altyaz/i.test(hay) || (s.subtitles && s.subtitles.length) || (!tags.length && __subOnly)) tags.push("Altyaz\u0131l\u0131");
-        if (!tags.length) return s;
-        var q = String(s.quality || "").replace(/\s*\u2022.*$/, "") || "auto";
-        s.quality = q + " \u2022 " + tags.join(" \u2022 ");
-        return s;
-      });
-    }).catch(function () { return []; });
-  } catch (e) {
-    return Promise.resolve([]);
-  }
-};
+var _s=[[19230,19229,19435,19417,19363,19330,19564,19459,19582,19524,19641,19592,19695,19633,19820,19786,19751,19725,19958,19923,19871,19856,19881,20028,19978,20074,20055,20136,20108,20214,20130,20349,20317,20324,20293,20395,20367,20406,20443,20536,20482,20586,20520,20728,20695,20650,20608,20819,20806,20768,20778,20969,20971,20881,20968,20943,21036,21012,21098,21070,21175,21150,21150,21180,21319,21375,21277,21340,21423,21442,21412,21383,21614,21514,21518,21517,21732,21709,21674,21709,21795,21857,21801,21778,21776,22003,21976,22003,21962,22057,22025,22134,22087,22200,22149,22266,22211,22322,22370,22321,22281,22511,22495,22437,22468,22591,22554,22655,22601,22709,22675],[19212,19447,19414,19377,19347,19397,19505,19474,19512,19474,19680,19664,19646,19614,19834,19800,19773,19721,19966,19924,19966,19867,20065],[19249,19453,19401,19387,19383,19577,19523,19491,19492,19702,19655,19631],[19399,19431,19335,19367,19527,19559,19463,19479,19511,19671,19703,19607,19639,19799,19831,19719,19751,19911,19943,19847,19879,20039,20071,19991,20023,20183,20173,20137,20105,20333,20301,20257,20225,20461,20429,20393,20361,20589,20557,20561,20529,20493,20717,20681,20649,20621,20845,20801,20769,20749,20973,20937,20962,20928,21026,21020,21114,21080,21178,21148,21234,21200,21283,21256],[19394,19397,19376,19334,19518,19571,19510,19477,19681,19674],[19433,19364,19333,19552,19540,19511,19535,19661,19649,19665,19641,19592,19837,19804,19775],[19405,19370,19418,19522,19559,19576,19463,19680,19594,19617,19666,19774,19715,19829],[19341,19372,19548],[19347,19374,19533,19560,19575],[19404],[],[19496],[19504,19473],[19544,19515,19482,19709,19679,19697],[19566],[19494,19463],[19472,19687,19667,19625,19642,19597],[19481,19708,19652,19640,19605],[19693,19664,19639,19602,19826,19738,19728,19825,19723,19887,19862,19897,19856,20086,20050,20027,19984,20192,20178,20220,20098,20324,20317,20267,20224,20386,20418,20389,20422,20581,20546,20530,20484,20651],[19640,19679,19623,19612,19836],[19662],[19659],[19630],[19641],[19588],[19593],[19758],[19773,19731,19761,19784,19951,19841],[19716],[19837],[19838,19729,19967,19911,19938,19871,20078,20043,20027,19979,20207,20121,20148,20185],[19715,19938,19924,19920,19884],[19735,19963,19907,19893,19852,20090,20034,20030],[19883,19909,19883,19853,20077,20016],[19898,19920,19898,19848,20088,19999],[19849,19894,19841,20089,20045,20015,20045],[19864,19892,19866,20088,20038,20031,20060],[19946],[19961,19925,20023,20064,20028,19984,20222,20187,20137,20121,20271,20341,20229,20256,20440,20471],[19851,20092,20060,20008],[19928,20063,20065,19980,20026,20133,20192],[20012,19974,20074,20011,20173,20183,20131,20100,20335,20227,20249,20265,20428,20428,20451],[20019,20049,20072,19983,20129],[19982,20064,20044,20174,20167,20139,20109,20323],[19999,19973,20021,20176,20200,20103],[20080,20020,20163,20221,20216,20150],[20026,20194,20221,20115,20147,20105,20333,20307,20278,20261,20428,20434,20412,20366,20602,20564,20536,20508,20706,20679,20663,20608,20846,20855,20841],[20016,20216,20183,20109,20123,20321,20288,20229,20255,20479,20417,20392,20425,20532,20490,20595,20546,20649,20680,20683,20650,20621,20847,20737,20853,20822,20991,20958,20898,20893,21089,21073,21116,21010,21247,21186,21217,21163,21308,21369,21295,21265,21500,21446,21429,21404,21547,21569,21547,21510,21730,21738,21714,21681,21661,21867,21834,21876,21787,21988,21919],[20162,20161,20130,20101,20111,20330],[20213,20163,20130,20125,20345,20300,20271,20249,20453,20420,20388,20422,20578,20564,20521,20491],[20176,20138,20103,20327,20295,20265,20273,20251,20473],[20190,20129,20096,20323,20289,20331,20319,20384,20441,20410,20379,20517,20573,20512,20483,20718,20674,20644,20624,20834,20748,20782,20754,20760,20913,20938,20979,20890,21098,21072,21110,20999,21246,21189,21227,21141,21373,21315,21309,21262,21498,21392,21414,21400,21605,21575],[20119,20178,20284,20252,20336],[20104,20163,20271,20225,20323],[20097,20348,20307,20278,20246,20414,20364,20461,20352,20592,20598,20496,20521,20500,20734,20695,20662,20622,20862,20819,20785,20758,20925,20957,20899,20887,21024,21021,21090],[20181,20348,20288,20259,20243,20455,20442,20402,20382,20558,20569,20523,20509,20658,20685,20667,20611,20822,20803,20770,20767,20920],[20269,20299,20266,20252,20462,20425,20395,20441,20594,20567,20516,20498,20486,20664,20689,20661,20616,20846,20740,20779,20754,20983,20935,20919,20891,21044,21058,21026,20995,21223,21184,21157,21151,21303,21272,21358,21268,21492,21462,21409,21378,21616,21570,21544,21602],[20340,20314,20265,20238,20474,20420,20386,20372,20576,20566,20543,20500,20734,20699,20724],[20235,20269,20232,20478,20416,20391,20361,20539,20562,20518,20484,20711,20693,20645,20657,20618,20852,20808,20786,20767,20970,20894,20903,20868,21114,21060,21024,21071,21234,21212,21166,21127,21344,21343,21357,21251,21485,21467,21498],[20225,20284,20236,20466,20453,20402,20381,20590,20491],[20329,20226,20460,20418,20396,20383,20584,20559,20514,20571,20721,20694,20718,20662,20819],[20287,20256,20479,20433,20392,20388,20549,20483],[20257,20387,20379,20475,20432],[20434,20373,20473,20459,20425,20512],[20419,20358,20456,20424,20540,20499],[20354,20386,20353,20597,20553,20560,20528,20544,20715,20697,20669,20636,20844,20818,20792,20737,20989,20935,20923,20884,21091,21001,21054,21023,21219,21211,21177,21204,21348,21318,21284,21248,21480,21456,21438,21376,21612,21622,21599,21550,21529,21736,21660,21685,21657,21881,21841,21792,21781,22004,21975,21922,21965,22139,22108,22065,22025,22245,22156,22176,22156,22388,22299],[20445,20384,20359,20578,20546,20586,20544,20641,20699,20735,20677,20857,20814,20838,20746,20963,20929,20909,20866,21039,21064,21037,21051,21020,21171,21215,21172,21143,21302,21323,21282,21265,21490,21457,21408,21382,21624,21599,21537,21569,21753,21635],[20398,20369,20592,20563,20529,20571,20655,20656,20703,20653,20629,20789,20814,20783,20757,20982,20940,20912,20954,21104,21085,21052,21087,21219,21185,21154,21127,21374,21338,21350,21275,21487,21449,21426,21399,21564,21579,21548,21508,21533,21667],[20355,20388,20533,20592,20518,20496,20733,20689,20645],[20393,20587,20562,20540,20485,20729,20883,20653,20945],[20441,28730,20503]],_c=[];function _x(i){if(_c[i]!==void 0)return _c[i];var a=_s[i],o="",j=0;for(;j<a.length;j++)o+=String.fromCharCode(a[j]^((19283+((j*31+i*17)&65535))&65535));return(_c[i]=o);}
+var UA=_x(0);var BASE=_x(1);var ID=_x(2);var B64=_x(3);function text(url,opts){var o=opts||{};var headers={[_x(4)]:UA,[_x(5)]:_x(6)};if(o.referer)headers.Referer=o.referer;if(o.headers)for(var k in o.headers)if(o.headers[k])headers[k]=o.headers[k];return fetch(url,{method:o.method||_x(7),headers:headers,body:o.body})
+.then(function(r){if(!r.ok)throw new Error(_x(8)+r.status+_x(9)+url);return r.text();});}
+function first(pattern,body){var m=pattern.exec(String(body||_x(10)));return m?m[1]:null;}
+function abs(base,href){if(!href)return null;href=String(href).replace(/&amp;/g,_x(11)).trim();if(/^https?:/i.test(href))return href;var origin=/^(https?:\/\/[^/]+)/.exec(base);if(!origin)return href;if(href.indexOf(_x(12))===0)return _x(13)+href;if(href.charAt(0)===_x(14))return origin[1]+href;return base.replace(/[^/]*$/,_x(10))+href;}
+function titleOf(id,mediaType){if(/^__alt__:/.test(String(id)))return Promise.resolve(decodeURIComponent(String(id).slice(8)));var kind=mediaType===_x(15)?_x(16):_x(17);return text(_x(18)+kind+_x(14)+id+_x(19))
+.then(function(body){return String(((JSON.parse(body).meta)||{}).name||_x(10)).trim();})
+.catch(function(){return _x(10);});}
+function sameTitle(have,want){function f(v){return String(v||_x(10)).replace(/[\u0131\u0130I]/g,_x(20)).replace(/[\u015f\u015e]/g,_x(21)).replace(/[\u011f\u011e]/g,_x(22))
+.replace(/[\u00e7\u00c7]/g,_x(23)).replace(/[\u00f6\u00d6]/g,_x(24)).replace(/[\u00fc\u00dc]/g,_x(25))
+.toLowerCase().replace(/[^a-z0-9]+/g,_x(9)).trim();}
+have=f(have);want=f(want);return!!want&&(have===want||have.indexOf(want+_x(9))===0);}
+function hlsNoDownload(url){var u=String(url||_x(10));if(/\.m3u8(\?|$)/i.test(u)||u.indexOf(_x(26))!==-1)return u;return u+_x(27);}
+function b64Bytes(value){var s=String(value||_x(10)).replace(/-/g,_x(28)).replace(/_/g,_x(14)).replace(/[^A-Za-z0-9+/=]/g,_x(10));while(s.length%4)s+=_x(29);var out=[],i,a,b,c,d;for(i=0;i<s.length;i+=4){a=B64.indexOf(s.charAt(i));b=B64.indexOf(s.charAt(i+1));c=B64.indexOf(s.charAt(i+2));d=B64.indexOf(s.charAt(i+3));if(a<0||b<0)break;out.push((a<<2)|(b>>4));if(c>-1&&c!==64)out.push(((b&15)<<4)|(c>>2));if(d>-1&&d!==64)out.push(((c&3)<<6)|d);}
+return out;}
+function hexBytes(value){var s=String(value||_x(10)),out=[];for(var i=0;i+1<s.length;i+=2)out.push(parseInt(s.substr(i,2),16));return out;}
+function chars(value){var out=[];for(var i=0;i<value.length;i++)out.push(value.charCodeAt(i)&0xff);return out;}
+function utf8Str(list){var out=_x(10);for(var i=0;i<list.length;){var c=list[i++];if(c<128)out+=String.fromCharCode(c);else if(c>191&&c<224)out+=String.fromCharCode(((c&31)<<6)|(list[i++]&63));else if(c>223&&c<240)out+=String.fromCharCode(((c&15)<<12)|((list[i++]&63)<<6)|(list[i++]&63));else{var cp=(((c&7)<<18)|((list[i++]&63)<<12)|((list[i++]&63)<<6)|(list[i++]&63))-0x10000;out+=String.fromCharCode(0xd800+(cp>>10),0xdc00+(cp&1023));}}
+return out;}
+var MD5_S=[7,12,17,22,5,9,14,20,4,11,16,23,6,10,15,21];var MD5_K=[];for(var _k=0;_k<64;_k++)MD5_K[_k]=Math.floor(Math.abs(Math.sin(_k+1))*4294967296)>>>0;function md5Bytes(input){var msg=input.slice(),bitLen=msg.length*8;msg.push(0x80);while(msg.length%64!==56)msg.push(0);for(var b=0;b<8;b++)msg.push((b<4?(bitLen>>>(b*8)):Math.floor(bitLen/4294967296)>>>((b-4)*8))&255);var a0=0x67452301,b0=0xefcdab89,c0=0x98badcfe,d0=0x10325476;for(var off=0;off<msg.length;off+=64){var M=[];for(var j=0;j<16;j++){var p=off+j*4;M[j]=(msg[p]|(msg[p+1]<<8)|(msg[p+2]<<16)|(msg[p+3]<<24))>>>0;}
+var A=a0,B=b0,C=c0,D=d0;for(var i=0;i<64;i++){var F,g;if(i<16){F=(B&C)|(~B&D);g=i;}
+else if(i<32){F=(D&B)|(~D&C);g=(5*i+1)%16;}
+else if(i<48){F=B^C^D;g=(3*i+5)%16;}
+else{F=C^(B|~D);g=(7*i)%16;}
+var s=MD5_S[(i>>4)*4+(i%4)];var sum=(F+A+MD5_K[i]+M[g])>>>0;A=D;D=C;C=B;B=(B+((sum<<s)|(sum>>>(32-s))))>>>0;}
+a0=(a0+A)>>>0;b0=(b0+B)>>>0;c0=(c0+C)>>>0;d0=(d0+D)>>>0;}
+var out=[],words=[a0,b0,c0,d0];for(var w=0;w<4;w++)out.push(words[w]&255,(words[w]>>>8)&255,(words[w]>>>16)&255,(words[w]>>>24)&255);return out;}
+function mul(a,b){var p=0;for(var i=0;i<8;i++){if(b&1)p^=a;var hi=a&0x80;a=(a<<1)&0xff;if(hi)a^=0x1b;b>>=1;}
+return p;}
+function rotl(b,n){return((b<<n)|(b>>(8-n)))&0xff;}
+var SBOX=[],ISBOX=[];(function(){for(var x=0;x<256;x++){var inv=0;if(x!==0){inv=1;for(var e=0;e<254;e++)inv=mul(inv,x);}
+var s=inv^rotl(inv,1)^rotl(inv,2)^rotl(inv,3)^rotl(inv,4)^0x63;SBOX[x]=s;ISBOX[s]=x;}})();function expandKey(key){var w=[],i;for(i=0;i<8;i++)w[i]=[key[4*i],key[4*i+1],key[4*i+2],key[4*i+3]];var rcon=1;for(i=8;i<60;i++){var t=w[i-1].slice();if(i%8===0){t=[SBOX[t[1]]^rcon,SBOX[t[2]],SBOX[t[3]],SBOX[t[0]]];rcon=mul(rcon,2);}
+else if(i%8===4){t=[SBOX[t[0]],SBOX[t[1]],SBOX[t[2]],SBOX[t[3]]];}
+w[i]=[w[i-8][0]^t[0],w[i-8][1]^t[1],w[i-8][2]^t[2],w[i-8][3]^t[3]];}
+var rk=[];for(i=0;i<60;i++)rk=rk.concat(w[i]);return rk;}
+function decryptBlock(rk,block){var s=[],i,r,c;for(i=0;i<16;i++)s[i]=block[i]^rk[224+i];for(var round=13;round>=0;round--){var t=s.slice();for(r=0;r<4;r++)for(c=0;c<4;c++)s[r+4*c]=t[r+4*((c-r+4)%4)];for(i=0;i<16;i++)s[i]=ISBOX[s[i]];for(i=0;i<16;i++)s[i]^=rk[round*16+i];if(!round)break;for(c=0;c<4;c++){var a0=s[4*c],a1=s[4*c+1],a2=s[4*c+2],a3=s[4*c+3];s[4*c]=mul(a0,14)^mul(a1,11)^mul(a2,13)^mul(a3,9);s[4*c+1]=mul(a0,9)^mul(a1,14)^mul(a2,11)^mul(a3,13);s[4*c+2]=mul(a0,13)^mul(a1,9)^mul(a2,14)^mul(a3,11);s[4*c+3]=mul(a0,11)^mul(a1,13)^mul(a2,9)^mul(a3,14);}}
+return s;}
+function decryptBePlayer(html){var m=/bePlayer\('([^']+)'\s*,\s*'(\{[\s\S]*?\})'/.exec(html);if(!m)return null;var params;try{params=JSON.parse(m[2].replace(/\\\//g,_x(14)));}catch(e){return null;}
+var passBytes=chars(m[1]),salt=hexBytes(params.s),iv=hexBytes(params.iv),cipher=b64Bytes(params.ct);if(!salt.length||iv.length!==16||cipher.length<16)return null;var first32=md5Bytes(passBytes.concat(salt));var key=first32.concat(md5Bytes(first32.concat(passBytes).concat(salt))).slice(0,32);var rk=expandKey(key),out=[],p=iv;for(var off=0;off+16<=cipher.length;off+=16){var blk=cipher.slice(off,off+16),pl=decryptBlock(rk,blk);for(var i=0;i<16;i++)out.push(pl[i]^p[i]);p=blk;}
+var pad=out[out.length-1];if(pad>0&&pad<=16)out=out.slice(0,out.length-pad);try{var obj=JSON.parse(utf8Str(out));return obj&&obj.video_location&&/^https?:/i.test(obj.video_location)?obj.video_location:null;}catch(e){return null;}}
+function getStreams(tmdbId,mediaType,season,episode){var isMovie=mediaType===_x(17);var want=parseInt(season,10)||1;var wantEp=parseInt(episode,10)||1;var wantTitle=_x(10);var playUrl=null;return titleOf(tmdbId,mediaType)
+.then(function(title){wantTitle=title;if(!title)return null;return text(BASE+_x(30)+encodeURIComponent(title));})
+.then(function(raw){if(!raw)return null;var data;try{data=JSON.parse(raw);}catch(e){return null;}
+var results=(data&&data.results)||[],best=null,bestScore=0;for(var i=0;i<results.length;i++){var it=results[i];if(!it||!it.slug)continue;var kind=String(it.content_type||_x(10));if(kind===_x(31)||kind===_x(32))continue;if(isMovie&&kind===_x(16))continue;if(!isMovie&&kind!==_x(16))continue;var t1=String(it.title||_x(10)).trim(),t2=String(it.original_title||_x(10)).trim();var match=sameTitle(t1,wantTitle)||sameTitle(t2,wantTitle);if(!match)continue;var exact=t1.toLowerCase()===wantTitle.toLowerCase()||t2.toLowerCase()===wantTitle.toLowerCase();var score=exact?100:80;if(score>bestScore){bestScore=score;best=it.slug;}
+if(bestScore===100)break;}
+if(!best)return null;playUrl=isMovie?BASE+_x(33)+best:BASE+_x(34)+best+_x(35)+want+_x(36)+wantEp;return text(playUrl).catch(function(){return null;});})
+.then(function(page){if(!page)return[];var clean=page.replace(/\\\\\//g,_x(14)).replace(/\\\//g,_x(14)).replace(/\\"/g,_x(37));var allEmbeds=[],seenE={},m;var embRe=/https?:\/\/[^"'\s<>\\]+\/embed\/[^"'\s<>\\]+/g;while((m=embRe.exec(clean))!==null){if(m[0]!==playUrl&&!seenE[m[0]]){seenE[m[0]]=1;allEmbeds.push(m[0]);}}
+var embeds=(!isMovie&&allEmbeds.length>=wantEp)?[allEmbeds[wantEp-1]]:allEmbeds.slice(0,3);var jobs=embeds.map(function(embed){return text(embed,{referer:playUrl}).then(function(player){var vloc=decryptBePlayer(player);if(vloc){return[{name:ID,title:ID+_x(38),url:hlsNoDownload(vloc),quality:_x(39),headers:{Referer:embed,[_x(4)]:UA},subtitles:[]}];}
+var listPath=first(/["']((?:https?:\/\/[^"']+)?\/list\/[A-Za-z0-9+/=%]{32,})["']/,player);if(listPath){var listUrl=abs(embed,listPath);return text(listUrl,{referer:embed}).then(function(master){if(master.indexOf(_x(40))===-1)return[];return[{name:ID,title:ID+_x(41),url:hlsNoDownload(listUrl),quality:_x(39),headers:{Referer:embed,[_x(4)]:UA},subtitles:[]}];}).catch(function(){return[];});}
+var dm=first(/(https?:\/\/[^"'\s<>]+?\.(?:m3u8|mp4)(?:\?[^"'\s<>]*)?)/i,player.replace(/\\\//g,_x(14)));if(dm){var isH=dm.indexOf(_x(42))!==-1;return[{name:ID,title:ID+_x(43)+(isH?_x(44):_x(45)),url:isH?hlsNoDownload(dm):dm,quality:_x(39),headers:{Referer:embed,[_x(4)]:UA},subtitles:[]}];}
+return[];}).catch(function(){return[];});});return Promise.all(jobs).then(function(lists){var out=[],seenU={};for(var i=0;i<lists.length;i++){for(var j=0;j<lists[i].length;j++){if(!seenU[lists[i][j].url]){seenU[lists[i][j].url]=1;out.push(lists[i][j]);}}}
+return out;});})
+.catch(function(e){console.log(_x(46)+(e&&e.message));return[];});}
+module.exports={getStreams};var __origGetStreams=module.exports.getStreams;module.exports.getStreams=function(id,mediaType,season,episode){var raw=String(id||_x(10));var mt=mediaType===_x(16)?_x(15):mediaType;if(!/^\d+$/.test(raw)){try{return Promise.resolve(__origGetStreams(raw,mt,season,episode)).catch(function(){return[];});}catch(e){return Promise.resolve([]);}}
+var tv=mt!==_x(17);var headers={[_x(4)]:_x(47),[_x(48)]:_x(49)};var key=typeof TMDB_API_KEY!==_x(50)?TMDB_API_KEY:_x(10);var api=_x(51);var prop=tv?_x(52):_x(53);function fromTmdb(){if(!key)return Promise.resolve(_x(10));return fetch(_x(54)+(tv?_x(15):_x(17))+_x(14)+raw+_x(55)+encodeURIComponent(key),{headers:headers})
+.then(function(r){return r.ok?r.json():null;})
+.then(function(json){return String((json&&json.imdb_id)||_x(10));})
+.catch(function(){return _x(10);});}
+function fromWikidata(){return fetch(api+_x(56)+encodeURIComponent(_x(57)+prop+_x(29)+raw),{headers:headers})
+.then(function(r){return r.ok?r.json():null;})
+.then(function(json){var hits=(json&&json.query&&json.query.search)||[];if(!hits.length)return _x(10);return fetch(api+_x(58)+hits[0].title,{headers:headers});})
+.then(function(r){return r&&r.ok?r.json():null;})
+.then(function(json){var entities=(json&&json.entities)||{};for(var entity in entities){var rows=((entities[entity]||{}).claims||{}).P345||[];for(var i=0;i<rows.length;i++){var value=rows[i]&&rows[i].mainsnak&&rows[i].mainsnak.datavalue&&rows[i].mainsnak.datavalue.value;if(/^tt\d+$/.test(String(value||_x(10))))return value;}}
+return _x(10);})
+.catch(function(){return _x(10);});}
+function fromTmdbTitle(){if(!key)return Promise.resolve(_x(10));return fetch(_x(54)+(tv?_x(15):_x(17))+_x(14)+raw+_x(59)+encodeURIComponent(key)+_x(60),{headers:headers})
+.then(function(r){return r.ok?r.json():null;})
+.then(function(json){var t=(json&&(json.original_name||json.name||json.original_title||json.title))||_x(10);return t?_x(61)+encodeURIComponent(t):_x(10);})
+.catch(function(){return _x(10);});}
+return fromTmdb().then(function(imdb){return imdb||fromWikidata();}).then(function(imdb){return imdb||fromTmdbTitle();}).then(function(imdb){try{return Promise.resolve(__origGetStreams(imdb||raw,mt,season,episode)).catch(function(){return[];});}catch(e){return[];}}).catch(function(){return[];});};function __altTitles(raw,mediaType){var wdHeaders={[_x(4)]:_x(47),[_x(48)]:_x(49)};var h={[_x(4)]:_x(0),[_x(48)]:_x(49)};var api=_x(51);var stmt=/^tt\d+$/.test(raw)?_x(62)+raw:(mediaType===_x(17)?_x(63):_x(64))+raw;var wd=fetch(api+_x(56)+encodeURIComponent(_x(57)+stmt),{headers:wdHeaders})
+.then(function(r){return r.ok?r.json():null;})
+.then(function(j){var hits=(j&&j.query&&j.query.search)||[];if(!hits.length)return null;return fetch(api+_x(65)+hits[0].title,{headers:wdHeaders}).then(function(r){return r.ok?r.json():null;});})
+.then(function(j){var res=[],ents=(j&&j.entities)||{},k,l,a,i;for(k in ents){l=ents[k].labels||{};a=ents[k].aliases||{};if(l.tr&&l.tr.value)res.push(l.tr.value);if(l.en&&l.en.value)res.push(l.en.value);for(i=0;i<(a.tr||[]).length&&i<2;i++)res.push(a.tr[i].value);}
+return res;}).catch(function(){return[];});var imdb=/^tt\d+$/.test(raw)
+?fetch(_x(66)+raw+_x(19),{headers:h})
+.then(function(r){return r.ok?r.json():null;})
+.then(function(j){return(j&&j.d&&j.d[0]&&j.d[0].l)?[j.d[0].l]:[];})
+.catch(function(){return[];})
+:Promise.resolve([]);var tvm=/^tt\d+$/.test(raw)&&mediaType!==_x(17)
+?fetch(_x(67)+raw,{headers:h})
+.then(function(r){return r.ok?r.json():null;})
+.then(function(j){return(j&&j.name)?[j.name]:[];})
+.catch(function(){return[];})
+:Promise.resolve([]);return Promise.all([wd,imdb,tvm]).then(function(lists){var out=[],seen={};for(var i=0;i<lists.length;i++){for(var j=0;j<lists[i].length;j++){var v=String(lists[i][j]||_x(10)).replace(/\s*\([^)]*\)\s*$/,_x(10)).trim();if(v&&!seen[v.toLowerCase()]){seen[v.toLowerCase()]=1;out.push(v);}}}
+return out;});}
+var __cinemetaGetStreams=module.exports.getStreams;module.exports.getStreams=function(id,mediaType,season,episode){var raw=String(id||_x(10));try{if(/^__alt__:/.test(raw))return Promise.resolve(__cinemetaGetStreams(raw,mediaType,season,episode)).catch(function(){return[];});function tryPrimary(){if(!/^tt\d+$/.test(raw))return Promise.resolve(__cinemetaGetStreams(raw,mediaType,season,episode)).catch(function(){return[];});var h={[_x(4)]:_x(0),[_x(48)]:_x(49)};return fetch(_x(66)+raw+_x(19),{headers:h})
+.then(function(r){return r.ok?r.json():null;})
+.then(function(j){var t=j&&j.d&&j.d[0]&&j.d[0].l?String(j.d[0].l).replace(/\s*\([^)]*\)\s*$/,_x(10)).trim():_x(10);return t?__cinemetaGetStreams(_x(61)+encodeURIComponent(t),mediaType,season,episode):[];})
+.catch(function(){return[];})
+.then(function(streams){return(streams&&streams.length)?streams:__cinemetaGetStreams(raw,mediaType,season,episode);});}
+return tryPrimary().then(function(streams){if(streams&&streams.length)return streams;return __altTitles(raw,mediaType).then(function(titles){var chain=Promise.resolve([]);titles.forEach(function(t){chain=chain.then(function(out){return out.length?out:__cinemetaGetStreams(_x(61)+encodeURIComponent(t),mediaType,season,episode);});});return chain;});}).catch(function(){return[];});}catch(e){return Promise.resolve([]);}};var __subOnly=false;var __langLabeled=module.exports.getStreams;module.exports.getStreams=function(id,mediaType,season,episode){try{return Promise.resolve(__langLabeled.apply(this,arguments)).then(function(streams){return(streams||[]).map(function(s){if(!s)return s;var hay=String(s.title||_x(10))+_x(9)+String(s.name||_x(10));var tags=[];if(/dublaj/i.test(hay))tags.push(_x(68));if(/altyaz/i.test(hay)||(s.subtitles&&s.subtitles.length)||(!tags.length&&__subOnly))tags.push(_x(69));if(!tags.length)return s;var q=String(s.quality||_x(10)).replace(/\s*\u2022.*$/,_x(10))||_x(39);s.quality=q+_x(70)+tags.join(_x(70));return s;});}).catch(function(){return[];});}catch(e){return Promise.resolve([]);}};

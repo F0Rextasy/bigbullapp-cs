@@ -1,9 +1,0 @@
-{
-  "id": "deokwave",
-  "name": "Deokwave",
-  "type": "series",
-  "url": "https://deokwave.com/search_api.php?q=my",
-  "item": "\\{\"animeid\":\"[^\"]+\"[^\\}]+\\}",
-  "title": "\"name_english\":\"([^\"]+)\"",
-  "poster": "\"poster\":\"([^\"]+)\""
-}

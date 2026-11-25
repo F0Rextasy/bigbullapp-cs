@@ -1,9 +1,0 @@
-{
-  "id": "animetr",
-  "name": "AnimeTR",
-  "type": "series",
-  "url": "https://animetr.co/seriler?sortOrder=views",
-  "item": "<a[^>]+class=\"anime-card\"[\\s\\S]*?</a>",
-  "title": "aria-label=\"([^\"]+)\"",
-  "poster": "<img[^>]+src=\"([^\"]+)\""
-}

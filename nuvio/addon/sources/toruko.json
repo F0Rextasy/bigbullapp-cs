@@ -1,9 +1,0 @@
-{
-  "id": "toruko",
-  "name": "Toruko",
-  "type": "series",
-  "url": "https://turkceanime.com/",
-  "item": "<article class=\"tile\"[\\s\\S]*?</article>",
-  "title": "alt=\"([^\"]+)\"",
-  "poster": "src=\"([^\"]+)\""
-}

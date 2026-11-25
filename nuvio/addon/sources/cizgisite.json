@@ -1,9 +1,0 @@
-{
-  "id": "cizgisite",
-  "name": "CizgiSite",
-  "type": "series",
-  "url": "https://www.cizgi.site/tr",
-  "item": "<div class=\"ikon-dis\">[\\s\\S]*?</div>",
-  "title": "<h4>([^<]+)</h4>",
-  "poster": "src=\"([^\"]+)\""
-}

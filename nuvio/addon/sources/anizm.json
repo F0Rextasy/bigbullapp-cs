@@ -1,9 +1,0 @@
-{
-  "id": "anizm",
-  "name": "Anizm",
-  "type": "series",
-  "url": "https://turkanime.info/arama?sayfa=1",
-  "item": "<article class=\"v3-catalog-card\">[\\s\\S]*?</article>",
-  "title": "<h2[^>]*>\\s*<a[^>]+>([^<]+)</a>",
-  "poster": "src=\"([^\"]+)\""
-}

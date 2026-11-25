@@ -1,9 +1,0 @@
-{
-  "id": "puhutv",
-  "name": "PuhuTV",
-  "type": "series",
-  "url": "https://puhutv.com/api/slug/dizi?s_page=1&s_per=40",
-  "item": "\\{\"id\":\\d+,\"name\":\"[^\"]+\",\"search_images\"",
-  "title": "\"name\":\"([^\"]+)\"",
-  "limit": 40
-}

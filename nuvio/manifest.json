@@ -19,7 +19,7 @@
         "mp4",
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=aniarsiv.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/aniarsiv.png",
       "contentLanguage": [
         "tr"
       ]
@@ -38,7 +38,7 @@
       "formats": [
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=animecix.tv&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/animecix.png",
       "contentLanguage": [
         "tr"
       ]
@@ -58,7 +58,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=animeler.live&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/animeler.png",
       "contentLanguage": [
         "tr"
       ]
@@ -78,7 +78,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=animetr.co&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/animetr.png",
       "contentLanguage": [
         "tr"
       ]
@@ -97,7 +97,7 @@
       "formats": [
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=anizium.co&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/anizium.png",
       "contentLanguage": [
         "tr"
       ]
@@ -105,7 +105,7 @@
     {
       "id": "anizm",
       "name": "Anizm",
-      "description": "Anizm (turkanime.info) Turkce altyazili anime arsivi (AnizmPlayer, PuffyTR, OkRu, Vidmoly).",
+      "description": "Anizm Turkce altyazili anime arsivi (AnizmPlayer, PuffyTR, OkRu, Vidmoly).",
       "version": "1.0.0",
       "author": "bigbull",
       "supportedTypes": [
@@ -117,7 +117,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=turkanime.info&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/anizm.png",
       "contentLanguage": [
         "tr"
       ]
@@ -136,7 +136,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=asyaanimeleri.top&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/asyaanimeleri.png",
       "contentLanguage": [
         "tr"
       ]
@@ -157,7 +157,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=asyadizi.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/asyadizi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -178,7 +178,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=asyadizileriizle.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/asyadizileriizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -198,7 +198,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=asyafanatikleri.vip&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/asyafanatikleri.png",
       "contentLanguage": [
         "tr"
       ]
@@ -219,7 +219,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=asyamax.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/asyamax.png",
       "contentLanguage": [
         "tr"
       ]
@@ -239,7 +239,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=asyawatch.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/asyawatch.png",
       "contentLanguage": [
         "tr"
       ]
@@ -259,7 +259,7 @@
         "mp4",
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=atv.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/atv.png",
       "contentLanguage": [
         "tr"
       ]
@@ -278,7 +278,7 @@
       "formats": [
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=belgeselx.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/belgeselx.png",
       "contentLanguage": [
         "tr"
       ]
@@ -297,7 +297,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=bicaps.live&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/bicaps.png",
       "contentLanguage": [
         "tr"
       ]
@@ -318,7 +318,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=www.birasyadizi.cx&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/birasyadizi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -337,7 +337,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=canlidizi.sbs&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/canlidizi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -357,7 +357,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=cizgimax.online&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/cizgimax.png",
       "contentLanguage": [
         "tr"
       ]
@@ -377,7 +377,7 @@
         "mp4",
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=www.cizgi.site&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/cizgisite.png",
       "contentLanguage": [
         "tr"
       ]
@@ -397,7 +397,7 @@
         "mp4",
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=www.ddizi.tel&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/ddizi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -417,7 +417,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=ddizimag2.icu&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/ddizimag.png",
       "contentLanguage": [
         "tr"
       ]
@@ -437,7 +437,7 @@
         "mp4",
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=deokwave.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/deokwave.png",
       "contentLanguage": [
         "tr"
       ]
@@ -456,7 +456,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=www.diziabi.net&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/diziabi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -477,7 +477,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=diziasia.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/diziasia.png",
       "contentLanguage": [
         "tr"
       ]
@@ -496,7 +496,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizibaba.icu&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizibaba.png",
       "contentLanguage": [
         "tr"
       ]
@@ -516,7 +516,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizibal.org&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizibal.png",
       "contentLanguage": [
         "tr"
       ]
@@ -536,7 +536,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizibol.org&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizibol.png",
       "contentLanguage": [
         "tr"
       ]
@@ -555,7 +555,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizibox.live&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizibox.png",
       "contentLanguage": [
         "tr"
       ]
@@ -575,7 +575,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=diziboxizle.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/diziboxizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -595,7 +595,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=diziboxtv.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/diziboxtv.png",
       "contentLanguage": [
         "tr"
       ]
@@ -615,7 +615,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizican.cc&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizican.png",
       "contentLanguage": [
         "tr"
       ]
@@ -636,7 +636,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizifilmizle.to&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizifilmizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -656,7 +656,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=www.dizifon.cc&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizifon.png",
       "contentLanguage": [
         "tr"
       ]
@@ -675,7 +675,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizigecesi.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizigecesi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -695,7 +695,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=www.dizigom.news&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizigom.png",
       "contentLanguage": [
         "tr"
       ]
@@ -714,7 +714,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=diziizle2.icu&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/diziizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -733,7 +733,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizikorea3.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizikorea3.png",
       "contentLanguage": [
         "tr"
       ]
@@ -753,7 +753,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizikutusu.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizikutusu.png",
       "contentLanguage": [
         "tr"
       ]
@@ -772,7 +772,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizilab.cc&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizilab.png",
       "contentLanguage": [
         "tr"
       ]
@@ -792,7 +792,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizi87.life&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizilife.png",
       "contentLanguage": [
         "tr"
       ]
@@ -811,7 +811,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizilla.la&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizilla.png",
       "contentLanguage": [
         "tr"
       ]
@@ -831,7 +831,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizimanya.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizimanya.png",
       "contentLanguage": [
         "tr"
       ]
@@ -850,7 +850,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=ddizimom.icu&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizimom.png",
       "contentLanguage": [
         "tr"
       ]
@@ -870,7 +870,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizipal1598.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizipal.png",
       "contentLanguage": [
         "tr"
       ]
@@ -889,7 +889,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizipod.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizipod.png",
       "contentLanguage": [
         "tr"
       ]
@@ -909,7 +909,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizirella.one&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizirella.png",
       "contentLanguage": [
         "tr"
       ]
@@ -929,7 +929,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizisol.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizisol.png",
       "contentLanguage": [
         "tr"
       ]
@@ -948,7 +948,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dizist.live&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dizist.png",
       "contentLanguage": [
         "tr"
       ]
@@ -968,7 +968,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=diziyou.love&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/diziyou.png",
       "contentLanguage": [
         "tr"
       ]
@@ -987,7 +987,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dmax.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dmax.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1007,7 +1007,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=dramadizilerim1.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/dramadizilerim.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1027,7 +1027,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=filmdozu.com&sz=128",
+      "logo": "https://bigbullapp.github.io/favicon.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1047,7 +1047,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=filmekseni.pro&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/filmekseni.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1068,7 +1068,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=filmgecesi.vip&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/filmgecesi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1089,7 +1089,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=filmizyon.net&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/filmizyon.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1109,7 +1109,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=filmkovasi.co&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/filmkovasi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1129,7 +1129,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=filmmakinesi.co&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/filmmakinesi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1148,7 +1148,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=filmmodu.icu&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/filmmodu.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1168,7 +1168,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=fullhdfilmizlebox.vip&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/fullhdfilm.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1187,7 +1187,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=fullhdfilmizlesene.now&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/fullhdfilmizlesene.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1206,7 +1206,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=hdfilmcehennemi.nl&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/hdfilmcehennemi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1226,7 +1226,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=hdfilmcehennemi2.biz&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/hdfilmcehennemi2.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1247,7 +1247,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=hdfilmdelisi1.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/hdfilmdelisi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1268,7 +1268,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=www.hdfilmdiziizle.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/hdfilmdiziizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1288,7 +1288,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=hdfilmizle.ink&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/hdfilmizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1309,7 +1309,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=hdfilmizle.best&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/hdfilmizlebest.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1317,7 +1317,7 @@
     {
       "id": "izle7",
       "name": "Izle7",
-      "description": "Kanal 7 resmi dizi ve TV filmi arşivi (izle7.com); Dailymotion HLS akışları.",
+      "description": "Kanal 7 resmi dizi ve TV filmi arşivi; Dailymotion HLS akışları.",
       "version": "1.0.0",
       "author": "bigbull",
       "supportedTypes": [
@@ -1329,7 +1329,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=izle7.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/izle7.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1349,7 +1349,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=izlefilm.net&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/izlefilm.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1369,7 +1369,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=jetfilmizle.app&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/jetfilmizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1388,7 +1388,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=kanald.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/kanald.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1407,7 +1407,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=koreanturk.tv&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/koreanturk.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1426,7 +1426,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=kultfilmler.net&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/kultfilmler.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1446,7 +1446,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=lovefilmizle.net&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/lovefilm.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1467,7 +1467,7 @@
         "mp4",
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=minikacocuk.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/minikacocuk.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1487,7 +1487,7 @@
       "formats": [
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=minikago.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/minikago.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1506,7 +1506,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=netfilmizle.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/netfilmizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1526,7 +1526,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=nowtv.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/nowtv.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1534,7 +1534,7 @@
     {
       "id": "onepacetr",
       "name": "Onepacetr",
-      "description": "One Pace TR (onepacetr.net) Turkce altyazili One Piece fan-edit arsivi (Google Drive, Vidmoly, OkRu).",
+      "description": "One Pace TR Turkce altyazili One Piece fan-edit arsivi (Google Drive, Vidmoly, OkRu).",
       "version": "1.0.0",
       "author": "bigbull",
       "supportedTypes": [
@@ -1546,7 +1546,7 @@
         "mp4",
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=onepacetr.net&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/onepacetr.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1566,7 +1566,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=onlinedizi.sbs&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/onlinedizi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1585,7 +1585,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=720pizle.my&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/p720pizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1605,7 +1605,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=puhutv.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/puhutv.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1625,7 +1625,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=a.psrectv80.xyz&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/rectv.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1645,7 +1645,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=roketdizi.life&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/roketdizi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1665,7 +1665,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=selcukflix.app&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/selcukflix.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1685,7 +1685,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=setfilmizle.ltd&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/setfilmizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1704,7 +1704,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=sezonlukdizi.cc&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/sezonlukdizi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1724,7 +1724,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=showtv.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/showtv.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1744,7 +1744,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=sinemacc.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/sinemacx.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1763,7 +1763,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=sinemakolik.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/sinemakolik.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1783,7 +1783,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=sinemetrik.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/sinemetrik.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1802,7 +1802,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=sinezy.si&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/sinezy.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1822,7 +1822,7 @@
       "formats": [
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=sonanime.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/sonanime.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1841,7 +1841,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=startv.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/startv.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1860,7 +1860,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=tlctv.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/tlctr.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1868,7 +1868,7 @@
     {
       "id": "toruko",
       "name": "Toruko",
-      "description": "Toruko (turkceanime.com) Turkce altyazili ve dublajli anime arsivi (HLS + tau-video).",
+      "description": "Toruko Turkce altyazili ve dublajli anime arsivi (HLS + tau-video).",
       "version": "1.0.0",
       "author": "bigbull",
       "supportedTypes": [
@@ -1880,7 +1880,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=turkceanime.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/toruko.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1900,7 +1900,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=www.trdiziizle.tv&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/trdiziizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1919,7 +1919,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=trt1.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/trt1.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1927,7 +1927,7 @@
     {
       "id": "turkanimetv",
       "name": "TurkAnimeTV",
-      "description": "TurkAnimeTV (turkanime.live) Turkce altyazili anime arsivi (HLS + altyazi).",
+      "description": "TurkAnimeTV Turkce altyazili anime arsivi (HLS + altyazi).",
       "version": "1.0.0",
       "author": "bigbull",
       "supportedTypes": [
@@ -1939,7 +1939,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=turkanime.live&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/turkanimetv.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1960,7 +1960,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=turkcedizi.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/turkcedizi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1980,7 +1980,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=tv2.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/tv2.png",
       "contentLanguage": [
         "tr"
       ]
@@ -1999,7 +1999,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=tv8.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/tv8.png",
       "contentLanguage": [
         "tr"
       ]
@@ -2019,7 +2019,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=tvdiziler.tv&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/tvdiziler.png",
       "contentLanguage": [
         "tr"
       ]
@@ -2038,7 +2038,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=ultraiz.net&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/ultrafilmizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -2057,7 +2057,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=venusfilmizle.com&sz=128",
+      "logo": "https://bigbullapp.github.io/favicon.png",
       "contentLanguage": [
         "tr"
       ]
@@ -2077,7 +2077,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=webdramaturkey2.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/webdramaturkey2.png",
       "contentLanguage": [
         "tr"
       ]
@@ -2096,7 +2096,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=webfilmizle.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/webfilmizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -2117,7 +2117,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=weboo.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/weboo.png",
       "contentLanguage": [
         "tr"
       ]
@@ -2137,7 +2137,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=webteizle.info&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/webteizle.png",
       "contentLanguage": [
         "tr"
       ]
@@ -2157,7 +2157,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=ybncidizi.com&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/yabancidizi.png",
       "contentLanguage": [
         "tr"
       ]
@@ -2176,7 +2176,7 @@
       "formats": [
         "m3u8"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=yerlidiziler.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/yerlidiziler.png",
       "contentLanguage": [
         "tr"
       ]
@@ -2196,7 +2196,7 @@
         "m3u8",
         "mp4"
       ],
-      "logo": "https://www.google.com/s2/favicons?domain=yesilcamtv.com.tr&sz=128",
+      "logo": "https://bigbullapp.github.io/assets/icons/yesilcamtv.png",
       "contentLanguage": [
         "tr"
       ]
