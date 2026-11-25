@@ -7762,5 +7762,45 @@
  "movie|2026|my son s sugar mama 2026": {
   "id": "tt49735612",
   "poster": "https://m.media-amazon.com/images/M/MV5BZDE4YjNhNzMtYWY3NC00ODYyLWI2MjItYTM3ZmQ3OTZiZDE2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|doctor x": {
+  "id": "tt2349912",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNGM2YmJmYjEtYzM3Yi00NTM1LWJhYmMtOWMyMzEzZDBlYzQwXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2026|last seen": {
+  "id": "tt6037988",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNmI3MjQzN2YtZjMxYy00MWJlLWFlNjYtOTZmY2NkZGE0NTMzXkEyXkFqcGc@._V1_.jpg"
+ },
+ "series|2013|peaky blinders": {
+  "id": "tt2442560",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGM0NGY3ZmItOGE2ZC00OWIxLTk0N2EtZWY4Yzg3ZDlhNGI3XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|2004|benim ulkem": {
+  "id": "tt0349260",
+  "poster": "https://m.media-amazon.com/images/M/MV5BNzM5MDg1NjIxMl5BMl5BanBnXkFtZTgwODkyNDM2MTI@._V1_.jpg"
+ },
+ "movie|2012|the conspiracy": {
+  "id": "tt2330322",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjExMjA5NjMwMl5BMl5BanBnXkFtZTgwNzA1Mzk2MDE@._V1_.jpg"
+ },
+ "movie|2026|way of the warrior kid": {
+  "id": "tt32213169",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTE0ZWE3MzgtOTgwYS00MDY4LTgyNWYtMjRiZGFlMjgzYzYyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|rainbow on mars": {
+  "id": "tt31078765",
+  "poster": "https://m.media-amazon.com/images/M/MV5BOGE5YTJjNzQtMjE3YS00NzQxLWI1MzItNWMzY2I2M2Q1MDg2XkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|for sale": {
+  "id": "tt0126735",
+  "poster": "https://m.media-amazon.com/images/M/MV5BMjE5NjA4NDE0Ml5BMl5BanBnXkFtZTcwNDU4MTEyMQ@@._V1_.jpg"
+ },
+ "movie|way of the warrior kid": {
+  "id": "tt32213169",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTE0ZWE3MzgtOTgwYS00MDY4LTgyNWYtMjRiZGFlMjgzYzYyXkEyXkFqcGc@._V1_.jpg"
+ },
+ "movie|robin hood un olumu": {
+  "id": "tt32273171",
+  "poster": "https://m.media-amazon.com/images/M/MV5BYTRmNzlmZjEtYjkzMC00MmNjLThiOGYtZjM5MjFiZDQyM2IwXkEyXkFqcGc@._V1_.jpg"
  }
 }
