@@ -5,6 +5,18 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.8.4] - 2026-11-25
+
+### Değişti
+
+- **DiziLife v16** (+ Nuvio `dizilife` v1.0.1): taban adres `https://dizi87.life` -> `https://dizi88.life`.
+
+### Düzeltildi
+
+- **CizgiVeDizi v5**: harici katalog betiği (`window.__CVD_POOL`) desteği eklendi.
+- **DiziCaN v15** (+ Nuvio `dizican` v1.0.1): yeni `pframe data-src` JSON oynatıcı ve kart ayrıştırıcısı eklendi.
+- **BigBullApp Katalog**: `dizican`, `dizilife` ve `dizipod` katalog kaynakları güncellendi.
+
 ## [1.8.3] - 2026-11-25
 
 ### Değişti
