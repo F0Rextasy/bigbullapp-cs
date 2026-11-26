@@ -3,6 +3,7 @@
   "version": "1.10.0",
   "name": "BigBull Canlı TV",
   "description": "Türkçe canlı TV kanalları (Cloudstream CanliTV kaynaklarından). Akışlar doğrudan HLS'dir.",
+  "logo": "https://bigbullapp.github.io/assets/tv-logos/default.png",
   "resources": [
     "catalog",
     "meta",
