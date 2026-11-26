@@ -1,6 +1,6 @@
 {
   "id": "org.bigbull.trcatalog",
-  "version": "1.8.4",
+  "version": "1.9.0",
   "name": "BigBullApp Katalog",
   "description": "Cloudstream sağlayıcılarının film ve dizi listeleri; öne çıkan toplu satırlar. Katalog verir; meta Nuvio'nun yerleşik TMDB zenginleştirmesi ve kurulu metadata addon'larından, akış BigBull Nuvio eklentilerinden gelir; canlı TV ayrı addon'dadır.",
   "resources": [
@@ -102,6 +102,11 @@
       "name": "BirAsyaDizi"
     },
     {
+      "type": "movie",
+      "id": "buzfilmizle3",
+      "name": "BuzFilmizle3"
+    },
+    {
       "type": "series",
       "id": "canlidizi",
       "name": "CanlıDizi"
@@ -120,6 +125,11 @@
       "type": "series",
       "id": "ddizi",
       "name": "Ddizi"
+    },
+    {
+      "type": "series",
+      "id": "ddizibox",
+      "name": "DDiziBox"
     },
     {
       "type": "series",
@@ -268,6 +278,11 @@
     },
     {
       "type": "series",
+      "id": "diziwatch",
+      "name": "DiziWatch"
+    },
+    {
+      "type": "series",
       "id": "diziyou",
       "name": "DiziYou"
     },
@@ -285,6 +300,11 @@
       "type": "movie",
       "id": "filmgecesi",
       "name": "Filmgecesi"
+    },
+    {
+      "type": "movie",
+      "id": "filmizle",
+      "name": "Filmizle"
     },
     {
       "type": "movie",
@@ -378,8 +398,18 @@
     },
     {
       "type": "movie",
+      "id": "kralfilmizle",
+      "name": "KralFilmizle"
+    },
+    {
+      "type": "movie",
       "id": "kultfilmler",
       "name": "Kultfilmler"
+    },
+    {
+      "type": "movie",
+      "id": "liderfilm",
+      "name": "LiderFilm"
     },
     {
       "type": "movie",
@@ -410,6 +440,11 @@
       "type": "series",
       "id": "onlinedizi",
       "name": "OnlineDizi"
+    },
+    {
+      "type": "movie",
+      "id": "onlinefilmizle",
+      "name": "OnlineFilmizle"
     },
     {
       "type": "movie",
@@ -560,6 +595,16 @@
       "type": "movie",
       "id": "yesilcamtv",
       "name": "Yeşilçam TV"
+    },
+    {
+      "type": "series",
+      "id": "zdizi",
+      "name": "Zdizi"
+    },
+    {
+      "type": "movie",
+      "id": "zipfilmizle",
+      "name": "ZipFilmizle"
     }
   ]
 }
