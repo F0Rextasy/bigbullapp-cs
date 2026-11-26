@@ -57,18 +57,20 @@ https://bigbullapp-katalog-worker.applio.workers.dev/manifest.json
 https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json
 ```
 
-**Nuvio Özel Rozet Paketi (Custom Badges · Opsiyonel):**
+**Nuvio Özel Rozet Paketi (Badge URL · İsteğe Bağlı):**
 
 ```text
 https://bigbullapp.github.io/badges/bigbull-badges.json
 ```
+
+*Ne işe yarar?* Nuvio akış kartlarının altında **4K UHD, 2K QHD, 1080p FHD, TR Dublaj, TR Altyazı, Dual Audio, H.264/H.265, AAC ve HLS/MP4** renkli görsel rozetlerini gösterir (`Nuvio → Ayarlar → Badge URLs` alanına yapıştırın).
 
 <details>
 <summary><b>Kısa Kurulum Rehberi</b></summary>
 
 1. **Cloudstream:** Ayarlar -> Eklentiler -> Depo Ekle ekranından yukarıdaki `repo.json` adresini yapıştırın ya da tek tık kurulum butonunu kullanın.
 2. **Nuvio (Sideload):** Settings -> Content & Discovery -> Plugins / Addons bölümüne yukarıdaki `manifest.json` adreslerini ekleyin.
-3. **Nuvio Özel Rozetler (Opsiyonel):** Nuvio ayarlarından *Badge URL / Custom Badges* alanına yukarıdaki `bigbull-badges.json` adresini ekleyerek çözünürlük, dil/altyazı ve codec rozetlerini akış kartlarında görüntüleyebilirsiniz.
+3. **Nuvio Özel Rozet Paketi (Badge URL · İsteğe Bağlı):** Nuvio ayarlarından *Badge URLs* bölümüne yukarıdaki `bigbull-badges.json` adresini yapıştırarak akış kartlarında çözünürlük (`4K UHD`, `2K QHD`, `1080p FHD`), dil/altyazı (`TR Dublaj`, `TR Altyazı`, `Dual Audio`) ve format/codec (`H.264`, `H.265`, `AAC`, `HLS`, `MP4`) renkli rozetlerini etkinleştirebilirsiniz.
 
 </details>
 
