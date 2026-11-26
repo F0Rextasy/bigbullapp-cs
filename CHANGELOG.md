@@ -5,6 +5,18 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.9.0] - 2026-11-26
+
+### Eklendi
+
+- **21 yeni Cloudstream modülü (`v1`):** `AsyaFilmIzle`, `BuzFilmizle3`, `DDiziBox`, `DiziDad`, `DiziRoll`, `DiziWatch`, `DramaDunyam`, `DramaVakti`, `Filmizle`, `FilmizleHell`, `Filmmirasim`, `Hdkore`, `KralFilmizle`, `LiderFilm`, `MiniDiziIzle`, `OnlineFilmizle`, `SeiCode`, `Shortizle`, `YouTubeDiziFilm`, `Zdizi` ve `ZipFilmizle` eklendi.
+- **20 yeni Nuvio sağlayıcısı (`v1.0.0`):** `asyafilmizle`, `buzfilmizle3`, `ddizibox`, `dizidad`, `diziroll`, `diziwatch`, `dramadunyam`, `dramavakti`, `filmizle`, `filmizlehell`, `filmmirasim`, `hdkore`, `kralfilmizle`, `liderfilm`, `minidiziizle`, `onlinefilmizle`, `seicode`, `shortizle`, `zdizi` ve `zipfilmizle` eklendi.
+- **BigBullApp Katalog:** `asyafilmizle`, `buzfilmizle3`, `ddizibox`, `dizidad`, `diziroll`, `diziwatch`, `filmizle`, `filmizlehell`, `kralfilmizle`, `liderfilm`, `onlinefilmizle`, `zdizi` ve `zipfilmizle` katalog kaynakları eklendi.
+
+### Güncellendi
+
+- **Nuvio katalog ve sağlayıcı paketi:** Toplam Nuvio sağlayıcı sayısı `131` modüle çıkarıldı.
+
 ## [1.8.4] - 2026-11-25
 
 ### Değişti

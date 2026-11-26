@@ -8,8 +8,8 @@
 
 **Cloudstream ve Nuvio için Türkçe film, dizi, anime ve canlı TV eklenti deposu.**
 
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-113-F59E0B?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
-[![Nuvio](https://img.shields.io/badge/Nuvio-111%20plugin-6366F1?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#kurulum)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-134-F59E0B?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
+[![Nuvio](https://img.shields.io/badge/Nuvio-131%20plugin-6366F1?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#kurulum)
 [![Canlı TV](https://img.shields.io/badge/Canl%C4%B1%20TV-154%20kanal-10B981?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
 
 [![Cloudstream'e Tek Tıkla Ekle](https://img.shields.io/badge/Cloudstream'e_Tek_T%C4%B1kla_Ekle-F59E0B?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/?install=cloudstream)
@@ -24,7 +24,7 @@
 
 | İstemci / Hizmet | Kapsam |
 | :--- | :--- |
-| **Cloudstream** | **113 modül** |
+| **Cloudstream** | **134 modül** |
 | **Nuvio** | **111 plugin** (+ Katalog addon'u) |
 | **Canlı TV** | **156 kanal** (8 kategori · Cloudstream + Nuvio addon) |
 
