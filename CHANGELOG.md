@@ -5,6 +5,18 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.10.1] - 2026-11-27
+
+### Güncellendi
+
+- **Nuvio kaynak görünümü sadeleştirildi:** Her sağlayıcıdan artık yalnızca en yüksek 2 kalite gösteriliyor; mobilde `HLS`, `AAC`, `H.264` gibi teknik yazılar kaldırılarak sadece kalite ve `Türkçe Dublaj` / `Türkçe Altyazı` bilgisi gösteriliyor.
+- **Canlı TV logoları yenilendi:** Cloudstream ve Nuvio'daki tüm Canlı TV kanal logoları temiz, eşit oranlı ve kesilmeden görünecek şekilde güncellendi.
+
+### Düzeltildi
+
+- **Yanlış film/dizi ve Canlı TV yönlendirmesi giderildi:** Bir içerik açıldığında bazı sağlayıcıların alakasız yapımlara veya canlı TV kanallarına yönlendirmesi düzeltildi.
+- **Nuvio rozet paketi uyumluluğu düzeltildi:** Özel rozet bağlantısındaki şema ve eşleşme sorunları giderildi.
+
 ## [1.10.0] - 2026-11-26
 
 ### Eklendi
