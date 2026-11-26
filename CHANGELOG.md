@@ -5,6 +5,29 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.10.0] - 2026-11-26
+
+### Eklendi
+
+- **6 yeni Cloudstream modülü (`v1`):** `DiziCehennemi`, `FilmBurada`, `SinemaIzle`, `FilmciBaba`, `FilmiFullizle` ve `TurkceCizgiFilmArsivi` eklendi.
+- **6 yeni Nuvio sağlayıcısı (`v1.0.0`):** `dizicehennemi`, `filmburada`, `sinemaizle`, `filmcibaba`, `filmifullizle` ve `turkcecizgi` eklendi.
+- **İnatTV (`v6`) geri geldi:** imzalı API katalogları (film, dizi, dijital platform ve canlı yayın) güncel host'larla yeniden eklendi; Nuvio `inattvdizi` (`v1.0.7`) ve `inattvfilmler` (`v1.0.9`) de yeniden yayında.
+- **StreamIMDb (`v2`)**: IMDb/TMDB kimliğiyle akış veren oynatıcı eklendi; tarama listeleri ve arama BigBullApp Katalog'dan geliyor, aramada filmler dizilerden önce listelenir.
+- **Türkçe altyazı**: kaynağın kendi altyazısı olmayan içeriklerde OpenSubtitles'tan otomatik Türkçe altyazı (`StreamIMDb` ve Nuvio `HDFilmCehennemi2` `v1.0.4`).
+- **Nuvio Özel Rozet Paketi (Custom Badges):** Akış kartlarında çözünürlük (`4K UHD`, `2K QHD`, `1080p FHD`, `720p HD`, `480p SD`, `360p`), ses/altyazı (`Dublaj`, `Altyazılı`, `Çift Ses`, `Çoklu Altyazı`), konteyner (`HLS`, `MP4`) ve codec (`H.265`, `H.264`, `AAC`) simgeleri için isteğe bağlı rozet adresi (`https://bigbullapp.github.io/badges/bigbull-badges.json`) eklendi.
+
+### Güncellendi
+
+- **Toplam sağlayıcı sayısı:** Cloudstream `142` modül, Nuvio `139` eklenti.
+- **Nuvio çoklu çözünürlük ve zengin akış kartları (`139` eklenti):** Tüm Nuvio sağlayıcılarında mevcut HLS kalite seviyeleri (`2160p`/`4K`, `1440p`/`2K`, `1080p`, `720p`, `480p`, `360p`) ayrı ve yüksekten düşüğe sıralı olarak sunuluyor; mevcut akışlarda gerçek bitrate (`Mbps`), codec (`H.264`/`H.265`/`AAC`), `HLS`/`MP4` ve Türkçe dil/altyazı etiketleri gösteriliyor.
+- **BigBullApp Katalog:** Toplam `133` katalog sırasına (`130` görünür kaynak + `3` birleşik vitrin) çıkarıldı; `DiziCehennemi`, `FilmBurada`, `FilmciBaba`, `FilmiFullizle`, `SinemaIzle` ve `TurkceCizgiFilmArsivi` katalogları eklendi.
+
+### Düzeltildi
+
+- **Nuvio HDFilmDiziIzle:** Doğru başlık eşleştirmesi, güncel `UFilm` ve `PlayHD` oynatıcı akış çıkarımı ve çoklu kalite desteği onarıldı.
+- **Canlı TV logoları (`161` kanal):** Cloudstream `CanliTV` ve Nuvio `BigBull Canlı TV` kanallarındaki eksik, bozuk veya erişilemeyen logolar güncellendi.
+- **Nuvio kalite çıkarımı:** Ok.ru `2K`/`4K` (`1440p`/`2160p`) desteği eklendi, HLS ve MP4 kaynaklarında hatalı sabit `1080p`/`720p` etiketleri gerçek veya `Auto` değerleriyle değiştirildi ve yapay kalite sınırları kaldırıldı.
+
 ## [1.9.0] - 2026-11-26
 
 ### Eklendi

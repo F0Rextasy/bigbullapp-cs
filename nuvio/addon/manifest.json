@@ -1,6 +1,6 @@
 {
   "id": "org.bigbull.trcatalog",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "name": "BigBullApp Katalog",
   "description": "Cloudstream sağlayıcılarının film ve dizi listeleri; öne çıkan toplu satırlar. Katalog verir; meta Nuvio'nun yerleşik TMDB zenginleştirmesi ve kurulu metadata addon'larından, akış BigBull Nuvio eklentilerinden gelir; canlı TV ayrı addon'dadır.",
   "resources": [
@@ -70,6 +70,11 @@
       "type": "series",
       "id": "asyafanatikleri",
       "name": "AsyaFanatikleri"
+    },
+    {
+      "type": "series",
+      "id": "asyafilmizle",
+      "name": "AsyaFilmIzle"
     },
     {
       "type": "series",
@@ -193,6 +198,21 @@
     },
     {
       "type": "series",
+      "id": "dizicehennemi-series",
+      "name": "DiziCehennemi"
+    },
+    {
+      "type": "movie",
+      "id": "dizicehennemi",
+      "name": "DiziCehennemi"
+    },
+    {
+      "type": "series",
+      "id": "dizidad",
+      "name": "DiziDad"
+    },
+    {
+      "type": "series",
       "id": "dizifilmizle",
       "name": "DiziFilmİzle"
     },
@@ -267,6 +287,11 @@
       "name": "Dizirella"
     },
     {
+      "type": "series",
+      "id": "diziroll",
+      "name": "DiziRoll"
+    },
+    {
       "type": "movie",
       "id": "dizisol",
       "name": "DiziSol"
@@ -287,6 +312,21 @@
       "name": "DiziYou"
     },
     {
+      "type": "series",
+      "id": "filmburada-series",
+      "name": "FilmBurada"
+    },
+    {
+      "type": "movie",
+      "id": "filmburada",
+      "name": "FilmBurada"
+    },
+    {
+      "type": "movie",
+      "id": "filmcibaba",
+      "name": "FilmciBaba"
+    },
+    {
       "type": "movie",
       "id": "filmdozu",
       "name": "FilmDozu"
@@ -303,8 +343,18 @@
     },
     {
       "type": "movie",
+      "id": "filmifullizle",
+      "name": "FilmiFullizle"
+    },
+    {
+      "type": "movie",
       "id": "filmizle",
       "name": "Filmizle"
+    },
+    {
+      "type": "movie",
+      "id": "filmizlehell",
+      "name": "FilmizleHell"
     },
     {
       "type": "movie",
@@ -492,6 +542,16 @@
       "name": "SinemaCX"
     },
     {
+      "type": "series",
+      "id": "sinemaizle-series",
+      "name": "SinemaIzle"
+    },
+    {
+      "type": "movie",
+      "id": "sinemaizle",
+      "name": "SinemaIzle"
+    },
+    {
       "type": "movie",
       "id": "sinemakolik",
       "name": "Sinemakolik"
@@ -535,6 +595,16 @@
       "type": "series",
       "id": "turkanimetv",
       "name": "TurkAnimeTV"
+    },
+    {
+      "type": "series",
+      "id": "turkcecizgi-series",
+      "name": "TurkceCizgi"
+    },
+    {
+      "type": "movie",
+      "id": "turkcecizgi",
+      "name": "TurkceCizgi"
     },
     {
       "type": "series",

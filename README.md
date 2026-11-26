@@ -8,9 +8,9 @@
 
 **Cloudstream ve Nuvio için Türkçe film, dizi, anime ve canlı TV eklenti deposu.**
 
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-134-F59E0B?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
-[![Nuvio](https://img.shields.io/badge/Nuvio-131%20plugin-6366F1?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#kurulum)
-[![Canlı TV](https://img.shields.io/badge/Canl%C4%B1%20TV-154%20kanal-10B981?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-142-F59E0B?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
+[![Nuvio](https://img.shields.io/badge/Nuvio-139%20plugin-6366F1?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#kurulum)
+[![Canlı TV](https://img.shields.io/badge/Canl%C4%B1%20TV-161%20kanal-10B981?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
 
 [![Cloudstream'e Tek Tıkla Ekle](https://img.shields.io/badge/Cloudstream'e_Tek_T%C4%B1kla_Ekle-F59E0B?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/?install=cloudstream)
 [![Web Sitesi & Sağlayıcılar](https://img.shields.io/badge/Web_Sitesi_%26_Sa%C4%9Flay%C4%B1c%C4%B1lar-4F46E5?style=for-the-badge&logoColor=white)](https://bigbullapp.github.io/)
@@ -24,9 +24,9 @@
 
 | İstemci / Hizmet | Kapsam |
 | :--- | :--- |
-| **Cloudstream** | **134 modül** |
-| **Nuvio** | **111 plugin** (+ Katalog addon'u) |
-| **Canlı TV** | **156 kanal** (8 kategori · Cloudstream + Nuvio addon) |
+| **Cloudstream** | **142 modül** |
+| **Nuvio** | **139 plugin** (+ Katalog addon'u) |
+| **Canlı TV** | **161 kanal** (8 kategori · Cloudstream + Nuvio addon) |
 
 > [!TIP]
 > **Cloudstream'e tek tıkla ekleyin (VPN gerekmez):** Yukarıdaki **Cloudstream'e Tek Tıkla Ekle** butonuna dokunun. Kısa kod `bigbullapp` yalnızca VPN açıkken çalışır; doğrudan bağlantı için aşağıdaki depo adresini kopyalayabilirsiniz.
@@ -57,11 +57,18 @@ https://bigbullapp-katalog-worker.applio.workers.dev/manifest.json
 https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json
 ```
 
+**Nuvio Özel Rozet Paketi (Custom Badges · Opsiyonel):**
+
+```text
+https://bigbullapp.github.io/badges/bigbull-badges.json
+```
+
 <details>
 <summary><b>Kısa Kurulum Rehberi</b></summary>
 
 1. **Cloudstream:** Ayarlar -> Eklentiler -> Depo Ekle ekranından yukarıdaki `repo.json` adresini yapıştırın ya da tek tık kurulum butonunu kullanın.
 2. **Nuvio (Sideload):** Settings -> Content & Discovery -> Plugins / Addons bölümüne yukarıdaki `manifest.json` adreslerini ekleyin.
+3. **Nuvio Özel Rozetler (Opsiyonel):** Nuvio ayarlarından *Badge URL / Custom Badges* alanına yukarıdaki `bigbull-badges.json` adresini ekleyerek çözünürlük, dil/altyazı ve codec rozetlerini akış kartlarında görüntüleyebilirsiniz.
 
 </details>
 
