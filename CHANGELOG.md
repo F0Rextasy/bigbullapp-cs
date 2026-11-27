@@ -5,6 +5,33 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.10.7] - 2026-11-27
+
+### Düzeltildi
+
+- **DMAX v10:** Çok sezonlu programların yüklenme hızı artırıldı; zaman aşımı hataları giderildi.
+- **DramaDunyam, OnlineDizi, MiniDiziIzle, MinikaGO:** Ana sayfa ve oynatıcı iyileştirmeleri dahil edildi.
+
+## [1.10.6] - 2026-11-27
+
+### Düzeltildi
+- **OnlineDizi (Nuvio) 1.0.6**: oynatıcı ve ikincil bağlantılar güncellendi.
+
+## [1.10.5] - 2026-11-27
+
+### Düzeltildi
+- **MinikaGO (Nuvio) 1.0.6**: oynatıcı ve ikincil bağlantılar güncellendi.
+
+## [1.10.4] - 2026-11-27
+
+### Düzeltildi
+- **MiniDiziIzle (Nuvio) 1.0.6**: oynatıcı ve ikincil bağlantılar güncellendi.
+
+## [1.10.3] - 2026-11-27
+
+### Düzeltildi
+- **DramaDunyam v4**: ana sayfa kategori ve görsel seçicileri güncellendi.
+
 ## [1.10.2] - 2026-11-27
 
 ### Eklendi

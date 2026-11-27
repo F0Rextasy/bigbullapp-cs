@@ -1,6 +1,6 @@
 {
   "name": "BigBullApp",
-  "version": "1.10.2",
+  "version": "1.10.6",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -1864,7 +1864,7 @@
       "id": "minidiziizle",
       "name": "MiniDiziIzle",
       "description": "MiniDiziIzle Turkce altyazili ve dublajli dikey mini dizi arsivi (HLS).",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
@@ -1904,7 +1904,7 @@
       "id": "minikago",
       "name": "MinikaGO",
       "description": "MinikaGO çocuk VOD arşivi; doğrudan MP4 akışları.",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "tv",
@@ -1983,7 +1983,7 @@
       "id": "onlinedizi",
       "name": "OnlineDizi",
       "description": "OnlineDizi yabanci dizi ve anime arsivi (OkRu + Vidmoly).",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
