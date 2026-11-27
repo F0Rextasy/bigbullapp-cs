@@ -5,6 +5,13 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.10.8] - 2026-11-27
+
+### Düzeltildi
+
+- **DMAX v11 & Nuvio 1.0.15:** Bölümlerde çıkan 30 saniyelik "sadece Türkiye'de izlenebilir" uyarı videosu giderildi; yayınlar artık doğrudan Doğuş Video API (`PublisherId=27`) üzerinden gerçek HLS akışıyla açılıyor.
+- **İnatTV v9:** Mobil/VPN kullanımında tek bir kategorideki Cloudflare `520`/zaman aşımı hatasının tüm ana sayfayı çökertmesi giderildi; host başına eşzamanlı istek sınırı (`2`), `1006` devre kesici ve `403`/`520`/HTML yanıtlarında IPv4 HTTP/1.1 yedeği eklendi.
+
 ## [1.10.7] - 2026-11-27
 
 ### Düzeltildi
