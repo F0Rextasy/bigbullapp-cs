@@ -5,6 +5,12 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.10.9] - 2026-11-27
+
+### Düzeltildi
+
+- **İnatTV v10:** Varsayılan ana sayfa 6 temel kategoriye indirildi (diğer 19 kategori Ayarlar'dan açılabilir, Arama tümünü tarar), boş/hatalı satır başlıkları gizlendi, çözücü isteklerinde `speedrestapi` başlıklarının ezilmesi düzeltildi, ExoPlayer oynatmada kanonik `User-Agent`/`Referer`/`X-Requested-With`/`Cache-Control` başlıkları korundu, imzalı (`md5=`) HLS akışlarında erken ön-okuma kaldırıldı ve `4k.filmizleeeee.cfd` yedeği eklendi.
+
 ## [1.10.8] - 2026-11-27
 
 ### Düzeltildi
