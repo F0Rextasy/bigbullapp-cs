@@ -1,6 +1,6 @@
 {
   "name": "BigBullApp",
-  "version": "1.10.11",
+  "version": "1.10.12",
   "description": "Bigbull Turkish streaming providers for Nuvio, running on-device.",
   "author": "bigbull",
   "scrapers": [
@@ -79,25 +79,6 @@
         "mp4"
       ],
       "logo": "https://bigbullapp.github.io/assets/icons/animetr.png",
-      "contentLanguage": [
-        "tr"
-      ]
-    },
-    {
-      "id": "anizium",
-      "name": "Anizium",
-      "description": "Anizium anime arsivi (Turkce altyazili MP4 akislari).",
-      "version": "1.0.20",
-      "author": "bigbull",
-      "supportedTypes": [
-        "tv"
-      ],
-      "filename": "providers/anizium.js",
-      "enabled": true,
-      "formats": [
-        "mp4"
-      ],
-      "logo": "https://bigbullapp.github.io/assets/icons/anizium.png",
       "contentLanguage": [
         "tr"
       ]
