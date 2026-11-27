@@ -38,11 +38,6 @@
     },
     {
       "type": "tv",
-      "id": "canlitv-movies",
-      "name": "Canlı TV · Sinema"
-    },
-    {
-      "type": "tv",
       "id": "canlitv-documentary",
       "name": "Canlı TV · Belgesel"
     },
