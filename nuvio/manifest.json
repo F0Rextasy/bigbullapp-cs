@@ -1133,8 +1133,8 @@
     {
       "id": "dmax",
       "name": "DMAX",
-      "description": "DMAX Türkiye program arşivi; bölümler player/info HLS adresiyle açılır.",
-      "version": "1.0.14",
+      "description": "DMAX Türkiye program arşivi; bölümler DYG Video HLS adresiyle açılır.",
+      "version": "1.0.15",
       "author": "bigbull",
       "supportedTypes": [
         "tv"
