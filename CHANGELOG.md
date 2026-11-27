@@ -5,6 +5,21 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.10.11] - 2026-11-27
+
+### Eklendi
+
+- **Telegram `/stabil` Komutu:** Grupta herkesin kullanabileceği `/stabil` (`/eniyiler`, `/top`) komutu film, dizi, anime, çizgi ve belgesel kategorilerinde en kararlı sağlayıcıları listeler.
+- **VPN'siz Kısa Kod (`!bigbull`):** Cloudstream release sürümlerinde VPN açmadan kullanılabilen `!bigbull` kısa kodu kurulum rehberlerine eklendi.
+
+### Düzeltildi
+
+- **Nuvio Canlı TV:** `Show Max` canlı yayın akışı düzeltildi; bulut üzerinden erişilemeyen bozuk kanallar listeden temizlendi (`189 kanal · 9 kategori`).
+
+### Değişti
+
+- **Depo & Kurulum Adresleri:** Cloudstream, Nuvio Plugin Deposu ve Canlı TV kurulum adresleri güncellendi; halihazırda kurulu Cloudstream kullanıcıları ek bir işlem yapmadan otomatik olarak yeni yapıya geçer.
+
 ## [1.10.10] - 2026-11-27
 
 ### Eklendi
