@@ -5,6 +5,18 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.10.2] - 2026-11-27
+
+### Eklendi
+
+- **Nuvio'ya YouTube Dizi & Film eklendi:** Resmî yapımcı kanallarındaki yerli dizi ve filmler artık Nuvio içinden de izlenebiliyor.
+
+### Düzeltildi
+
+- **İnatTV bağlantıları yenilendi:** Cloudstream ve Nuvio'da İnatTV açılmama sorunları giderildi, sık istek kaynaklı engellemeler azaltıldı ve Nuvio eklenti aramasına `InatTV` yazıldığında kolayca bulunması sağlandı.
+- **Cloudstream ana sayfa ve oynatma hataları giderildi:** Ana sayfasında boş/tekrarlı satır gösteren, ilgisiz başlık çeken, kapağı açılmayan veya tıklandığında hata veren 40'tan fazla eklenti düzeltildi (`CizgiVeDizi`, `YouTubeDiziFilm`, `DMAX`, `LiderFilm`, `ShowTV`, `FilmBurada`, `SinemaIzle`, `Deokwave`, `Shortizle`, `Dizigecesi`, `FilmKovasi`, `TRT1` ve diğerleri).
+- **Nuvio kalite etiketleri sadeleştirildi:** Bazı eklentilerde hâlâ görünen `HLS`, `MP4`, `Multi Sub` gibi karmaşık İngilizce/teknik yazılar temizlendi; mobilde artık yalnızca kalite ve `Türkçe Dublaj` / `Türkçe Altyazı` bilgisi gösteriliyor.
+
 ## [1.10.1] - 2026-11-27
 
 ### Güncellendi
