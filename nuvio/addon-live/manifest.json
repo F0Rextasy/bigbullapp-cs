@@ -1,9 +1,9 @@
 {
   "id": "org.bigbull.canlitv",
-  "version": "1.10.0",
+  "version": "1.10.10",
   "name": "BigBull Canlı TV",
-  "description": "Türkçe canlı TV kanalları (Cloudstream CanliTV kaynaklarından). Akışlar doğrudan HLS'dir.",
-  "logo": "https://bigbullapp.github.io/assets/tv-logos/default.png",
+  "description": "Türkçe canlı TV kanalları (Cloudstream CanliTV kaynaklarından; doğrudan HLS ve dinamik akış çözümleyici).",
+  "logo": "https://bigbullapp.github.io/assets/logo.png",
   "resources": [
     "catalog",
     "meta",
@@ -38,6 +38,16 @@
     },
     {
       "type": "tv",
+      "id": "canlitv-movies",
+      "name": "Canlı TV · Sinema"
+    },
+    {
+      "type": "tv",
+      "id": "canlitv-documentary",
+      "name": "Canlı TV · Belgesel"
+    },
+    {
+      "type": "tv",
       "id": "canlitv-kids",
       "name": "Canlı TV · Çocuk"
     },
@@ -48,13 +58,13 @@
     },
     {
       "type": "tv",
-      "id": "canlitv-documentary",
-      "name": "Canlı TV · Belgesel"
+      "id": "canlitv-religious",
+      "name": "Canlı TV · Dini"
     },
     {
       "type": "tv",
-      "id": "canlitv-religious",
-      "name": "Canlı TV · Dini"
+      "id": "canlitv-education",
+      "name": "Canlı TV · Eğitim"
     }
   ]
 }

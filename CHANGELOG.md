@@ -5,6 +5,21 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
+## [1.10.10] - 2026-11-27
+
+### Eklendi
+
+- **BigBullApp 78 Rozet Paketi (`v2.0.0`):** Nuvio ve Stremio uyumlu rozet paketimiz; alt çerçevesi küçük harfli `bigbullapp` imzalı yeni tasarımla 78 rozete genişletildi (`4K`/`8K`, `HDR`/`Dolby Vision`/`HDR10+`, `REMUX`/`BluRay`/`WEB-DL`, `Atmos`/`DTS`/`AAC`, `7.1`/`5.1`/`2.0`, Türkçe Dublaj/Altyazı ve `Netflix`, `Prime Video`, `Disney+`, `Apple TV+`, `Max`, `BluTV`, `Exxen`, `GAİN`, `TOD`, `Tabii`, `TV+` platform rozetleri).
+- **Resmi BigBullApp Logosu:** Nuvio Katalog, BigBull Canlı TV, Nuvio eklenti listesi ve Cloudstream depo/Canlı TV simgeleri resmi BigBullApp logosuyla güncellendi.
+- **Canlı TV 281 Türkçe Kanala Çıktı (Cloudstream & Nuvio):** İnatTV'deki tüm Türkçe canlı yayın kanalları (`Ulusal`, `Haber`, `Spor`, `Sinema`, `Belgesel`, `Çocuk`, `Dini`, `Eğitim`) CanliTV sağlayıcısına taşındı; spor, sinema ve belgesel kanalları dahil toplam 281 Türkçe kanal artık hem Cloudstream'de hem Nuvio Canlı TV'de izlenebiliyor.
+- **124 Yeni Resmi Canlı TV Logosu:** Yeni eklenen tüm Türkçe kanallar için taşmadan ve kesilmeden görünen tek tip koyu kart resmi kanal logoları eklendi.
+
+### Güncellendi
+
+- **Nuvio sade mobil & gelişmiş masaüstü etiketleri:** Mobil görünümde akış kartlarında artık yalnızca çözünürlük ve Türkçe dublaj/altyazı bilgisi sade şekilde gösterilir; masaüstü ve rozet destekli istemciler için bitrate, `HLS`/`MP4` ve `H.264`/`H.265`/`AAC` bilgileri arka plan başlığında korunur.
+- **İnatTV Artık Sadece Dizi & Film (`v11`):** Canlı yayınlar ve `Liste 1 / Liste 2 / Liste 3` gibi karmaşık sekmeler İnatTV'den kaldırıldı; ana sayfada yalnızca anlaşılır 12 dizi/film kategorisi (`Yabancı Diziler`, `Yerli Diziler`, `Yerli Filmler`, `Netflix`, `Disney+`, `Amazon Prime`, `HBO Max (BluTV)`, `EXXEN`, `Gain`, `Tabii`, `MUBI Filmleri`, `TOD`) varsayılan olarak açık ve daha hızlı yüklenecek şekilde düzenlendi.
+- **Canlı TV Temiz Kategoriler (`v12`):** İsim farkından kaynaklanan tekrarlı kanallar birleştirildi; kanallar 10 anlaşılır kategoriye ayrıldı (`Yabancı Kanallar` yalnızca Cloudstream'de ayrı sekmede sunulur).
+
 ## [1.10.9] - 2026-11-27
 
 ### Düzeltildi

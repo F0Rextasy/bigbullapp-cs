@@ -10,7 +10,7 @@
 
 [![Modül](https://img.shields.io/badge/mod%C3%BCl-142-F59E0B?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
 [![Nuvio](https://img.shields.io/badge/Nuvio-140%20plugin-6366F1?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#kurulum)
-[![Canlı TV](https://img.shields.io/badge/Canl%C4%B1%20TV-164%20kanal-10B981?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
+[![Canlı TV](https://img.shields.io/badge/Canl%C4%B1%20TV-281%20kanal-10B981?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
 
 [![Cloudstream'e Tek Tıkla Ekle](https://img.shields.io/badge/Cloudstream'e_Tek_T%C4%B1kla_Ekle-F59E0B?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/?install=cloudstream)
 [![Web Sitesi & Sağlayıcılar](https://img.shields.io/badge/Web_Sitesi_%26_Sa%C4%9Flay%C4%B1c%C4%B1lar-4F46E5?style=for-the-badge&logoColor=white)](https://bigbullapp.github.io/)
@@ -25,8 +25,8 @@
 | İstemci / Hizmet | Kapsam |
 | :--- | :--- |
 | **Cloudstream** | **142 modül** |
-| **Nuvio** | **139 plugin** (+ Katalog addon'u) |
-| **Canlı TV** | **161 kanal** (8 kategori · Cloudstream + Nuvio addon) |
+| **Nuvio** | **140 plugin** (+ Katalog addon'u) |
+| **Canlı TV** | **281 kanal** (10 kategori · Cloudstream + Nuvio addon) |
 
 > [!TIP]
 > **Cloudstream'e tek tıkla ekleyin (VPN gerekmez):** Yukarıdaki **Cloudstream'e Tek Tıkla Ekle** butonuna dokunun. Kısa kod `bigbullapp` yalnızca VPN açıkken çalışır; doğrudan bağlantı için aşağıdaki depo adresini kopyalayabilirsiniz.
@@ -54,7 +54,7 @@ https://bigbullapp-katalog-worker.applio.workers.dev/manifest.json
 **Nuvio BigBull Canlı TV:**
 
 ```text
-https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/master/nuvio/addon-live/manifest.json
+https://bigbullapp-katalog-worker.applio.workers.dev/live/manifest.json
 ```
 
 **Nuvio Özel Rozet Paketi (Badge URL · İsteğe Bağlı):**
