@@ -1,6 +1,6 @@
 {
   "id": "org.bigbull.canlitv",
-  "version": "1.10.11",
+  "version": "1.10.12",
   "name": "BigBull Canlı TV",
   "description": "Türkçe canlı TV kanalları (Cloudstream CanliTV kaynaklarından; doğrudan HLS ve dinamik akış çözümleyici).",
   "logo": "https://bigbullapp.github.io/assets/logo.png",
