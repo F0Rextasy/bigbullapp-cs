@@ -5,7 +5,7 @@ Biçim: [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/). Depo sürümle
 `providers/<Modül>/build.gradle.kts` içinde kendi `version` değerini taşır ve Cloudstream ancak bu
 sayı arttığında güncelleme sunar.
 
-## [1.10.12] - 2026-11-28
+## [1.10.13] - 2026-11-28
 
 ### Eklendi
 
@@ -34,6 +34,8 @@ sayı arttığında güncelleme sunar.
 ### Değişti
 
 - **DiziBoxTv v10:** Erişilemeyen `diziboxtv.com` alan adı nedeniyle modül pasif (`status = 0`) olarak işaretlendi.
+
+## [1.10.12] - 2026-11-27
 
 ### Kaldırıldı
 
