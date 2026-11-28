@@ -8,9 +8,9 @@
 
 **Cloudstream ve Nuvio için Türkçe film, dizi, anime ve canlı TV eklenti deposu.**
 
-[![Modül](https://img.shields.io/badge/mod%C3%BCl-141-F59E0B?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
+[![Modül](https://img.shields.io/badge/mod%C3%BCl-140-F59E0B?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
 [![Nuvio](https://img.shields.io/badge/Nuvio-139%20plugin-6366F1?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#kurulum)
-[![Canlı TV](https://img.shields.io/badge/Canl%C4%B1%20TV-189%20kanal-10B981?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
+[![Canlı TV](https://img.shields.io/badge/Canl%C4%B1%20TV-184%20kanal-10B981?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/#saglayicilar)
 
 [![Cloudstream'e Tek Tıkla Ekle](https://img.shields.io/badge/Cloudstream'e_Tek_T%C4%B1kla_Ekle-F59E0B?style=for-the-badge&labelColor=1E293B)](https://bigbullapp.github.io/?install=cloudstream)
 [![Web Sitesi & Sağlayıcılar](https://img.shields.io/badge/Web_Sitesi_%26_Sa%C4%9Flay%C4%B1c%C4%B1lar-4F46E5?style=for-the-badge&logoColor=white)](https://bigbullapp.github.io/)
@@ -24,7 +24,7 @@
 
 | İstemci / Hizmet | Kapsam |
 | :--- | :--- |
-| **Cloudstream** | **141 modül** |
+| **Cloudstream** | **140 modül** |
 | **Nuvio** | **140 plugin** (+ Katalog addon'u) |
 | **Canlı TV** | **189 kanal** (9 kategori · Cloudstream + Nuvio addon) |
 
@@ -36,25 +36,25 @@
 **Cloudstream Depo Adresi (VPN'siz):**
 
 ```text
-https://bigbullapp-repo-stats.applio.workers.dev/repo.json
+https://repo.bigbullapp.com/repo.json
 ```
 
 **Nuvio Plugin Deposu (Sideload):**
 
 ```text
-https://bigbullapp-repo-stats.applio.workers.dev/nuvio/manifest.json
+https://repo.bigbullapp.com/nuvio/manifest.json
 ```
 
 **Nuvio BigBullApp Katalog:**
 
 ```text
-https://bigbullapp-katalog-worker.applio.workers.dev/manifest.json
+https://katalog.bigbullapp.com/manifest.json
 ```
 
 **Nuvio BigBull Canlı TV:**
 
 ```text
-https://bigbullapp-katalog-worker.applio.workers.dev/live/manifest.json
+https://katalog.bigbullapp.com/live/manifest.json
 ```
 
 **Nuvio Özel Rozet Paketi (Badge URL · İsteğe Bağlı):**

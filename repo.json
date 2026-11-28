@@ -4,6 +4,6 @@
   "iconUrl": "https://bigbullapp.github.io/assets/logo.png",
   "manifestVersion": 1,
   "pluginLists": [
-    "https://bigbullapp-repo-stats.applio.workers.dev/plugins.json"
+    "https://raw.githubusercontent.com/F0Rextasy/bigbullapp-cs/builds/plugins.json"
   ]
 }

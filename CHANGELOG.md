@@ -7,6 +7,34 @@ sayı arttığında güncelleme sunar.
 
 ## [1.10.12] - 2026-11-28
 
+### Eklendi
+
+- **Yeni Özel Alan Adları & Kurulum Adresleri:**
+  - Cloudstream Depo: `https://repo.bigbullapp.com/repo.json` (release sürümlerinde VPN'siz `!bigbull` kısa kodu)
+  - Nuvio Plugin Deposu: `https://repo.bigbullapp.com/nuvio/manifest.json`
+  - Nuvio Katalog: `https://katalog.bigbullapp.com/manifest.json`
+  - Nuvio Canlı TV: `https://katalog.bigbullapp.com/live/manifest.json`
+  - Nuvio Özel Rozet Paketi (`v2.1.0`): `https://bigbullapp.github.io/badges/bigbull-badges.json`
+- **Telegram Bot Komutları (`@bigbull_app`):**
+  - `/stabil [film|dizi|anime|cizgi|belgesel]` (`/eniyiler`, `/top`) — Kategorilere göre en kararlı en fazla 10 sağlayıcıyı listeler.
+  - `/durum [eklenti]` (`/eklenti`, `/saglayici`, `/status`) — Sağlayıcının Cloudstream ve Nuvio'daki aktif/pasif durumunu gösterir.
+  - `/pasifler` (`/pasif`) — Bakımdaki/pasif sağlayıcıları listeler.
+  - `/kurulum` (`/cs`, `/nuvio`) — Cloudstream & Nuvio kurulum rehberlerini paylaşır.
+  - `/kurallar` (`/rules`), `/linkler` (`/site`, `/repo`), `/destek` (`/bagis`, `/kreosus`), `/yardim` (`/help`), `/id` ve özelden doğrulama kurtarma `/start`.
+
+### Düzeltildi
+
+- **BigBullApp 78 Rozet Paketi (`v2.1.0`):** Nuvio/Stremio akış kartlarında küçük görünen `74px` ikonların tamamı yüksek çözünürlüklü `203px` yüksekliğinde sıfırdan yeniden üretilip önbellek kırıcı (`?v=3`) eklendi.
+- **DiziBox v19 & DiziLife v21:** Cloudflare `403`/`503` engel takılmalarına karşı Cloudstream yerleşik `CloudflareKiller` desteği eklendi (`DiziLife` taban adresi `https://dizi88.life` -> `https://dizi89.life` olarak güncellendi).
+- **FilmModu v14 (+ Nuvio 1.1.16):** Taban adres `https://filmmodu.icu` -> `https://filmmodu.cafe` olarak güncellendi; emülatör oynatma ve Nuvio doğrulaması geçti.
+- **DiziPal v21 (+ Nuvio 1.0.27):** Taban adres `https://dizipal1598.com` -> `https://dizipal1599.com` olarak güncellendi (Turnstile kapısı aktif olduğu sürece doğrudan HTTP erişimi sınırlıdır).
+- **Canlı TV (Cloudstream v14 & Nuvio Canlı TV):** Ölü `Line TV`, `GS TV`, `Automoto` ve `Tele1` kayıtları temizlendi; `Cem TV`, `Kon TV`, `Kanal 24`, `Cartoon Network`, `Ekotürk` (doğrudan HLS), `Ülke TV` ve `Akit TV` canlı yayın akışları yenilendi.
+- **Nuvio Sağlayıcı Onarımları:** `BelgeselX` (`1.0.19`, `/belgeseldizi/` site haritası takibi), `JetFilmizle` (`1.1.14`, Türkçe `İ` harfi arama normalizasyonu ve Vidmoly çözücüsü), `DramaVakti` (`1.0.8`, `/diziler?q=` arama yolu ve güncel örnek), `FilmDozu` (`1.0.8`, güncel örnek), `KralFilmizle` (`1.0.8`, çift dil başlık ayrıştırma ve HTML varlık çözümü), `Filmmirasim` (`1.0.8`, GET `/tr/search?q=` ve başlık eşleme) ile `Sinezy` (`1.0.8`, güncel örnek) onarılıp canlı doğrulandı.
+
+### Değişti
+
+- **DiziBoxTv v10:** Erişilemeyen `diziboxtv.com` alan adı nedeniyle modül pasif (`status = 0`) olarak işaretlendi.
+
 ### Kaldırıldı
 
 - **Anizium (Cloudstream & Nuvio):** Anizium sağlayıcısı bir süreliğine kaldırıldı.
